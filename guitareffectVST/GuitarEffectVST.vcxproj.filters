@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="VST">
+      <UniqueIdentifier>{9c6b30a0-2b97-4e23-b75a-bb9ab98a379a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\vst\audioeffect.cpp">
+      <Filter>VST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vst\audioeffectx.cpp">
+      <Filter>VST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\vst\vstplugmain.cpp">
+      <Filter>VST</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VSTGL\ExampleEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VSTGL\VstPlugin.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VSTGL\VSTGL\VSTGLEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\VSTGL\VSTGL\VSTGLTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GLEW\glew.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\vst\audioeffect.h">
+      <Filter>VST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vst\audioeffectx.h">
+      <Filter>VST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\aeffect.h">
+      <Filter>VST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\aeffectx.h">
+      <Filter>VST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\vstfxstore.h">
+      <Filter>VST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\vst\aeffeditor.h">
+      <Filter>VST</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VSTGL\ExampleEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VSTGL\VstPlugin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VSTGL\VSTGL\VSTGLEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\VSTGL\VSTGL\VSTGLTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

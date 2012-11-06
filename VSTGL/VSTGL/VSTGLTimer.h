@@ -20,16 +20,11 @@
 //	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //	DEALINGS IN THE SOFTWARE.
 //	---------------------------------------------------------------------------
+#pragma once
+#pragma warning( disable : 4996 4819)
 
-#ifndef VSTGLTIMER_H_
-#define VSTGLTIMER_H_
-
-#ifdef WIN32
 #include <windows.h>
 #include <map>
-#elif MACX
-#include <Carbon/Carbon.h>
-#endif
 
 //-----------------------------------------------------------------------------
 ///	Simple message-based timer class.
@@ -74,25 +69,15 @@ class Timer
 	 */
 	virtual void timerCallback() = 0;
 
-#ifdef WIN32
 	///	Windows: Windows callback function, calls timerCallback().
 	static void  __stdcall timerProc(HWND hWnd,
 									 unsigned int uMsg,
 									 unsigned int idEvent,
 									 unsigned long dwTime);
-#elif MACX
-	///	OSX: OSX callback function, calls timerCallback().
-	static pascal void timerProc(EventLoopTimerRef theTimer,
-									void *userData);
-#endif
+
   private:
-#ifdef WIN32
 	///	Windows: Timer ID, used to kill the timer in the stop() method.
 	int timerId;
-#elif MACX
-	///	OSX: Pointer to the timer.
-	EventLoopTimerRef timer;
-#endif
 
 	///	The interval the timer is running at.
 	int timerInterval;
@@ -101,7 +86,6 @@ class Timer
 };
 
 //-----------------------------------------------------------------------------
-#ifdef WIN32
 ///	Windows-only:  Used to work out which Timer::timerCallback to call for a given timerId.
 class TimerSingleton
 {
@@ -121,6 +105,7 @@ class TimerSingleton
 	///	Called from Timer::timerProc() to determine which Timer::timerCallback() to call.
 	/*!
 		\retval Pointer to the correct Timer if successful, 0 otherwise.
+
 	 */
 	Timer *getTimer(int timerId) const;
 
@@ -133,6 +118,3 @@ class TimerSingleton
 	///	map holding all the currently running timers.
 	std::map<int, Timer *> timers;
 };
-#endif
-
-#endif

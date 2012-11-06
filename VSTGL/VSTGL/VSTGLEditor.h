@@ -21,22 +21,15 @@
 //	FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 //	DEALINGS IN THE SOFTWARE.
 //	---------------------------------------------------------------------------
+#pragma once
+#pragma warning( disable : 4996 4819)
 
-#ifndef VSTGLEDITOR_H_
-#define VSTGLEDITOR_H_
 
 #include "aeffeditor.h"
 
-#ifdef WIN32
-	#include <windows.h>
-	#include <GL/gl.h>
-	#include <GL/glu.h>
-#elif MACX
-	#include <OpenGL/gl.h>
-	#include <OpenGL/glu.h>
-	#include <AGL/agl.h>
-	#include <Carbon/Carbon.h>
-#endif
+#include <windows.h>
+#include <GL/glew.h>
+#include <GL/wglew.h>
 
 ///	Editor window for VST plugins, using OpenGL to handle all the drawing.
 /*!
@@ -191,29 +184,12 @@ class VSTGLEditor : public AEffEditor
 	int getWidth() const {return _rect.right-_rect.left;};
 	///	Returns the height of the window/context.
 	int getHeight() const {return _rect.bottom-_rect.top;};
-#ifdef WIN32
 	///	Windows: Message loop - we use this to intercept mouse messages, among other things.
 	static LONG WINAPI GLWndProc(HWND hwnd,
 								 UINT message,
 								 WPARAM wParam,
 								 LPARAM lParam);
-#endif
-#ifdef MACX
-	///	OSX: Message loop - we use this to intercept mouse messages, among other things.
-	static pascal OSStatus macEventHandler(EventHandlerCallRef handler,
-										   EventRef event,
-										   void *userData);
 
-	///	OSX: Used to update our context's bounds if the host changes them.
-	void updateBounds(int x, int y);
-	///	OSX: Returns the boundsX value.
-	int getBoundsX() const {return boundsX;};
-	///	OSX: Returns the boundsY value.
-	int getBoundsY() const {return boundsY;};
-
-	///	OSX: Returns our WindowRef.
-	WindowRef getWindowRef() const {return window;};
-#endif
   protected:
 	///	Helper method, needs to be called before any drawing takes place.
 	void setupContext();
@@ -248,7 +224,6 @@ class VSTGLEditor : public AEffEditor
 	 */
 	void setupAntialiasing();
 
-#ifdef WIN32
 	///	Windows: Windows rendering context.
 	HGLRC glRenderingContext;
 	///	Windows: Holds a handle to the window we created in createWindow().
@@ -257,35 +232,6 @@ class VSTGLEditor : public AEffEditor
 	HDC dc;
 	///	Windows: The pixel format we want to use for the window.
 	PIXELFORMATDESCRIPTOR pixelformat;
-#endif
-#ifdef MACX
-	///	OSX: OS X rendering context.
-	AGLContext context;
-	///	OSX: The pixel format we used.
-	/*!
-		\todo Should make this cross-platform, and allow subclasses to set
-		it(?).
-	 */
-	AGLPixelFormat pixels;
-	///	OSX: Saved in setupContext(), to be used in swapBuffers().
-	GrafPtr port;
-	///	OSX: Reference to our event handler.
-	EventHandlerRef eventHandlerRef;
-	///	Our window.
-	WindowRef window;
-	///	OSX: Our context's actual bounds (x).
-	int boundsX;
-	///	OSX: Our context's actual bounds (y).
-	int boundsY;
-
-	///	OSX: The control class reference for our dummy HIView.
-	ControlDefSpec controlSpec;
-	///	OSX: Id for our dummy HI class.
-	CFStringRef classId;
-	///	OSX: Our dummy HIView (necessary for VST 2.4).
-	ControlRef controlRef;
-#endif
-
 	///	The rect our opengl context is contained within.
 	ERect _rect;
 
@@ -295,60 +241,6 @@ class VSTGLEditor : public AEffEditor
 	int antialiasing;
 };
 
-#ifdef WIN32
-//Why aren't these in a system header?
-#define WGL_NUMBER_PIXEL_FORMATS_ARB   0x2000
-#define WGL_DRAW_TO_WINDOW_ARB         0x2001
-#define WGL_DRAW_TO_BITMAP_ARB         0x2002
-#define WGL_ACCELERATION_ARB           0x2003
-#define WGL_NEED_PALETTE_ARB           0x2004
-#define WGL_NEED_SYSTEM_PALETTE_ARB    0x2005
-#define WGL_SWAP_LAYER_BUFFERS_ARB     0x2006
-#define WGL_SWAP_METHOD_ARB            0x2007
-#define WGL_NUMBER_OVERLAYS_ARB        0x2008
-#define WGL_NUMBER_UNDERLAYS_ARB       0x2009
-#define WGL_TRANSPARENT_ARB            0x200A
-#define WGL_TRANSPARENT_RED_VALUE_ARB  0x2037
-#define WGL_TRANSPARENT_GREEN_VALUE_ARB 0x2038
-#define WGL_TRANSPARENT_BLUE_VALUE_ARB 0x2039
-#define WGL_TRANSPARENT_ALPHA_VALUE_ARB 0x203A
-#define WGL_TRANSPARENT_INDEX_VALUE_ARB 0x203B
-#define WGL_SHARE_DEPTH_ARB            0x200C
-#define WGL_SHARE_STENCIL_ARB          0x200D
-#define WGL_SHARE_ACCUM_ARB            0x200E
-#define WGL_SUPPORT_GDI_ARB            0x200F
-#define WGL_SUPPORT_OPENGL_ARB         0x2010
-#define WGL_DOUBLE_BUFFER_ARB          0x2011
-#define WGL_STEREO_ARB                 0x2012
-#define WGL_PIXEL_TYPE_ARB             0x2013
-#define WGL_COLOR_BITS_ARB             0x2014
-#define WGL_RED_BITS_ARB               0x2015
-#define WGL_RED_SHIFT_ARB              0x2016
-#define WGL_GREEN_BITS_ARB             0x2017
-#define WGL_GREEN_SHIFT_ARB            0x2018
-#define WGL_BLUE_BITS_ARB              0x2019
-#define WGL_BLUE_SHIFT_ARB             0x201A
-#define WGL_ALPHA_BITS_ARB             0x201B
-#define WGL_ALPHA_SHIFT_ARB            0x201C
-#define WGL_ACCUM_BITS_ARB             0x201D
-#define WGL_ACCUM_RED_BITS_ARB         0x201E
-#define WGL_ACCUM_GREEN_BITS_ARB       0x201F
-#define WGL_ACCUM_BLUE_BITS_ARB        0x2020
-#define WGL_ACCUM_ALPHA_BITS_ARB       0x2021
-#define WGL_DEPTH_BITS_ARB             0x2022
-#define WGL_STENCIL_BITS_ARB           0x2023
-#define WGL_AUX_BUFFERS_ARB            0x2024
-#define WGL_NO_ACCELERATION_ARB        0x2025
-#define WGL_GENERIC_ACCELERATION_ARB   0x2026
-#define WGL_FULL_ACCELERATION_ARB      0x2027
-#define WGL_SWAP_EXCHANGE_ARB          0x2028
-#define WGL_SWAP_COPY_ARB              0x2029
-#define WGL_SWAP_UNDEFINED_ARB         0x202A
-#define WGL_TYPE_RGBA_ARB              0x202B
-#define WGL_TYPE_COLORINDEX_ARB        0x202C
-#define WGL_SAMPLE_BUFFERS_ARB		   0x2041
-#define WGL_SAMPLES_ARB				   0x2042
-#endif
 
 //Documentation Main Page.
 /*!
@@ -370,4 +262,3 @@ class VSTGLEditor : public AEffEditor
 	- Niall Moody (04/03/2006).
  */
 
-#endif

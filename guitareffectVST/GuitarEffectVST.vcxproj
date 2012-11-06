@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F4642DE7-E6F4-48DA-B270-103B38A7D3CC}</ProjectGuid>
+    <RootNamespace>GuitarEffectVST</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;$(IncludePath)</IncludePath>
+    <TargetExt>.dll</TargetExt>
+    <LibraryPath>C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;$(IncludePath)</IncludePath>
+    <TargetExt>.dll</TargetExt>
+    <LibraryPath>C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>GLEW_BUILD ;WIN32;_WINDLL;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>glu32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\vst\audioeffect.cpp" />
+    <ClCompile Include="..\..\vst\audioeffectx.cpp" />
+    <ClCompile Include="..\..\vst\vstplugmain.cpp" />
+    <ClCompile Include="..\GLEW\glew.c" />
+    <ClCompile Include="..\VSTGL\ExampleEditor.cpp" />
+    <ClCompile Include="..\VSTGL\VSTGL\VSTGLEditor.cpp" />
+    <ClCompile Include="..\VSTGL\VSTGL\VSTGLTimer.cpp" />
+    <ClCompile Include="..\VSTGL\VstPlugin.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\vst\aeffeditor.h" />
+    <ClInclude Include="..\..\vst\audioeffect.h" />
+    <ClInclude Include="..\..\vst\audioeffectx.h" />
+    <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\aeffect.h" />
+    <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\aeffectx.h" />
+    <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\vstfxstore.h" />
+    <ClInclude Include="..\VSTGL\ExampleEditor.h" />
+    <ClInclude Include="..\VSTGL\VSTGL\VSTGLEditor.h" />
+    <ClInclude Include="..\VSTGL\VSTGL\VSTGLTimer.h" />
+    <ClInclude Include="..\VSTGL\VstPlugin.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

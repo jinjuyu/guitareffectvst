@@ -21,8 +21,8 @@
 //	DEALINGS IN THE SOFTWARE.
 //	--------------------------------------------------------------------------
 
-#ifndef VSTPLUGIN_H_
-#define VSTPLUGIN_H_
+#pragma once
+#pragma warning( disable : 4996 4819)
 
 #include "audioeffectx.h"
 #include <string>
@@ -30,13 +30,7 @@
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
-#ifdef WIN32
 #define strictinline __forceinline
-#elif defined (__GNUC__)
-#define strictinline inline __attribute__((always_inline))
-#else
-#define strictinline inline
-#endif
 
 //----------------------------------------------------------------------------
 ///	VST plugin class.
@@ -239,4 +233,3 @@ struct PluginProgram
 	std::string name;
 };
 
-#endif

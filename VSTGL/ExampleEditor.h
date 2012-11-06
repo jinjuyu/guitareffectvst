@@ -21,11 +21,10 @@
 //	DEALINGS IN THE SOFTWARE.
 //	--------------------------------------------------------------------------
 
-#ifndef EXAMPLEEDITOR_H_
-#define EXAMPLEEDITOR_H_
-
-#include "VSTGLEditor.h"
-#include "VSTGLTimer.h"
+#pragma once
+#pragma warning( disable : 4996 4819)
+#include "VSTGL/VSTGLEditor.h"
+#include "VSTGL/VSTGLTimer.h"
 #include <iostream>
 
 ///	Simple VSTGL example.
@@ -53,4 +52,3 @@ class ExampleEditor : public VSTGLEditor,
 	float thing;
 };
 
-#endif
