@@ -138,7 +138,7 @@ Chorus::out (float * smpsl, float * smpsr)
                 dlk = 0;
             float tmp = (float) dlk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
 
-            F2I (tmp, dlhi);
+			((dlhi)=((tmp>0) ? ( (int)(tmp) ) :( (int)(tmp-1.0f) )));
             dlhi %= maxdelay;
 
             dlhi2 = (dlhi - 1 + maxdelay) % maxdelay;
@@ -154,7 +154,7 @@ Chorus::out (float * smpsl, float * smpsr)
                 drk = 0;
             tmp = (float)drk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
 
-            F2I (tmp, dlhi);
+			((dlhi)=((tmp>0) ? ( (int)(tmp) ) :( (int)(tmp-1.0f) )));
             dlhi %= maxdelay;
 
             dlhi2 = (dlhi - 1 + maxdelay) % maxdelay;

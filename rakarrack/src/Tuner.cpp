@@ -147,10 +147,11 @@ Tuner::schmittFloat (int nframes, float *indatal, float *indatar)
 {
     int i;
 
-    signed short int buf[nframes];
+    signed short int *buf = new signed short int[nframes];
     for (i = 0; i < nframes; i++) {
         buf[i] = (short) ((indatal[i] + indatar[i]) * 32768);
     }
     schmittS16LE (nframes, buf);
+	delete[] buf;
 };
 

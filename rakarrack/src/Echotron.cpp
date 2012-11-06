@@ -26,7 +26,7 @@
 #include <math.h>
 
 #include "Echotron.h"
-
+//const char *DATADIR = "./data";
 Echotron::Echotron (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;

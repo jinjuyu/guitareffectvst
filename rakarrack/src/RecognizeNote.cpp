@@ -161,7 +161,7 @@ void
 Recognize::schmittFloat (float *indatal, float *indatar)
 {
     int i;
-    signed short int buf[PERIOD];
+    signed short int *buf= new signed short int [PERIOD];
 
     lpfl->filterout (indatal);
     hpfl->filterout (indatal);
@@ -174,6 +174,7 @@ Recognize::schmittFloat (float *indatal, float *indatar)
         buf[i] = (short) ((indatal[i]+indatar[i]) * 32768);
     }
     schmittS16LE (buf);
+	delete[] buf;
 };
 
 

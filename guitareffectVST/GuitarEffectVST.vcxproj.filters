@@ -16,6 +16,9 @@
     <Filter Include="VST">
       <UniqueIdentifier>{9c6b30a0-2b97-4e23-b75a-bb9ab98a379a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RAK">
+      <UniqueIdentifier>{81f9dbc3-5139-41a6-86b0-890035ab568c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\vst\audioeffect.cpp">
@@ -38,6 +41,207 @@
     </ClCompile>
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLTimer.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Alienwah.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\AnalogFilter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\APhaser.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Arpie.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\beattracker.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Chorus.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\CoilCrafter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\CompBand.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Compressor.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Convolotron.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\delayline.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Distorsion.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Dual_Flange.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\DynamicFilter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Echo.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Echotron.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\EffectLFO.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\EQ.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Exciter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Expander.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\fileio.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Filter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\FilterParams.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\FormantFilter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\FPreset.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Gate.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\HarmonicEnhancer.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Harmonizer.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Infinity.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Looper.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\main.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\mayer_fft.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\MBDist.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\MBVvol.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\metronome.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\MIDIConverter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\MusicDelay.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\NewDist.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Opticaltrem.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Pan.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Phaser.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\process.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\RBEcho.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\RBFilter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\RecChord.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\RecognizeNote.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Resample.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Reverb.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Reverbtron.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Ring.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\RyanWah.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Sequence.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\ShelfBoost.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Shifter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Shuffle.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\smbPitchShift.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\StereoHarm.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\StompBox.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Sustainer.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\SVFilter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Synthfilter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Tuner.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Valve.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\varios.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Vibe.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Vocoder.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Waveshaper.cpp">
+      <Filter>RAK</Filter>
     </ClCompile>
     <ClCompile Include="..\GLEW\glew.c">
       <Filter>Source Files</Filter>
@@ -72,6 +276,216 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\VSTGL\VSTGL\VSTGLTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Phaser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\RBEcho.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\RBFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\RecChord.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\RecognizeNote.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Resample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Reverb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Reverbtron.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Ring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\RyanWah.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Sequence.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\ShelfBoost.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Shifter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Shuffle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\smbPitchShift.fftw3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\smbPitchShift.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\smbPitchShift_mayerfft.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\StereoHarm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\StompBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Sustainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\SVFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Synthfilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Tuner.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Valve.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Vibe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Vocoder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Waveshaper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Alienwah.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\AnalogFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\APhaser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Arpie.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\beattracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Chorus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\CoilCrafter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\CompBand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Compressor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Convolotron.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\delayline.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Distorsion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Dual_Flange.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\DynamicFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Echo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Echotron.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Effect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\EffectLFO.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\EQ.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Exciter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Expander.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\f_sin.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Filter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Filter_.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\FilterParams.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\FormantFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\FPreset.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Gate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\global.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\HarmonicEnhancer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Harmonizer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Infinity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Looper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\mayer_fft.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\MBDist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\MBVvol.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\metronome.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\MIDIConverter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\MusicDelay.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\NewDist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Opticaltrem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\Pan.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\rakarrack\src\dirent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

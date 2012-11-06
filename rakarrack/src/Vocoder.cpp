@@ -230,7 +230,7 @@ Vocoder::out (float * smpsl, float * smpsr)
 
     for (i = 0; i<nPERIOD; i++) {  //apply compression to auxresampled
         auxtemp = input * tmpaux[i];
-        if(fabs(auxtemp > compeak)) compeak = fabs(auxtemp);   //First do peak detection on the signal
+        if(fabs(auxtemp) > fabs(compeak)) compeak = fabs(auxtemp);   //First do peak detection on the signal
         compeak *= prls;
         compenv = cbeta * oldcompenv + calpha * compeak;       //Next average into envelope follower
         oldcompenv = compenv;
@@ -326,7 +326,7 @@ Vocoder::setbands (int numbands, float startfreq, float endfreq)
     float start = startfreq;   //useful variables
     float endband = endfreq;
     float fnumbands = (float) numbands;
-    float output[VOC_BANDS + 1];
+    float *output = new float[VOC_BANDS + 1];
     int k;
 
     //calculate intermediate values
@@ -342,7 +342,7 @@ Vocoder::setbands (int numbands, float startfreq, float endfreq)
         filterbank[k].aux->setfreq_and_q (filterbank[k].sfreq, filterbank[k].sq);
     }
     cleanup();
-
+	delete[] output;
 }
 
 /*

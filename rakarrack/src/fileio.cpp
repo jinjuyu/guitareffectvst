@@ -22,7 +22,8 @@
 
 #include <errno.h>
 #include "global.h"
-
+//const char *DATADIR = "./data";
+//const char *VERSION = "1.0";
 void RKR::putbuf(char *buf, int j)
 {
     char *cfilename;
@@ -2662,6 +2663,7 @@ RKR::SaveIntPreset(int num,char *name)
 void
 RKR::DelIntPreset(int num, char *name)
 {
+	/*
     FILE *fn;
     FILE *fs;
     char *rname;
@@ -2703,7 +2705,7 @@ RKR::DelIntPreset(int num, char *name)
 
     sprintf(orden,"mv %s %s\n",tempfile2,tempfile);
     system(orden);
-
+	*/
 }
 
 void

@@ -203,7 +203,7 @@ delayline::delay(float smps, float time_, int tap_, int touch,
     int dlytime = 0;
     int bufptr = 0;
 
-    tap = fabs(tap_);
+    tap = fabs((double)tap_);
     if (tap >= maxtaps)
         tap = 0;
 

@@ -22,12 +22,12 @@
 
 */
 
-
+#pragma warning(disable : 4244)
 #include <stdlib.h>
 #include <math.h>
 #include "Waveshaper.h"
 #include "f_sin.h"
-
+//int Wave_res_amount;
 Waveshaper::Waveshaper()
 {
 
@@ -115,13 +115,14 @@ Waveshaper::waveshapesmps (int n, float * smps, int type,
 {
 
     int nn=n;
-
+	
     if(Wave_res_amount > 0) {
         nn=n*period_coeff;
-        U_Resample->mono_out(smps,temps,n,u_up,nn);
+        //U_Resample->mono_out(smps,temps,n,u_up,nn);
     }
 
     else memcpy(temps,smps,sizeof(float)*n);
+	//temps = smps;
 
     int i;
     float ws = (float)drive / 127.0f + .00001f;
@@ -559,7 +560,7 @@ Waveshaper::waveshapesmps (int n, float * smps, int type,
         D_Resample->mono_out(temps,smps,nn,u_down,n);
     } else
         memcpy(smps,temps,sizeof(float)*n);
-
+		
 
 };
 

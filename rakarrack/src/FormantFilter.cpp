@@ -115,8 +115,10 @@ FormantFilter::setpos (float input)
     float pos = fmodf (input * sequencestretch, 1.0f);
     if (pos < 0.0)
         pos += 1.0f;
+	float ppp1 = pos * (float)sequencesize;
+	((p2)=((ppp1>0) ? ( (int)(ppp1) ) :( (int)(ppp1-1.0f) )));
 
-    F2I (pos * (float)sequencesize, p2);
+
     p1 = p2 - 1;
     if (p1 < 0)
         p1 += sequencesize;

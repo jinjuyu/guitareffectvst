@@ -25,7 +25,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Reverbtron.h"
-
+//const char *DATADIR = "./data";
 Reverbtron::Reverbtron (float * efxoutl_, float * efxoutr_,int DS, int uq, int dq)
 {
     efxoutl = efxoutl_;

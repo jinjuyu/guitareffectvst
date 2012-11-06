@@ -18,13 +18,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <CharacterSet>MultiByte</CharacterSet>
+    <CharacterSet>NotSet</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -37,12 +37,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;C:\Program Files\Mega-Nerd\libsndfile\include;$(IncludePath)</IncludePath>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;C:\Program Files\Mega-Nerd\libsndfile\include;$(IncludePath)</IncludePath>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
@@ -63,13 +63,14 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>GLEW_BUILD ;WIN32;_WINDLL;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GLEW_BUILD;WIN32;_WINDLL;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;_USRDLL;_USE_MATH_DEFINES;_CRT_SECURE_NO_DEPRECATE;VST_FORCE_DEPRECATED=0;DATADIR="./data";VERSION="1.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>glu32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libsamplerate-0.lib;libsndfile-1.lib;glu32.lib;opengl32.lib;libfftw3l-3.lib;libfftw3f-3.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>./vstplug.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -77,6 +78,73 @@
     <ClCompile Include="..\..\vst\audioeffectx.cpp" />
     <ClCompile Include="..\..\vst\vstplugmain.cpp" />
     <ClCompile Include="..\GLEW\glew.c" />
+    <ClCompile Include="..\rakarrack\src\Alienwah.cpp" />
+    <ClCompile Include="..\rakarrack\src\AnalogFilter.cpp" />
+    <ClCompile Include="..\rakarrack\src\APhaser.cpp" />
+    <ClCompile Include="..\rakarrack\src\Arpie.cpp" />
+    <ClCompile Include="..\rakarrack\src\beattracker.cpp" />
+    <ClCompile Include="..\rakarrack\src\Chorus.cpp" />
+    <ClCompile Include="..\rakarrack\src\CoilCrafter.cpp" />
+    <ClCompile Include="..\rakarrack\src\CompBand.cpp" />
+    <ClCompile Include="..\rakarrack\src\Compressor.cpp" />
+    <ClCompile Include="..\rakarrack\src\Convolotron.cpp" />
+    <ClCompile Include="..\rakarrack\src\delayline.cpp" />
+    <ClCompile Include="..\rakarrack\src\Distorsion.cpp" />
+    <ClCompile Include="..\rakarrack\src\Dual_Flange.cpp" />
+    <ClCompile Include="..\rakarrack\src\DynamicFilter.cpp" />
+    <ClCompile Include="..\rakarrack\src\Echo.cpp" />
+    <ClCompile Include="..\rakarrack\src\Echotron.cpp" />
+    <ClCompile Include="..\rakarrack\src\EffectLFO.cpp" />
+    <ClCompile Include="..\rakarrack\src\EQ.cpp" />
+    <ClCompile Include="..\rakarrack\src\Exciter.cpp" />
+    <ClCompile Include="..\rakarrack\src\Expander.cpp" />
+    <ClCompile Include="..\rakarrack\src\fileio.cpp" />
+    <ClCompile Include="..\rakarrack\src\Filter.cpp" />
+    <ClCompile Include="..\rakarrack\src\FilterParams.cpp" />
+    <ClCompile Include="..\rakarrack\src\FormantFilter.cpp" />
+    <ClCompile Include="..\rakarrack\src\FPreset.cpp" />
+    <ClCompile Include="..\rakarrack\src\Gate.cpp" />
+    <ClCompile Include="..\rakarrack\src\HarmonicEnhancer.cpp" />
+    <ClCompile Include="..\rakarrack\src\Harmonizer.cpp" />
+    <ClCompile Include="..\rakarrack\src\Infinity.cpp" />
+    <ClCompile Include="..\rakarrack\src\Looper.cpp" />
+    <ClCompile Include="..\rakarrack\src\main.cpp" />
+    <ClCompile Include="..\rakarrack\src\mayer_fft.cpp" />
+    <ClCompile Include="..\rakarrack\src\MBDist.cpp" />
+    <ClCompile Include="..\rakarrack\src\MBVvol.cpp" />
+    <ClCompile Include="..\rakarrack\src\metronome.cpp" />
+    <ClCompile Include="..\rakarrack\src\MIDIConverter.cpp" />
+    <ClCompile Include="..\rakarrack\src\MusicDelay.cpp" />
+    <ClCompile Include="..\rakarrack\src\NewDist.cpp" />
+    <ClCompile Include="..\rakarrack\src\Opticaltrem.cpp" />
+    <ClCompile Include="..\rakarrack\src\Pan.cpp" />
+    <ClCompile Include="..\rakarrack\src\Phaser.cpp" />
+    <ClCompile Include="..\rakarrack\src\process.cpp" />
+    <ClCompile Include="..\rakarrack\src\RBEcho.cpp" />
+    <ClCompile Include="..\rakarrack\src\RBFilter.cpp" />
+    <ClCompile Include="..\rakarrack\src\RecChord.cpp" />
+    <ClCompile Include="..\rakarrack\src\RecognizeNote.cpp" />
+    <ClCompile Include="..\rakarrack\src\Resample.cpp" />
+    <ClCompile Include="..\rakarrack\src\Reverb.cpp" />
+    <ClCompile Include="..\rakarrack\src\Reverbtron.cpp" />
+    <ClCompile Include="..\rakarrack\src\Ring.cpp" />
+    <ClCompile Include="..\rakarrack\src\RyanWah.cpp" />
+    <ClCompile Include="..\rakarrack\src\Sequence.cpp" />
+    <ClCompile Include="..\rakarrack\src\ShelfBoost.cpp" />
+    <ClCompile Include="..\rakarrack\src\Shifter.cpp" />
+    <ClCompile Include="..\rakarrack\src\Shuffle.cpp" />
+    <ClCompile Include="..\rakarrack\src\smbPitchShift.cpp" />
+    <ClCompile Include="..\rakarrack\src\StereoHarm.cpp" />
+    <ClCompile Include="..\rakarrack\src\StompBox.cpp" />
+    <ClCompile Include="..\rakarrack\src\Sustainer.cpp" />
+    <ClCompile Include="..\rakarrack\src\SVFilter.cpp" />
+    <ClCompile Include="..\rakarrack\src\Synthfilter.cpp" />
+    <ClCompile Include="..\rakarrack\src\Tuner.cpp" />
+    <ClCompile Include="..\rakarrack\src\Valve.cpp" />
+    <ClCompile Include="..\rakarrack\src\varios.cpp" />
+    <ClCompile Include="..\rakarrack\src\Vibe.cpp" />
+    <ClCompile Include="..\rakarrack\src\Vocoder.cpp" />
+    <ClCompile Include="..\rakarrack\src\Waveshaper.cpp" />
     <ClCompile Include="..\VSTGL\ExampleEditor.cpp" />
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLEditor.cpp" />
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLTimer.cpp" />
@@ -89,6 +157,76 @@
     <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\aeffect.h" />
     <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\aeffectx.h" />
     <ClInclude Include="..\..\vst\pluginterfaces\vst2.x\vstfxstore.h" />
+    <ClInclude Include="..\rakarrack\src\Alienwah.h" />
+    <ClInclude Include="..\rakarrack\src\AnalogFilter.h" />
+    <ClInclude Include="..\rakarrack\src\APhaser.h" />
+    <ClInclude Include="..\rakarrack\src\Arpie.h" />
+    <ClInclude Include="..\rakarrack\src\beattracker.h" />
+    <ClInclude Include="..\rakarrack\src\Chorus.h" />
+    <ClInclude Include="..\rakarrack\src\CoilCrafter.h" />
+    <ClInclude Include="..\rakarrack\src\CompBand.h" />
+    <ClInclude Include="..\rakarrack\src\Compressor.h" />
+    <ClInclude Include="..\rakarrack\src\Convolotron.h" />
+    <ClInclude Include="..\rakarrack\src\delayline.h" />
+    <ClInclude Include="..\rakarrack\src\dirent.h" />
+    <ClInclude Include="..\rakarrack\src\Distorsion.h" />
+    <ClInclude Include="..\rakarrack\src\Dual_Flange.h" />
+    <ClInclude Include="..\rakarrack\src\DynamicFilter.h" />
+    <ClInclude Include="..\rakarrack\src\Echo.h" />
+    <ClInclude Include="..\rakarrack\src\Echotron.h" />
+    <ClInclude Include="..\rakarrack\src\Effect.h" />
+    <ClInclude Include="..\rakarrack\src\EffectLFO.h" />
+    <ClInclude Include="..\rakarrack\src\EQ.h" />
+    <ClInclude Include="..\rakarrack\src\Exciter.h" />
+    <ClInclude Include="..\rakarrack\src\Expander.h" />
+    <ClInclude Include="..\rakarrack\src\Filter.h" />
+    <ClInclude Include="..\rakarrack\src\FilterParams.h" />
+    <ClInclude Include="..\rakarrack\src\Filter_.h" />
+    <ClInclude Include="..\rakarrack\src\FormantFilter.h" />
+    <ClInclude Include="..\rakarrack\src\FPreset.h" />
+    <ClInclude Include="..\rakarrack\src\f_sin.h" />
+    <ClInclude Include="..\rakarrack\src\Gate.h" />
+    <ClInclude Include="..\rakarrack\src\global.h" />
+    <ClInclude Include="..\rakarrack\src\HarmonicEnhancer.h" />
+    <ClInclude Include="..\rakarrack\src\Harmonizer.h" />
+    <ClInclude Include="..\rakarrack\src\Infinity.h" />
+    <ClInclude Include="..\rakarrack\src\Looper.h" />
+    <ClInclude Include="..\rakarrack\src\mayer_fft.h" />
+    <ClInclude Include="..\rakarrack\src\MBDist.h" />
+    <ClInclude Include="..\rakarrack\src\MBVvol.h" />
+    <ClInclude Include="..\rakarrack\src\metronome.h" />
+    <ClInclude Include="..\rakarrack\src\MIDIConverter.h" />
+    <ClInclude Include="..\rakarrack\src\MusicDelay.h" />
+    <ClInclude Include="..\rakarrack\src\NewDist.h" />
+    <ClInclude Include="..\rakarrack\src\Opticaltrem.h" />
+    <ClInclude Include="..\rakarrack\src\Pan.h" />
+    <ClInclude Include="..\rakarrack\src\Phaser.h" />
+    <ClInclude Include="..\rakarrack\src\RBEcho.h" />
+    <ClInclude Include="..\rakarrack\src\RBFilter.h" />
+    <ClInclude Include="..\rakarrack\src\RecChord.h" />
+    <ClInclude Include="..\rakarrack\src\RecognizeNote.h" />
+    <ClInclude Include="..\rakarrack\src\Resample.h" />
+    <ClInclude Include="..\rakarrack\src\Reverb.h" />
+    <ClInclude Include="..\rakarrack\src\Reverbtron.h" />
+    <ClInclude Include="..\rakarrack\src\Ring.h" />
+    <ClInclude Include="..\rakarrack\src\RyanWah.h" />
+    <ClInclude Include="..\rakarrack\src\Sequence.h" />
+    <ClInclude Include="..\rakarrack\src\ShelfBoost.h" />
+    <ClInclude Include="..\rakarrack\src\Shifter.h" />
+    <ClInclude Include="..\rakarrack\src\Shuffle.h" />
+    <ClInclude Include="..\rakarrack\src\smbPitchShift.fftw3.h" />
+    <ClInclude Include="..\rakarrack\src\smbPitchShift.h" />
+    <ClInclude Include="..\rakarrack\src\smbPitchShift_mayerfft.h" />
+    <ClInclude Include="..\rakarrack\src\StereoHarm.h" />
+    <ClInclude Include="..\rakarrack\src\StompBox.h" />
+    <ClInclude Include="..\rakarrack\src\Sustainer.h" />
+    <ClInclude Include="..\rakarrack\src\SVFilter.h" />
+    <ClInclude Include="..\rakarrack\src\Synthfilter.h" />
+    <ClInclude Include="..\rakarrack\src\Tuner.h" />
+    <ClInclude Include="..\rakarrack\src\Valve.h" />
+    <ClInclude Include="..\rakarrack\src\Vibe.h" />
+    <ClInclude Include="..\rakarrack\src\Vocoder.h" />
+    <ClInclude Include="..\rakarrack\src\Waveshaper.h" />
     <ClInclude Include="..\VSTGL\ExampleEditor.h" />
     <ClInclude Include="..\VSTGL\VSTGL\VSTGLEditor.h" />
     <ClInclude Include="..\VSTGL\VSTGL\VSTGLTimer.h" />

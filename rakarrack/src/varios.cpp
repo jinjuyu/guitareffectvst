@@ -21,18 +21,18 @@
 
 */
 
-#include <FL/Fl_Pixmap.H>
+/*#include <FL/Fl_Pixmap.H>
 #include <FL/Fl_Group.H>
 #include <FL/fl_ask.H>
 #include <FL/Fl_Widget.H>
-#include "icono_rakarrack_32x32.xpm"
+#include "icono_rakarrack_32x32.xpm"*/
 #include "global.h"
 
 int
 RKR::Message (int prio, const char *labelwin, const char *message_text)
 {
     if((mess_dis) && (prio==0)) return(0);
-
+	/*
     Fl_Widget *w = fl_message_icon ();
 
     Fl_Image *a = new Fl_Pixmap (icono_rakarrack_32x32_xpm);
@@ -43,17 +43,18 @@ RKR::Message (int prio, const char *labelwin, const char *message_text)
     w->parent ()->copy_label (labelwin);
     fl_message ("%s",message_text);
     return (0);
-
+	*/
 };
 
 
 void
 RKR::Error_Handle(int num)
 {
+	
     char meslabel[64];
     char error_msg[256];
     memset(meslabel,0, sizeof(meslabel));
-    sprintf(meslabel, "%s %s",jackcliname,VERSION);
+    sprintf(meslabel, "asd asd");//,jackcliname,VERSION);
 
     error_num = 0;
     memset(error_msg,0,sizeof(error_msg));
@@ -121,7 +122,7 @@ RKR::PrefNom (const char *dato)
 int
 RKR::Get_Bogomips()
 {
-
+	/*
     char temp[256];
     char *tmp;
     FILE *fp;
@@ -160,7 +161,7 @@ RKR::Get_Bogomips()
         return(1);
     }
 
-    return(0);
+    return(0);*/
 
 }
 
@@ -169,10 +170,11 @@ RKR::Get_Bogomips()
 int
 RKR::TapTempo()
 {
+	/*
     int i;
     double AvTempo;
     double latency= 0.04;
-    gettimeofday(&timeA, NULL);
+    //gettimeofday(&timeA, NULL);
 
     double Aseconds =  ((double) timeA.tv_sec + (double)timeA.tv_usec * 0.000001);
     if(Tap_Selection==0) Aseconds += latency;
@@ -197,14 +199,14 @@ RKR::TapTempo()
     Tap_timeC = Aseconds;
     if(Tap_Selection)Tap_Display=1;
     Update_tempo();
-    return(Tap_TempoSet);
+    return(Tap_TempoSet);*/
 
 }
 
 void
 RKR::TapTempo_Timeout(int state)
 {
-
+/*
     gettimeofday(&timeA, NULL);
     double Aseconds = (double) timeA.tv_sec + (double) timeA.tv_usec* 0.000001;
     if (!state) {
@@ -213,7 +215,7 @@ RKR::TapTempo_Timeout(int state)
     }
     double timediff = Aseconds - Tap_timeC;
     if( timediff > 8.0f)   Tap_Display = 2;
-
+	*/
 }
 
 

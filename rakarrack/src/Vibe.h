@@ -25,7 +25,7 @@
 
 #ifndef Vibe_H
 #define Vibe_H
-
+#pragma warning(disable: 4244)
 #include "global.h"
 #include "EffectLFO.h"
 

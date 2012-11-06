@@ -27,8 +27,8 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <sys/types.h>
-#include <unistd.h>
-#include <FL/Fl_Preferences.H>
+//#include <unistd.h>
+//#include <FL/Fl_Preferences.H>
 #include "global.h"
 
 int Pexitprogram, preset;
@@ -62,12 +62,13 @@ char *s_uuid;
 char *statefile;
 char *filetoload;
 char *banktoload;
-Fl_Preferences rakarrack (Fl_Preferences::USER, WEBSITE, PACKAGE);
-Pixmap p, mask;
-XWMHints *hints;
+//Fl_Preferences rakarrack (Fl_Preferences::USER, WEBSITE, PACKAGE);
+//Pixmap p, mask;
+//XWMHints *hints;
 
 RKR::RKR ()
 {
+	/*
     db6booster=0;
     jdis=0;
     jshut=0;
@@ -205,7 +206,7 @@ RKR::RKR ()
             strcpy (j_names, jack_names[i]);
         else
             strcpy (j_names, "");
-        rakarrack.get (PrefNom (temp), jack_po[i].name, j_names, 128);
+//        rakarrack.get (PrefNom (temp), jack_po[i].name, j_names, 128);
 
     }
 
@@ -221,7 +222,7 @@ RKR::RKR ()
             strcpy (j_names, jack_inames[i]);
         else
             strcpy (j_names, "");
-        rakarrack.get (PrefNom (temp), jack_poi[i].name, j_names, 128);
+//        rakarrack.get (PrefNom (temp), jack_poi[i].name, j_names, 128);
     }
 
 
@@ -305,7 +306,7 @@ RKR::RKR ()
 
     beat = new beattracker();
     efx_Tuner = new Tuner ();
-    efx_MIDIConverter = new MIDIConverter(jackcliname);
+//    efx_MIDIConverter = new MIDIConverter(jackcliname);
     RecNote = new Recognize (efxoutl, efxoutr, rtrig);
     RC = new RecChord ();
 
@@ -320,7 +321,7 @@ RKR::RKR ()
     memset (UserRealName, 0, sizeof (char) * 128);
 
 // Names
-
+*/
     /*
     //Filter
 
@@ -332,7 +333,7 @@ RKR::RKR ()
     32  - Dynamics
     64  - Processing & EQ
     128 - Synthesis
-    */
+    * /
 
     NumEffects = 47;
 
@@ -797,7 +798,7 @@ RKR::RKR ()
 
     New_Bank ();
     init_rkr ();
-
+	*/
 }
 
 
@@ -885,7 +886,7 @@ RKR::init_rkr ()
     char temp[128];
     memset (temp, 0, sizeof (temp));
     sprintf (temp, "%s/Default.rkrb", DATADIR);
-    rakarrack.get (PrefNom ("Bank Filename"), BankFilename, temp, 127);
+//    rakarrack.get (PrefNom ("Bank Filename"), BankFilename, temp, 127);
     loadnames();
 
     if (commandline == 0) {
@@ -933,11 +934,11 @@ RKR::ConnectMIDI ()
 // Get config settings and init settings
 // Get MIDI IN Setting
 
-    rakarrack.get (PrefNom ("Auto Connect MIDI IN"), aconnect_MI, 0);
+/*    rakarrack.get (PrefNom ("Auto Connect MIDI IN"), aconnect_MI, 0);
     rakarrack.get (PrefNom ("MIDI IN Device"), MID, "", 40);
     if (aconnect_MI)
         Conecta ();
-
+		*/
 
 }
 
@@ -1499,9 +1500,9 @@ RKR::Alg (float *inl1, float *inr1, float *origl, float *origr, void *)
         if (Tuner_Bypass)
             efx_Tuner->schmittFloat (PERIOD, efxoutl, efxoutr);
 
-        if (MIDIConverter_Bypass)
+/*        if (MIDIConverter_Bypass)
             efx_MIDIConverter->schmittFloat (PERIOD, efxoutl, efxoutr);
-
+			*/
 
         if ((Harmonizer_Bypass) && (have_signal)) {
             if (efx_Har->mira) {

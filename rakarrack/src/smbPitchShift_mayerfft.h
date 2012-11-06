@@ -37,9 +37,7 @@
 *****************************************************************************/
 
 
-#ifndef PITCH_H
-#define PITCH_H
-
+#pragma once
 #include <string.h>
 #include <math.h>
 #include <stdio.h>
@@ -47,6 +45,8 @@
 
 
 #define MAX_FRAME_LENGTH 2048
+
+
 class PitchShifter
 {
 public:
@@ -78,4 +78,3 @@ private:
 };
 
 
-#endif /*  */

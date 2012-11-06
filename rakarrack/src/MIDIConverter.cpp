@@ -7,6 +7,7 @@
  * GNU General Public License, as published by the Free Software Foundation.
  * Please see the file COPYING for details.
  */
+/*
 #include "MIDIConverter.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -339,3 +340,4 @@ MIDIConverter::setVelAdjust (int val)
 };
 
 
+*/

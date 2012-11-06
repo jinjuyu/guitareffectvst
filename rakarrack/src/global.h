@@ -19,10 +19,63 @@
  Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
 
 */
-
+#pragma warning(disable: 4305)
+	/*	Win32 doesn't seem to have these functions. 
+	**	Therefore implement inline versions of these functions here.
+	*/
 
 #ifndef DXEMU_H
 #define DXEMU_H
+
+	
+__inline long int 
+lrint (double flt)
+{	int intgr;
+
+	_asm
+	{	fld flt
+		fistp intgr
+		} ;
+			
+	return intgr ;
+} 
+	
+__inline long int 
+lrintf (float flt)
+{	int intgr;
+
+	_asm
+	{	fld flt
+		fistp intgr
+		} ;
+			
+	return intgr ;
+}
+
+__inline long long int 
+llrint (double flt)
+{	long long int intgr;
+
+	_asm
+	{	fld flt
+		fistp intgr
+		} ;
+			
+	return intgr ;
+} 
+	
+__inline long long int 
+llrintf (float flt)
+{	long long int intgr;
+
+	_asm
+	{	fld flt
+		fistp intgr
+		} ;
+			
+	return intgr ;
+}
+
 
 
 #define D_PI 6.283185f
@@ -38,7 +91,7 @@
 #define MAX_FILTER_STAGES 5
 #define RND (rand()/(RAND_MAX+1.0))
 #define RND1 (((float) rand())/(((float) RAND_MAX)+1.0f))
-#define F2I(f,i) (i)=((f>0) ? ( (int)(f) ) :( (int)(f-1.0f) ))
+#define F2I(f,i) ((i)=((f>0) ? ( (int)(f) ) :( (int)(f-1.0f) )))
 #define dB2rap(dB) (float)((expf((dB)*LOG_10/20.0f)))
 #define rap2dB(rap) (float)((20*log(rap)/LOG_10))
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
@@ -167,16 +220,16 @@ static inline float f_pow2(float x)
 
 #define f_exp(x) f_pow2(x * LN2R)
 
-#include "config.h"
+//#include "config.h"
 #include <signal.h>
-#include <dirent.h>
+#include "dirent.h"
 #include <search.h>
-#include <sys/time.h>
-#include <alsa/asoundlib.h>
-#include <X11/xpm.h>
-#include <jack/jack.h>
-#include <jack/midiport.h>
-#include <FL/Fl_Preferences.H>
+#include <time.h>
+//#include <alsa/asoundlib.h>
+//#include <X11/xpm.h>
+//#include <jack/jack.h>
+//#include <jack/midiport.h>
+//#include <FL/Fl_Preferences.H>
 #include "FPreset.h"
 #include "Reverb.h"
 #include "Chorus.h"
@@ -192,7 +245,7 @@ static inline float f_pow2(float x)
 #include "MusicDelay.h"
 #include "Gate.h"
 #include "Tuner.h"
-#include "MIDIConverter.h"
+//#include "MIDIConverter.h"
 #include "RecognizeNote.h"
 #include "RecChord.h"
 #include "NewDist.h"
@@ -253,8 +306,8 @@ extern float r__ratio[12];
 extern int Wave_res_amount;
 extern int Wave_up_q;
 extern int Wave_down_q;
-extern Pixmap p, mask;
-extern XWMHints *hints;
+//extern Pixmap p, mask;
+//extern XWMHints *hints;
 extern float freqs[12];
 extern float lfreqs[12];
 extern float aFreq;
@@ -317,7 +370,7 @@ public:
     void ConnectMIDI ();
     void ActiveUn(int value);
     void ActOnOff();
-    void jack_process_midievents (jack_midi_event_t *midievent);
+    //void jack_process_midievents (jack_midi_event_t *midievent);
     void process_midi_controller_events(int parameter, int value);
     int ret_Tempo(int value);
     int ret_LPF(int value);
@@ -401,9 +454,9 @@ public:
     class Vibe *efx_Vibe;
     class Infinity *efx_Infinity;
 
-    jack_client_t *jackclient;
-    jack_options_t options;
-    jack_status_t status;
+    //jack_client_t *jackclient;
+    //jack_options_t options;
+    //jack_status_t status;
     char jackcliname[64];
 
     int db6booster;
@@ -663,7 +716,7 @@ public:
     double u_down;
     double u_up;
 
-    timeval timeA;
+    //timeval timeA;
 
     float booster;
     float cpuload;
@@ -773,7 +826,7 @@ public:
 
     // Alsa MIDI
 
-    snd_seq_t *midi_in, *midi_out;
+    //snd_seq_t *midi_in, *midi_out;
 
 
     struct JackPorts {

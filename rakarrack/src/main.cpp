@@ -21,7 +21,7 @@
 
 */
 
-
+/*
 #include <getopt.h>
 #include <sched.h>
 #include <sys/mman.h>
@@ -246,3 +246,4 @@ main (int argc, char *argv[])
 
 };
 
+*/

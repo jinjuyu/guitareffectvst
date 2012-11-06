@@ -132,7 +132,7 @@ Looper::out (float * smpsl, float * smpsr)
 {
     int i;
     float rswell, lswell;
-    float ticktock[PERIOD];
+    float *ticktock = new float[PERIOD];
     if((Pmetro) && (Pplay) && (!Pstop)) ticker.metronomeout(ticktock);
 
     for (i = 0; i < PERIOD; i++) {
@@ -200,7 +200,7 @@ Looper::out (float * smpsl, float * smpsr)
         }
     };
 
-
+	delete[] ticktock;
 };
 
 
