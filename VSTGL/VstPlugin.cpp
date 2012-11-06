@@ -45,9 +45,15 @@ frames(0),
 effectName("VSTGLExample"),
 vendorName("ndc Plugs")
 {
+	// Setup RAKARRACK global vars
+	SAMPLE_RATE = samplerate;
+	fSAMPLE_RATE = samplerate;
+
+	// RAKARRACK effects
 	mEffEcho = new Echo(nullptr, nullptr);
 	mEffDistorsion = new Distorsion(nullptr, nullptr);
 
+	//presets
 
 	int preset[] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
     for (int n = 0; n < 9; n++)
@@ -58,6 +64,8 @@ vendorName("ndc Plugs")
         mEffDistorsion->changepar (n, preset2[n]);
 	
 	
+
+	// originals
 	int i;
 
 	//Initialise parameters.
@@ -163,7 +171,8 @@ void VstPlugin::processReplacing(float **inputs,
 		//outputs[0][i] = inputs[0][i];
 		//outputs[1][i] = inputs[1][i];
 	}
-	mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
+	//mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
+	mEffEcho->processReplacing(inputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
 	{
