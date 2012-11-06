@@ -32,8 +32,8 @@
 extern void* hInstance;
 
 //Used to check/setup Vertical Sync.
-typedef void (APIENTRY *PFNWGLEXTSWAPCONTROLPROC) (int);
-typedef int (*PFNWGLEXTGETSWAPINTERVALPROC) (void);
+//typedef void (APIENTRY *PFNWGLEXTSWAPCONTROLPROC) (int);
+//typedef int (*PFNWGLEXTGETSWAPINTERVALPROC) (void);
 
 //Used to check/setup Antialiasing.
 typedef BOOL (WINAPI * PFNWGLCHOOSEPIXELFORMATARBPROC) (HDC hdc, const int *piAttribIList, const FLOAT *pfAttribFList, UINT nMaxFormats, int *piFormats, UINT *nNumFormats);
@@ -215,11 +215,11 @@ void VSTGLEditor::createWindow()
 //-----------------------------------------------------------------------------
 void VSTGLEditor::setupVSync()
 {
-	unsigned char *extensions;
-	PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT = NULL;
+	//unsigned char *extensions;
+	//PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT = NULL;
 
 	//Check the graphics card's extensions.
-	extensions = const_cast<unsigned char *>(glGetString(GL_EXTENSIONS));
+	//extensions = const_cast<unsigned char *>(glGetString(GL_EXTENSIONS));
   
 	//Check if extensions contains the vertical sync string.
 	if(WGLEW_EXT_swap_control)
@@ -232,14 +232,14 @@ void VSTGLEditor::setupVSync()
 //-----------------------------------------------------------------------------
 void VSTGLEditor::setupAntialiasing()
 {
-	unsigned char *extensions;
-	PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB;
+	//unsigned char *extensions;
+	//PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB;
 	int pixelFormat;
 	UINT numFormats;
 	float fAttributes[] = {0,0};
 
 	//Check the graphics card's extensions.
-	extensions = const_cast<unsigned char *>(glGetString(GL_EXTENSIONS));
+	//extensions = const_cast<unsigned char *>(glGetString(GL_EXTENSIONS));
   
 	//Check if extensions contains the multisample string.
 	if(GLEW_ARB_multisample)
