@@ -366,9 +366,9 @@ RKR::Update_tempo()
     if(Vibe_Bypass) efx_Vibe->changepar(1,Tap_TempoSetL);
     if(Infinity_Bypass) efx_Infinity->changepar(12,Tap_TempoSetL);
 
-    if(Echo_Bypass) {
+    /*if(Echo_Bypass) {
         efx_Echo->Tempo2Delay(Tap_TempoSetD);
-    }
+    }*/
 
 }
 

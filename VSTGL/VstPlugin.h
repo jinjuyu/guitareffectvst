@@ -26,7 +26,8 @@
 
 #include "audioeffectx.h"
 #include <string>
-
+#include "Echo.h"
+#include "Distorsion.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -46,7 +47,8 @@ public:
 	VstPlugin(audioMasterCallback audioMaster);
 	///	Destructor.
 	~VstPlugin();
-
+	Echo *mEffEcho;
+	Distorsion *mEffDistorsion;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples

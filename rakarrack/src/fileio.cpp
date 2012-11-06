@@ -77,7 +77,7 @@ void RKR::putbuf(char *buf, int j)
                 &lv[5][5], &lv[5][6], &lv[5][7], &lv[5][8], &lv[5][9],
                 &lv[5][10], &lv[5][11], &lv[5][12],&Overdrive_B);
         break;
-
+/*
     case 2:
         //Distorsion
         sscanf (buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
@@ -85,7 +85,7 @@ void RKR::putbuf(char *buf, int j)
                 &lv[6][5], &lv[6][6], &lv[6][7], &lv[6][8], &lv[6][9],
                 &lv[6][10], &lv[6][11], &lv[6][12], &Distorsion_B);
         break;
-
+		*/
     case 0:
         //EQ1
         sscanf (buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
@@ -437,7 +437,7 @@ void RKR::getbuf(char *buf, int j)
                  efx_Rev->getpar (10), efx_Rev->getpar (11), Reverb_Bypass);
         break;
 
-    case 4:
+    /*case 4:
         //Echo
         sprintf (buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
                  efx_Echo->getpar (0), efx_Echo->getpar (1),
@@ -446,7 +446,7 @@ void RKR::getbuf(char *buf, int j)
                  efx_Echo->getpar (6), efx_Echo->getpar(7),
                  efx_Echo->getpar (8), Echo_Bypass);
         break;
-
+		*/
     case 5:
         //Chorus
         sprintf (buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
@@ -483,7 +483,7 @@ void RKR::getbuf(char *buf, int j)
                  Phaser_Bypass);
         break;
 
-    case 3:
+    /*case 3:
         //Overdrive
         sprintf (buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
                  efx_Overdrive->getpar (0), efx_Overdrive->getpar (1),
@@ -495,7 +495,7 @@ void RKR::getbuf(char *buf, int j)
                  efx_Overdrive->getpar (12),Overdrive_Bypass);
         break;
 
-    case 2:
+/*    case 2:
         //Distorsion
         sprintf (buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
                  efx_Distorsion->getpar (0), efx_Distorsion->getpar (1),
@@ -506,7 +506,7 @@ void RKR::getbuf(char *buf, int j)
                  efx_Distorsion->getpar (10), efx_Distorsion->getpar (11),
                  efx_Distorsion->getpar(12),Distorsion_Bypass);
         break;
-
+		*/
     case 0:
         //EQ1
         sprintf (buf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d\n",
@@ -1201,7 +1201,7 @@ RKR::Actualizar_Audio ()
             Compressor_Bypass = Compressor_B;
             break;
 
-        case 2://Distortion
+/*        case 2://Distortion
 
             Distorsion_Bypass = 0;
             efx_Distorsion->cleanup();
@@ -1218,7 +1218,7 @@ RKR::Actualizar_Audio ()
                 efx_Overdrive->changepar (i, lv[5][i]);
             Overdrive_Bypass = Overdrive_B;
             break;
-
+			/*
         case 4://Echo
 
             Echo_Bypass = 0;
@@ -1227,7 +1227,7 @@ RKR::Actualizar_Audio ()
                 efx_Echo->changepar (i, lv[1][i]);
             Echo_Bypass = Echo_B;
             break;
-
+			*/
         case 5://Chorus
 
             Chorus_Bypass = 0;
@@ -1897,8 +1897,8 @@ RKR::New ()
     Chorus_B = 0;
     Flanger_B = 0;
     Phaser_B = 0;
-    Overdrive_B = 0;
-    Distorsion_B = 0;
+    //Overdrive_B = 0;
+//    Distorsion_B = 0;
     EQ1_B = 0;
     EQ2_B = 0;
     Compressor_B = 0;
@@ -2139,8 +2139,8 @@ RKR::Bank_to_Preset (int i)
     Chorus_B = Bank[i].lv[2][19];
     Flanger_B = Bank[i].lv[3][19];
     Phaser_B = Bank[i].lv[4][19];
-    Overdrive_B = Bank[i].lv[5][19];
-    Distorsion_B = Bank[i].lv[6][19];
+    //Overdrive_B = Bank[i].lv[5][19];
+//    Distorsion_B = Bank[i].lv[6][19];
     EQ1_B = Bank[i].lv[7][19];
     EQ2_B = Bank[i].lv[8][19];
     Compressor_B = Bank[i].lv[9][19];
@@ -2228,18 +2228,18 @@ RKR::Preset_to_Bank (int i)
 
     for (j = 0; j <= 11; j++)
         lv[0][j] = efx_Rev->getpar (j);
-    for (j = 0; j <= 8; j++)
-        lv[1][j] = efx_Echo->getpar (j);
+    //for (j = 0; j <= 8; j++)
+        //lv[1][j] = efx_Echo->getpar (j);
     for (j = 0; j <= 12; j++)
         lv[2][j] = efx_Chorus->getpar (j);
     for (j = 0; j <= 12; j++)
         lv[3][j] = efx_Flanger->getpar (j);
     for (j = 0; j <= 11; j++)
         lv[4][j] = efx_Phaser->getpar (j);
-    for (j = 0; j <= 12; j++)
+    /*for (j = 0; j <= 12; j++)
         lv[5][j] = efx_Overdrive->getpar (j);
     for (j = 0; j <= 12; j++)
-        lv[6][j] = efx_Distorsion->getpar (j);
+        lv[6][j] = efx_Distorsion->getpar (j);*/
     for (j = 0; j <= 8; j++)
         lv[9][j] = efx_Compressor->getpar (j + 1);
     for (j = 0; j <= 9; j++)
@@ -2350,8 +2350,8 @@ RKR::Preset_to_Bank (int i)
     Bank[i].lv[2][19] = Chorus_Bypass;
     Bank[i].lv[3][19] = Flanger_Bypass;
     Bank[i].lv[4][19] = Phaser_Bypass;
-    Bank[i].lv[5][19] = Overdrive_Bypass;
-    Bank[i].lv[6][19] = Distorsion_Bypass;
+    //Bank[i].lv[5][19] = Overdrive_Bypass;
+//    Bank[i].lv[6][19] = Distorsion_Bypass;
     Bank[i].lv[7][19] = EQ1_Bypass;
     Bank[i].lv[8][19] = EQ2_Bypass;
     Bank[i].lv[9][19] = Compressor_Bypass;

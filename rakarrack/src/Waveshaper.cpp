@@ -57,7 +57,7 @@ Waveshaper::Waveshaper()
     }
 
 
-    temps = (float *) malloc (sizeof (float) * PERIOD * period_coeff);
+    //temps = (float *) malloc (sizeof (float) * PERIOD * period_coeff);
     u_up= (double)period_coeff;
     u_down = 1.0 / u_up;
 
@@ -115,10 +115,10 @@ Waveshaper::waveshapesmps (int n, float * smps, int type,
 {
 
     int nn=n;
-	
+	temps = (float *) malloc (sizeof (float) * PERIOD * period_coeff);
     if(Wave_res_amount > 0) {
         nn=n*period_coeff;
-        //U_Resample->mono_out(smps,temps,n,u_up,nn);
+        U_Resample->mono_out(smps,temps,n,u_up,nn);
     }
 
     else memcpy(temps,smps,sizeof(float)*n);
@@ -561,6 +561,6 @@ Waveshaper::waveshapesmps (int n, float * smps, int type,
     } else
         memcpy(smps,temps,sizeof(float)*n);
 		
-
+	free(temps);
 };
 

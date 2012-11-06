@@ -1416,10 +1416,10 @@ RKR::cleanup_efx ()
 
     efx_EQ1->cleanup ();
     efx_Rev->cleanup ();
-    efx_Distorsion->cleanup ();
-    efx_Overdrive->cleanup ();
+//    efx_Distorsion->cleanup ();
+    //efx_Overdrive->cleanup ();
     efx_Compressor->cleanup ();
-    efx_Echo->cleanup ();
+    //efx_Echo->cleanup ();
     efx_Chorus->cleanup ();
     efx_Flanger->cleanup ();
     efx_Phaser->cleanup ();
@@ -1589,26 +1589,26 @@ RKR::Alg (float *inl1, float *inr1, float *origl, float *origr, void *)
                 }
                 break;
 
-            case 2:
+/*            case 2:
                 if (Distorsion_Bypass) {
                     efx_Distorsion->out (efxoutl, efxoutr);
                     Vol_Efx (2, efx_Distorsion->outvolume);
                 }
                 break;
 
-            case 3:
+/*            case 3:
                 if (Overdrive_Bypass) {
                     efx_Overdrive->out (efxoutl, efxoutr);
                     Vol_Efx (3, efx_Overdrive->outvolume);
                 }
                 break;
 
-            case 4:
+/*            case 4:
                 if (Echo_Bypass) {
                     efx_Echo->out (efxoutl, efxoutr);
                     Vol_Efx (4, efx_Echo->outvolume);
                 }
-                break;
+                break;*/
             case 8:
                 if (Reverb_Bypass) {
                     efx_Rev->out (efxoutl, efxoutr);

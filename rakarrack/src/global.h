@@ -233,9 +233,9 @@ static inline float f_pow2(float x)
 #include "FPreset.h"
 #include "Reverb.h"
 #include "Chorus.h"
-#include "Echo.h"
+//#include "Echo.h"
 #include "Phaser.h"
-#include "Distorsion.h"
+//#include "Distorsion.h"
 #include "EQ.h"
 #include "Compressor.h"
 #include "Alienwah.h"
@@ -401,8 +401,8 @@ public:
     class EQ *efx_EQ1;
     class EQ *efx_EQ2;
     class Echo *efx_Echo;
-    class Distorsion *efx_Distorsion;
-    class Distorsion *efx_Overdrive;
+    //class Distorsion *efx_Distorsion;
+    //class Distorsion *efx_Overdrive;
     class Compressor *efx_Compressor;
     class DynamicFilter *efx_WhaWha;
     class Alienwah *efx_Alienwah;
@@ -474,7 +474,7 @@ public:
     int Flanger_Bypass;
     int Phaser_Bypass;
     int Overdrive_Bypass;
-    int Distorsion_Bypass;
+    //int Distorsion_Bypass;
     int Echo_Bypass;
     int EQ1_Bypass;
     int EQ2_Bypass;
@@ -524,7 +524,7 @@ public:
     int APhaser_B;
     int DFlange_B;
     int Overdrive_B;
-    int Distorsion_B;
+    //int Distorsion_B;
     int Echo_B;
     int EQ1_B;
     int EQ2_B;

@@ -29,13 +29,16 @@
 
 #include "global.h"
 #include "delayline.h"
-
+ 
 class Echo
 {
 public:
     Echo (float * efxoutl_, float * efxoutr_);
     ~Echo ();
     void out (float * smpsl, float * smpr);
+	void processReplacing (float **inputs,
+										float **outputs,
+										int sampleFrames);
     void setpreset (int npreset);
     void changepar (int npar, int value);
     int getpar (int npar);

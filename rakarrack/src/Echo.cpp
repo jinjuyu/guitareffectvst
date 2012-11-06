@@ -32,6 +32,7 @@
 
 Echo::Echo (float * efxoutl_, float * efxoutr_)
 {
+	PERIOD = 32768;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     //default values
@@ -132,6 +133,54 @@ Echo::out (float * smpsl, float * smpsr)
 
         efxoutl[i]= l;
         efxoutr[i]= r;
+
+        //LowPass Filter
+        oldl = ldl * hidamp + oldl * (1.0f - hidamp);
+        oldr = rdl * hidamp + oldr * (1.0f - hidamp);
+        oldl += DENORMAL_GUARD;
+        oldr += DENORMAL_GUARD;
+
+    };
+
+};
+
+void
+Echo::processReplacing (float **inputs,
+								 float **outputs,
+								 int sampleFrames)
+{
+    int i;
+    float l, r, ldl, rdl, ldlout, rdlout, rvl, rvr;
+
+    for (i = 0; i < sampleFrames; i++) {
+
+        ldl = ldelay->delay_simple(oldl, ltime, 0, 1, 0);
+        rdl = rdelay->delay_simple(oldr, rtime, 0, 1, 0);
+
+        if(Preverse) {
+            rvl = ldelay->delay_simple(oldl, ltime, 1, 0, 1)*ldelay->envelope();
+            rvr = rdelay->delay_simple(oldr, rtime, 1, 0, 1)*rdelay->envelope();
+            ldl = ireverse*ldl + reverse*rvl;
+            rdl = ireverse*rdl + reverse*rvr;
+        }
+
+        l = ldl * (1.0f - lrcross) + rdl * lrcross;
+        r = rdl * (1.0f - lrcross) + ldl * lrcross;
+        ldl = l;
+        rdl = r;
+
+        ldlout = -ldl*fb;
+        rdlout = -rdl*fb;
+        if (!Pdirect) {
+            l = ldl = inputs[0][i] * panning + ldlout;
+            r = rdl = inputs[1][i] * (1.0f - panning) + rdlout;
+        } else {
+            ldl = inputs[0][i] * panning + ldlout;
+            rdl = inputs[1][i] * (1.0f - panning) + rdlout;
+        }
+
+        outputs[0][i]= l;
+        outputs[1][i]= r;
 
         //LowPass Filter
         oldl = ldl * hidamp + oldl * (1.0f - hidamp);

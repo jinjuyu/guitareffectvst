@@ -26,14 +26,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Distorsion.h"
-
+#include "Resample.h"
 Distorsion::Distorsion (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
-    octoutl = (float *) malloc (sizeof (float) * PERIOD);
-    octoutr = (float *) malloc (sizeof (float) * PERIOD);
+    //octoutl = (float *) malloc (sizeof (float) * PERIOD);
+    //octoutr = (float *) malloc (sizeof (float) * PERIOD);
 
     lpfl = new AnalogFilter (2, 22000, 1, 0);
     lpfr = new AnalogFilter (2, 22000, 1, 0);
@@ -50,6 +50,7 @@ Distorsion::Distorsion (float * efxoutl_, float * efxoutr_)
 
     dwshapel = new Waveshaper();
     dwshaper = new Waveshaper();
+	///Resample *asd = new Resample(0);
 
     //default values
     Ppreset = 0;
@@ -101,16 +102,16 @@ Distorsion::cleanup ()
  */
 
 void
-Distorsion::applyfilters (float * efxoutl, float * efxoutr)
+Distorsion::applyfilters (float * _efxoutl, float * _efxoutr)
 {
-    lpfl->filterout (efxoutl);
-    hpfl->filterout (efxoutl);
+    lpfl->filterout (_efxoutl);
+    hpfl->filterout (_efxoutl);
 
-    if (Pstereo != 0) {
+//    if (Pstereo != 0) {
         //stereo
-        lpfr->filterout (efxoutr);
-        hpfr->filterout (efxoutr);
-    };
+        lpfr->filterout (_efxoutr);
+        hpfr->filterout (_efxoutr);
+  //  };
 
 };
 
@@ -207,7 +208,102 @@ Distorsion::out (float * smpsl, float * smpsr)
     DCl->filterout (efxoutl);
 };
 
+void
+Distorsion::processReplacing (float **inputs,
+								 float **outputs,
+								 int sampleFrames)
+{
 
+    int i;
+    float l, r, lout, rout;
+	PERIOD = sampleFrames;
+
+	octoutl = (float *) malloc (sizeof (float) * PERIOD);
+    octoutr = (float *) malloc (sizeof (float) * PERIOD);
+
+    float inputvol = powf (5.0f, ((float)Pdrive - 32.0f) / 127.0f);
+    if (Pnegate != 0)
+        inputvol *= -1.0f;
+
+    if (Pstereo != 0) {
+        //Stereo
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] = inputs[0][i] * inputvol * 2.0f;
+            outputs[1][i] = inputs[1][i] * inputvol * 2.0f;
+        };
+    } else {
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] = inputs[0][i] * inputvol * 2.0f;
+            outputs[1][i] = inputs[1][i] * inputvol * 2.0f;
+        };
+    };
+
+    if (Pprefiltering != 0)
+        applyfilters (outputs[0], outputs[1]);
+
+    //no optimised, yet (no look table)
+
+
+    dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
+    dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
+	
+    if (Pprefiltering == 0)
+        applyfilters (outputs[0], outputs[1]);
+
+
+    if (octmix > 0.01f) {
+        for (i = 0; i < PERIOD; i++) {
+            lout = outputs[0][i];
+            rout = outputs[1][i];
+
+
+            if ( (octave_memoryl < 0.0f) && (lout > 0.0f) ) togglel *= -1.0f;
+
+            octave_memoryl = lout;
+
+            if ( (octave_memoryr < 0.0f) && (rout > 0.0f) ) toggler *= -1.0f;
+
+            octave_memoryr = rout;
+
+            octoutl[i] = lout *  togglel;
+            octoutr[i] = rout *  toggler;
+        }
+
+        blockDCr->filterout (octoutr);
+        blockDCl->filterout (octoutl);
+    }
+
+
+
+    float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
+
+    for (i = 0; i < PERIOD; i++) {
+        lout = outputs[0][i];
+        rout = outputs[1][i];
+
+
+        l = lout * (1.0f - lrcross) + rout * lrcross;
+        r = rout * (1.0f - lrcross) + lout * lrcross;
+
+        if (octmix > 0.01f) {
+            lout = l * (1.0f - octmix) + octoutl[i] * octmix;
+            rout = r * (1.0f - octmix) + octoutr[i] * octmix;
+        } else {
+            lout = l;
+            rout = r;
+        }
+
+        outputs[0][i] = lout * 2.0f * level * panning;
+        outputs[1][i] = rout * 2.0f * level * (1.0f -panning);
+
+    };
+
+    DCr->filterout (outputs[1]);
+    DCl->filterout (outputs[0]);
+	
+	free( octoutl);
+	free( octoutr);
+}
 /*
  * Parameter control
  */

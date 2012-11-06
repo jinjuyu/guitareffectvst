@@ -45,6 +45,19 @@ frames(0),
 effectName("VSTGLExample"),
 vendorName("ndc Plugs")
 {
+	mEffEcho = new Echo(nullptr, nullptr);
+	mEffDistorsion = new Distorsion(nullptr, nullptr);
+
+
+	int preset[] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
+    for (int n = 0; n < 9; n++)
+        mEffEcho->changepar (n, preset[n]);
+	
+	int preset2[] =  {0, 64, 127, 127, 12, 13, 0, 5078, 56, 0, 1};
+    for (int n = 0; n < sizeof(preset2); n++)
+        mEffDistorsion->changepar (n, preset2[n]);
+	
+	
 	int i;
 
 	//Initialise parameters.
@@ -74,7 +87,7 @@ vendorName("ndc Plugs")
 	setProgram(0);
 
 	//Set various constants.
-    setNumInputs(2);
+    setNumInputs(2); // 2in2out here
     setNumOutputs(2);
     canProcessReplacing(true);
     isSynth(false);
@@ -87,6 +100,8 @@ vendorName("ndc Plugs")
 //----------------------------------------------------------------------------
 VstPlugin::~VstPlugin()
 {
+	delete mEffEcho;
+	delete mEffDistorsion;
 	int i;
 
 	//Delete event queue.
@@ -117,10 +132,11 @@ void VstPlugin::process(float **inputs, float **outputs, VstInt32 sampleFrames)
 		if(numEvents>0)
 			processMIDI(i);
 
-		outputs[0][i] += inputs[0][i];
-		outputs[1][i] += inputs[1][i];
+		//outputs[0][i] += inputs[0][i];
+		//outputs[1][i] += inputs[1][i];
 	}
 	//If there are events remaining in the queue, update their delta values.
+	mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
 	if(numPendingEvents > 0)
 	{
 		for(i=0;i<numPendingEvents;++i)
@@ -144,9 +160,10 @@ void VstPlugin::processReplacing(float **inputs,
 		if(numEvents>0)
 			processMIDI(i);
 
-		outputs[0][i] = inputs[0][i];
-		outputs[1][i] = inputs[1][i];
+		//outputs[0][i] = inputs[0][i];
+		//outputs[1][i] = inputs[1][i];
 	}
+	mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
 	{
@@ -330,7 +347,7 @@ VstInt32 VstPlugin::canDo(char *text)
 	if(!strcmp(text, "1in1out")) return -1;
 	if(!strcmp(text, "1in2out")) return -1;
 	if(!strcmp(text, "2in1out")) return -1;
-	if(!strcmp(text, "2in2out")) return -1;
+	if(!strcmp(text, "2in2out")) return 1;
 	if(!strcmp(text, "2in4out")) return -1;
 	if(!strcmp(text, "4in2out")) return -1;
 	if(!strcmp(text, "4in4out")) return -1;
