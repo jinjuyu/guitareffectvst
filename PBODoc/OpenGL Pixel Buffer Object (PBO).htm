@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://www.songho.ca/opengl/gl_pbo.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>OpenGL Pixel Buffer Object (PBO)</title>
+
+<meta charset="utf-8">
+<meta name="description" content="OpenGL Pixel Buffer object (FBO) to store pixel data. It is used for faster pixel data transfer from/to GPU.">
+<meta name="keywords" content="OpenGL, Pixel Buffer Object, PBO, stream texture, asynchronous read">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="author" content="Song Ho Ahn">
+<meta name="generator" content="editplus">
+<meta name="robots" content="index,follow">
+
+<!-- favicon -->
+<link rel="icon" type="image/vnd.microsoft.icon" href="http://www.songho.ca/favicon.ico">
+
+<!-- CSS -->
+<link rel="stylesheet" type="text/css" media="screen" href="./OpenGL Pixel Buffer Object (PBO)_files/screen.css">
+<link rel="stylesheet" type="text/css" media="print" href="./OpenGL Pixel Buffer Object (PBO)_files/print.css">
+
+<script>window["_GOOG_TRANS_EXT_VER"] = "1";</script></head>
+
+
+<body>
+<div id="contentblock">
+
+
+<!-- nav -->
+<div style="clear:both; font-size:80%">
+<a href="http://www.songho.ca/opengl/index.html">←Back</a>
+</div>
+
+
+<h1>OpenGL Pixel Buffer Object (PBO)</h1>
+
+<p>
+<b>Related Topics:</b> <a href="http://www.songho.ca/opengl/gl_vbo.html">Vertex Buffer Object (VBO)</a>, <a href="http://www.songho.ca/opengl/gl_fbo.html">Frame Buffer Object (FBO)</a>
+<br>
+<b>Download:</b> <a href="http://www.songho.ca/opengl/files/pboUnpack.zip">pboUnpack.zip</a>, <a href="http://www.songho.ca/opengl/files/pboPack.zip">pboPack.zip</a>
+</p>
+
+<ul>
+	<li><a href="http://www.songho.ca/opengl/gl_pbo.html#overview">Overview</a></li>
+	<li><a href="http://www.songho.ca/opengl/gl_pbo.html#create">Creating PBO</a></li>
+	<li><a href="http://www.songho.ca/opengl/gl_pbo.html#map">Mapping PBO</a></li>
+	<li><a href="http://www.songho.ca/opengl/gl_pbo.html#unpack">Example: Streaming Texture Uploads with PBO</a></li>
+	<li><a href="http://www.songho.ca/opengl/gl_pbo.html#pack">Example: Asynchronous Readback with PBO</a></li>
+</ul>
+<h3 id="overview">Overview</h3>
+<div style="float:left; text-align:center">
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/gl_pbo01.png" width="279" height="164" alt="OpenGL Pixel Buffer Object (PBO)">
+<br>
+<span class="caption">OpenGL PBO</span>
+</div>
+<p>
+OpenGL ARB_pixel_buffer_object extension is very close to <a href="http://www.songho.ca/opengl/gl_vbo.html">ARB_vertex_buffer_object</a>. It simply expands ARB_vertex_buffer_object extension in order to store not only vertex data but also pixel data into the buffer objects. This buffer object storing pixel data is called Pixel Buffer Object (PBO). ARB_pixel_buffer_object extension borrows all VBO framework and APIs, plus, adds 2 additional <em>"target"</em> tokens. These tokens assist the PBO memory manger (OpenGL driver) to determine the best location of the buffer object; system memory, AGP (shared memory) or video memory. Also, the target tokens clearly specify the bound PBO will be used in one of 2 different operations; GL_PIXEL_PACK_BUFFER_ARB to transfer pixel data to a PBO, or GL_PIXEL_UNPACK_BUFFER_ARB to transfer pixel data from PBO.
+</p>
+<p style="clear:both">
+For example, glReadPixels() and glGetTexImage() are <em>"pack"</em> pixel operations, and glDrawPixels(), glTexImage2D() and glTexSubImage2D() are <em>"unpack"</em> operations. When a PBO is bound with GL_PIXEL_PACK_BUFFER_ARB token, glReadPixels() reads pixel data from a OpenGL framebuffer and write (pack) the data into the PBO. When a PBO is bound with GL_PIXEL_UNPACK_BUFFER_ARB token, glDrawPixels() reads (unpack) pixel data from the PBO and copy them to OpenGL framebuffer.
+</p>
+<p>
+The main advantage of PBO are fast pixel data transfer to and from a graphics card through DMA (Direct Memory Access) without involing CPU cycles. And, the other advantage of PBO is asynchronous DMA transfer. Let's compare a conventional texture transfer method with using a Pixel Buffer Object. The left side of the following diagram is a conventional way to load texture data from an image source (image file or video stream). The source is first loaded into system memory, and then, copied from system memory to an OpenGL texture object with glTexImage2D(). These 2 transfer processes (load and copy) are all performed by CPU.
+</p>
+<div style="float:left; text-align:center">
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/gl_pbo02.png" width="380" height="128" alt="Conventional texture loading">
+<br>
+<span class="caption">Texture loading without PBO</span>
+</div>
+<div style="float:left; text-align:center">
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/gl_pbo03.png" width="320" height="128" alt="Texture loading with PBO">
+<br>
+<span class="caption">Texture loading with PBO</span>
+</div>
+<p style="clear:both">
+On the contrary in the right side diagram, the image source can be directly loaded into a PBO, which is controlled by OpenGL. CPU still involves to load the source to the PBO, but, not for transferring the pixel data from a PBO to a texture object. Instead, GPU (OpenGL driver) manages copying data from a PBO to a texture object. This means OpenGL performs a DMA transfer operation without wasting CPU cycles. Further, OpenGL can schedule an asynchronous DMA transfer for later execution. Therefore, glTexImage2D() returns immediately, and CPU can perform something else without waiting the pixel transfer is done.
+</p>
+<p>
+There are 2 major PBO approaches to improve the performance of the pixel data transfer: <a href="http://www.songho.ca/opengl/gl_pbo.html#unpack">streaming texture update</a> and <a href="http://www.songho.ca/opengl/gl_pbo.html#pack">asynchronous read-back from the framebuffer</a>.
+</p>
+
+<h3 id="create">Creating PBO</h3>
+<p>
+As mentioned earlier, Pixel Buffer Object borrows all APIs from <a href="http://www.songho.ca/opengl/gl_vbo.html">Vertex Buffer Object</a>. The only difference is there are 2 additional tokens for PBOs: <strong>GL_PIXEL_PACK_BUFFER_ARB</strong> and <strong>GL_PIXEL_UNPACK_BUFFER_ARB</strong>. GL_PIXEL_PACK_BUFFER_ARB is for transferring pixel data from OpenGL to your application, and GL_PIXEL_UNPACK_BUFFER_ARB means transferring pixel data from an application to OpenGL. OpenGL refers to these tokens to determine the best memory space of a PBO, for example, a video memory for uploading (unpack) textures, or system memory for reading (pack) framebuffer. However, these target tokens are solely hint. OpenGL driver decides the appropriate location for you.
+</p>
+<p>
+Creating a PBO requires 3 steps;
+</p>
+<ol>
+	<li>Generate a new buffer object with <strong>glGenBuffersARB()</strong>.</li>
+	<li>Bind the buffer object with <strong>glBindBufferARB()</strong>.</li>
+	<li>Copy pixel data to the buffer object with <strong>glBufferDataARB()</strong>.</li>
+</ol>
+<p>
+If you specify a NULL pointer to the source array in glBufferDataARB(), then PBO allocates only a memory space with the given data size. The last parameter of glBufferDataARB() is another performance hint for PBO to provide how the buffer object will be used. <strong>GL_STREAM_DRAW_ARB</strong> is for streaming texture upload and <strong>GL_STREAM_READ_ARB</strong> is for asynchronous framebuffer read-back.
+</p>
+<p>
+Please check <a href="http://www.songho.ca/opengl/gl_vbo.html#create">VBO</a> for more details.
+</p>
+
+<h3 id="map">Mapping PBO</h3>
+<p>
+PBO provides a memory mapping mechanism to map the OpenGL controlled buffer object to the client's address space. So, the client can modify a portion of the buffer object or the entire buffer by using <strong>glMapBufferARB()</strong> and <strong>glUnmapBufferARB()</strong>.
+</p>
+<pre><code class="codeblock">
+void* glMapBufferARB(GLenum target, GLenum access)
+
+GLboolean glUnmapBufferARB(GLenum target)
+
+</code></pre>
+<p>
+glMapBufferARB() returns the pointer to the buffer object if success. Otherwise it returns NULL. The <em>target</em> parameter is GL_PIXEL_PACK_BUFFER_ARB or GL_PIXEL_UNPACK_BUFFER_ARB. The second parameter, <em>access</em> specifies what to do with the mapped buffer; read data from the PBO (GL_READ_ONLY_ARB), write data to the PBO (GL_WRITE_ONLY_ARB), or both (GL_READ_WRITE_ARB).
+</p>
+<p>
+Note that if GPU is still working with the buffer object, glMapBufferARB() will not return until GPU finishes its job with the corresponding buffer object. To avoid this stall(wait), call glBufferDataARB() with NULL pointer right before glMapBufferARB(). Then, OpenGL will discard the old buffer, and allocate new memory space for the buffer object.
+</p>
+<p>
+The buffer object must be unmapped with glUnmapBufferARB() after use of the PBO. glUnmapBufferARB() returns GL_TRUE if success. Otherwise, it returns GL_FALSE.
+</p>
+
+<h3 id="unpack">Example: Streaming Texture Uploads</h3>
+<p>
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/gl_pbo05.png" width="428" height="352" alt="Streaming Texture with PBO">
+</p>
+<p>
+Download the source and binary: <a href="http://www.songho.ca/opengl/files/pboUnpack.zip">pboUnpack.zip</a>.
+</p>
+
+<p>
+This demo application uploads (unpack) streaming textures to an OpenGL texture object using PBO. You can switch to the different transfer modes (single PBO, double PBOs and without PBO) by pressing the space key, and compare the performance differences.
+</p>
+<p>
+The texture sources are written directly on the mapped pixel buffer every frame in the PBO modes. Then, these data are transferred from the PBO to a texture object using glTexSubImage2D(). By using PBO, OpenGL can perform asynchronous DMA transfer between a PBO and a texture object. It significantly increases the texture upload performance. If asynchronous DMA transfer is supported, glTexSubImage2D() should return immediately, and CPU can process other jobs without waiting the actual texture copy.
+</p>
+<div style="float:left; text-align:center">
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/gl_pbo04.png" width="360" height="154" alt="Streaming texture uploads with 2 PBOs">
+<br>
+<span class="caption">Streaming texture uploads with 2 PBOs</span>
+</div>
+<p>
+To maximize the streaming transfer performance, you may use multiple pixel buffer objects. The diagram shows that 2 PBOs are used simultaneously; glTexSubImage2D() copies the pixel data from a PBO while the texture source is being written to the other PBO.
+</p>
+<p>
+For <em>n</em>th frame, <em>PBO 1</em> is used for glTexSubImage2D() and <em>PBO 2</em> is used to get new texture source. For <em>n+1</em>th frame, 2 pixel buffers are switching the roles and continue to update the texture. Because of asynchronous DMA transfer, the update and copy processes can be performed simultaneously. CPU updates the texture source to a PBO while GPU copies texture from the other PBO.
+</p>
+
+<pre><code class="codeblock">
+<span class="comment">// "index" is used to copy pixels from a PBO to a texture object</span>
+<span class="comment">// "nextIndex" is used to update pixels in the other PBO</span>
+index = (index + 1) % 2;
+nextIndex = (index + 1) % 2;
+
+<span class="comment">// bind the texture and PBO</span>
+glBindTexture(GL_TEXTURE_2D, textureId);
+glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pboIds[index]);
+
+<span class="comment">// copy pixels from PBO to texture object</span>
+<span class="comment">// Use offset instead of ponter.</span>
+glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT,
+                GL_BGRA, GL_UNSIGNED_BYTE, 0);
+
+
+<span class="comment">// bind PBO to update texture source</span>
+glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, pboIds[nextIndex]);
+
+<span class="comment">// Note that glMapBufferARB() causes sync issue.</span>
+<span class="comment">// If GPU is working with this buffer, glMapBufferARB() will wait(stall)</span>
+<span class="comment">// until GPU to finish its job. To avoid waiting (idle), you can call</span>
+<span class="comment">// first glBufferDataARB() with NULL pointer before glMapBufferARB().</span>
+<span class="comment">// If you do that, the previous data in PBO will be discarded and</span>
+<span class="comment">// glMapBufferARB() returns a new allocated pointer immediately</span>
+<span class="comment">// even if GPU is still working with the previous data.</span>
+glBufferDataARB(GL_PIXEL_UNPACK_BUFFER_ARB, DATA_SIZE, 0, GL_STREAM_DRAW_ARB);
+
+<span class="comment">// map the buffer object into client's memory</span>
+GLubyte* ptr = (GLubyte*)glMapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB,
+                                        GL_WRITE_ONLY_ARB);
+if(ptr)
+{
+    <span class="comment">// update data directly on the mapped buffer</span>
+    updatePixels(ptr, DATA_SIZE);
+    glUnmapBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB); <span class="comment">// release the mapped buffer</span>
+}
+
+<span class="comment">// it is good idea to release PBOs with ID 0 after use.</span>
+<span class="comment">// Once bound with 0, all pixel operations are back to normal ways.</span>
+glBindBufferARB(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+
+</code></pre>
+
+<h3 id="pack">Example: Asynchronous Read-back</h3>
+<p>
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/gl_pbo06.png" width="540" height="308" alt="Asynchronous readback with PBO">
+</p>
+<p>
+Download the source and binary: <a href="http://www.songho.ca/opengl/files/pboPack.zip">pboPack.zip</a>.
+</p>
+<p>
+This demo application reads (pack) the pixel data from the framebuffer (left-side) to a PBO, then, draws it back to the right side of the window after modifying the brightness of the image. You can toggle PBO on/off by pressing the space key, and measure the performance of glReadPixels().
+</p>
+<p>
+Conventional glReadPixels() blocks the pipeline and waits until all pixel data are transferred. Then, it returns control to the application. On the contrary, glReadPixels() with PBO can schedule asynchronous DMA transfer and returns immediately without stall. Therefore, the application (CPU) can execute other process right away, while transferring data with DMA by OpenGL (GPU).
+</p>
+<div style="float:right; text-align:center">
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/gl_pbo07.png" width="360" height="154" alt="Asynchronous readback with 2 PBOs">
+<br>
+<span class="caption">Asynchronous glReadPixels() with 2 PBOs</span>
+</div>
+<p>
+This demo uses 2 pixel buffers. At frame <em>n</em>, the application reads the pixel data from OpenGL framebuffer to <em>PBO 1</em> using glReadPixels(), and processes the pixel data in <em>PBO 2</em>. These read and process can be performed simultaneously, because glReadPixels() to <em>PBO 1</em> returns immediately and CPU starts to process data in <em>PBO 2</em> without delay. And, we alternate between <em>PBO 1</em> and <em>PBO 2</em> on every frame. 
+</p>
+
+<pre><code class="codeblock">
+<span class="comment">// "index" is used to read pixels from framebuffer to a PBO</span>
+<span class="comment">// "nextIndex" is used to update pixels in the other PBO</span>
+index = (index + 1) % 2;
+nextIndex = (index + 1) % 2;
+
+<span class="comment">// set the target framebuffer to read</span>
+glReadBuffer(GL_FRONT);
+
+<span class="comment">// read pixels from framebuffer to PBO</span>
+<span class="comment">// glReadPixels() should return immediately.</span>
+glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB, pboIds[index]);
+glReadPixels(0, 0, WIDTH, HEIGHT, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+
+<span class="comment">// map the PBO to process its data by CPU</span>
+glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB, pboIds[nextIndex]);
+GLubyte* ptr = (GLubyte*)glMapBufferARB(GL_PIXEL_PACK_BUFFER_ARB,
+                                        GL_READ_ONLY_ARB);
+if(ptr)
+{
+    processPixels(ptr, ...);
+    glUnmapBufferARB(GL_PIXEL_PACK_BUFFER_ARB);
+}
+
+<span class="comment">// back to conventional pixel operation</span>
+glBindBufferARB(GL_PIXEL_PACK_BUFFER_ARB, 0);
+
+</code></pre>
+
+
+<!-- footer -->
+<div id="footer">
+<div style="float:left">
+©&nbsp;2008-2012 <a href="mailto:song.ahn@gmail.com">Song Ho Ahn (<span lang="ko">안성호</span>)</a>
+</div>
+<div style="float:right">
+<img src="./OpenGL Pixel Buffer Object (PBO)_files/html5_gray32.png" width="32" height="32" alt="HTML5 Logo">
+</div>
+<div style="float:right">
+<a href="http://validator.w3.org/check?uri=referer"><img src="./OpenGL Pixel Buffer Object (PBO)_files/I_heart_validator.png" width="80" height="15" alt="HTML Validator"></a>
+</div>
+</div>
+
+<!-- nav -->
+<div style="clear:both; font-size:80%">
+<a href="http://www.songho.ca/opengl/index.html">←Back</a>
+</div>
+
+
+</div> <!-- END OF CONTENTBLACK -->
+
+
+</body><style type="text/css"></style></html>
