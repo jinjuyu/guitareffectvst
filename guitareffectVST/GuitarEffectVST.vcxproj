@@ -45,6 +45,7 @@
     <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;C:\Program Files\Mega-Nerd\libsndfile\include;$(IncludePath)</IncludePath>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\..\ExtraReleaseFiles\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
