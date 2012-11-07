@@ -34,7 +34,6 @@ class Distorsion
 public:
     Distorsion (float * efxoutl_, float * efxoutr_);
     ~Distorsion ();
-    void out (float * smpsl, float * smpr);
     void setpreset (int dgui, int npreset);
     void changepar (int npar, int value);
     int getpar (int npar);
@@ -44,8 +43,6 @@ public:
 										float **outputs,
 										int sampleFrames);
     int Ppreset;
-    float *efxoutl;
-    float *efxoutr;
     float *octoutl;
     float *octoutr;
     float outvolume;

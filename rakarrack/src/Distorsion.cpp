@@ -29,8 +29,6 @@
 #include "Resample.h"
 Distorsion::Distorsion (float * efxoutl_, float * efxoutr_)
 {
-    efxoutl = efxoutl_;
-    efxoutr = efxoutr_;
 
     //octoutl = (float *) malloc (sizeof (float) * PERIOD);
     //octoutr = (float *) malloc (sizeof (float) * PERIOD);
@@ -119,94 +117,6 @@ Distorsion::applyfilters (float * _efxoutl, float * _efxoutr)
 /*
  * Effect output
  */
-void
-Distorsion::out (float * smpsl, float * smpsr)
-{
-    int i;
-    float l, r, lout, rout;
-
-    float inputvol = powf (5.0f, ((float)Pdrive - 32.0f) / 127.0f);
-    if (Pnegate != 0)
-        inputvol *= -1.0f;
-
-    if (Pstereo != 0) {
-        //Stereo
-        for (i = 0; i < PERIOD; i++) {
-            efxoutl[i] = smpsl[i] * inputvol * 2.0f;
-            efxoutr[i] = smpsr[i] * inputvol * 2.0f;
-        };
-    } else {
-        for (i = 0; i < PERIOD; i++) {
-            efxoutl[i] =
-                (smpsl[i]  +  smpsr[i] ) * inputvol;
-        };
-    };
-
-    if (Pprefiltering != 0)
-        applyfilters (efxoutl, efxoutr);
-
-    //no optimised, yet (no look table)
-
-
-    dwshapel->waveshapesmps (PERIOD, efxoutl, Ptype, Pdrive, 1);
-    if (Pstereo != 0)
-        dwshaper->waveshapesmps (PERIOD, efxoutr, Ptype, Pdrive, 1);
-
-    if (Pprefiltering == 0)
-        applyfilters (efxoutl, efxoutr);
-
-    if (Pstereo == 0) memcpy (efxoutr , efxoutl, PERIOD * sizeof(float));
-	
-    if (octmix > 0.01f) {
-        for (i = 0; i < PERIOD; i++) {
-            lout = efxoutl[i];
-            rout = efxoutr[i];
-
-
-            if ( (octave_memoryl < 0.0f) && (lout > 0.0f) ) togglel *= -1.0f;
-
-            octave_memoryl = lout;
-
-            if ( (octave_memoryr < 0.0f) && (rout > 0.0f) ) toggler *= -1.0f;
-
-            octave_memoryr = rout;
-
-            octoutl[i] = lout *  togglel;
-            octoutr[i] = rout *  toggler;
-        }
-
-        blockDCr->filterout (octoutr);
-        blockDCl->filterout (octoutl);
-    }
-
-
-
-    float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
-
-    for (i = 0; i < PERIOD; i++) {
-        lout = efxoutl[i];
-        rout = efxoutr[i];
-
-
-        l = lout * (1.0f - lrcross) + rout * lrcross;
-        r = rout * (1.0f - lrcross) + lout * lrcross;
-
-        if (octmix > 0.01f) {
-            lout = l * (1.0f - octmix) + octoutl[i] * octmix;
-            rout = r * (1.0f - octmix) + octoutr[i] * octmix;
-        } else {
-            lout = l;
-            rout = r;
-        }
-
-        efxoutl[i] = lout * 2.0f * level * panning;
-        efxoutr[i] = rout * 2.0f * level * (1.0f -panning);
-
-    };
-
-    DCr->filterout (efxoutr);
-    DCl->filterout (efxoutl);
-};
 
 void
 Distorsion::processReplacing (float **inputs,
@@ -238,8 +148,8 @@ Distorsion::processReplacing (float **inputs,
     //no optimised, yet (no look table)
 
 	
-    //dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
-    //dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
+    dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
+    dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
 	
 	// TODO: 필터가 되는지 봐야함. 필터 됨.
     if (Pprefiltering == 0)

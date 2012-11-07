@@ -185,8 +185,8 @@ void VstPlugin::process(float **inputs, float **outputs, VstInt32 sampleFrames)
 		if(numEvents>0)
 			processMIDI(i);
 
-		//outputs[0][i] += inputs[0][i];
-		//outputs[1][i] += inputs[1][i];
+		outputs[0][i] += inputs[0][i];
+		outputs[1][i] += inputs[1][i];
 	}
 	//If there are events remaining in the queue, update their delta values.
 	//mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
@@ -217,7 +217,7 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[1][i] = inputs[1][i];
 	}
 	
-	mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
+	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
 	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
