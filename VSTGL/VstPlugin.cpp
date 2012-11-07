@@ -33,6 +33,26 @@ AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
 }
 
 //----------------------------------------------------------------------------
+
+void
+VstPlugin::update_freqs(float val)
+{
+    int i;
+
+    aFreq=val;
+    freqs[0] = aFreq;
+    lfreqs[0] = logf (freqs[0]);
+    for (i = 1; i < 12; i++) {
+        freqs[i] = freqs[i - 1] * D_NOTE;
+        lfreqs[i] = lfreqs[i - 1] + LOG_D_NOTE;
+    }
+
+}
+
+
+
+
+
 VstPlugin::VstPlugin(audioMasterCallback audioMaster):
 AudioEffectX(audioMaster, numPrograms, numParameters),
 programs(0),
@@ -46,8 +66,19 @@ effectName("VSTGLExample"),
 vendorName("ndc Plugs")
 {
 	// Setup RAKARRACK global vars
+	fPERIOD = 32768.0f;
+	PERIOD = 32768;
 	SAMPLE_RATE = samplerate;
 	fSAMPLE_RATE = samplerate;
+	cSAMPLE_RATE = 1.0f / samplerate;
+	aFreq = 440.0;
+	update_freqs(aFreq);
+	reconota = -1;
+	error_num = 0;
+	Wave_res_amount = 5;
+	Wave_up_q = 4;
+	Wave_down_q = 2;
+
 
 	// RAKARRACK effects
 	mEffEcho = new Echo(nullptr, nullptr);
@@ -55,12 +86,12 @@ vendorName("ndc Plugs")
 
 	//presets
 
-	int preset[] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
+	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
     for (int n = 0; n < 9; n++)
         mEffEcho->changepar (n, preset[n]);
 	
-	int preset2[] =  {0, 64, 127, 127, 12, 13, 0, 5078, 56, 0, 1};
-    for (int n = 0; n < sizeof(preset2); n++)
+	int preset2[11] =  {0, 64, 127, 127, 12, 13, 0, 5078, 56, 0, 1};
+    for (int n = 0; n < 11; n++)
         mEffDistorsion->changepar (n, preset2[n]);
 	
 	
@@ -171,8 +202,8 @@ void VstPlugin::processReplacing(float **inputs,
 		//outputs[0][i] = inputs[0][i];
 		//outputs[1][i] = inputs[1][i];
 	}
-	//mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
-	mEffEcho->processReplacing(inputs, outputs, sampleFrames);
+	mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
+	//mEffEcho->processReplacing(inputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
 	{

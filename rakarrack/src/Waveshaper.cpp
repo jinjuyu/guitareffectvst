@@ -120,7 +120,6 @@ Waveshaper::waveshapesmps (int n, float * smps, int type,
         nn=n*period_coeff;
         U_Resample->mono_out(smps,temps,n,u_up,nn);
     }
-
     else memcpy(temps,smps,sizeof(float)*n);
 	//temps = smps;
 

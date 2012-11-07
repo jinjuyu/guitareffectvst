@@ -151,6 +151,7 @@ Echo::processReplacing (float **inputs,
 {
     int i;
     float l, r, ldl, rdl, ldlout, rdlout, rvl, rvr;
+	PERIOD = sampleFrames;
 
     for (i = 0; i < sampleFrames; i++) {
 

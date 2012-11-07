@@ -35,10 +35,10 @@ Distorsion::Distorsion (float * efxoutl_, float * efxoutr_)
     //octoutl = (float *) malloc (sizeof (float) * PERIOD);
     //octoutr = (float *) malloc (sizeof (float) * PERIOD);
 
-    lpfl = new AnalogFilter (2, 22000, 1, 0);
-    lpfr = new AnalogFilter (2, 22000, 1, 0);
-    hpfl = new AnalogFilter (3, 20, 1, 0);
-    hpfr = new AnalogFilter (3, 20, 1, 0);
+    lpfl = new AnalogFilter (2, 300, 1, 0);
+    lpfr = new AnalogFilter (2, 300, 1, 0);
+    hpfl = new AnalogFilter (3, 700, 1, 0);
+    hpfr = new AnalogFilter (3, 700, 1, 0);
     blockDCl = new AnalogFilter (2, 440.0f, 1, 0);
     blockDCr = new AnalogFilter (2, 440.0f, 1, 0);
     blockDCl->setfreq (75.0f);
@@ -156,7 +156,7 @@ Distorsion::out (float * smpsl, float * smpsr)
         applyfilters (efxoutl, efxoutr);
 
     if (Pstereo == 0) memcpy (efxoutr , efxoutl, PERIOD * sizeof(float));
-
+	
     if (octmix > 0.01f) {
         for (i = 0; i < PERIOD; i++) {
             lout = efxoutl[i];
@@ -213,7 +213,8 @@ Distorsion::processReplacing (float **inputs,
 								 float **outputs,
 								 int sampleFrames)
 {
-
+	// 아. 샘플이 대략 3초 정도는 모여야(엄청 길어야) 제대로 되는데, sampleFrames가 너무 작은가보다.
+	// 어쩌지?
     int i;
     float l, r, lout, rout;
 	PERIOD = sampleFrames;
@@ -225,18 +226,11 @@ Distorsion::processReplacing (float **inputs,
     if (Pnegate != 0)
         inputvol *= -1.0f;
 
-    if (Pstereo != 0) {
-        //Stereo
-        for (i = 0; i < PERIOD; i++) {
-            outputs[0][i] = inputs[0][i] * inputvol * 2.0f;
-            outputs[1][i] = inputs[1][i] * inputvol * 2.0f;
-        };
-    } else {
-        for (i = 0; i < PERIOD; i++) {
-            outputs[0][i] = inputs[0][i] * inputvol * 2.0f;
-            outputs[1][i] = inputs[1][i] * inputvol * 2.0f;
-        };
-    };
+    for (i = 0; i < PERIOD; i++) {
+        outputs[0][i] = inputs[0][i] * inputvol * 2.0f;
+        outputs[1][i] = inputs[1][i] * inputvol * 2.0f;
+    }
+
 
     if (Pprefiltering != 0)
         applyfilters (outputs[0], outputs[1]);
@@ -250,7 +244,7 @@ Distorsion::processReplacing (float **inputs,
     if (Pprefiltering == 0)
         applyfilters (outputs[0], outputs[1]);
 
-
+	//octmix = 0.5;
     if (octmix > 0.01f) {
         for (i = 0; i < PERIOD; i++) {
             lout = outputs[0][i];

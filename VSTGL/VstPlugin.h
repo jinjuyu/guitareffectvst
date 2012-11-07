@@ -44,6 +44,8 @@ public:
 		communicate with the host.  Subclasses of AudioEffect/AudioEffectX
 		should not ever need to make use of it directly.
 	 */
+
+	void update_freqs(float val);
 	VstPlugin(audioMasterCallback audioMaster);
 	///	Destructor.
 	~VstPlugin();
