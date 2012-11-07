@@ -65,6 +65,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>GLEW_BUILD;WIN32;_WINDLL;WIN32_LEAN_AND_MEAN;VC_EXTRALEAN;_USRDLL;_USE_MATH_DEFINES;_CRT_SECURE_NO_DEPRECATE;VST_FORCE_DEPRECATED=0;DATADIR="./data";VERSION="1.0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

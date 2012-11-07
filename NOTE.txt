@@ -1,3 +1,4 @@
+fM신스 만드는법: 2개의 오실리에이터를 이용하고 각각의 오실리에이터는 다른 주파수를 내며, 이걸 LFO로 각각의 주파수의 볼륨을 내렸다 올렸다 지그재그로 하면 된다. 3개 이상의 주파수도 가능.
 OpenCL을 이용하지 말고 OpenGL을 이용해서 픽셀쉐이더를 이용해 계산하도록 한다.
 
 ------------------------------------------------------------------------
@@ -76,3 +77,6 @@ Note for Zynewave Podium(and possibly other DAWs):
 
 you need to put all the other dlls(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.dll, libsamplerate-0.dll, libsndfile-1.dll)
 in where the Podium.exe(REAPER.exe, Cubase.exe, etc) is. System32 doesn't work.
+---------
+freq = 440 * 2^((n-100)/12) 이런 미디 컨버젼 공식을 이용해 필터의 주파수를 쓴다.
+n은 0~168까지 쓸 수 있다.(1Hz~22000Hz)
