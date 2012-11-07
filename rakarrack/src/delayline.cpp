@@ -189,7 +189,7 @@ delayline::delay_simple(float smps, float time_, int tap_, int touch,
         return (xfade[tap] * ringbuffer[bufptr] + (1.0f - xfade[tap]) * ringbuffer[tmpptr]);	//fade nicely to new tap
     } else
         return (ringbuffer[bufptr]);
-
+	// 이걸 GL로 바꿔야함 근데 for가 없다?
 };
 
 /*

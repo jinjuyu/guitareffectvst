@@ -39,6 +39,9 @@ public:
 	void processReplacing (float **inputs,
 										float **outputs,
 										int sampleFrames);
+	void processReplacingGL (float **inputs,
+								 float **outputs,
+								 int sampleFrames);
     void setpreset (int npreset);
     void changepar (int npar, int value);
     int getpar (int npar);

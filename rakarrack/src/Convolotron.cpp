@@ -206,7 +206,7 @@ Convolotron::out (float * smpsl, float * smpsr)
     }
 
 
-
+	// TODO: 이거랑 다른 tron시리즈는  GL로 바꾸고 나머지는 그냥 놔둔다. 그냥 둬도 빠름
 
 
 };

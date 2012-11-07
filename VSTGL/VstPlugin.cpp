@@ -202,8 +202,8 @@ void VstPlugin::processReplacing(float **inputs,
 		//outputs[0][i] = inputs[0][i];
 		//outputs[1][i] = inputs[1][i];
 	}
-	mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
-	//mEffEcho->processReplacing(inputs, outputs, sampleFrames);
+	//mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
+	mEffEcho->processReplacing(inputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
 	{

@@ -75,4 +75,4 @@ Scalax
 Note for Zynewave Podium(and possibly other DAWs):
 
 you need to put all the other dlls(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.dll, libsamplerate-0.dll, libsndfile-1.dll)
-in where the Podium.exe is. System32 doesn't work.
+in where the Podium.exe(REAPER.exe, Cubase.exe, etc) is. System32 doesn't work.
