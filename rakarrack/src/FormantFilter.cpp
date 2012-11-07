@@ -78,8 +78,8 @@ FormantFilter::~FormantFilter ()
 {
     for (int i = 0; i < numformants; i++)
         delete (formant[i]);
-    delete (inbuffer);
-    delete (tmpbuf);
+    delete[] (inbuffer);
+    delete[] (tmpbuf);
 };
 
 

@@ -218,9 +218,9 @@ Distorsion::processReplacing (float **inputs,
     int i;
     float l, r, lout, rout;
 	PERIOD = sampleFrames;
-
-	octoutl = (float *) malloc (sizeof (float) * PERIOD);
-    octoutr = (float *) malloc (sizeof (float) * PERIOD);
+	fPERIOD = PERIOD;
+	octoutl = (float *) malloc (sizeof (float) * (PERIOD+100));
+    octoutr = (float *) malloc (sizeof (float) * (PERIOD+100));
 
     float inputvol = powf (5.0f, ((float)Pdrive - 32.0f) / 127.0f);
     if (Pnegate != 0)
@@ -237,9 +237,10 @@ Distorsion::processReplacing (float **inputs,
 
     //no optimised, yet (no look table)
 
-
+	
     dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
     dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
+	
 	// TODO: 필터가 되는지 봐야함. 필터 됨.
     if (Pprefiltering == 0)
         applyfilters (outputs[0], outputs[1]);

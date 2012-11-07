@@ -47,6 +47,7 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     feedback = 0.0f;
     
 	PERIOD = 96000*10;
+	fPERIOD = PERIOD;
 	adjust(DS);
     templ = (float *) malloc (sizeof (float) * PERIOD);
     tempr = (float *) malloc (sizeof (float) * PERIOD);
@@ -223,6 +224,7 @@ Convolotron::processReplacing (float **inputs,
     int i, j, xindex;
     float l,lyn;
 	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
 
 	adjust(DS_state);
 	//update(67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0); // process_rbuf를 해야하니까, period가 바꼈으니까, adjust에서 값이 다 바뀌니까

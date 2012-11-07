@@ -430,7 +430,9 @@ AnalogFilter::singlefilterout (float * smp, fstage & x, fstage & y,
 void
 AnalogFilter::filterout (float * smp)
 {
+
     int i;
+	fPERIOD = PERIOD;
     float *ismp = NULL;	//used if it needs interpolation
     if (needsinterpolation != 0) {
         ismp = new float[PERIOD];
@@ -448,7 +450,7 @@ AnalogFilter::filterout (float * smp)
             float x = (float) i / fPERIOD;
             smp[i] = ismp[i] * (1.0f - x) + smp[i] * x;
         };
-        delete (ismp);
+        delete[] (ismp);
         needsinterpolation = 0;
     };
 

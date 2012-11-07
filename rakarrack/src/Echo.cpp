@@ -33,6 +33,7 @@
 Echo::Echo (float * efxoutl_, float * efxoutr_)
 {
 	PERIOD = 32768;
+	fPERIOD = PERIOD;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     //default values
@@ -151,7 +152,7 @@ Echo::processReplacingGL (float **inputs,
     int i;
     float l, r, ldl, rdl, ldlout, rdlout, rvl, rvr;
 	PERIOD = sampleFrames;
-
+	fPERIOD = PERIOD;
     for (i = 0; i < sampleFrames; i++) {
 
         ldl = ldelay->delay_simple(oldl, ltime, 0, 1, 0);
@@ -200,6 +201,7 @@ Echo::processReplacing (float **inputs,
     int i;
     float l, r, ldl, rdl, ldlout, rdlout, rvl, rvr;
 	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
 
     for (i = 0; i < sampleFrames; i++) {
 
