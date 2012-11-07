@@ -55,7 +55,7 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     lxn = (float *) malloc (sizeof (float) * maxx_size);
     maxx_size = 96000;
 	maxx_size--;
-	PERIOD = 96000;
+	PERIOD = 1;
 	fPERIOD = PERIOD;
 	adjust(DS);
 	

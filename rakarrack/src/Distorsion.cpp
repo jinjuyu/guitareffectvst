@@ -150,7 +150,7 @@ Distorsion::processReplacing (float **inputs,
 	
     dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
     dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
-	
+			
 	// TODO: 필터가 되는지 봐야함. 필터 됨.
     if (Pprefiltering == 0)
         applyfilters (outputs[0], outputs[1]);
@@ -205,7 +205,6 @@ Distorsion::processReplacing (float **inputs,
 
     DCr->filterout (outputs[1]);
     DCl->filterout (outputs[0]);
-	
 	free( octoutl);
 	free( octoutr);
 }

@@ -216,9 +216,9 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = inputs[0][i];
 		outputs[1][i] = inputs[1][i];
 	}
-	
-	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames); // Uncomment to crash
-	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
+	// processReplacing에 문제가 없는 건 아닐까?
+	mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
+	mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
@@ -403,7 +403,7 @@ VstInt32 VstPlugin::canDo(char *text)
 	if(!strcmp(text, "1in1out")) return -1;
 	if(!strcmp(text, "1in2out")) return -1;
 	if(!strcmp(text, "2in1out")) return -1;
-	if(!strcmp(text, "2in2out")) return 1;
+	if(!strcmp(text, "2in2out")) return -1;
 	if(!strcmp(text, "2in4out")) return -1;
 	if(!strcmp(text, "4in2out")) return -1;
 	if(!strcmp(text, "4in4out")) return -1;
