@@ -77,7 +77,7 @@ vendorName("ndc Plugs")
 	error_num = 0;
 	Wave_res_amount = 2;
 	Wave_up_q = 4;
-	Wave_down_q = 2;
+	Wave_down_q = 1;
 
 
 	// RAKARRACK effects
@@ -90,7 +90,7 @@ vendorName("ndc Plugs")
     for (int n = 0; n < 9; n++)
         mEffEcho->changepar (n, preset[n]);
 	
-	int preset2[11] =  {0, 64, 127, 127, 12, 13, 20, 5078, 56, 0, 1};
+	int preset2[11] =  {84, 64, 35, 63, 50, 2, 0, 824, 21, 0, 0};
     for (int n = 0; n < 11; n++)
         mEffDistorsion->changepar (n, preset2[n]);
 	
