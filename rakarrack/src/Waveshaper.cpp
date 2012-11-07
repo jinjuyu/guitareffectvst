@@ -116,7 +116,7 @@ Waveshaper::waveshapesmps (int n, float * smps, int type,
 
     int nn=n;
 	temps = (float *) malloc (sizeof (float) * PERIOD * period_coeff);
-    if(Wave_res_amount > 0) {
+    if(Wave_res_amount >= 0) {
         nn=n*period_coeff;
         U_Resample->mono_out(smps,temps,n,u_up,nn);
     }
@@ -555,7 +555,7 @@ Waveshaper::waveshapesmps (int n, float * smps, int type,
 
     };
 
-    if(Wave_res_amount>= 0) {
+    if(Wave_res_amount >= 0) {
         D_Resample->mono_out(temps,smps,nn,u_down,n);
     } else
         memcpy(smps,temps,sizeof(float)*n);
