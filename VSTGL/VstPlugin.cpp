@@ -102,10 +102,11 @@ vendorName("ndc Plugs")
     for (int n = 0; n < 11; n++)
         mEffDistorsion->changepar (n, preset2[n]);
 	
+	
 	int preset3[11] = {67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0};
     for (int n = 0; n < 11; n++)
         mEffConvolotron->changepar (n, preset3[n]);
-
+		
 
 	// originals
 	int i;
@@ -216,6 +217,7 @@ void VstPlugin::processReplacing(float **inputs,
 		//outputs[0][i] = inputs[0][i];
 		//outputs[1][i] = inputs[1][i];
 	}
+	mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
 	mEffConvolotron->processReplacing(inputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(inputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.

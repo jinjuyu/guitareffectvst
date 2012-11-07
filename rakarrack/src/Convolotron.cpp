@@ -51,11 +51,13 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     templ = (float *) malloc (sizeof (float) * PERIOD);
     tempr = (float *) malloc (sizeof (float) * PERIOD);
 
-    maxx_size = (int) (nfSAMPLE_RATE * convlength);
+    maxx_size = PERIOD;//(int) (nfSAMPLE_RATE * convlength);
     buf = (float *) malloc (sizeof (float) * maxx_size);
     rbuf = (float *) malloc (sizeof (float) * maxx_size);
     lxn = (float *) malloc (sizeof (float) * maxx_size);
-    maxx_size--;
+    maxx_size = 96000;
+	maxx_size--;
+	
     offset = 0;
     M_Resample = new Resample(0);
     U_Resample = new Resample(dq);//Downsample, uses sinc interpolation for bandlimiting to avoid aliasing
@@ -228,8 +230,10 @@ Convolotron::processReplacing (float **inputs,
     //for (int n = 0; n < 11; n++)
         //changepar (n, preset3[n]);
 
-	float *tempinputsl = (float*)malloc(sizeof(float)*nPERIOD);
-	float *tempinputsr = (float*)malloc(sizeof(float)*nPERIOD);
+	float *tempinputsl = (float*)malloc(sizeof(float)*(nPERIOD+100));
+	float *tempinputsr = (float*)malloc(sizeof(float)*(nPERIOD+100)); // + 100 for possible memory leak
+	float *tempoutputsl = (float*)malloc(sizeof(float)*(sampleFrames+100));
+	float *tempoutputsr = (float*)malloc(sizeof(float)*(sampleFrames+100)); // + 100 for possible memory leak
     if(DS_state != 0) {
         memcpy(templ, inputs[0],sizeof(float)*PERIOD);
         memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
@@ -270,7 +274,9 @@ Convolotron::processReplacing (float **inputs,
     };
 
     if(DS_state != 0) {
-        D_Resample->out(templ,tempr,outputs[0],outputs[1],nPERIOD,u_down);
+        D_Resample->out(templ,tempr,tempoutputsl,tempoutputsr,nPERIOD,u_down);
+        memcpy(outputs[0], tempoutputsl,sizeof(float)*PERIOD);
+        memcpy(outputs[1], tempoutputsr,sizeof(float)*PERIOD);
 
     } else {
         memcpy(outputs[0], templ,sizeof(float)*PERIOD);
@@ -279,7 +285,8 @@ Convolotron::processReplacing (float **inputs,
 
 	free(tempinputsl);
 	free(tempinputsr);
-	// TODO: 이거랑 다른 tron시리즈는  GL로 바꾸고 나머지는 그냥 놔둔다. 그냥 둬도 빠름.
+	free(tempoutputsl);
+	free(tempoutputsr);	// TODO: 이거랑 다른 tron시리즈는  GL로 바꾸고 나머지는 그냥 놔둔다. 그냥 둬도 빠름.
 	// 아...이것도 oldl이랑 feedback, lxn이 재귀적으로 쓰인다. 이거도 GL론 안되겠네.. ㅡㅡ;
 
 

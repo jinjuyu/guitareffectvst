@@ -52,7 +52,7 @@ public:
     float *efxoutr;
     float outvolume;
 
-    char Filename[128];
+    char Filename[260];
 
 
 private:
