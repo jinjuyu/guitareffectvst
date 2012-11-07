@@ -213,7 +213,7 @@ Distorsion::processReplacing (float **inputs,
 								 float **outputs,
 								 int sampleFrames)
 {
-	// 아. 샘플이 대략 3초 정도는 모여야(엄청 길어야) 제대로 되는데, sampleFrames가 너무 작은가보다.
+	// 아. 샘플이 대략 필터링 될 정도는 모여야(엄청 길어야) 제대로 되는데, sampleFrames가 너무 작은가보다.
 	// 어쩌지?
     int i;
     float l, r, lout, rout;

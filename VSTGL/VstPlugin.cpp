@@ -90,7 +90,7 @@ vendorName("ndc Plugs")
     for (int n = 0; n < 9; n++)
         mEffEcho->changepar (n, preset[n]);
 	
-	int preset2[11] =  {0, 64, 127, 127, 12, 13, 0, 5078, 56, 0, 1};
+	int preset2[11] =  {0, 64, 127, 127, 12, 13, 5, 5078, 56, 0, 1};
     for (int n = 0; n < 11; n++)
         mEffDistorsion->changepar (n, preset2[n]);
 	
