@@ -238,8 +238,8 @@ Distorsion::processReplacing (float **inputs,
     //no optimised, yet (no look table)
 
 	
-    dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
-    dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
+    //dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
+    //dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
 	
 	// TODO: 필터가 되는지 봐야함. 필터 됨.
     if (Pprefiltering == 0)

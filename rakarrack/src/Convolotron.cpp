@@ -48,9 +48,6 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     
 	PERIOD = 96000*10;
 	fPERIOD = PERIOD;
-	adjust(DS);
-    templ = (float *) malloc (sizeof (float) * PERIOD);
-    tempr = (float *) malloc (sizeof (float) * PERIOD);
 
     maxx_size = PERIOD;//(int) (nfSAMPLE_RATE * convlength);
     buf = (float *) malloc (sizeof (float) * maxx_size);
@@ -58,6 +55,9 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     lxn = (float *) malloc (sizeof (float) * maxx_size);
     maxx_size = 96000;
 	maxx_size--;
+	PERIOD = 96000;
+	fPERIOD = PERIOD;
+	adjust(DS);
 	
     offset = 0;
     M_Resample = new Resample(0);
@@ -234,8 +234,10 @@ Convolotron::processReplacing (float **inputs,
 
 	float *tempinputsl = (float*)malloc(sizeof(float)*(nPERIOD+100));
 	float *tempinputsr = (float*)malloc(sizeof(float)*(nPERIOD+100)); // + 100 for possible memory leak
-	float *tempoutputsl = (float*)malloc(sizeof(float)*(sampleFrames+100));
-	float *tempoutputsr = (float*)malloc(sizeof(float)*(sampleFrames+100)); // + 100 for possible memory leak
+	float *tempoutputsl = (float*)malloc(sizeof(float)*(PERIOD+100));
+	float *tempoutputsr = (float*)malloc(sizeof(float)*(PERIOD+100)); // + 100 for possible memory leak
+    templ = (float *) malloc (sizeof (float) * (PERIOD+100));
+    tempr = (float *) malloc (sizeof (float) * (PERIOD+100));
     if(DS_state != 0) {
         memcpy(templ, inputs[0],sizeof(float)*PERIOD);
         memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
@@ -248,7 +250,6 @@ Convolotron::processReplacing (float **inputs,
         memcpy(tempinputsl, inputs[0],sizeof(float)*PERIOD);
         memcpy(tempinputsr, inputs[1],sizeof(float)*PERIOD);
 	}
-
 
     for (i = 0; i < nPERIOD; i++) {
 
@@ -284,9 +285,10 @@ Convolotron::processReplacing (float **inputs,
         memcpy(outputs[0], templ,sizeof(float)*PERIOD);
         memcpy(outputs[1], tempr,sizeof(float)*PERIOD);
     }
-
 	free(tempinputsl);
 	free(tempinputsr);
+	free(templ);
+	free(tempr);
 	free(tempoutputsl);
 	free(tempoutputsr);	// TODO: 이거랑 다른 tron시리즈는  GL로 바꾸고 나머지는 그냥 놔둔다. 그냥 둬도 빠름.
 	// 아...이것도 oldl이랑 feedback, lxn이 재귀적으로 쓰인다. 이거도 GL론 안되겠네.. ㅡㅡ;
