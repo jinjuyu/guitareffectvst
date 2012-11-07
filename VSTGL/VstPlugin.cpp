@@ -216,7 +216,7 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = inputs[0][i];
 		outputs[1][i] = inputs[1][i];
 	}
-	// processReplacing에 문제가 없는 건 아닐까?
+	// processReplacing에 문제가 없는 건 아닐까? 
 	mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
 	mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
