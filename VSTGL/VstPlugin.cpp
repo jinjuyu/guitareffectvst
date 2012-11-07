@@ -90,7 +90,7 @@ vendorName("ndc Plugs")
 	// RAKARRACK effects
 	
 	mEffEcho = new Echo(nullptr, nullptr);
-	//mEffDistorsion = new Distorsion(nullptr, nullptr);
+	mEffDistorsion = new Distorsion(nullptr, nullptr);
 	//mEffConvolotron = new Convolotron(nullptr, nullptr, 1, 4, 2);
 
 	//presets
@@ -100,7 +100,7 @@ vendorName("ndc Plugs")
         mEffEcho->changepar (n, preset[n]);
 	int preset2[11] =  {84, 64, 35, 56, 40, 0, 0, 6703, 21, 0, 0};
     for (int n = 0; n < 11; n++)
-        ;//mEffDistorsion->changepar (n, preset2[n]);
+        mEffDistorsion->changepar (n, preset2[n]);
 	
 	int preset3[11] = {67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0};
     for (int n = 0; n < 11; n++)
@@ -153,7 +153,7 @@ vendorName("ndc Plugs")
 VstPlugin::~VstPlugin()
 {
 	delete mEffEcho;
-	//delete mEffDistorsion;
+	delete mEffDistorsion;
 	//delete mEffConvolotron;
 	int i;
 
@@ -213,12 +213,13 @@ void VstPlugin::processReplacing(float **inputs,
 		if(numEvents>0)
 			processMIDI(i);
 
-		//outputs[0][i] = inputs[0][i];
-		//outputs[1][i] = inputs[1][i];
+		outputs[0][i] = inputs[0][i];
+		outputs[1][i] = inputs[1][i];
 	}
-	//mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
-	//mEffConvolotron->processReplacing(inputs, outputs, sampleFrames);
-	mEffEcho->processReplacing(inputs, outputs, sampleFrames);
+	
+	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
+	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
+	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
 	{
