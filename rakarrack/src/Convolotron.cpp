@@ -45,12 +45,13 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     convlength = .5f;
     fb = 0.0f;
     feedback = 0.0f;
-    adjust(DS);
-
+    
+	PERIOD = 96000*10;
+	adjust(DS);
     templ = (float *) malloc (sizeof (float) * PERIOD);
     tempr = (float *) malloc (sizeof (float) * PERIOD);
 
-    maxx_size = (int) (nfSAMPLE_RATE * convlength);  //just to get the max memory allocated
+    maxx_size = (int) (nfSAMPLE_RATE * convlength);
     buf = (float *) malloc (sizeof (float) * maxx_size);
     rbuf = (float *) malloc (sizeof (float) * maxx_size);
     lxn = (float *) malloc (sizeof (float) * maxx_size);
@@ -84,7 +85,7 @@ Convolotron::adjust(int DS)
 
     DS_state=DS;
 
-
+	fPERIOD = (float)PERIOD;
     switch(DS) {
 
     case 0:
@@ -206,10 +207,84 @@ Convolotron::out (float * smpsl, float * smpsr)
     }
 
 
-	// TODO: 이거랑 다른 tron시리즈는  GL로 바꾸고 나머지는 그냥 놔둔다. 그냥 둬도 빠름
+	// TODO: 이거랑 다른 tron시리즈는  GL로 바꾸고 나머지는 그냥 놔둔다. 그냥 둬도 빠름.
+	// 아...이것도 oldl이랑 feedback, lxn이 재귀적으로 쓰인다. 이거도 GL론 안되겠네.. ㅡㅡ;
 
 
 };
+
+void
+Convolotron::processReplacing (float **inputs,
+								 float **outputs,
+								 int sampleFrames)
+{
+    int i, j, xindex;
+    float l,lyn;
+	PERIOD = sampleFrames;
+
+	adjust(DS_state);
+	//update(67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0); // process_rbuf를 해야하니까, period가 바꼈으니까, adjust에서 값이 다 바뀌니까
+	int preset3[11] = {67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0};
+    //for (int n = 0; n < 11; n++)
+        //changepar (n, preset3[n]);
+
+	float *tempinputsl = (float*)malloc(sizeof(float)*nPERIOD);
+	float *tempinputsr = (float*)malloc(sizeof(float)*nPERIOD);
+    if(DS_state != 0) {
+        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
+        U_Resample->out(templ,tempr,tempinputsl,tempinputsr,PERIOD,u_up);
+    }
+	else
+	{
+        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
+        memcpy(tempinputsl, inputs[0],sizeof(float)*PERIOD);
+        memcpy(tempinputsr, inputs[1],sizeof(float)*PERIOD);
+	}
+
+
+    for (i = 0; i < nPERIOD; i++) {
+
+        l = tempinputsl[i] + tempinputsr[i] + feedback;
+        oldl = l * hidamp + oldl * (alpha_hidamp);  //apply damping while I'm in the loop
+        lxn[offset] = oldl;
+
+
+        //Convolve left channel
+        lyn = 0;
+        xindex = offset;
+
+        for (j =0; j<length; j++) {
+            if (--xindex<0) xindex = maxx_size;		//length of lxn is maxx_size.
+            lyn += buf[j] * lxn[xindex];		//this is all there is to convolution
+        }
+
+        feedback = fb * lyn;
+        templ[i] = lyn * levpanl;
+        tempr[i] = lyn * levpanr;
+
+        if (++offset>maxx_size) offset = 0;
+
+
+    };
+
+    if(DS_state != 0) {
+        D_Resample->out(templ,tempr,outputs[0],outputs[1],nPERIOD,u_down);
+
+    } else {
+        memcpy(outputs[0], templ,sizeof(float)*PERIOD);
+        memcpy(outputs[1], tempr,sizeof(float)*PERIOD);
+    }
+
+	free(tempinputsl);
+	free(tempinputsr);
+	// TODO: 이거랑 다른 tron시리즈는  GL로 바꾸고 나머지는 그냥 놔둔다. 그냥 둬도 빠름.
+	// 아...이것도 oldl이랑 feedback, lxn이 재귀적으로 쓰인다. 이거도 GL론 안되겠네.. ㅡㅡ;
+
+
+};
+
 
 
 /*
@@ -453,6 +528,31 @@ Convolotron::changepar (int npar, int value)
 
     };
 };
+
+void
+Convolotron::update (int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k)
+{
+	setvolume(a);
+	setpanning(b);
+	Psafe = c;
+	Plength = d;
+	//setfile();
+	UpdateLength();
+	Puser = e;
+	sethidamp(g);
+	Plevel = h;
+    level =  dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
+    levpanl=lpanning*level*2.0f;
+    levpanr=rpanning*level*2.0f;
+
+    Pfb = k;
+    if(Pfb<0) {
+        fb = (float) .1f*k/250.0f*.15f;
+    } else {
+        fb = (float) .1f*k/500.0f*.15f;
+    }
+};
+
 
 int
 Convolotron::getpar (int npar)

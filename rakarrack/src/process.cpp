@@ -62,6 +62,9 @@ char *s_uuid;
 char *statefile;
 char *filetoload;
 char *banktoload;
+
+
+char DATADIR[260];
 //Fl_Preferences rakarrack (Fl_Preferences::USER, WEBSITE, PACKAGE);
 //Pixmap p, mask;
 //XWMHints *hints;

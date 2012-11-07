@@ -23,7 +23,7 @@
 
 #include "VstPlugin.h"
 #include "ExampleEditor.h"
-
+#include <string>
 using namespace std;
 
 //----------------------------------------------------------------------------
@@ -52,7 +52,7 @@ VstPlugin::update_freqs(float val)
 
 
 
-
+extern void* hInstance;
 VstPlugin::VstPlugin(audioMasterCallback audioMaster):
 AudioEffectX(audioMaster, numPrograms, numParameters),
 programs(0),
@@ -79,22 +79,33 @@ vendorName("ndc Plugs")
 	Wave_up_q = 4;
 	Wave_down_q = 1;
 
+	char buffer[260];
+	GetModuleFileName((HMODULE)hInstance, buffer, sizeof(buffer));
+	string a(buffer);
+	int pos = a.find_last_of('\\');
+	string b = a.substr(0, pos);
+	b += "\\data";
+	strcpy(DATADIR, b.c_str());
 
 	// RAKARRACK effects
 	mEffEcho = new Echo(nullptr, nullptr);
 	mEffDistorsion = new Distorsion(nullptr, nullptr);
+	mEffConvolotron = new Convolotron(nullptr, nullptr, 1, 4, 2);
 
 	//presets
 
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
-    for (int n = 0; n < 9; n++)
+    for (int n = 0; n < 9; n++) 
         mEffEcho->changepar (n, preset[n]);
 	
 	int preset2[11] =  {84, 64, 35, 56, 40, 0, 0, 6703, 21, 0, 0};
     for (int n = 0; n < 11; n++)
         mEffDistorsion->changepar (n, preset2[n]);
 	
-	
+	int preset3[11] = {67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0};
+    for (int n = 0; n < 11; n++)
+        mEffConvolotron->changepar (n, preset3[n]);
+
 
 	// originals
 	int i;
@@ -134,6 +145,9 @@ vendorName("ndc Plugs")
 
 	//Construct editor here.
 	editor = new ExampleEditor(this);
+
+
+	//SetCurrentDirectory() 이건 호스트에서나 쓸 수 있다.
 }
 
 //----------------------------------------------------------------------------
@@ -202,7 +216,7 @@ void VstPlugin::processReplacing(float **inputs,
 		//outputs[0][i] = inputs[0][i];
 		//outputs[1][i] = inputs[1][i];
 	}
-	mEffDistorsion->processReplacing(inputs, outputs, sampleFrames);
+	mEffConvolotron->processReplacing(inputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(inputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)

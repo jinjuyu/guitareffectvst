@@ -42,7 +42,10 @@ public:
     int setfile (int value);
     void adjust(int DS);
     void loaddefault();
-
+	void processReplacing (float **inputs,
+								 float **outputs,
+								 int sampleFrames);
+	void update (int a, int b, int c, int d, int e, int f, int g, int h, int i, int j, int k);
     int Ppreset;
 
     float *efxoutl;
