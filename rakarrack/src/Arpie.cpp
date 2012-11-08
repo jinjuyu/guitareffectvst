@@ -50,7 +50,7 @@ Arpie::Arpie (float * efxoutl_, float * efxoutr_)
     Srate_Attack_Coeff = 1.0f / (fSAMPLE_RATE * ATTACK);
     invattack = SAMPLE_RATE/15;
     envattack = 1.0f/(float)invattack;
-    maxx_delay = SAMPLE_RATE * MAX_DELAY;
+    maxx_delay = SAMPLE_RATE * MAX_DELAY*10;
     fade = SAMPLE_RATE / 10;    //200ms fade time available
 
     ldelay = new float[maxx_delay];
@@ -64,6 +64,9 @@ Arpie::Arpie (float * efxoutl_, float * efxoutr_)
 
 Arpie::~Arpie ()
 {
+	delete[] ldelay;
+	delete[] rdelay;
+	delete[] pattern;
 };
 
 /*
@@ -126,6 +129,10 @@ Arpie::out (float * smpsl, float * smpsr)
     float l, r, ldl, rdl, rswell, lswell;
 
     for (i = 0; i < PERIOD; i++) {
+		if(kl >= maxx_delay)
+			kl = maxx_delay-1;
+		if(kr >= maxx_delay)
+			kr = maxx_delay-1;
         ldl = ldelay[kl];
         rdl = rdelay[kr];
         l = ldl * (1.0f - lrcross) + rdl * lrcross;
@@ -161,6 +168,86 @@ Arpie::out (float * smpsl, float * smpsr)
         } else {
             efxoutl[i]= ldl;
             efxoutr[i]= rdl;
+        }
+
+
+        //LowPass Filter
+        ldelay[kl] = ldl = ldl * hidamp + oldl * (1.0f - hidamp);
+        rdelay[kr] = rdl = rdl * hidamp + oldr * (1.0f - hidamp);
+        oldl = ldl + DENORMAL_GUARD;
+        oldr = rdl + DENORMAL_GUARD;
+
+        if (++envcnt >= invattack) envcnt = invattack;
+        if (kl > (dl - invattack)) envcnt -=2;
+        if (envcnt < 0) envcnt = 0;
+
+        if (++kl >= dl) {
+            kl = 0;
+            envcnt = 0;
+            if (++harmonic >= Pharms) harmonic = 0;
+        }
+        if (++kr >= dr)
+            kr = 0;
+        rvkl += pattern[harmonic];
+        if (rvkl >= (dl )) rvkl = rvkl%(dl);
+        rvkr += pattern[harmonic];
+        if (rvkr >= (dr )) rvkr = rvkr%(dr);
+
+        rvfl = rvkl + fade;
+        if (rvfl >= (dl ))  rvfl = rvfl%(dl);
+        rvfr = rvkr + fade;
+        if (rvfr >= (dr )) rvfr = rvfr%(dr);
+    };
+
+};
+
+
+void
+Arpie::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float l, r, ldl, rdl, rswell, lswell;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+
+    for (i = 0; i < PERIOD; i++) {
+        ldl = ldelay[kl];
+        rdl = rdelay[kr];
+        l = ldl * (1.0f - lrcross) + rdl * lrcross;
+        r = rdl * (1.0f - lrcross) + ldl * lrcross;
+        ldl = l;
+        rdl = r;
+
+
+        ldl = inputs[0][i] * panning - ldl * fb;
+        rdl = inputs[1][i] * (1.0f - panning) - rdl * fb;
+
+        if(reverse > 0.0) {
+
+            lswell =	(float)(abs(kl - rvkl)) * Srate_Attack_Coeff;
+            envswell = (1.0f - cosf(PI * envcnt*envattack));
+            if (envswell > 1.0f) envswell = 1.0f;
+            if (lswell <= PI) {
+                lswell = 0.5f * (1.0f - cosf(lswell));  //Clickless transition
+                outputs[0][i] = envswell * (reverse * (ldelay[rvkl] * lswell + ldelay[rvfl] * (1.0f - lswell))  + (ldl * (1-reverse)));   //Volume ducking near zero crossing.
+            } else {
+                outputs[0][i] = ((ldelay[rvkl] * reverse)  + (ldl * (1-reverse))) * envswell;
+            }
+
+            rswell = 	(float)(abs(kr - rvkr)) * Srate_Attack_Coeff;
+            if (rswell <= PI) {
+                rswell = 0.5f * (1.0f - cosf(rswell));   //Clickless transition
+                outputs[1][i] = envswell * (reverse * (rdelay[rvkr] * rswell + rdelay[rvfr] * (1.0f - rswell))  + (rdl * (1-reverse)));  //Volume ducking near zero crossing.
+            } else {
+                outputs[1][i] = envswell * ((rdelay[rvkr] * reverse)  + (rdl * (1-reverse)));
+            }
+
+
+        } else {
+            outputs[0][i]= ldl;
+            outputs[1][i]= rdl;
         }
 
 

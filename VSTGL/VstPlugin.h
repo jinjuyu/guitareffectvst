@@ -31,6 +31,7 @@
 #include "Convolotron.h"
 #include "Alienwah.h"
 #include "APhaser.h"
+#include "Arpie.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -57,6 +58,7 @@ public:
 	Convolotron *mEffConvolotron;
 	Alienwah *mEffAlienwah;
 	Analog_Phaser *mEffAPhaser;
+	Arpie *mEffArpie;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples

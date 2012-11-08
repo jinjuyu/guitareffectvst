@@ -94,6 +94,7 @@ vendorName("ndc Plugs")
 	mEffConvolotron = new Convolotron(nullptr, nullptr, 0, 4, 2);
 	mEffAlienwah = new Alienwah(nullptr, nullptr);
 	mEffAPhaser = new Analog_Phaser(nullptr, nullptr);
+	mEffArpie = new Arpie(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -115,7 +116,11 @@ vendorName("ndc Plugs")
 	for (int n = 0; n < 13; n++)
 		mEffAPhaser->changepar (n, preset5[n]);
 		
-
+	int preset6[9] = {81, 60, 26, 100, 127, 67, 36, 0, 4};
+	for (int n = 0; n < 9; n++)
+		mEffArpie->changepar (n, preset6[n]);
+	mEffArpie->changepar(9, 2);	
+	mEffArpie->changepar(10, 16);
 
 	// originals
 	int i;
@@ -168,6 +173,7 @@ VstPlugin::~VstPlugin()
 	delete mEffConvolotron;
 	delete mEffAlienwah;
 	delete mEffAPhaser;
+	delete mEffArpie;
 	int i;
 
 	//Delete event queue.
@@ -231,9 +237,10 @@ void VstPlugin::processReplacing(float **inputs,
 	}
 	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
 	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
-	mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
+	//mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
-	mEffAPhaser->processReplacing(outputs, outputs, sampleFrames);
+	//mEffAPhaser->processReplacing(outputs, outputs, sampleFrames);
+	mEffArpie->processReplacing(outputs, outputs, sampleFrames);
 
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
