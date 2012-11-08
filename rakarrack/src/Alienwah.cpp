@@ -55,7 +55,6 @@ Alienwah::out (float * smpsl, float * smpsr)
     int i;
     float lfol, lfor;
     COMPLEXTYPE clfol, clfor, out, tmp;
-
     lfo.effectlfoout (&lfol, &lfor);
     lfol *= depth * D_PI;
     lfor *= depth * D_PI;
@@ -104,6 +103,66 @@ Alienwah::out (float * smpsl, float * smpsr)
 
 };
 
+
+void Alienwah::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float lfol, lfor;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+
+	lfo.update();// lfo는 어찌할지 막막...
+
+    COMPLEXTYPE clfol, clfor, out, tmp;
+
+    lfo.effectlfoout (&lfol, &lfor);
+    lfol *= depth * D_PI;
+    lfor *= depth * D_PI;
+    clfol.a = cosf (lfol + phase) * fb;
+    clfol.b = sinf (lfol + phase) * fb;
+    clfor.a = cosf (lfor + phase) * fb;
+    clfor.b = sinf (lfor + phase) * fb;
+
+    for (i = 0; i < PERIOD; i++) {
+        float x = (float)i / fPERIOD;
+        float x1 = 1.0f - x;
+        //left
+        tmp.a = clfol.a * x + oldclfol.a * x1;
+        tmp.b = clfol.b * x + oldclfol.b * x1;
+
+        out.a = tmp.a * oldl[oldk].a - tmp.b * oldl[oldk].b
+                + (1.0f - fabsf (fb)) * inputs[0][i] * panning;
+        out.b = tmp.a * oldl[oldk].b + tmp.b * oldl[oldk].a;
+        oldl[oldk].a = out.a;
+        oldl[oldk].b = out.b;
+        float l = out.a * 10.0f * (fb + 0.1f);
+
+        //right
+        tmp.a = clfor.a * x + oldclfor.a * x1;
+        tmp.b = clfor.b * x + oldclfor.b * x1;
+
+        out.a = tmp.a * oldr[oldk].a - tmp.b * oldr[oldk].b
+                + (1.0f - fabsf (fb)) * inputs[1][i] * (1.0f - panning);
+        out.b = tmp.a * oldr[oldk].b + tmp.b * oldr[oldk].a;
+        oldr[oldk].a = out.a;
+        oldr[oldk].b = out.b;
+        float r = out.a * 10.0f * (fb + 0.1f);
+
+
+        if (++oldk >= Pdelay)
+            oldk = 0;
+        //LRcross
+        outputs[0][i] = l * (1.0f - lrcross) + r * lrcross;
+        outputs[1][i] = r * (1.0f - lrcross) + l * lrcross;
+    };
+
+    oldclfol.a = clfol.a;
+    oldclfol.b = clfol.b;
+    oldclfor.a = clfor.a;
+    oldclfor.b = clfor.b;
+}
 /*
  * Cleanup the effect
  */

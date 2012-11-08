@@ -35,6 +35,7 @@ public:
     ~EffectLFO ();
     void effectlfoout (float * outl, float * outr);
     void updateparams ();
+	void update();
     int Pfreq;
     int Prandomness;
     int PLFOtype;

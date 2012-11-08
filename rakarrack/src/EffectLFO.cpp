@@ -66,13 +66,29 @@ EffectLFO::~EffectLFO ()
 };
 
 
+void EffectLFO::update()
+{
+    incx = (float)Pfreq * fPERIOD / (fSAMPLE_RATE * 60.0f);
+
+    if (incx > 0.49999999)
+        incx = 0.499999999f;		//Limit the Frequency
+	
+	if ((h = incx*ratediv) > 0.02) h = 0.02;  //keeps it stable
+
+
+	iperiod = fPERIOD/fSAMPLE_RATE;
+	float tmp = 6.0f/((float) Pfreq);  //S/H time attack  0.2*60=12.0
+    tca = iperiod/(iperiod + tmp);  //
+    tcb = 1.0f - tca;
+    maxrate = 4.0f*iperiod;
+
+}
 /*
  * Update the changed parameters
  */
 void
 EffectLFO::updateparams ()
 {
-
     incx = (float)Pfreq * fPERIOD / (fSAMPLE_RATE * 60.0f);
 
     if (incx > 0.49999999)

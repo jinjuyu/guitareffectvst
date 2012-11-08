@@ -29,6 +29,7 @@
 #include "Echo.h"
 #include "Distorsion.h"
 #include "Convolotron.h"
+#include "Alienwah.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -53,6 +54,7 @@ public:
 	Echo *mEffEcho;
 	Distorsion *mEffDistorsion;
 	Convolotron *mEffConvolotron;
+	Alienwah *mEffAlienwah;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples
