@@ -95,6 +95,7 @@ vendorName("ndc Plugs")
 	mEffAlienwah = new Alienwah(nullptr, nullptr);
 	mEffAPhaser = new Analog_Phaser(nullptr, nullptr);
 	mEffArpie = new Arpie(nullptr, nullptr);
+	mEffChorus = new Chorus(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -121,7 +122,10 @@ vendorName("ndc Plugs")
 		mEffArpie->changepar (n, preset6[n]);
 	mEffArpie->changepar(9, 2);	
 	mEffArpie->changepar(10, 1);
-
+			
+	int preset7[12] = {64, 64, 1, 0, 0, 42, 115, 18, 90, 127, 0, 0};
+	for (int n = 0; n < 12; n++)
+		mEffChorus->changepar (n, preset7[n]);
 	// originals
 	int i;
 
@@ -174,6 +178,7 @@ VstPlugin::~VstPlugin()
 	delete mEffAlienwah;
 	delete mEffAPhaser;
 	delete mEffArpie;
+	delete mEffChorus;
 	int i;
 
 	//Delete event queue.
@@ -240,7 +245,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
 	//mEffAPhaser->processReplacing(outputs, outputs, sampleFrames);
-	mEffArpie->processReplacing(outputs, outputs, sampleFrames);
+	//mEffArpie->processReplacing(outputs, outputs, sampleFrames);
+	mEffChorus->processReplacing(outputs, outputs, sampleFrames);
 
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)

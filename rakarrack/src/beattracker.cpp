@@ -9,7 +9,7 @@ beattracker:: beattracker ()
     peaklpfilter2 = new RBFilter (0, 25.0f, 0.5f, 0);
     peakhpfilter = new RBFilter (1, 45.0f, 0.5f, 0);
 
-    index = (int *) malloc (sizeof (int) * PERIOD);
+    index = (int *) malloc (sizeof (int) * 44100);//PERIOD);
 
 //Trigger Filter Settings
     peakpulse = peak = envrms = 0.0f;

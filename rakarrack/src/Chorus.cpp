@@ -180,6 +180,104 @@ Chorus::out (float * smpsl, float * smpsr)
     } //end awesome_mode test
 };
 
+void Chorus::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float tmp;
+    dl1 = dl2;
+    dr1 = dr2;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	lfo.update();
+    lfo.effectlfoout (&lfol, &lfor);
+
+    if(awesome_mode) { //use interpolated delay line for better sound
+        float tmpsub;
+
+        dl2 = delay + lfol * depth;
+        dr2 = delay + lfor * depth;
+        if (Poutsub != 0) tmpsub = -1.0f;
+        else tmpsub = 1.0f;
+
+        for (i = 0; i < PERIOD; i++) {
+            //Left
+            mdel = (dl1 * (float)(PERIOD - i) + dl2 * (float)i) / fPERIOD;
+            tmp = inputs[0][i] + oldl*fb;
+            outputs[0][i] = tmpsub*ldelay->delay(tmp, mdel, 0, 1, 0);
+            oldl = outputs[0][i];
+
+            //Right
+            mdel = (dr1 * (float)(PERIOD - i) + dr2 * (float)i) / fPERIOD;
+            tmp = inputs[1][i] + oldr*fb;
+            outputs[1][i] = tmpsub*rdelay->delay(tmp, mdel, 0, 1, 0);
+            oldr =  outputs[1][i];
+        }
+
+    } else {
+
+        dl2 = getdelay (lfol);
+        dr2 = getdelay (lfor);
+        for (i = 0; i < PERIOD; i++) {
+            float inl = inputs[0][i];
+            float inr = inputs[1][i];
+            //LRcross
+            float l = inl;
+            float r = inr;
+            inl = l * (1.0f - lrcross) + r * lrcross;
+            inr = r * (1.0f - lrcross) + l * lrcross;
+
+            //Left channel
+
+            //compute the delay in samples using linear interpolation between the lfo delays
+            mdel = (dl1 * (float)(PERIOD - i) + dl2 * (float)i) / fPERIOD;
+            if (++dlk >= maxdelay)
+                dlk = 0;
+            float tmp = (float) dlk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
+
+			((dlhi)=((tmp>0) ? ( (int)(tmp) ) :( (int)(tmp-1.0f) )));
+            dlhi %= maxdelay;
+
+            dlhi2 = (dlhi - 1 + maxdelay) % maxdelay;
+            dllo = 1.0f - fmodf (tmp, 1.0f);
+            outputs[0][i] = delayl[dlhi2] * dllo + delayl[dlhi] * (1.0f - dllo);
+            delayl[dlk] = inl + outputs[0][i] * fb;
+
+            //Right channel
+
+            //compute the delay in samples using linear interpolation between the lfo delays
+            mdel = (dr1 * (float)(PERIOD - i) + dr2 * (float)i) / fPERIOD;
+            if (++drk >= maxdelay)
+                drk = 0;
+            tmp = (float)drk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
+
+			((dlhi)=((tmp>0) ? ( (int)(tmp) ) :( (int)(tmp-1.0f) )));
+            dlhi %= maxdelay;
+
+            dlhi2 = (dlhi - 1 + maxdelay) % maxdelay;
+            dllo = 1.0f - fmodf (tmp, 1.0f);
+            outputs[1][i] = delayr[dlhi2] * dllo + delayr[dlhi] * (1.0f - dllo);
+            delayr[dlk] = inr + outputs[1][i] * fb;
+
+        };
+
+
+        if (Poutsub != 0)
+            for (i = 0; i < PERIOD; i++) {
+                outputs[0][i] *= -1.0f;
+                outputs[1][i] *= -1.0f;
+            };
+
+
+        for (int i = 0; i < PERIOD; i++) {
+            outputs[0][i] *= panning;
+            outputs[1][i] *= (1.0f - panning);
+        };
+
+    } //end awesome_mode test
+};
+
 /*
  * Cleanup the effect
  */

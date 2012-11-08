@@ -32,6 +32,7 @@
 #include "Alienwah.h"
 #include "APhaser.h"
 #include "Arpie.h"
+#include "Chorus.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -59,6 +60,7 @@ public:
 	Alienwah *mEffAlienwah;
 	Analog_Phaser *mEffAPhaser;
 	Arpie *mEffArpie;
+	Chorus *mEffChorus;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples
