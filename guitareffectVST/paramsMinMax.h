@@ -1,6 +1,14 @@
 #pragma once
 
 /*
+주파수같은 건 로가리즘으로 매핑하고
+나머지는 선형적으로 매핑하면 될 듯.
+
+파라메터값의 mix/max랑
+표현값의 min/max가 있고
+ConvertToParam함수
+ConvertToPrint함수가 어떻게 값을 변환할지를 결정한다.
+
 
 findpos(0,(int)o->value(),o);}
           xywh {7 214 34 18} shortcut 0x31 color 62 selection_color 1 labelsize 10 align 84 when 1
