@@ -397,3 +397,155 @@ Compressor::out (float *efxoutl, float *efxoutr)
 
 }
 
+void
+Compressor::processReplacing (float **inputs, float **outputs, int sampleFrames)
+{
+
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+
+    for (i = 0; i < PERIOD; i++) {
+        float rdelta = 0.0f;
+        float ldelta = 0.0f;
+//Right Channel
+
+        if(peak) {
+            if (rtimer > hold) {
+                rpeak *= 0.9998f;   //The magic number corresponds to ~0.1s based on T/(RC + T),
+                rtimer--;
+            }
+            if (ltimer > hold) {
+                lpeak *= 0.9998f;	//leaky peak detector.
+                ltimer --;  //keeps the timer from eventually exceeding max int & rolling over
+            }
+            ltimer++;
+            rtimer++;
+            if(rpeak<fabs(outputs[1][i])) {
+                rpeak = fabs(outputs[1][i]);
+                rtimer = 0;
+            }
+            if(lpeak<fabs(outputs[0][i])) {
+                lpeak = fabs(outputs[0][i]);
+                ltimer = 0;
+            }
+
+            if(lpeak>20.0f) lpeak = 20.0f;
+            if(rpeak>20.0f) rpeak = 20.0f; //keeps limiter from getting locked up when signal levels go way out of bounds (like hundreds)
+
+        } else {
+            rpeak = outputs[1][i];
+            lpeak = outputs[0][i];
+        }
+
+        if(stereo) {
+            rdelta = fabsf (rpeak);
+            if(rvolume < 0.9f) {
+                attr = att;
+                relr = rel;
+            } else if (rvolume < 1.0f) {
+                attr = att + ((1.0f - att)*(rvolume - 0.9f)*10.0f);	//dynamically change attack time for limiting mode
+                relr = rel/(1.0f + (rvolume - 0.9f)*9.0f);  //release time gets longer when signal is above limiting
+            } else {
+                attr = 1.0f;
+                relr = rel*0.1f;
+            }
+
+            if (rdelta > rvolume)
+                rvolume = attr * rdelta + (1.0f - attr)*rvolume;
+            else
+                rvolume = relr * rdelta + (1.0f - relr)*rvolume;
+
+
+            rvolume_db = rap2dB (rvolume);
+            if (rvolume_db < thres_db) {
+                rgain = outlevel;
+            } else if (rvolume_db < thres_mx) {
+                //Dynamic ratio that depends on volume.  As can be seen, ratio starts
+                //at something negligibly larger than 1 once volume exceeds thres, and increases toward selected
+                // ratio by the time it has reached thres_mx.  --Transmogrifox
+
+                eratio = 1.0f + (kratio-1.0f)*(rvolume_db-thres_db)* coeff_knee;
+                rgain =   outlevel*dB2rap(thres_db + (rvolume_db-thres_db)/eratio - rvolume_db);
+            } else {
+                rgain = outlevel*dB2rap(thres_db + coeff_kk + (rvolume_db-thres_mx)*coeff_ratio - rvolume_db);
+                limit = 1;
+            }
+
+            if ( rgain < MIN_GAIN) rgain = MIN_GAIN;
+            rgain_t = .4f * rgain + .6f * rgain_old;
+        };
+
+//Left Channel
+        if(stereo)  {
+            ldelta = fabsf (lpeak);
+        } else  {
+            ldelta = 0.5f*(fabsf (lpeak) + fabsf (rpeak));
+        };  //It's not as efficient to check twice, but it's small expense worth code clarity
+
+        if(lvolume < 0.9f) {
+            attl = att;
+            rell = rel;
+        } else if (lvolume < 1.0f) {
+            attl = att + ((1.0f - att)*(lvolume - 0.9f)*10.0f);	//dynamically change attack time for limiting mode
+            rell = rel/(1.0f + (lvolume - 0.9f)*9.0f);  //release time gets longer when signal is above limiting
+        } else {
+            attl = 1.0f;
+            rell = rel*0.1f;
+        }
+
+        if (ldelta > lvolume)
+            lvolume = attl * ldelta + (1.0f - attl)*lvolume;
+        else
+            lvolume = rell*ldelta + (1.0f - rell)*lvolume;
+
+        lvolume_db = rap2dB (lvolume);
+
+        if (lvolume_db < thres_db) {
+            lgain = outlevel;
+        } else if (lvolume_db < thres_mx) { //knee region
+            eratio = 1.0f + (kratio-1.0f)*(lvolume_db-thres_db)* coeff_knee;
+            lgain =   outlevel*dB2rap(thres_db + (lvolume_db-thres_db)/eratio - lvolume_db);
+        } else {
+            lgain = outlevel*dB2rap(thres_db + coeff_kk + (lvolume_db-thres_mx)*coeff_ratio - lvolume_db);
+            limit = 1;
+        }
+
+
+        if ( lgain < MIN_GAIN) lgain = MIN_GAIN;
+        lgain_t = .4f * lgain + .6f * lgain_old;
+
+        if (stereo) {
+            outputs[0][i] *= lgain_t;
+            outputs[1][i] *= rgain_t;
+            rgain_old = rgain;
+            lgain_old = lgain;
+        } else {
+            outputs[0][i] *= lgain_t;
+            outputs[1][i] *= lgain_t;
+            lgain_old = lgain;
+        }
+
+        if(peak) {
+            if(outputs[0][i]>0.999f) {            //output hard limiting
+                outputs[0][i] = 0.999f;
+                clipping = 1;
+            }
+            if(outputs[0][i]<-0.999f) {
+                outputs[0][i] = -0.999f;
+                clipping = 1;
+            }
+            if(outputs[1][i]>0.999f) {
+                outputs[1][i] = 0.999f;
+                clipping = 1;
+            }
+            if(outputs[1][i]<-0.999f) {
+                outputs[1][i] = -0.999f;
+                clipping = 1;
+            }
+            //highly probably there is a more elegant way to do that, but what the hey...
+        }
+    }
+
+}
+

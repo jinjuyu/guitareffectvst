@@ -33,6 +33,7 @@
 #include "APhaser.h"
 #include "Arpie.h"
 #include "Chorus.h"
+#include "CoilCrafter.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -61,6 +62,7 @@ public:
 	Analog_Phaser *mEffAPhaser;
 	Arpie *mEffArpie;
 	Chorus *mEffChorus;
+	CoilCrafter *mEffCoil;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples

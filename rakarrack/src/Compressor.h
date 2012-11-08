@@ -45,7 +45,7 @@ public:
     void Compressor_Change_Preset (int dgui,int npreset);
     int getpar (int npar);
     void cleanup ();
-
+	void processReplacing (float **inputs, float **outputs, int sampleFrames);
     float *efxoutl;
     float *efxoutr;
 

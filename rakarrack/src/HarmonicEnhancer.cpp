@@ -31,8 +31,8 @@
 HarmEnhancer::HarmEnhancer(float *Rmag, float hfreq, float lfreq, float gain)
 {
 
-    inputl = (float *) malloc (sizeof (float) * PERIOD);
-    inputr = (float *) malloc (sizeof (float) * PERIOD);
+    inputl = (float *) malloc (sizeof (float) * 44100);//PERIOD);
+    inputr = (float *) malloc (sizeof (float) * 44100);//PERIOD);
 
     set_vol(0,gain);
     realvol = gain;
@@ -191,13 +191,15 @@ HarmEnhancer::harm_out(float *smpsl, float *smpsr)
 
     memcpy(inputl,smpsl, sizeof(float)*PERIOD);
     memcpy(inputr,smpsr, sizeof(float)*PERIOD);
-
+	float *compressedl = new float[PERIOD];
+	float *compressedr = new float[PERIOD];
 
 
     hpfl->filterout(inputl);
     hpfr->filterout(inputr);
-
-    limiter->out(inputl,inputr);
+	float *inputs[2] = {inputl, inputr};
+	float *outputs[2] = {compressedl, compressedr};
+    limiter->processReplacing(inputs, outputs, PERIOD);
 
     for (i=0; i<PERIOD; i++) {
         float xl = inputl[i];
@@ -230,10 +232,11 @@ HarmEnhancer::harm_out(float *smpsl, float *smpsr)
     lpfr->filterout(inputr);
 
     for (i=0; i<PERIOD; i++) {
-        smpsl[i] =(smpsl[i]+inputl[i]*vol);
-        smpsr[i] =(smpsr[i]+inputr[i]*vol);
+        smpsl[i] =(compressedl[i]+inputl[i]*vol);
+        smpsr[i] =(compressedr[i]+inputr[i]*vol);
     }
-
+	delete[] compressedl;
+	delete[] compressedr;
 }
 
 

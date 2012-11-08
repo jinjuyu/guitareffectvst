@@ -145,6 +145,45 @@ CoilCrafter::out (float * smpsl, float * smpsr)
 
 };
 
+void
+CoilCrafter::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+    if(Ppo>0) {
+        RB1l->filterout(inputs[0]);
+        RB1r->filterout(inputs[1]);
+
+        for (i=0; i<PERIOD; i++) {
+            inputs[0][i]*=att;
+            inputs[1][i]*=att;
+        }
+
+    }
+    if(Ppd>0) {
+        RB2l->filterout(inputs[0]);
+        RB2r->filterout(inputs[1]);
+    }
+
+    if(Pmode) harm->harm_out(inputs[0],inputs[1]);
+
+
+    for (i=0; i<PERIOD; i++) {
+        inputs[0][i]*=outvolume;
+        inputs[1][i]*=outvolume;
+
+        if(Pmode) {
+            inputs[0][i]*=.5f;
+            inputs[1][i]*=.5f;
+        }
+    }
+
+};
+
 
 /*
  * Parameter control

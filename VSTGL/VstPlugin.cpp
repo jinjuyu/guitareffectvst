@@ -96,6 +96,7 @@ vendorName("ndc Plugs")
 	mEffAPhaser = new Analog_Phaser(nullptr, nullptr);
 	mEffArpie = new Arpie(nullptr, nullptr);
 	mEffChorus = new Chorus(nullptr, nullptr);
+	mEffCoil = new CoilCrafter(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -126,6 +127,11 @@ vendorName("ndc Plugs")
 	int preset7[12] = {64, 64, 1, 0, 0, 42, 115, 18, 90, 127, 0, 0};
 	for (int n = 0; n < 12; n++)
 		mEffChorus->changepar (n, preset7[n]);
+
+	int preset8[9] = {32, 6, 1, 3300, 16,  4400, 42, 20, 0};
+	for (int n = 0; n < 9; n++)
+		mEffCoil->changepar (n, preset8[n]);
+
 	// originals
 	int i;
 
