@@ -120,7 +120,7 @@ vendorName("ndc Plugs")
 	for (int n = 0; n < 9; n++)
 		mEffArpie->changepar (n, preset6[n]);
 	mEffArpie->changepar(9, 2);	
-	mEffArpie->changepar(10, 16);
+	mEffArpie->changepar(10, 1);
 
 	// originals
 	int i;
