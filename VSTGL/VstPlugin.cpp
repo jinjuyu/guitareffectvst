@@ -100,6 +100,7 @@ vendorName("ndc Plugs")
 	mEffCompBand = new CompBand(nullptr, nullptr);
 	mEffCompressor = new Compressor(nullptr, nullptr);
 	mEffDualFlange = new Dflange(nullptr, nullptr);
+	mEffEchotron = new Echotron(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -146,7 +147,10 @@ vendorName("ndc Plugs")
 	int preset11[15] = {0, 0, 64, 500, 3000, 50, -40, 8000, 1, 0, 196, 96, 0, 0, 0};
 	for (int n = 0; n < 15; n++)
 		mEffDualFlange->changepar (n, preset11[n]);
-
+	
+	int preset12[16] = {64, 45, 34, 4, 0, 76, 3, 41, 0, 96, -13, 64, 1, 1, 1, 1};
+	for (int n = 0; n < 16; n++)
+		mEffEchotron->changepar (n, preset12[n]);
 
 	// originals
 	int i;
@@ -204,6 +208,7 @@ VstPlugin::~VstPlugin()
 	delete mEffCoil;
 	delete mEffCompressor;
 	delete mEffDualFlange;
+	delete mEffEchotron;
 	int i;
 
 	//Delete event queue.
@@ -275,8 +280,9 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffCoil->processReplacing(outputs, outputs, sampleFrames);
 	//mEffCompBand->processReplacing(outputs, outputs, sampleFrames);
 	//mEffCompressor->processReplacing(outputs, outputs, sampleFrames);
-	mEffDualFlange->processReplacing(outputs, outputs, sampleFrames);
+	//mEffDualFlange->processReplacing(outputs, outputs, sampleFrames);
 	//mEffCompBand->processReplacing(outputs, outputs, sampleFrames);
+	mEffEchotron->processReplacing(outputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
 	{

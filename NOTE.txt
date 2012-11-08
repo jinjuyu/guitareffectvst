@@ -88,3 +88,5 @@ OpenGL은 Additive Synthesis에만 이용할 수 있을 것 같다. 가장 비싼 멀티 오실리에�
 Convolotron같은 클래스 생성시에 DS값을 지정해줘야 하는 것은 VST의 GUI에서도 생성시에 DS값 즉 오버/다운샘플링값을 지정하도록 한다.
 Convolotron사각형 패널을 추가하고 거기에 DS값을 지정하면 Convolotron클래스가 생성되고 ConvolotronGUI가 나오는 방식
 Convolotron같은 외부 wav를 이용하는 건 기존에 지정된 data안에 있는거 말고도 따로 외부적으로 더 지정할 수도 있게 한다.
+-------------
+각 파라메터의 미니멈/맥시멈 값은 rakarrack.fl안에 있다.

@@ -81,9 +81,6 @@
     <ClCompile Include="..\rakarrack\src\Dual_Flange.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
-    <ClCompile Include="..\rakarrack\src\DynamicFilter.cpp">
-      <Filter>RAK</Filter>
-    </ClCompile>
     <ClCompile Include="..\rakarrack\src\Echo.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
@@ -245,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="..\GLEW\glew.c">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\DynamicFilter.cpp">
+      <Filter>RAK</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

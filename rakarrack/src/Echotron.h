@@ -45,7 +45,9 @@ public:
     void cleanup ();
     int setfile (int value);
     int Ppreset;
-
+		void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Pchange;
 
     float *efxoutl;

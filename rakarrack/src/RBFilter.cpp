@@ -201,6 +201,7 @@ RBFilter::setmix (int mix, float lpmix, float bpmix, float hpmix)
 void
 RBFilter::singlefilterout (float * smp, fstage & x, parameters & par)
 {
+	iper = 1.0/fPERIOD;
     int i;
     float *out = NULL;
     switch (type) {

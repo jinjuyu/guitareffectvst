@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include "Windows.h"
 #include "Echotron.h"
 //const char *DATADIR = "./data";
 Echotron::Echotron (float * efxoutl_, float * efxoutr_)
@@ -48,6 +48,8 @@ Echotron::Echotron (float * efxoutl_, float * efxoutr_)
     subdiv_dmod = 1.0f;
     subdiv_fmod = 1.0f;
     f_qmode = 0;
+	PERIOD = 44100;
+	fPERIOD = 44100;
 
     maxx_size = (SAMPLE_RATE * 6);   //6 Seconds delay time
 
@@ -176,6 +178,80 @@ Echotron::out (float * smpsl, float * smpsr)
 
 };
 
+void
+Echotron::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+
+    int i, j, k;
+    int length = Plength;
+    float l,r,lyn, ryn;
+    float rxindex,lxindex;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+	lfo.update();
+	dlfo.update();
+
+    if((Pmoddly)||(Pmodfilts)) modulate_delay();
+    else interpl = interpr = 0;
+
+    float tmpmodl = oldldmod;
+    float tmpmodr = oldrdmod;
+
+    for (i = 0; i < PERIOD; i++) {
+        tmpmodl+=interpl;
+        tmpmodr+=interpr;
+
+        l = lxn->delay( (lpfl->filterout_s(inputs[0][i] + lfeedback) ), 0.0f, 0, 1, 0);  //High Freq damping
+        r = rxn->delay( (lpfr->filterout_s(inputs[1][i] + rfeedback) ), 0.0f, 0, 1, 0);
+
+        //Convolve
+        lyn = 0.0f;
+        ryn = 0.0f;
+
+        if(Pfilters) {
+
+            j=0;
+            for (k=0; k<length; k++) {
+                lxindex = ltime[k] + tmpmodl;
+                rxindex = rtime[k] + tmpmodr;
+
+                if((iStages[k]>=0)&&(j<ECHOTRON_MAXFILTERS)) {
+                    lyn += filterbank[j].l->filterout_s(lxn->delay(l, lxindex, k, 0, 0)) * ldata[k];		//filter each tap specified
+                    ryn += filterbank[j].r->filterout_s(rxn->delay(r, lxindex, k, 0, 0)) * rdata[k];
+                    j++;
+                } else {
+                    lyn += lxn->delay(l, lxindex, k, 0, 0) * ldata[k];
+                    ryn += rxn->delay(r, rxindex, k, 0, 0) * rdata[k];
+                }
+
+            }
+
+        } else {
+            for (k=0; k<length; k++) {
+                lxindex = ltime[k] + tmpmodl;
+                rxindex = rtime[k] + tmpmodr;
+
+                lyn += lxn->delay(l, lxindex, k, 0, 0) * ldata[k];
+                ryn += rxn->delay(r, rxindex, k, 0, 0) * rdata[k];
+            }
+
+        }
+
+        lfeedback =  (lrcross*ryn + ilrcross*lyn) * lpanning;
+        rfeedback = (lrcross*lyn + ilrcross*ryn) * rpanning;
+        outputs[0][i] = lfeedback;
+        outputs[1][i] = rfeedback;
+        lfeedback *= fb;
+        rfeedback *= fb;
+
+    };
+
+    if(initparams) init_params();
+
+};
+
 
 /*
  * Parameter control
@@ -221,7 +297,7 @@ Echotron::setfile(int value)
 
     FILE *fs;
 
-    char wbuf[128];
+    char wbuf[260];
 
     if(!Puser) {
         Filenum = value;
@@ -519,7 +595,10 @@ Echotron::changepar (int npar, int value)
         ilrcross = 1.0f - abs(lrcross);
         break;
     case 8:
-        if(!setfile(value)) error_num=4;
+        if(!setfile(value)) {
+			error_num=4;
+			MessageBox(NULL, "Could not find Echotron dly files.", "Error", MB_OK);
+		}
         break;
     case 9:
         lfo.Pstereo = value;
