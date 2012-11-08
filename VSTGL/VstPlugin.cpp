@@ -231,7 +231,7 @@ void VstPlugin::processReplacing(float **inputs,
 	}
 	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
 	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
-	//mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
+	mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
 	mEffAPhaser->processReplacing(outputs, outputs, sampleFrames);
 
