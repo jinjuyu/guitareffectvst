@@ -42,7 +42,7 @@ CompBand::CompBand (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-
+	PERIOD = 44100;
     lowl = (float *) malloc (sizeof (float) * PERIOD);
     lowr = (float *) malloc (sizeof (float) * PERIOD);
     midll = (float *) malloc (sizeof (float) * PERIOD);
@@ -157,6 +157,58 @@ CompBand::out (float * smpsl, float * smpsr)
     for (i = 0; i < PERIOD; i++) {
         efxoutl[i]=(lowl[i]+midll[i]+midhl[i]+highl[i])*level;
         efxoutr[i]=(lowr[i]+midlr[i]+midhr[i]+highr[i])*level;
+    }
+
+
+
+};
+
+void
+CompBand::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+
+    memcpy(lowl,inputs[0],sizeof(float) * PERIOD);
+    memcpy(midll,inputs[0],sizeof(float) * PERIOD);
+    memcpy(midhl,inputs[0],sizeof(float) * PERIOD);
+    memcpy(highl,inputs[0],sizeof(float) * PERIOD);
+
+    lpf1l->filterout(lowl);
+    hpf1l->filterout(midll);
+    lpf2l->filterout(midll);
+    hpf2l->filterout(midhl);
+    lpf3l->filterout(midhl);
+    hpf3l->filterout(highl);
+
+    memcpy(lowr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(midlr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(midhr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(highr,inputs[1],sizeof(float) * PERIOD);
+
+    lpf1r->filterout(lowr);
+    hpf1r->filterout(midlr);
+    lpf2r->filterout(midlr);
+    hpf2r->filterout(midhr);
+    lpf3r->filterout(midhr);
+    hpf3r->filterout(highr);
+
+	float *lows[2] = {lowl, lowr};
+	float *midls[2] = {midll, midlr};
+	float *midhs[2] = {midhl, midhr};
+	float *highes[2] = {highl, highr};
+    CL->processReplacing(lows,lows, PERIOD);
+    CML->processReplacing(midls,midls, PERIOD);
+    CMH->processReplacing(midhs,midhs, PERIOD);
+    CH->processReplacing(highes,highes, PERIOD);
+
+
+    for (i = 0; i < PERIOD; i++) {
+        outputs[0][i]=(lowl[i]+midll[i]+midhl[i]+highl[i])*level;
+        outputs[1][i]=(lowr[i]+midlr[i]+midhr[i]+highr[i])*level;
     }
 
 
