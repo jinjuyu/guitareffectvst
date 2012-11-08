@@ -38,6 +38,9 @@ public:
     void out (float * smpsl, float * smpsr);
     void setpreset (int npreset);
     void changepar (int npar, int value);
+	void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int getpar (int npar);
     void cleanup ();
     int Ppreset;

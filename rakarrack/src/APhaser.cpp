@@ -200,6 +200,118 @@ Analog_Phaser::out (float * smpsl, float * smpsr)
 
 };
 
+void Analog_Phaser::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i, j;
+    float lfol, lfor, lgain, rgain, bl, br, gl, gr, rmod, lmod, d, hpfr, hpfl;
+    lgain = 0.0;
+    rgain = 0.0;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	invperiod = 1.0f/fPERIOD;
+	lfo.update();
+    //initialize hpf
+    hpfl = 0.0;
+    hpfr = 0.0;
+
+    lfo.effectlfoout (&lfol, &lfor);
+    lmod = lfol*width + depth;
+    rmod = lfor*width + depth;
+
+    if (lmod > ONE_)
+        lmod = ONE_;
+    else if (lmod < ZERO_)
+        lmod = ZERO_;
+    if (rmod > ONE_)
+        rmod = ONE_;
+    else if (rmod < ZERO_)
+        rmod = ZERO_;
+
+    if (Phyper != 0) {
+        lmod *= lmod;  //Triangle wave squared is approximately sin on bottom, tri on top
+        rmod *= rmod;  //Result is exponential sweep more akin to filter in synth with exponential generator circuitry.
+    };
+
+    lmod = sqrtf(1.0f - lmod);  //gl,gr is Vp - Vgs. Typical FET drain-source resistance follows constant/[1-sqrt(Vp - Vgs)]
+    rmod = sqrtf(1.0f - rmod);
+
+    rdiff = (rmod - oldrgain) * invperiod;
+    ldiff = (lmod - oldlgain) * invperiod;
+
+    gl = oldlgain;
+    gr = oldrgain;
+
+    oldlgain = lmod;
+    oldrgain = rmod;
+
+    for (i = 0; i < PERIOD; i++) {
+
+        gl += ldiff;	// Linear interpolation between LFO samples
+        gr += rdiff;
+
+        float lxn = inputs[0][i];
+        float rxn = inputs[1][i];
+
+
+        if (barber) {
+            gl = fmodf((gl + 0.25f) , ONE_);
+            gr = fmodf((gr + 0.25f) , ONE_);
+        };
+
+
+        //Left channel
+        for (j = 0; j < Pstages; j++) {
+            //Phasing routine
+            mis = 1.0f + offsetpct*offset[j];
+            d = (1.0f + 2.0f*(0.25f + gl)*hpfl*hpfl*distortion) * mis;  //This is symmetrical. FET is not, so this deviates slightly, however sym dist. is better sounding than a real FET.
+            Rconst =  1.0f + mis*Rmx;
+            bl = (Rconst - gl )/ (d*Rmin);  // This is 1/R. R is being modulated to control filter fc.
+            lgain = (CFs - bl)/(CFs + bl);
+
+            lyn1[j] = lgain * (lxn + lyn1[j]) - lxn1[j];
+            lyn1[j] += DENORMAL_GUARD;
+            hpfl = lyn1[j] + (1.0f-lgain)*lxn1[j];  //high pass filter -- Distortion depends on the high-pass part of the AP stage.
+
+            lxn1[j] = lxn;
+            lxn = lyn1[j];
+            if (j==1) lxn += fbl;  //Insert feedback after first phase stage
+        };
+
+        //Right channel
+        for (j = 0; j < Pstages; j++) {
+            //Phasing routine
+            mis = 1.0f + offsetpct*offset[j];
+            d = (1.0f + 2.0f*(0.25f + gr)*hpfr*hpfr*distortion) * mis;   // distortion
+            Rconst =  1.0f + mis*Rmx;
+            br = (Rconst - gr )/ (d*Rmin);
+            rgain = (CFs - br)/(CFs + br);
+
+            ryn1[j] = rgain * (rxn + ryn1[j]) - rxn1[j];
+            ryn1[j] += DENORMAL_GUARD;
+            hpfr = ryn1[j] + (1.0f-rgain)*rxn1[j];  //high pass filter
+
+            rxn1[j] = rxn;
+            rxn = ryn1[j];
+            if (j==1) rxn += fbr;  //Insert feedback after first phase stage
+        };
+
+        fbl = lxn * fb;
+        fbr = rxn * fb;
+        outputs[0][i] = lxn;
+        outputs[1][i] = rxn;
+
+    };
+
+    if (Poutsub != 0)
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] *= -1.0f;
+            outputs[1][i] *= -1.0f;
+        };
+
+};
+
 /*
  * Cleanup the effect
  */

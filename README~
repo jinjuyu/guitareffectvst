@@ -11,17 +11,10 @@ Code guideline:
 - it adds processReplacing() for every out().
 - you need to reset PERIOD and fPERIOD for every processReplacing call in the processReplacing func.
 - thus functions that uses PERIOD or fPERIOD needs to be updated too.
-- for EffectLFO you need to call update() in processReplacing() like this:
-void APhaser::processReplacing()
-{
-    ...
-
+- for EffectLFO you need to call update() like this:
 	PERIOD = sampleFrames;
 	fPERIOD = PERIOD;
 	invperiod = 1.0f/fPERIOD;
 	lfo.update();
     (from APhaser.cpp) 
-
-    ...
-}
 
