@@ -235,6 +235,7 @@
     <ClInclude Include="..\VSTGL\VSTGL\VSTGLEditor.h" />
     <ClInclude Include="..\VSTGL\VSTGL\VSTGLTimer.h" />
     <ClInclude Include="..\VSTGL\VstPlugin.h" />
+    <ClInclude Include="paramsMinMax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

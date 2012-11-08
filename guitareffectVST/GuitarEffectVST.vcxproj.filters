@@ -488,5 +488,8 @@
     <ClInclude Include="..\VSTGL\ExampleEditor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="paramsMinMax.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
