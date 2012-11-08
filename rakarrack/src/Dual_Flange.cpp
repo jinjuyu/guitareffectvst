@@ -367,6 +367,260 @@ Dflange::out (float * smpsl, float * smpsr)
 };
 
 
+void
+Dflange::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    //deal with LFO's
+    int tmp0, tmp1;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	period_const = 1.0/fPERIOD;
+
+    float lfol, lfor, lmod, rmod, lmodfreq, rmodfreq, rx0, rx1, lx0, lx1;
+    float ldif0, ldif1, rdif0, rdif1;  //Difference between fractional delay and floor(fractional delay)
+    float drA, drB, dlA, dlB;	//LFO inside the loop.
+
+    lfo.effectlfoout (&lfol, &lfor);
+    lmod = lfol;
+    if(Pzero && Pintense) rmod = 1.0f - lfol;  //using lfol is intentional
+    else rmod = lfor;
+
+    if(Pintense) {
+//do intense stuff
+        lmodfreq = (f_pow2(lmod*lmod*logmax)) * fdepth;  //2^x type sweep for musical interpretation of moving delay line.
+        rmodfreq = (f_pow2(rmod*rmod*logmax)) * fdepth;  //logmax depends on depth
+        rflange0 = 0.5f/rmodfreq;		//Turn the notch frequency into 1/2 period delay
+        rflange1 = rflange0 + (1.0f - foffset)/fdepth;				//Set relationship of second delay line
+        lflange0 = 0.5f/lmodfreq;
+        lflange1 = lflange0 + (1.0f - foffset)/fdepth;
+
+        rx0 = (rflange0 - oldrflange0) * period_const;  //amount to add each time around the loop.  Less processing of linear LFO interp inside the loop.
+        rx1 =  (rflange1 - oldrflange1) * period_const;
+        lx0 = (lflange0 - oldlflange0) * period_const;
+        lx1  = (lflange1 - oldlflange1) * period_const;
+
+// Now there is a fractional amount to add
+        drA = oldrflange0;
+        drB = oldrflange1;
+        dlA = oldlflange0;
+        dlB = oldlflange1;
+
+        oldrflange0 = rflange0;
+        oldrflange1 = rflange1;
+        oldlflange0 = lflange0;
+        oldlflange1 = lflange1;
+        //lfo ready...
+
+        if(Pzero) {
+            for (i = 0; i < PERIOD; i++) {
+
+                ldl = inputs[0][i] * lpan + ldl * ffb;
+                rdl = inputs[1][i] * rpan + rdl * ffb;
+
+                //LowPass Filter
+                ldl = ldl * (1.0f - fhidamp) + oldl * fhidamp;
+                rdl = rdl * (1.0f - fhidamp) + oldr * fhidamp;
+                oldl = ldl + DENORMAL_GUARD;
+                oldr = rdl + DENORMAL_GUARD;
+                /*
+                Here do the delay line stuff
+                basically,
+                dl1(dl2(smps));
+                ^^This runs two flangers in series so you can get a double notch
+                */
+
+                ldl = ldelayline0->delay(ldl,dlA, 0, 1, 0)  + ldelayline1->delay(ldl,drA, 0, 1, 0);
+                rdl = rdelayline0->delay(rdl,dlB, 0, 1, 0) + rdelayline1->delay(rdl,drB, 0, 1, 0);
+
+                outputs[0][i] = ldl = ldl * flrcross + rdl * frlcross;
+                outputs[1][i] = rdl = rdl * flrcross + ldl * frlcross;
+
+// Increment LFO
+                drA += rx0;
+                drB += rx1;
+                dlA += lx0;
+                dlB += lx1;
+            }
+        } else {
+            for (i = 0; i < PERIOD; i++) {
+
+                ldl = inputs[0][i] * lpan + ldl * ffb;
+                rdl = inputs[1][i] * rpan + rdl * ffb;
+
+                //LowPass Filter
+                ldl = ldl * (1.0f - fhidamp) + oldl * fhidamp;
+                rdl = rdl * (1.0f - fhidamp) + oldr * fhidamp;
+                oldl = ldl + DENORMAL_GUARD;
+                oldr = rdl + DENORMAL_GUARD;
+                /*
+                Here do the delay line stuff
+                basically,
+                dl1(dl2(smps));
+                ^^This runs two flangers in series so you can get a double notch
+                */
+
+                ldl = ldelayline0->delay(ldl,dlA, 0, 1, 0);
+                ldl = ldelayline1->delay(ldl,dlB, 0, 1, 0);
+
+                rdl = rdelayline0->delay(rdl,drA, 0, 1, 0);
+                rdl = rdelayline1->delay(rdl,drB, 0, 1, 0);
+
+                outputs[0][i] = ldl = ldl * flrcross + rdl * frlcross;
+                outputs[1][i] = rdl = rdl * flrcross + ldl * frlcross;
+
+// Increment LFO
+                drA += rx0;
+                drB += rx1;
+                dlA += lx0;
+                dlB += lx1;
+            }
+        }
+
+
+    } else {
+
+        lmodfreq = fdepth + fwidth*(powf(base, lmod) - 1.0f)*ibase;	//sets frequency of lowest notch. // 20 <= fdepth <= 4000 // 20 <= width <= 16000 //
+        rmodfreq = fdepth + fwidth*(powf(base, rmod) - 1.0f)*ibase;
+
+
+        if (lmodfreq > 10000.0f)
+            lmodfreq = 10000.0f;
+        else if (lmodfreq < 10.0f)
+            lmodfreq = 10.0f;
+        if (rmodfreq > 10000.0)
+            rmodfreq = 10000.0f;
+        else if (rmodfreq < 10.0f)
+            rmodfreq = 10.0f;
+
+        rflange0 = fSAMPLE_RATE * 0.5f/rmodfreq;		//Turn the notch frequency into a number for delay
+        rflange1 = rflange0 * foffset;				//Set relationship of second delay line
+        lflange0 = fSAMPLE_RATE * 0.5f/lmodfreq;
+        lflange1 = lflange0 * foffset;
+
+//now is a delay expressed in number of samples.  Number here
+//will be fractional, but will use linear interpolation inside the loop to make a decent guess at
+//the numbers between samples.
+
+        rx0 = (rflange0 - oldrflange0) * period_const;  //amount to add each time around the loop.  Less processing of linear LFO interp inside the loop.
+        rx1 =  (rflange1 - oldrflange1) * period_const;
+        lx0 = (lflange0 - oldlflange0) * period_const;
+        lx1  = (lflange1 - oldlflange1) * period_const;
+// Now there is a fractional amount to add
+
+        drA = oldrflange0;
+        drB = oldrflange1;
+        dlA = oldlflange0;
+        dlB = oldlflange1;
+        // dr, dl variables are the LFO inside the loop.
+
+        oldrflange0 = rflange0;
+        oldrflange1 = rflange1;
+        oldlflange0 = lflange0;
+        oldlflange1 = lflange1;
+        //lfo ready...
+
+
+        for (i = 0; i < PERIOD; i++) {
+
+            //Delay line utility
+            ldl = ldelay[kl];
+            rdl = rdelay[kr];
+            l = ldl * flrcross + rdl * frlcross;
+            r = rdl * flrcross + ldl * frlcross;
+            ldl = l;
+            rdl = r;
+            ldl = inputs[0][i] * lpan - ldl * ffb;
+            rdl = inputs[1][i] * rpan - rdl * ffb;
+
+
+            //LowPass Filter
+            ldelay[kl] = ldl = ldl * (1.0f - fhidamp) + oldl * fhidamp;
+            rdelay[kr] = rdl = rdl * (1.0f - fhidamp) + oldr * fhidamp;
+            oldl = ldl + DENORMAL_GUARD;
+            oldr = rdl + DENORMAL_GUARD;
+
+            if(Pzero) {
+                //Offset zero reference delay
+                zdl = zldelay[zl];
+                zdr = zrdelay[zr];
+                zldelay[zl] = inputs[0][i];
+                zrdelay[zr] = inputs[1][i];
+                if (--zl < 0)   //Cycle delay buffer in reverse so delay time can be indexed directly with addition
+                    zl =  zcenter;
+                if (--zr < 0)
+                    zr =  zcenter;
+            }
+
+            //End delay line management, start flanging:
+
+            //Right Channel, delay A
+            rdif0 = drA - floor(drA);
+            tmp0 = (kr + (int) floor(drA)) %  maxx_delay;
+            tmp1 = tmp0 + 1;
+            if (tmp1 >= maxx_delay) tmp1 =  0;
+            //rsA = rdelay[tmp0] + rdif0 * (rdelay[tmp1] - rdelay[tmp0] );	//here is the first right channel delay
+            rsA = rdelay[tmp1] + rdif0 * (rdelay[tmp0] - rsA );	//All-pass interpolator
+
+            //Right Channel, delay B
+            rdif1 = drB - floor(drB);
+            tmp0 = (kr + (int) floor(drB)) %  maxx_delay;
+            tmp1 = tmp0 + 1;
+            if (tmp1 >= maxx_delay) tmp1 =  0;
+            //rsB = rdelay[tmp0] + rdif1 * (rdelay[tmp1] - rdelay[tmp0]);	//here is the second right channel delay
+            rsB = rdelay[tmp1] + rdif1 * (rdelay[tmp0] - rsB );
+
+            //Left Channel, delay A
+            ldif0 = dlA - floor(dlA);
+            tmp0 = (kl + (int) floor(dlA)) %  maxx_delay;
+            tmp1 = tmp0 + 1;
+            if (tmp1 >= maxx_delay) tmp1 =  0;
+            //lsA = ldelay[tmp0] + ldif0 * (ldelay[tmp1] - ldelay[tmp0]);	//here is the first left channel delay
+            lsA = ldelay[tmp1] + ldif0 * (ldelay[tmp0] - lsA );
+
+            //Left Channel, delay B
+            ldif1 = dlB - floor(dlB);
+            tmp0 = (kl + (int) floor(dlB)) %  maxx_delay;
+            tmp1 = tmp0 + 1;
+            if (tmp1 >= maxx_delay) tmp1 =  0;
+            //lsB = ldelay[tmp0] + ldif1 * (ldelay[tmp1] - ldelay[tmp0]);	//here is the second left channel delay
+            lsB = ldelay[tmp1] + ldif1 * (ldelay[tmp0] - lsB );
+            //End flanging, next process outputs
+
+            if(Pzero) {
+                outputs[0][i]= dry * inputs[0][i] +  fsubtract * wet * (fsubtract * (lsA + lsB)  + zdl);    // Make final FX out mix
+                outputs[1][i]= dry * inputs[1][i] +  fsubtract * wet * (fsubtract * (rsA + rsB)  + zdr);
+            } else {
+                outputs[0][i]= dry * inputs[0][i] +  wet * fsubtract * (lsA + lsB);    // Make final FX out mix
+                outputs[1][i]= dry * inputs[1][i] +  wet * fsubtract * (rsA + rsB);
+            }
+
+
+
+
+            if (--kl < 0)   //Cycle delay buffer in reverse so delay time can be indexed directly with addition
+                kl =  maxx_delay;
+            if (--kr < 0)
+                kr =  maxx_delay;
+
+
+
+// Increment LFO
+            drA += rx0;
+            drB += rx1;
+            dlA += lx0;
+            dlB += lx1;
+
+        };  //end for loop
+
+    }  //end intense if statement
+
+
+};
+
+
 /*
  * Parameter control
  */

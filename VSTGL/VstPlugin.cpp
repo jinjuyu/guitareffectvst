@@ -98,6 +98,8 @@ vendorName("ndc Plugs")
 	mEffChorus = new Chorus(nullptr, nullptr);
 	mEffCoil = new CoilCrafter(nullptr, nullptr);
 	mEffCompBand = new CompBand(nullptr, nullptr);
+	mEffCompressor = new Compressor(nullptr, nullptr);
+	mEffDualFlange = new Dflange(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -136,6 +138,14 @@ vendorName("ndc Plugs")
 	int preset9[13] = {0, 16, 2, 2, 4, -16, 24, 24, -8, 140, 1000, 5000, 48};
 	for (int n = 0; n < 13; n++)
 		mEffCompBand->changepar (n, preset9[n]);
+
+	int preset10[10] = {-1, 15, 0, 5, 250, 0 ,0 ,1 ,1};
+	for (int n = 0; n < 10; n++)
+		mEffCompressor->Compressor_Change (n, preset10[n]);
+
+	int preset11[15] = {0, 0, 64, 500, 3000, 50, -40, 8000, 1, 0, 196, 96, 0, 0, 0};
+	for (int n = 0; n < 15; n++)
+		mEffDualFlange->changepar (n, preset11[n]);
 
 
 	// originals
@@ -192,6 +202,8 @@ VstPlugin::~VstPlugin()
 	delete mEffArpie;
 	delete mEffChorus;
 	delete mEffCoil;
+	delete mEffCompressor;
+	delete mEffDualFlange;
 	int i;
 
 	//Delete event queue.
@@ -253,14 +265,17 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = inputs[0][i];
 		outputs[1][i] = inputs[1][i];
 	}
-	mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
-	mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
-	mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
+	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
+	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
+	//mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
-	mEffAPhaser->processReplacing(outputs, outputs, sampleFrames);
-	mEffArpie->processReplacing(outputs, outputs, sampleFrames);
-	mEffChorus->processReplacing(outputs, outputs, sampleFrames);
-	mEffCoil->processReplacing(outputs, outputs, sampleFrames);
+	//mEffAPhaser->processReplacing(outputs, outputs, sampleFrames);
+	//mEffArpie->processReplacing(outputs, outputs, sampleFrames);
+	//mEffChorus->processReplacing(outputs, outputs, sampleFrames);
+	//mEffCoil->processReplacing(outputs, outputs, sampleFrames);
+	//mEffCompBand->processReplacing(outputs, outputs, sampleFrames);
+	//mEffCompressor->processReplacing(outputs, outputs, sampleFrames);
+	mEffDualFlange->processReplacing(outputs, outputs, sampleFrames);
 	//mEffCompBand->processReplacing(outputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
