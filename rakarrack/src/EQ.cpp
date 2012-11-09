@@ -27,9 +27,9 @@
 #include <math.h>
 #include "EQ.h"
 
-EQ::EQ (float * efxoutl_, float * efxoutr_)
+EQ::EQ (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
-
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -40,8 +40,8 @@ EQ::EQ (float * efxoutl_, float * efxoutr_)
         filter[i].Pgain = 64;
         filter[i].Pq = 64;
         filter[i].Pstages = 0;
-        filter[i].l = new AnalogFilter (6, 1000.0f, 1.0f, 0);
-        filter[i].r = new AnalogFilter (6, 1000.0f, 1.0f, 0);
+        filter[i].l = new AnalogFilter (param,6, 1000.0f, 1.0f, 0);
+        filter[i].r = new AnalogFilter (param,6, 1000.0f, 1.0f, 0);
     };
     //default values
     Ppreset = 0;
@@ -84,7 +84,7 @@ EQ::out (float * smpsl, float * smpsr)
     };
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i] = smpsl[i] * outvolume;
         efxoutr[i] = smpsr[i] * outvolume;
     };
@@ -97,11 +97,11 @@ EQ::processReplacing (float **inputs,
 								int sampleFrames)
 {
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = sampleFrames;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         outputs[0][i] = inputs[0][i] * outvolume;
         outputs[1][i] = inputs[1][i] * outvolume;
     };

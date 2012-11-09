@@ -32,8 +32,9 @@ class Chorus
 {
 
 public:
-    Chorus (float * efxoutl_, float * efxoutr_);
+    Chorus (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Chorus ();
+	Parameters *param;
     void out (float * smpsl, float * smpsr);
     void setpreset (int dgui, int npreset);
     void changepar (int npar, int value);

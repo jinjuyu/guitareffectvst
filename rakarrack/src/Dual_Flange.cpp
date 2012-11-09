@@ -32,12 +32,13 @@
 #include <math.h>
 #include "Dual_Flange.h"
 
-Dflange::Dflange (float * efxoutl_, float * efxoutr_)
-{
+Dflange::Dflange (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
-    period_const = 1.0f/fPERIOD;
+    period_const = 1.0f/param->fPERIOD;
 
     //default values
     Ppreset = 0;
@@ -52,10 +53,10 @@ Dflange::Dflange (float * efxoutl_, float * efxoutr_)
     zldelay = new float[maxx_delay];
     zrdelay = new float[maxx_delay];
 
-    ldelayline0  = new delayline(0.055f, 2);
-    rdelayline0  = new delayline(0.055f, 2);
-    ldelayline1  = new delayline(0.055f, 2);
-    rdelayline1  = new delayline(0.055f, 2);
+    ldelayline0  = new delayline(param,0.055f, 2);
+    rdelayline0  = new delayline(param,0.055f, 2);
+    ldelayline1  = new delayline(param,0.055f, 2);
+    rdelayline1  = new delayline(param,0.055f, 2);
     ldelayline0 -> set_averaging(0.05f);
     rdelayline0 -> set_averaging(0.05f);
     ldelayline0->set_mix( 0.5f );
@@ -161,7 +162,7 @@ Dflange::out (float * smpsl, float * smpsr)
         //lfo ready...
 
         if(Pzero) {
-            for (i = 0; i < PERIOD; i++) {
+            for (i = 0; i < param->PERIOD; i++) {
 
                 ldl = smpsl[i] * lpan + ldl * ffb;
                 rdl = smpsr[i] * rpan + rdl * ffb;
@@ -191,7 +192,7 @@ Dflange::out (float * smpsl, float * smpsr)
                 dlB += lx1;
             }
         } else {
-            for (i = 0; i < PERIOD; i++) {
+            for (i = 0; i < param->PERIOD; i++) {
 
                 ldl = smpsl[i] * lpan + ldl * ffb;
                 rdl = smpsr[i] * rpan + rdl * ffb;
@@ -269,7 +270,7 @@ Dflange::out (float * smpsl, float * smpsr)
         //lfo ready...
 
 
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
 
             //Delay line utility
             ldl = ldelay[kl];
@@ -375,9 +376,9 @@ Dflange::processReplacing (float **inputs,
     int i;
     //deal with LFO's
     int tmp0, tmp1;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
-	period_const = 1.0/fPERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
+	period_const = 1.0/param->fPERIOD;
 
     float lfol, lfor, lmod, rmod, lmodfreq, rmodfreq, rx0, rx1, lx0, lx1;
     float ldif0, ldif1, rdif0, rdif1;  //Difference between fractional delay and floor(fractional delay)
@@ -415,7 +416,7 @@ Dflange::processReplacing (float **inputs,
         //lfo ready...
 
         if(Pzero) {
-            for (i = 0; i < PERIOD; i++) {
+            for (i = 0; i < param->PERIOD; i++) {
 
                 ldl = inputs[0][i] * lpan + ldl * ffb;
                 rdl = inputs[1][i] * rpan + rdl * ffb;
@@ -445,7 +446,7 @@ Dflange::processReplacing (float **inputs,
                 dlB += lx1;
             }
         } else {
-            for (i = 0; i < PERIOD; i++) {
+            for (i = 0; i < param->PERIOD; i++) {
 
                 ldl = inputs[0][i] * lpan + ldl * ffb;
                 rdl = inputs[1][i] * rpan + rdl * ffb;
@@ -523,7 +524,7 @@ Dflange::processReplacing (float **inputs,
         //lfo ready...
 
 
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
 
             //Delay line utility
             ldl = ldelay[kl];

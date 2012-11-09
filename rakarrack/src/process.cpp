@@ -34,7 +34,7 @@
 int Pexitprogram, preset;
 int commandline;
 int exitwithhelp, gui, nojack;
-int PERIOD;
+//int param->PERIOD;
 int note_active[POLY];
 int rnote[POLY];
 int gate[POLY];
@@ -46,7 +46,7 @@ int looper_lqua;
 int needtoloadstate;
 int needtoloadbank;
 unsigned int SAMPLE_RATE;
-float fPERIOD;
+//float param->fPERIOD;
 float fSAMPLE_RATE;
 float cSAMPLE_RATE;
 int Wave_res_amount = 5;
@@ -69,7 +69,7 @@ char DATADIR[260];
 //Pixmap p, mask;
 //XWMHints *hints;
 
-RKR::RKR ()
+RKR::RKR (Parameters *param)
 {
 	/*
     db6booster=0;
@@ -234,19 +234,19 @@ RKR::RKR ()
 
 
 
-    efxoutl = (float *) malloc (sizeof (float) * PERIOD);
-    efxoutr = (float *) malloc (sizeof (float) * PERIOD);
+    efxoutl = (float *) malloc (sizeof (float) * param->PERIOD);
+    efxoutr = (float *) malloc (sizeof (float) * param->PERIOD);
 
-    smpl = (float *) malloc (sizeof (float) * PERIOD);
-    smpr = (float *) malloc (sizeof (float) * PERIOD);
+    smpl = (float *) malloc (sizeof (float) * param->PERIOD);
+    smpr = (float *) malloc (sizeof (float) * param->PERIOD);
 
-    anall = (float *) malloc (sizeof (float) * PERIOD);
-    analr = (float *) malloc (sizeof (float) * PERIOD);
+    anall = (float *) malloc (sizeof (float) * param->PERIOD);
+    analr = (float *) malloc (sizeof (float) * param->PERIOD);
 
-    auxdata = (float *) malloc (sizeof (float) * PERIOD);
-    auxresampled = (float *) malloc (sizeof (float) * PERIOD);
+    auxdata = (float *) malloc (sizeof (float) * param->PERIOD);
+    auxresampled = (float *) malloc (sizeof (float) * param->PERIOD);
 
-    m_ticks = (float *) malloc (sizeof (float) * PERIOD);
+    m_ticks = (float *) malloc (sizeof (float) * param->PERIOD);
 
 
 
@@ -909,19 +909,19 @@ RKR::Adjust_Upsample()
 
     if(upsample) {
         SAMPLE_RATE = J_SAMPLE_RATE*(UpAmo+2);
-        PERIOD = J_PERIOD*(UpAmo+2);
+        param->PERIOD = J_PERIOD*(UpAmo+2);
         u_up = (double)UpAmo+2.0;
         u_down = 1.0 / u_up;
 
 
     } else {
         SAMPLE_RATE = J_SAMPLE_RATE;
-        PERIOD = J_PERIOD;
+        param->PERIOD = J_PERIOD;
     }
 
     fSAMPLE_RATE = (float) SAMPLE_RATE;
     cSAMPLE_RATE = 1.0f / (float)SAMPLE_RATE;
-    fPERIOD= float(PERIOD);
+    param->fPERIOD= float(param->PERIOD);
     t_periods = J_SAMPLE_RATE / 12 / J_PERIOD;
 
 }
@@ -1146,7 +1146,7 @@ RKR::EQ2_setpreset (int npreset)
 void
 RKR::add_metro()
 {
-    for(int i=0; i<PERIOD; i++) {
+    for(int i=0; i<param->PERIOD; i++) {
 
         efxoutl[i] +=m_ticks[i]*M_Metro_Vol;
         efxoutr[i] +=m_ticks[i]*M_Metro_Vol;
@@ -1158,8 +1158,8 @@ RKR::add_metro()
 void
 RKR::Vol2_Efx ()
 {
-    memcpy(smpl,efxoutl, PERIOD * sizeof(float));
-    memcpy(smpr,efxoutr, PERIOD * sizeof(float));
+    memcpy(smpl,efxoutl, param->PERIOD * sizeof(float));
+    memcpy(smpr,efxoutr, param->PERIOD * sizeof(float));
 }
 
 
@@ -1169,7 +1169,7 @@ RKR::Vol3_Efx ()
     int i;
     float att=2.0f;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i] *= att;
         efxoutr[i] *= att;
     }
@@ -1197,7 +1197,7 @@ RKR::Vol_Efx (int NumEffect, float volume)
     if ((NumEffect == 8) || (NumEffect == 15))
         v2 *= v2;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i] = smpl[i] * v2 + efxoutl[i] * v1;
         efxoutr[i] = smpr[i] * v2 + efxoutr[i] * v1;
     };
@@ -1253,7 +1253,7 @@ RKR::Control_Gain (float *origl, float *origr)
 
     if(upsample) {
         U_Resample->out(origl,origr,efxoutl,efxoutr,J_PERIOD,u_up);
-        if((checkforaux()) || (ACI_Bypass)) A_Resample->mono_out(auxdata,auxresampled,J_PERIOD,u_up,PERIOD);
+        if((checkforaux()) || (ACI_Bypass)) A_Resample->mono_out(auxdata,auxresampled,J_PERIOD,u_up,param->PERIOD);
     } else if((checkforaux()) || (ACI_Bypass)) memcpy(auxresampled,auxdata,sizeof(float)*J_PERIOD);
 
     if(DC_Offset) {
@@ -1263,7 +1263,7 @@ RKR::Control_Gain (float *origl, float *origr)
 
 
 
-    for (i = 0; i <= PERIOD; i++) {
+    for (i = 0; i <= param->PERIOD; i++) {
         efxoutl[i] *= Log_I_Gain;
         efxoutr[i] *= Log_I_Gain;
         tmp = fabsf(efxoutr[i]);
@@ -1273,8 +1273,8 @@ RKR::Control_Gain (float *origl, float *origr)
 
 
     }
-    memcpy(smpl,efxoutl,sizeof(float)*PERIOD);
-    memcpy(smpr,efxoutr,sizeof(float)*PERIOD);
+    memcpy(smpl,efxoutl,sizeof(float)*param->PERIOD);
+    memcpy(smpr,efxoutr,sizeof(float)*param->PERIOD);
 
     temp_sum = (float)CLAMP (rap2dB (il_sum), -48.0, 15.0);
     val_il_sum = .6f * old_il_sum + .4f * temp_sum;
@@ -1288,7 +1288,7 @@ RKR::Control_Gain (float *origl, float *origr)
     if((ACI_Bypass) && (Aux_Source==0)) {
         temp_sum = 0.0;
         tmp = 0.0;
-        for (i = 0; i <= PERIOD; i++) {
+        for (i = 0; i <= param->PERIOD; i++) {
             tmp = fabsf(auxresampled[i]);
             if (tmp > a_sum) a_sum = tmp;
         }
@@ -1318,7 +1318,7 @@ RKR::Control_Volume (float *origl,float *origr)
 
     if((flpos)&&(have_signal)) {
         if(db6booster) {
-            for(i=0; i<PERIOD; i++) {
+            for(i=0; i<param->PERIOD; i++) {
                 efxoutl[i] *=.5f;
                 efxoutr[i] *=.5f;
             }
@@ -1327,7 +1327,7 @@ RKR::Control_Volume (float *origl,float *origr)
         efx_FLimiter->out(efxoutl, efxoutr);
 
         if(db6booster) {
-            for(i=0; i<PERIOD; i++) {
+            for(i=0; i<param->PERIOD; i++) {
                 efxoutl[i] *=2.0f;
                 efxoutr[i] *=2.0f;
             }
@@ -1336,13 +1336,13 @@ RKR::Control_Volume (float *origl,float *origr)
 
     }
 
-    memcpy(anall, efxoutl, sizeof(float)* PERIOD);
-    memcpy(analr, efxoutr, sizeof(float)* PERIOD);
+    memcpy(anall, efxoutl, sizeof(float)* param->PERIOD);
+    memcpy(analr, efxoutr, sizeof(float)* param->PERIOD);
 
 
 
     if(upsample)
-        D_Resample->out(anall,analr,efxoutl,efxoutr,PERIOD,u_down);
+        D_Resample->out(anall,analr,efxoutl,efxoutr,param->PERIOD,u_down);
 
 
     if (OnCounter < t_periods) {
@@ -1352,7 +1352,7 @@ RKR::Control_Volume (float *origl,float *origr)
 
     else Temp_M_Volume = Log_M_Volume;
 
-    for (i = 0; i <= PERIOD; i++) { //control volume
+    for (i = 0; i <= param->PERIOD; i++) { //control volume
 
         efxoutl[i] *= Temp_M_Volume*booster;
         efxoutr[i] *= Temp_M_Volume*booster;
@@ -1372,7 +1372,7 @@ RKR::Control_Volume (float *origl,float *origr)
 
     if ((!flpos) && (have_signal)) {
         if(db6booster) {
-            for(i=0; i<PERIOD; i++) {
+            for(i=0; i<param->PERIOD; i++) {
                 efxoutl[i] *=.5f;
                 efxoutr[i] *=.5f;
             }
@@ -1381,7 +1381,7 @@ RKR::Control_Volume (float *origl,float *origr)
         efx_FLimiter->out(efxoutl, efxoutr);  //then limit final output
 
         if(db6booster) {
-            for(i=0; i<PERIOD; i++) {
+            for(i=0; i<param->PERIOD; i++) {
                 efxoutl[i] *=2.0f;
                 efxoutr[i] *=2.0f;
             }
@@ -1391,7 +1391,7 @@ RKR::Control_Volume (float *origl,float *origr)
     }
 
 
-    for (i = 0; i <= PERIOD; i++) {
+    for (i = 0; i <= param->PERIOD; i++) {
 
         tmp = fabsf (efxoutl[i]);
         if (tmp > il_sum) il_sum = tmp;
@@ -1501,10 +1501,10 @@ RKR::Alg (float *inl1, float *inr1, float *origl, float *origr, void *)
 
 
         if (Tuner_Bypass)
-            efx_Tuner->schmittFloat (PERIOD, efxoutl, efxoutr);
+            efx_Tuner->schmittFloat (param->PERIOD, efxoutl, efxoutr);
 
 /*        if (MIDIConverter_Bypass)
-            efx_MIDIConverter->schmittFloat (PERIOD, efxoutl, efxoutr);
+            efx_MIDIConverter->schmittFloat (param->PERIOD, efxoutl, efxoutr);
 			*/
 
         if ((Harmonizer_Bypass) && (have_signal)) {

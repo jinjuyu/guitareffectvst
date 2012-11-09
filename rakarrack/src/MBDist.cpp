@@ -32,40 +32,41 @@
 
 
 
-MBDist::MBDist (float * efxoutl_, float * efxoutr_)
+MBDist::MBDist (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 44100;
-    lowl = (float *) malloc (sizeof (float) * PERIOD);
-    lowr = (float *) malloc (sizeof (float) * PERIOD);
-    midl = (float *) malloc (sizeof (float) * PERIOD);
-    midr = (float *) malloc (sizeof (float) * PERIOD);
-    highl = (float *) malloc (sizeof (float) * PERIOD);
-    highr = (float *) malloc (sizeof (float) * PERIOD);
+	param->PERIOD = 44106;
+    lowl = (float *) malloc (sizeof (float) * param->PERIOD);
+    lowr = (float *) malloc (sizeof (float) * param->PERIOD);
+    midl = (float *) malloc (sizeof (float) * param->PERIOD);
+    midr = (float *) malloc (sizeof (float) * param->PERIOD);
+    highl = (float *) malloc (sizeof (float) * param->PERIOD);
+    highr = (float *) malloc (sizeof (float) * param->PERIOD);
 
 
-    lpf1l = new AnalogFilter (2, 500.0f, .7071f, 0);
-    lpf1r = new AnalogFilter (2, 500.0f, .7071f, 0);
-    hpf1l = new AnalogFilter (3, 500.0f, .7071f, 0);
-    hpf1r = new AnalogFilter (3, 500.0f, .7071f, 0);
-    lpf2l = new AnalogFilter (2, 2500.0f, .7071f, 0);
-    lpf2r = new AnalogFilter (2, 2500.0f, .7071f, 0);
-    hpf2l = new AnalogFilter (3, 2500.0f, .7071f, 0);
-    hpf2r = new AnalogFilter (3, 2500.0f, .7071f, 0);
-    DCl = new AnalogFilter (3, 30, 1, 0);
-    DCr = new AnalogFilter (3, 30, 1, 0);
+    lpf1l = new AnalogFilter (param,2, 500.0f, .7071f, 0);
+    lpf1r = new AnalogFilter (param,2, 500.0f, .7071f, 0);
+    hpf1l = new AnalogFilter (param,3, 500.0f, .7071f, 0);
+    hpf1r = new AnalogFilter (param,3, 500.0f, .7071f, 0);
+    lpf2l = new AnalogFilter (param,2, 2500.0f, .7071f, 0);
+    lpf2r = new AnalogFilter (param,2, 2500.0f, .7071f, 0);
+    hpf2l = new AnalogFilter (param,3, 2500.0f, .7071f, 0);
+    hpf2r = new AnalogFilter (param,3, 2500.0f, .7071f, 0);
+    DCl = new AnalogFilter (param,3, 30, 1, 0);
+    DCr = new AnalogFilter (param,3, 30, 1, 0);
     DCl->setfreq (30.0f);
     DCr->setfreq (30.0f);
 
 
-    mbwshape1l = new Waveshaper();
-    mbwshape2l = new Waveshaper();
-    mbwshape3l = new Waveshaper();
+    mbwshape1l = new Waveshaper(param);
+    mbwshape2l = new Waveshaper(param);
+    mbwshape3l = new Waveshaper(param);
 
-    mbwshape1r = new Waveshaper();
-    mbwshape2r = new Waveshaper();
-    mbwshape3r = new Waveshaper();
+    mbwshape1r = new Waveshaper(param);
+    mbwshape2r = new Waveshaper(param);
+    mbwshape3r = new Waveshaper(param);
 
     //default values
     Ppreset = 0;
@@ -123,60 +124,60 @@ MBDist::out (float * smpsl, float * smpsr)
 
 
     if (Pstereo) {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] = smpsl[i] * inputvol * 2.0f;
             efxoutr[i] = smpsr[i] * inputvol * 2.0f;
         };
     } else {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] =
                 (smpsl[i]  +  smpsr[i] ) * inputvol;
         };
     };
 
 
-    memcpy(lowl,efxoutl,sizeof(float) * PERIOD);
-    memcpy(midl,efxoutl,sizeof(float) * PERIOD);
-    memcpy(highl,efxoutl,sizeof(float) * PERIOD);
+    memcpy(lowl,efxoutl,sizeof(float) * param->PERIOD);
+    memcpy(midl,efxoutl,sizeof(float) * param->PERIOD);
+    memcpy(highl,efxoutl,sizeof(float) * param->PERIOD);
 
     lpf1l->filterout(lowl);
     hpf1l->filterout(midl);
     lpf2l->filterout(midl);
     hpf2l->filterout(highl);
 
-    if(volL> 0)  mbwshape1l->waveshapesmps (PERIOD, lowl, PtypeL, PdriveL, 1);
-    if(volM> 0)  mbwshape2l->waveshapesmps (PERIOD, midl, PtypeM, PdriveM, 1);
-    if(volH> 0)  mbwshape3l->waveshapesmps (PERIOD, highl, PtypeH, PdriveH, 1);
+    if(volL> 0)  mbwshape1l->waveshapesmps (param->PERIOD, lowl, PtypeL, PdriveL, 1);
+    if(volM> 0)  mbwshape2l->waveshapesmps (param->PERIOD, midl, PtypeM, PdriveM, 1);
+    if(volH> 0)  mbwshape3l->waveshapesmps (param->PERIOD, highl, PtypeH, PdriveH, 1);
 
 
     if(Pstereo) {
-        memcpy(lowr,efxoutr,sizeof(float) * PERIOD);
-        memcpy(midr,efxoutr,sizeof(float) * PERIOD);
-        memcpy(highr,efxoutr,sizeof(float) * PERIOD);
+        memcpy(lowr,efxoutr,sizeof(float) * param->PERIOD);
+        memcpy(midr,efxoutr,sizeof(float) * param->PERIOD);
+        memcpy(highr,efxoutr,sizeof(float) * param->PERIOD);
 
         lpf1r->filterout(lowr);
         hpf1r->filterout(midr);
         lpf2r->filterout(midr);
         hpf2r->filterout(highr);
 
-        if(volL> 0)  mbwshape1r->waveshapesmps (PERIOD, lowr, PtypeL, PdriveL, 1);
-        if(volM> 0)  mbwshape2r->waveshapesmps (PERIOD, midr, PtypeM, PdriveM, 1);
-        if(volH> 0)  mbwshape3r->waveshapesmps (PERIOD, highr, PtypeH, PdriveH, 1);
+        if(volL> 0)  mbwshape1r->waveshapesmps (param->PERIOD, lowr, PtypeL, PdriveL, 1);
+        if(volM> 0)  mbwshape2r->waveshapesmps (param->PERIOD, midr, PtypeM, PdriveM, 1);
+        if(volH> 0)  mbwshape3r->waveshapesmps (param->PERIOD, highr, PtypeH, PdriveH, 1);
 
 
     }
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i]=lowl[i]*volL+midl[i]*volM+highl[i]*volH;
         if (Pstereo) efxoutr[i]=lowr[i]*volL+midr[i]*volM+highr[i]*volH;
     }
 
-    if (!Pstereo) memcpy(efxoutr, efxoutl, sizeof(float)* PERIOD);
+    if (!Pstereo) memcpy(efxoutr, efxoutl, sizeof(float)* param->PERIOD);
 
 
     float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         lout = efxoutl[i];
         rout = efxoutr[i];
 
@@ -203,8 +204,8 @@ MBDist::processReplacing (float **inputs,
 {
     int i;
     float l, r, lout, rout;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
     float inputvol = powf (5.0f, ((float)Pdrive - 32.0f) / 127.0f);
     if (Pnegate != 0)
@@ -212,60 +213,60 @@ MBDist::processReplacing (float **inputs,
 
 
     if (Pstereo) {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] = inputs[0][i] * inputvol * 2.0f;
             outputs[1][i] = inputs[1][i] * inputvol * 2.0f;
         };
     } else {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] =
                 (inputs[0][i]  +  inputs[1][i] ) * inputvol;
         };
     };
 
 
-    memcpy(lowl,outputs[0],sizeof(float) * PERIOD);
-    memcpy(midl,outputs[0],sizeof(float) * PERIOD);
-    memcpy(highl,outputs[0],sizeof(float) * PERIOD);
+    memcpy(lowl,outputs[0],sizeof(float) * param->PERIOD);
+    memcpy(midl,outputs[0],sizeof(float) * param->PERIOD);
+    memcpy(highl,outputs[0],sizeof(float) * param->PERIOD);
 
     lpf1l->filterout(lowl);
     hpf1l->filterout(midl);
     lpf2l->filterout(midl);
     hpf2l->filterout(highl);
 
-    if(volL> 0)  mbwshape1l->waveshapesmps (PERIOD, lowl, PtypeL, PdriveL, 1);
-    if(volM> 0)  mbwshape2l->waveshapesmps (PERIOD, midl, PtypeM, PdriveM, 1);
-    if(volH> 0)  mbwshape3l->waveshapesmps (PERIOD, highl, PtypeH, PdriveH, 1);
+    if(volL> 0)  mbwshape1l->waveshapesmps (param->PERIOD, lowl, PtypeL, PdriveL, 1);
+    if(volM> 0)  mbwshape2l->waveshapesmps (param->PERIOD, midl, PtypeM, PdriveM, 1);
+    if(volH> 0)  mbwshape3l->waveshapesmps (param->PERIOD, highl, PtypeH, PdriveH, 1);
 
 
     if(Pstereo) {
-        memcpy(lowr,outputs[1],sizeof(float) * PERIOD);
-        memcpy(midr,outputs[1],sizeof(float) * PERIOD);
-        memcpy(highr,outputs[1],sizeof(float) * PERIOD);
+        memcpy(lowr,outputs[1],sizeof(float) * param->PERIOD);
+        memcpy(midr,outputs[1],sizeof(float) * param->PERIOD);
+        memcpy(highr,outputs[1],sizeof(float) * param->PERIOD);
 
         lpf1r->filterout(lowr);
         hpf1r->filterout(midr);
         lpf2r->filterout(midr);
         hpf2r->filterout(highr);
 
-        if(volL> 0)  mbwshape1r->waveshapesmps (PERIOD, lowr, PtypeL, PdriveL, 1);
-        if(volM> 0)  mbwshape2r->waveshapesmps (PERIOD, midr, PtypeM, PdriveM, 1);
-        if(volH> 0)  mbwshape3r->waveshapesmps (PERIOD, highr, PtypeH, PdriveH, 1);
+        if(volL> 0)  mbwshape1r->waveshapesmps (param->PERIOD, lowr, PtypeL, PdriveL, 1);
+        if(volM> 0)  mbwshape2r->waveshapesmps (param->PERIOD, midr, PtypeM, PdriveM, 1);
+        if(volH> 0)  mbwshape3r->waveshapesmps (param->PERIOD, highr, PtypeH, PdriveH, 1);
 
 
     }
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         outputs[0][i]=lowl[i]*volL+midl[i]*volM+highl[i]*volH;
         if (Pstereo) outputs[1][i]=lowr[i]*volL+midr[i]*volM+highr[i]*volH;
     }
 
-    if (!Pstereo) memcpy(outputs[1], outputs[0], sizeof(float)* PERIOD);
+    if (!Pstereo) memcpy(outputs[1], outputs[0], sizeof(float)* param->PERIOD);
 
 
     float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         lout = outputs[0][i];
         rout = outputs[1][i];
 

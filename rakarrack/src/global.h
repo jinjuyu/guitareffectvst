@@ -27,7 +27,12 @@
 #ifndef DXEMU_H
 #define DXEMU_H
 
-
+class Parameters
+{
+public:
+	int PERIOD;
+	float fPERIOD;
+};
 	
 __inline long int 
 lrint (double flt)
@@ -287,7 +292,7 @@ extern int commandline, gui;
 extern int exitwithhelp, nojack;
 extern int maxx_len;
 extern int error_num;
-extern int PERIOD;
+//extern int param->PERIOD;
 extern int reconota;
 extern int needtoloadstate;
 extern int needtoloadbank;
@@ -299,7 +304,7 @@ extern int rnote[POLY];
 extern int gate[POLY];
 extern int pdata[50];
 extern float val_sum;
-extern float fPERIOD;
+//extern float param->fPERIOD;
 extern unsigned int SAMPLE_RATE;
 extern float fSAMPLE_RATE;
 extern float cSAMPLE_RATE;
@@ -324,9 +329,9 @@ class RKR
 
 public:
 
-    RKR ();
+    RKR (Parameters *param);
     ~RKR ();
-
+	Parameters *param;
     void Alg (float *inl, float *inr,float *origl, float *origr ,void *);
     void Control_Gain (float *origl, float *origr);
     void Control_Volume (float *origl, float *origr);

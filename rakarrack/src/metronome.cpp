@@ -31,9 +31,9 @@
 
 metronome::metronome ()
 {
-    dulltick =  new AnalogFilter(4,1600.0f,80.0f,1);   //BPF
-    sharptick =  new AnalogFilter(4,2800.0f,80.0f,1);  //BPF
-    hpf =  new AnalogFilter(3,850.0f,60.0f,1);  //HPF
+    dulltick =  new AnalogFilter(param,4,1600.0f,80.0f,1);   //BPF
+    sharptick =  new AnalogFilter(param,4,2800.0f,80.0f,1);  //BPF
+    hpf =  new AnalogFilter(param,3,850.0f,60.0f,1);  //HPF
     tick_interval = SAMPLE_RATE;
     tickctr = 0;
     markctr = 0;
@@ -87,8 +87,8 @@ metronome::metronomeout (float * tickout)
     float ticker = 0.0f;
     float hipass = 0.0f;
     int i;
-
-    for(i=0; i<PERIOD; i++) {
+	
+    for(i=0; i<param->PERIOD; i++) {
         tickctr++;
 
         if (tickctr>tick_interval) {

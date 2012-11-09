@@ -31,7 +31,8 @@
 class EffectLFO
 {
 public:
-    EffectLFO ();
+    EffectLFO (Parameters *param);
+	Parameters *param;
     ~EffectLFO ();
     void effectlfoout (float * outl, float * outr);
     void updateparams ();

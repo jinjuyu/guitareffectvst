@@ -27,27 +27,27 @@
 #include <math.h>
 #include "Distorsion.h"
 #include "Resample.h"
-Distorsion::Distorsion (float * efxoutl_, float * efxoutr_)
+Distorsion::Distorsion (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
+    //octoutl = (float *) malloc (sizeof (float) * param->PERIOD);
+    //octoutr = (float *) malloc (sizeof (float) * param->PERIOD);
 
-    //octoutl = (float *) malloc (sizeof (float) * PERIOD);
-    //octoutr = (float *) malloc (sizeof (float) * PERIOD);
-
-    lpfl = new AnalogFilter (2, 300, 1, 0);
-    lpfr = new AnalogFilter (2, 300, 1, 0);
-    hpfl = new AnalogFilter (3, 700, 1, 0);
-    hpfr = new AnalogFilter (3, 700, 1, 0);
-    blockDCl = new AnalogFilter (2, 440.0f, 1, 0);
-    blockDCr = new AnalogFilter (2, 440.0f, 1, 0);
+    lpfl = new AnalogFilter (param,2, 300, 1, 0);
+    lpfr = new AnalogFilter (param,2, 300, 1, 0);
+    hpfl = new AnalogFilter (param,3, 700, 1, 0);
+    hpfr = new AnalogFilter (param,3, 700, 1, 0);
+    blockDCl = new AnalogFilter (param,2, 440.0f, 1, 0);
+    blockDCr = new AnalogFilter (param,2, 440.0f, 1, 0);
     blockDCl->setfreq (75.0f);
     blockDCr->setfreq (75.0f);
-    DCl = new AnalogFilter (3, 30, 1, 0);
-    DCr = new AnalogFilter (3, 30, 1, 0);
+    DCl = new AnalogFilter (param,3, 30, 1, 0);
+    DCr = new AnalogFilter (param,3, 30, 1, 0);
     DCl->setfreq (30.0f);
     DCr->setfreq (30.0f);
 
-    dwshapel = new Waveshaper();
-    dwshaper = new Waveshaper();
+    dwshapel = new Waveshaper(param);
+    dwshaper = new Waveshaper(param);
 	///Resample *asd = new Resample(0);
 
     //default values
@@ -127,16 +127,16 @@ Distorsion::processReplacing (float **inputs,
 	// ¾îÂ¼Áö?
     int i;
     float l, r, lout, rout;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
-	octoutl = (float *) malloc (sizeof (float) * (PERIOD+100));
-    octoutr = (float *) malloc (sizeof (float) * (PERIOD+100));
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
+	octoutl = (float *) malloc (sizeof (float) * (param->PERIOD+100));
+    octoutr = (float *) malloc (sizeof (float) * (param->PERIOD+100));
 
     float inputvol = powf (5.0f, ((float)Pdrive - 32.0f) / 127.0f);
     if (Pnegate != 0)
         inputvol *= -1.0f;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         outputs[0][i] = inputs[0][i] * inputvol * 2.0f;
         outputs[1][i] = inputs[1][i] * inputvol * 2.0f;
     }
@@ -148,8 +148,8 @@ Distorsion::processReplacing (float **inputs,
     //no optimised, yet (no look table)
 
 	
-    dwshapel->waveshapesmps (PERIOD, outputs[0], Ptype, Pdrive, 1);
-    dwshaper->waveshapesmps (PERIOD, outputs[1], Ptype, Pdrive, 1);
+    dwshapel->waveshapesmps (param->PERIOD, outputs[0], Ptype, Pdrive, 1);
+    dwshaper->waveshapesmps (param->PERIOD, outputs[1], Ptype, Pdrive, 1);
 			
 	// TODO: ÇÊÅÍ°¡ µÇ´ÂÁö ºÁ¾ßÇÔ. ÇÊÅÍ µÊ.
     if (Pprefiltering == 0)
@@ -157,7 +157,7 @@ Distorsion::processReplacing (float **inputs,
 
 	//octmix = 0.5;
     if (octmix > 0.01f) {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             lout = outputs[0][i];
             rout = outputs[1][i];
 
@@ -182,7 +182,7 @@ Distorsion::processReplacing (float **inputs,
 
     float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         lout = outputs[0][i];
         rout = outputs[1][i];
 

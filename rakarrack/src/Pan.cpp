@@ -26,8 +26,9 @@
 
 
 
-Pan::Pan (float *efxoutl_, float *efxoutr_)
-{
+Pan::Pan (Parameters *param, float *efxoutl_, float *efxoutr_)
+:lfo(param){
+	this->param = param;
 
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
@@ -64,14 +65,14 @@ Pan::out (float *smpsl, float *smpsr)
     int i;
     float avg, ldiff, rdiff, tmp;
     float pp;
-    float coeff_PERIOD = 1.0 / fPERIOD;
+    float coeff_PERIOD = 1.0 / param->fPERIOD;
     float fi,P_i;
 
 
 
     if (PextraON) {
 
-        for (i = 0; i < PERIOD; i++)
+        for (i = 0; i < param->PERIOD; i++)
 
         {
 
@@ -96,9 +97,9 @@ Pan::out (float *smpsl, float *smpsr)
         ll = lfol;
         lr = lfor;
         lfo.effectlfoout (&lfol, &lfor);
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             fi = (float) i;
-            P_i = (float) (PERIOD - i);
+            P_i = (float) (param->PERIOD - i);
 
             pp = (ll * P_i + lfol * fi) * coeff_PERIOD;
 
@@ -126,12 +127,12 @@ Pan::processReplacing (float **inputs,
 								float **outputs,
 								int sampleFrames)
 {
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
     int i;
     float avg, ldiff, rdiff, tmp;
     float pp;
-    float coeff_PERIOD = 1.0 / fPERIOD;
+    float coeff_PERIOD = 1.0 / param->fPERIOD;
     float fi,P_i;
 
 	lfo.update();
@@ -139,7 +140,7 @@ Pan::processReplacing (float **inputs,
 
     if (PextraON) {
 
-        for (i = 0; i < PERIOD; i++)
+        for (i = 0; i < param->PERIOD; i++)
 
         {
 
@@ -164,9 +165,9 @@ Pan::processReplacing (float **inputs,
         ll = lfol;
         lr = lfor;
         lfo.effectlfoout (&lfol, &lfor);
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             fi = (float) i;
-            P_i = (float) (PERIOD - i);
+            P_i = (float) (param->PERIOD - i);
 
             pp = (ll * P_i + lfol * fi) * coeff_PERIOD;
 

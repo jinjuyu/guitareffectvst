@@ -31,8 +31,9 @@
 class MusicDelay
 {
 public:
-    MusicDelay (float * efxoutl_, float * efxoutr_);
+    MusicDelay (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~MusicDelay ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

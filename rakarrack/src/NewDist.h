@@ -36,7 +36,8 @@
 class NewDist
 {
 public:
-    NewDist (float * efxoutl_, float * efxoutr_);
+    NewDist (Parameters *param, float * efxoutl_, float * efxoutr_);
+	Parameters *param;
     ~NewDist ();
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);

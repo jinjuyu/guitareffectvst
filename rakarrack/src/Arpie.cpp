@@ -26,8 +26,9 @@
 #include <math.h>
 #include "Arpie.h"
 
-Arpie::Arpie (float * efxoutl_, float * efxoutr_)
+Arpie::Arpie (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -128,7 +129,7 @@ Arpie::out (float * smpsl, float * smpsr)
     int i;
     float l, r, ldl, rdl, rswell, lswell;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 		if(kl >= maxx_delay)
 			kl = maxx_delay-1;
 		if(kr >= maxx_delay)
@@ -209,10 +210,10 @@ Arpie::processReplacing (float **inputs,
 {
     int i;
     float l, r, ldl, rdl, rswell, lswell;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         ldl = ldelay[kl];
         rdl = rdelay[kr];
         l = ldl * (1.0f - lrcross) + rdl * lrcross;

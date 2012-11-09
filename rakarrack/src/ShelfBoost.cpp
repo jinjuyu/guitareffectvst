@@ -25,8 +25,9 @@
 
 
 
-ShelfBoost::ShelfBoost (float * efxoutl_, float * efxoutr_)
+ShelfBoost::ShelfBoost (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -36,8 +37,8 @@ ShelfBoost::ShelfBoost (float * efxoutl_, float * efxoutr_)
     Pvolume = 50;
     Pstereo = 0;
 
-    RB1l =  new AnalogFilter(7,3200.0f,0.5f,0);
-    RB1r =  new AnalogFilter(7,3200.0f,0.5f,0);
+    RB1l =  new AnalogFilter(param,7,3200.0f,0.5f,0);
+    RB1r =  new AnalogFilter(param,7,3200.0f,0.5f,0);
 
 
     cleanup ();
@@ -75,12 +76,12 @@ ShelfBoost::out (float * smpsl, float * smpsr)
     if(Pstereo) RB1r->filterout(smpsr);
 
 
-    for(i=0; i<PERIOD; i++) {
+    for(i=0; i<param->PERIOD; i++) {
         smpsl[i]*=outvolume*u_gain;
         if(Pstereo) smpsr[i]*=outvolume*u_gain;
     }
 
-    if(!Pstereo) memcpy(smpsr,smpsl,sizeof(float)*PERIOD);
+    if(!Pstereo) memcpy(smpsr,smpsl,sizeof(float)*param->PERIOD);
 
 
 
@@ -92,21 +93,21 @@ void ShelfBoost::processReplacing (float **inputs,
 								int sampleFrames)
 {
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
     RB1l->filterout(inputs[0]);
     if(Pstereo) RB1r->filterout(inputs[1]);
 
 
-    for(i=0; i<PERIOD; i++) {
+    for(i=0; i<param->PERIOD; i++) {
         inputs[0][i]*=outvolume*u_gain;
         if(Pstereo) inputs[1][i]*=outvolume*u_gain;
     }
 
-    if(!Pstereo) memcpy(inputs[1],inputs[0],sizeof(float)*PERIOD);
-	memcpy(outputs[0],inputs[0],sizeof(float)*PERIOD);
-	memcpy(outputs[1],inputs[1],sizeof(float)*PERIOD);
+    if(!Pstereo) memcpy(inputs[1],inputs[0],sizeof(float)*param->PERIOD);
+	memcpy(outputs[0],inputs[0],sizeof(float)*param->PERIOD);
+	memcpy(outputs[1],inputs[1],sizeof(float)*param->PERIOD);
 
 
 

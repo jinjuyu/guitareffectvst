@@ -30,7 +30,8 @@
 class Waveshaper
 {
 public:
-    Waveshaper ();
+    Waveshaper (Parameters *param);
+	Parameters *param;
     ~Waveshaper ();
 //Waveshaping
     void waveshapesmps (int n, float * smps, int type,

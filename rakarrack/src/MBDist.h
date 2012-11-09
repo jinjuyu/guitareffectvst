@@ -33,8 +33,9 @@
 class MBDist
 {
 public:
-    MBDist (float * efxoutl_, float * efxoutr_);
+    MBDist (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~MBDist ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

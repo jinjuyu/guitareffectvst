@@ -36,8 +36,9 @@
 class Echotron
 {
 public:
-    Echotron (float * efxoutl_, float * efxoutr_);
+    Echotron (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Echotron ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

@@ -33,7 +33,8 @@
 class Shuffle
 {
 public:
-    Shuffle (float * efxoutl_, float * efxoutr_);
+    Shuffle (Parameters *param,float * efxoutl_, float * efxoutr_);
+	Parameters *param;
     ~Shuffle ();
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);

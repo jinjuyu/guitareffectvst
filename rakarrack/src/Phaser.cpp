@@ -27,8 +27,9 @@
 #include <stdio.h>
 #define PHASER_LFO_SHAPE 2
 
-Phaser::Phaser (float * efxoutl_, float * efxoutr_)
-{
+Phaser::Phaser (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -75,8 +76,8 @@ Phaser::out (float * smpsl, float * smpsr)
     else if (rgain < 0.0)
         rgain = 0.0f;
 
-    for (i = 0; i < PERIOD; i++) {
-        float x = (float) i / fPERIOD;
+    for (i = 0; i < param->PERIOD; i++) {
+        float x = (float) i / param->fPERIOD;
         float x1 = 1.0f - x;
         float gl = lgain * x + oldlgain * x1;
         float gr = rgain * x + oldrgain * x1;
@@ -114,7 +115,7 @@ Phaser::out (float * smpsl, float * smpsr)
     oldrgain = rgain;
 
     if (Poutsub != 0)
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] *= -1.0f;
             efxoutr[i] *= -1.0f;
         };
@@ -129,8 +130,8 @@ Phaser::processReplacing (float **inputs,
 {
     int i, j;
     float lfol, lfor, lgain, rgain, tmp;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	lfo.update();
     lfo.effectlfoout (&lfol, &lfor);
     lgain = lfol;
@@ -153,8 +154,8 @@ Phaser::processReplacing (float **inputs,
     else if (rgain < 0.0)
         rgain = 0.0f;
 
-    for (i = 0; i < PERIOD; i++) {
-        float x = (float) i / fPERIOD;
+    for (i = 0; i < param->PERIOD; i++) {
+        float x = (float) i / param->fPERIOD;
         float x1 = 1.0f - x;
         float gl = lgain * x + oldlgain * x1;
         float gr = rgain * x + oldrgain * x1;
@@ -192,7 +193,7 @@ Phaser::processReplacing (float **inputs,
     oldrgain = rgain;
 
     if (Poutsub != 0)
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] *= -1.0f;
             outputs[1][i] *= -1.0f;
         };

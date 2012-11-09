@@ -38,8 +38,9 @@ class Gate
 
 public:
 
-    Gate (float * efxoutl_, float * efxoutr_);
+    Gate (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Gate ();
+	Parameters *param;
 
     void out (float * smps_l, float * smps_r);
 			void processReplacing (float **inputs,

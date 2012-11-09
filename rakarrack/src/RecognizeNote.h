@@ -20,8 +20,9 @@
 class Recognize
 {
 public:
-    Recognize (float * efxoutl_, float * efxoutr_, float trig);
+    Recognize (Parameters *param,float * efxoutl_, float * efxoutr_, float trig);
     ~Recognize ();
+	Parameters *param;
 
     void schmittFloat (float *indatal, float *indatar);
     void sethpf(int value);

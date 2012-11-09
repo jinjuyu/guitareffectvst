@@ -32,8 +32,8 @@
 class Sequence
 {
 public:
-    Sequence (float * efxoutl_, float * efxoutr_, long int Quality, int DS, int uq, int dq);
-    ~Sequence ();
+    Sequence (Parameters *param, float * efxoutl_, float * efxoutr_, long int Quality, int DS, int uq, int dq);
+    ~Sequence ();Parameters *param;
     void cleanup ();
     void out (float * smpsl, float * smpr);
     void changepar (int npar, int value);

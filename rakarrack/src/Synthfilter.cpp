@@ -40,12 +40,13 @@
 #define ONE_  0.99999f        // To prevent LFO ever reaching 1.0 for filter stability purposes
 #define ZERO_ 0.00001f        // Same idea as above.
 
-Synthfilter::Synthfilter (float * efxoutl_, float * efxoutr_)
-{
+Synthfilter::Synthfilter (Parameters *param,float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 44100;
-	fPERIOD = PERIOD;
+	param->PERIOD = 44115;
+	param->fPERIOD = param->PERIOD;
 
     lyn1 = new float[MAX_SFILTER_STAGES];
     ryn1 = new float[MAX_SFILTER_STAGES];
@@ -57,7 +58,7 @@ Synthfilter::Synthfilter (float * efxoutl_, float * efxoutr_)
     Plpstages = 4;
     Phpstages = 2;
 
-    inv_period = 1.0f/fPERIOD;
+    inv_period = 1.0f/param->fPERIOD;
 
     delta = cSAMPLE_RATE;
     Rmin = 185.0f;		// 2N5457 typical on resistance at Vgs = 0
@@ -113,7 +114,7 @@ Synthfilter::out (float * smpsl, float * smpsr)
     float gl = oldlgain;	// Linear interpolation between LFO samples
     float gr = oldrgain;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         float lxn = bandgain*smpsl[i];
         float rxn = bandgain*smpsr[i]; //extra gain
@@ -200,7 +201,7 @@ Synthfilter::out (float * smpsl, float * smpsr)
     oldrgain = rmod;
 
     if (Poutsub != 0)
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] *= -1.0f;
             efxoutr[i] *= -1.0f;
         };
@@ -215,9 +216,9 @@ Synthfilter::			processReplacing (float **inputs,
     float lfol, lfor, lgain, rgain,rmod, lmod, d;
     lgain = 0.0;
     rgain = 0.0;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
-	inv_period = 1.0f/fPERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
+	inv_period = 1.0f/param->fPERIOD;
 	lfo.update();
     lfo.effectlfoout (&lfol, &lfor);
     lmod = lfol*width + depth + env*sns;
@@ -242,7 +243,7 @@ Synthfilter::			processReplacing (float **inputs,
     float gl = oldlgain;	// Linear interpolation between LFO samples
     float gr = oldrgain;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         float lxn = bandgain*inputs[0][i];
         float rxn = bandgain*inputs[1][i]; //extra gain
@@ -329,7 +330,7 @@ Synthfilter::			processReplacing (float **inputs,
     oldrgain = rmod;
 
     if (Poutsub != 0)
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] *= -1.0f;
             outputs[1][i] *= -1.0f;
         };

@@ -31,8 +31,9 @@
 class RyanWah
 {
 public:
-    RyanWah (float * efxoutl_, float * efxoutr_);
+    RyanWah (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~RyanWah ();
+	Parameters *param;
     void out (float * smpsl, float * smpsr);
 				void processReplacing (float **inputs,
 								float **outputs,

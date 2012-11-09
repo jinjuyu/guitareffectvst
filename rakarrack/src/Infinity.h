@@ -30,8 +30,9 @@
 class Infinity
 {
 public:
-    Infinity (float * efxoutl_, float * efxoutr_);
+    Infinity (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Infinity ();
+	Parameters *param;
     void out (float * smpsl, float * smpsr);
 
     void setpreset (int npreset);

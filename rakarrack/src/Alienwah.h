@@ -37,7 +37,8 @@ struct COMPLEXTYPE {
 class Alienwah
 {
 public:
-    Alienwah (float * efxoutl_, float * efxoutr_);
+    Alienwah (Parameters *param, float * efxoutl_, float * efxoutr_);
+	Parameters *param;
     ~Alienwah ();
     void out (float * smpsl, float * smpsr);
 
@@ -54,7 +55,6 @@ public:
     float *efxoutr;
 
     float outvolume;
-
 
 private:
     //Parametrii Alienwah

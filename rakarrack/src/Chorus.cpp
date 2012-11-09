@@ -26,8 +26,10 @@
 #include "Chorus.h"
 #include <stdio.h>
 
-Chorus::Chorus (float * efxoutl_, float * efxoutr_)
+Chorus::Chorus (Parameters *param, float * efxoutl_, float * efxoutr_)
+	:lfo(param)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     dlk = 0;
@@ -40,8 +42,8 @@ Chorus::Chorus (float * efxoutl_, float * efxoutr_)
     setpreset (0,Ppreset);
 
     float tmp = 0.08f;
-    ldelay = new delayline(tmp, 2);
-    rdelay = new delayline(tmp, 2);
+    ldelay = new delayline(param,tmp, 2);
+    rdelay = new delayline(param,tmp, 2);
     ldelay -> set_averaging(0.005f);
     rdelay -> set_averaging(0.005f);
     ldelay->set_mix( 0.5f );
@@ -103,15 +105,15 @@ Chorus::out (float * smpsl, float * smpsr)
         if (Poutsub != 0) tmpsub = -1.0f;
         else tmpsub = 1.0f;
 
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             //Left
-            mdel = (dl1 * (float)(PERIOD - i) + dl2 * (float)i) / fPERIOD;
+            mdel = (dl1 * (float)(param->PERIOD - i) + dl2 * (float)i) / param->fPERIOD;
             tmp = smpsl[i] + oldl*fb;
             efxoutl[i] = tmpsub*ldelay->delay(tmp, mdel, 0, 1, 0);
             oldl = efxoutl[i];
 
             //Right
-            mdel = (dr1 * (float)(PERIOD - i) + dr2 * (float)i) / fPERIOD;
+            mdel = (dr1 * (float)(param->PERIOD - i) + dr2 * (float)i) / param->fPERIOD;
             tmp = smpsr[i] + oldr*fb;
             efxoutr[i] = tmpsub*rdelay->delay(tmp, mdel, 0, 1, 0);
             oldr =  efxoutr[i];
@@ -121,7 +123,7 @@ Chorus::out (float * smpsl, float * smpsr)
 
         dl2 = getdelay (lfol);
         dr2 = getdelay (lfor);
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             float inl = smpsl[i];
             float inr = smpsr[i];
             //LRcross
@@ -133,7 +135,7 @@ Chorus::out (float * smpsl, float * smpsr)
             //Left channel
 
             //compute the delay in samples using linear interpolation between the lfo delays
-            mdel = (dl1 * (float)(PERIOD - i) + dl2 * (float)i) / fPERIOD;
+            mdel = (dl1 * (float)(param->PERIOD - i) + dl2 * (float)i) / param->fPERIOD;
             if (++dlk >= maxdelay)
                 dlk = 0;
             float tmp = (float) dlk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
@@ -149,7 +151,7 @@ Chorus::out (float * smpsl, float * smpsr)
             //Right channel
 
             //compute the delay in samples using linear interpolation between the lfo delays
-            mdel = (dr1 * (float)(PERIOD - i) + dr2 * (float)i) / fPERIOD;
+            mdel = (dr1 * (float)(param->PERIOD - i) + dr2 * (float)i) / param->fPERIOD;
             if (++drk >= maxdelay)
                 drk = 0;
             tmp = (float)drk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
@@ -166,13 +168,13 @@ Chorus::out (float * smpsl, float * smpsr)
 
 
         if (Poutsub != 0)
-            for (i = 0; i < PERIOD; i++) {
+            for (i = 0; i < param->PERIOD; i++) {
                 efxoutl[i] *= -1.0f;
                 efxoutr[i] *= -1.0f;
             };
 
 
-        for (int i = 0; i < PERIOD; i++) {
+        for (int i = 0; i < param->PERIOD; i++) {
             efxoutl[i] *= panning;
             efxoutr[i] *= (1.0f - panning);
         };
@@ -188,8 +190,8 @@ void Chorus::processReplacing (float **inputs,
     float tmp;
     dl1 = dl2;
     dr1 = dr2;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	lfo.update();
     lfo.effectlfoout (&lfol, &lfor);
 
@@ -201,15 +203,15 @@ void Chorus::processReplacing (float **inputs,
         if (Poutsub != 0) tmpsub = -1.0f;
         else tmpsub = 1.0f;
 
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             //Left
-            mdel = (dl1 * (float)(PERIOD - i) + dl2 * (float)i) / fPERIOD;
+            mdel = (dl1 * (float)(param->PERIOD - i) + dl2 * (float)i) / param->fPERIOD;
             tmp = inputs[0][i] + oldl*fb;
             outputs[0][i] = tmpsub*ldelay->delay(tmp, mdel, 0, 1, 0);
             oldl = outputs[0][i];
 
             //Right
-            mdel = (dr1 * (float)(PERIOD - i) + dr2 * (float)i) / fPERIOD;
+            mdel = (dr1 * (float)(param->PERIOD - i) + dr2 * (float)i) / param->fPERIOD;
             tmp = inputs[1][i] + oldr*fb;
             outputs[1][i] = tmpsub*rdelay->delay(tmp, mdel, 0, 1, 0);
             oldr =  outputs[1][i];
@@ -219,7 +221,7 @@ void Chorus::processReplacing (float **inputs,
 
         dl2 = getdelay (lfol);
         dr2 = getdelay (lfor);
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             float inl = inputs[0][i];
             float inr = inputs[1][i];
             //LRcross
@@ -231,7 +233,7 @@ void Chorus::processReplacing (float **inputs,
             //Left channel
 
             //compute the delay in samples using linear interpolation between the lfo delays
-            mdel = (dl1 * (float)(PERIOD - i) + dl2 * (float)i) / fPERIOD;
+            mdel = (dl1 * (float)(param->PERIOD - i) + dl2 * (float)i) / param->fPERIOD;
             if (++dlk >= maxdelay)
                 dlk = 0;
             float tmp = (float) dlk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
@@ -247,7 +249,7 @@ void Chorus::processReplacing (float **inputs,
             //Right channel
 
             //compute the delay in samples using linear interpolation between the lfo delays
-            mdel = (dr1 * (float)(PERIOD - i) + dr2 * (float)i) / fPERIOD;
+            mdel = (dr1 * (float)(param->PERIOD - i) + dr2 * (float)i) / param->fPERIOD;
             if (++drk >= maxdelay)
                 drk = 0;
             tmp = (float)drk - mdel + (float)maxdelay * 2.0f;	//where should I get the sample from
@@ -264,13 +266,13 @@ void Chorus::processReplacing (float **inputs,
 
 
         if (Poutsub != 0)
-            for (i = 0; i < PERIOD; i++) {
+            for (i = 0; i < param->PERIOD; i++) {
                 outputs[0][i] *= -1.0f;
                 outputs[1][i] *= -1.0f;
             };
 
 
-        for (int i = 0; i < PERIOD; i++) {
+        for (int i = 0; i < param->PERIOD; i++) {
             outputs[0][i] *= panning;
             outputs[1][i] *= (1.0f - panning);
         };

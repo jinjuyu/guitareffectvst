@@ -27,8 +27,9 @@
 
 
 
-CoilCrafter::CoilCrafter (float * efxoutl_, float * efxoutr_)
+CoilCrafter::CoilCrafter (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -71,12 +72,12 @@ CoilCrafter::CoilCrafter (float * efxoutl_, float * efxoutr_)
     rm[8]=1.0;
 
 
-    harm = new HarmEnhancer (rm, 2500.0f,4400.0f,1.0f);
+    harm = new HarmEnhancer (param,rm, 2500.0f,4400.0f,1.0f);
 
-    RB1l =  new AnalogFilter(2,2000.0f,1.0f,0);
-    RB1r =  new AnalogFilter(2,2000.0f,1.0f,0);
-    RB2l =  new AnalogFilter(2,2000.0f,1.0f,0);
-    RB2r =  new AnalogFilter(2,2000.0f,1.0f,0);
+    RB1l =  new AnalogFilter(param,2,2000.0f,1.0f,0);
+    RB1r =  new AnalogFilter(param,2,2000.0f,1.0f,0);
+    RB2l =  new AnalogFilter(param,2,2000.0f,1.0f,0);
+    RB2r =  new AnalogFilter(param,2,2000.0f,1.0f,0);
 
 
     cleanup ();
@@ -119,7 +120,7 @@ CoilCrafter::out (float * smpsl, float * smpsr)
         RB1l->filterout(smpsl);
         RB1r->filterout(smpsr);
 
-        for (i=0; i<PERIOD; i++) {
+        for (i=0; i<param->PERIOD; i++) {
             smpsl[i]*=att;
             smpsr[i]*=att;
         }
@@ -133,7 +134,7 @@ CoilCrafter::out (float * smpsl, float * smpsr)
     if(Pmode) harm->harm_out(smpsl,smpsr);
 
 
-    for (i=0; i<PERIOD; i++) {
+    for (i=0; i<param->PERIOD; i++) {
         smpsl[i]*=outvolume;
         smpsr[i]*=outvolume;
 
@@ -152,13 +153,13 @@ CoilCrafter::processReplacing (float **inputs,
 {
     int i;
 
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
     if(Ppo>0) {
         RB1l->filterout(inputs[0]);
         RB1r->filterout(inputs[1]);
 
-        for (i=0; i<PERIOD; i++) {
+        for (i=0; i<param->PERIOD; i++) {
             inputs[0][i]*=att;
             inputs[1][i]*=att;
         }
@@ -172,7 +173,7 @@ CoilCrafter::processReplacing (float **inputs,
     if(Pmode) harm->harm_out(inputs[0],inputs[1]);
 
 
-    for (i=0; i<PERIOD; i++) {
+    for (i=0; i<param->PERIOD; i++) {
         inputs[0][i]*=outvolume;
         inputs[1][i]*=outvolume;
 

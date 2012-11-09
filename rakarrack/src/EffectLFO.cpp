@@ -31,8 +31,9 @@
 #include "EffectLFO.h"
 #include "f_sin.h"
 
-EffectLFO::EffectLFO ()
+EffectLFO::EffectLFO (Parameters *param)
 {
+	this->param = param;
     xl = 0.0;
     xr = 0.0;
     Pfreq = 40;
@@ -40,7 +41,7 @@ EffectLFO::EffectLFO ()
     PLFOtype = 0;
     Pstereo = 96;
 
-    iperiod = fPERIOD/fSAMPLE_RATE;
+    iperiod = param->fPERIOD/fSAMPLE_RATE;
     h = iperiod;
     a = 10.0f;
     b = 28.0f;
@@ -68,7 +69,7 @@ EffectLFO::~EffectLFO ()
 
 void EffectLFO::update()
 {
-    incx = (float)Pfreq * fPERIOD / (fSAMPLE_RATE * 60.0f);
+    incx = (float)Pfreq * param->fPERIOD / (fSAMPLE_RATE * 60.0f);
 
     if (incx > 0.49999999)
         incx = 0.499999999f;		//Limit the Frequency
@@ -76,7 +77,7 @@ void EffectLFO::update()
 	if ((h = incx*ratediv) > 0.02) h = 0.02;  //keeps it stable
 
 
-	iperiod = fPERIOD/fSAMPLE_RATE;
+	iperiod = param->fPERIOD/fSAMPLE_RATE;
 	float tmp = 6.0f/((float) Pfreq);  //S/H time attack  0.2*60=12.0
     tca = iperiod/(iperiod + tmp);  //
     tcb = 1.0f - tca;
@@ -89,7 +90,7 @@ void EffectLFO::update()
 void
 EffectLFO::updateparams ()
 {
-    incx = (float)Pfreq * fPERIOD / (fSAMPLE_RATE * 60.0f);
+    incx = (float)Pfreq * param->fPERIOD / (fSAMPLE_RATE * 60.0f);
 
     if (incx > 0.49999999)
         incx = 0.499999999f;		//Limit the Frequency

@@ -30,8 +30,9 @@
 class RBFilter:public Filter_
 {
 public:
-    RBFilter (int Ftype, float Ffreq, float Fq,
+    RBFilter (Parameters *param, int Ftype, float Ffreq, float Fq,
               int Fstages);
+	Parameters *param;
     ~RBFilter ();
     void filterout (float * smp);
     float filterout_s (float smp);
@@ -76,7 +77,7 @@ private:
     float hpg, lpg, bpg;
     float oldq, oldsq, oldf;
     float a_smooth_tc, b_smooth_tc;
-    float iper;			//inverse of PERIOD
+    float iper;			//inverse of param->PERIOD
 
 
 

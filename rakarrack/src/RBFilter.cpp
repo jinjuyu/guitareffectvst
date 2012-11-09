@@ -26,9 +26,10 @@
 #include <stdio.h>
 #include "RBFilter.h"
 
-RBFilter::RBFilter (int Ftype, float Ffreq, float Fq,
+RBFilter::RBFilter (Parameters *param, int Ftype, float Ffreq, float Fq,
                     int Fstages)
 {
+	this->param = param;
     stages = Fstages;
     type = Ftype;
     freq = Ffreq;
@@ -47,7 +48,7 @@ RBFilter::RBFilter (int Ftype, float Ffreq, float Fq,
         stages = MAX_FILTER_STAGES;
     cleanup ();
     setfreq_and_q (Ffreq, Fq);
-    iper = 1.0f/fPERIOD;
+    iper = 1.0f/param->fPERIOD;
     a_smooth_tc = cSAMPLE_RATE/(cSAMPLE_RATE + 0.01f);  //10ms time constant for averaging coefficients
     b_smooth_tc = 1.0f - a_smooth_tc;
 };
@@ -201,7 +202,7 @@ RBFilter::setmix (int mix, float lpmix, float bpmix, float hpmix)
 void
 RBFilter::singlefilterout (float * smp, fstage & x, parameters & par)
 {
-	iper = 1.0/fPERIOD;
+	iper = 1.0/param->fPERIOD;
     int i;
     float *out = NULL;
     switch (type) {
@@ -227,7 +228,7 @@ RBFilter::singlefilterout (float * smp, fstage & x, parameters & par)
     tmpsq = oldsq;
     tmpf = oldf;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         tmpq += qdiff;
         tmpsq += sqdiff;
         tmpf += fdiff;   //Modulation interpolation
@@ -259,8 +260,8 @@ RBFilter::filterout (float * smp)
     float *ismp = NULL;
 
     if (needsinterpolation != 0) {
-        ismp = new float[PERIOD];
-        for (i = 0; i < PERIOD; i++)
+        ismp = new float[param->PERIOD];
+        for (i = 0; i < param->PERIOD; i++)
             ismp[i] = smp[i];
         for (i = 0; i < stages + 1; i++)
             singlefilterout (ismp, st[i], ipar);
@@ -273,7 +274,7 @@ RBFilter::filterout (float * smp)
         singlefilterout (smp, st[i], par);
 
 
-    for (i = 0; i < PERIOD; i++)
+    for (i = 0; i < param->PERIOD; i++)
         smp[i] *= outgain;
 
 };

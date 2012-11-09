@@ -33,8 +33,9 @@
 class Analog_Phaser
 {
 public:
-    Analog_Phaser (float * efxoutl_, float * efxoutr_);
+    Analog_Phaser (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Analog_Phaser ();
+	Parameters *param;
     void out (float * smpsl, float * smpsr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

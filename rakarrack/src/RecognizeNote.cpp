@@ -36,9 +36,10 @@
 
 
 
-Recognize::Recognize (float *efxoutl_, float *efxoutr_, float trig)
+Recognize::Recognize (Parameters *param,float *efxoutl_, float *efxoutr_, float trig)
 {
-
+	this->param = param;
+		
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -51,15 +52,15 @@ Recognize::Recognize (float *efxoutl_, float *efxoutr_, float trig)
     afreq = 0;
     trigfact = trig;
 
-    Sus = new Sustainer(efxoutl,efxoutr);
+    Sus = new Sustainer(param,efxoutl,efxoutr);
     Sus->changepar(1,64);
     Sus->changepar(2,127);
 
 
-    lpfl = new AnalogFilter (2, 3000, 1, 0);
-    lpfr = new AnalogFilter (2, 3000, 1, 0);
-    hpfl = new AnalogFilter (3, 300, 1, 0);
-    hpfr = new AnalogFilter (3, 300, 1, 0);
+    lpfl = new AnalogFilter (param,2, 3000, 1, 0);
+    lpfr = new AnalogFilter (param,2, 3000, 1, 0);
+    hpfl = new AnalogFilter (param,3, 300, 1, 0);
+    hpfr = new AnalogFilter (param,3, 300, 1, 0);
 
 
     schmittInit (24);
@@ -87,7 +88,7 @@ Recognize::schmittS16LE (signed short int *indata)
 {
     int i, j;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         *schmittPointer++ = indata[i];
         if (schmittPointer - schmittBuffer >= blockSize) {
             int endpoint, startpoint, t1, t2, A1, A2, tc, schmittTriggered;
@@ -161,7 +162,7 @@ void
 Recognize::schmittFloat (float *indatal, float *indatar)
 {
     int i;
-    signed short int *buf= new signed short int [PERIOD];
+    signed short int *buf= new signed short int [param->PERIOD];
 
     lpfl->filterout (indatal);
     hpfl->filterout (indatal);
@@ -170,7 +171,7 @@ Recognize::schmittFloat (float *indatal, float *indatar)
 
     Sus->out(indatal,indatar);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         buf[i] = (short) ((indatal[i]+indatar[i]) * 32768);
     }
     schmittS16LE (buf);

@@ -1,15 +1,15 @@
 #include <math.h>
 #include "beattracker.h"
 
-beattracker:: beattracker ()
+beattracker:: beattracker (Parameters *param)
 {
+	this->param = param;
+    rmsfilter = new RBFilter (param,0, 15.0f, 0.15f, 1);
+    peaklpfilter = new RBFilter (param,0, 25.0f, 0.5f, 0);
+    peaklpfilter2 = new RBFilter (param,0, 25.0f, 0.5f, 0);
+    peakhpfilter = new RBFilter (param,1, 45.0f, 0.5f, 0);
 
-    rmsfilter = new RBFilter (0, 15.0f, 0.15f, 1);
-    peaklpfilter = new RBFilter (0, 25.0f, 0.5f, 0);
-    peaklpfilter2 = new RBFilter (0, 25.0f, 0.5f, 0);
-    peakhpfilter = new RBFilter (1, 45.0f, 0.5f, 0);
-
-    index = (int *) malloc (sizeof (int) * 44100);//PERIOD);
+    index = (int *) malloc (sizeof (int) * 44100);//param->PERIOD);
 
 //Trigger Filter Settings
     peakpulse = peak = envrms = 0.0f;
@@ -67,7 +67,7 @@ beattracker::detect (float * smpsl, float * smpsr)
     int idx = 0;
     int i = 0;
 
-    for ( i = 0; i < PERIOD; i++) { //Detect dynamics onset
+    for ( i = 0; i < param->PERIOD; i++) { //Detect dynamics onset
         index[i] = 0; //initializes all elements to zero
 
         tmp = 15.0f*fabs(smpsl[i] + smpsr[i]);

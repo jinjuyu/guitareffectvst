@@ -36,8 +36,9 @@ class Compressor
 
 public:
 
-    Compressor (float * efxoutl_, float * efxoutr_);
+    Compressor (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Compressor ();
+	Parameters *param;
 
     void out (float * smps_l, float * smps_r);
 

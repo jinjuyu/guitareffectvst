@@ -31,8 +31,9 @@ class Pan
 {
 
 public:
-    Pan (float *efxoutl_, float *efxoutr_);
+    Pan (Parameters *param, float *efxoutl_, float *efxoutr_);
     ~Pan ();
+	Parameters *param;
     void out (float *smpsl, float *smpsr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

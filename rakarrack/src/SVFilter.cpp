@@ -26,9 +26,10 @@
 #include <stdio.h>
 #include "SVFilter.h"
 
-SVFilter::SVFilter (unsigned char Ftype, float Ffreq, float Fq,
+SVFilter::SVFilter (Parameters *param,unsigned char Ftype, float Ffreq, float Fq,
                     unsigned char Fstages)
 {
+	this->param = param;
     stages = Fstages;
     type = Ftype;
     freq = Ffreq;
@@ -157,7 +158,7 @@ SVFilter::singlefilterout (float * smp, fstage & x, parameters & par)
         break;
     };
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         x.low = x.low + par.f * x.band;
         x.high = par.q_sqrt * smp[i] - x.low - par.q * x.band;
         x.band = par.f * x.high + x.band;
@@ -174,8 +175,8 @@ SVFilter::filterout (float * smp)
     float *ismp = NULL;
 
     if (needsinterpolation != 0) {
-        ismp = new float[PERIOD];
-        for (i = 0; i < PERIOD; i++)
+        ismp = new float[param->PERIOD];
+        for (i = 0; i < param->PERIOD; i++)
             ismp[i] = smp[i];
         for (i = 0; i < stages + 1; i++)
             singlefilterout (ismp, st[i], ipar);
@@ -185,15 +186,15 @@ SVFilter::filterout (float * smp)
         singlefilterout (smp, st[i], par);
 
     if (needsinterpolation != 0) {
-        for (i = 0; i < PERIOD; i++) {
-            float x = (float) i / fPERIOD;
+        for (i = 0; i < param->PERIOD; i++) {
+            float x = (float) i / param->fPERIOD;
             smp[i] = ismp[i] * (1.0f - x) + smp[i] * x;
         };
         delete (ismp);
         needsinterpolation = 0;
     };
 
-    for (i = 0; i < PERIOD; i++)
+    for (i = 0; i < param->PERIOD; i++)
         smp[i] *= outgain;
 
 };

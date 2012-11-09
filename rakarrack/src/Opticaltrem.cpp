@@ -26,8 +26,9 @@
 #include <math.h>
 #include "Opticaltrem.h"
 
-Opticaltrem::Opticaltrem (float * efxoutl_, float * efxoutr_)
-{
+Opticaltrem::Opticaltrem (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -53,7 +54,7 @@ Opticaltrem::Opticaltrem (float * efxoutl_, float * efxoutr_)
     oldgr = 0.0f;
     gl = 0.0f;
     gr = 0.0f;
-    cperiod = 1.0f/fPERIOD;
+    cperiod = 1.0f/param->fPERIOD;
 
 }
 
@@ -101,7 +102,7 @@ Opticaltrem::out (float *smpsl, float *smpsr)
     oldgr = lfor;
     oldgl = lfol;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         //Left Cds
         stepl = gl*(1.0f - alphal) + alphal*oldstepl;
         oldstepl = stepl;
@@ -140,8 +141,8 @@ Opticaltrem::processReplacing (float **inputs,
     int i;
     float lfol, lfor, xl, xr, fxl, fxr;
     float rdiff, ldiff;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	lfo.update();
     lfo.effectlfoout (&lfol, &lfor);
 
@@ -168,7 +169,7 @@ Opticaltrem::processReplacing (float **inputs,
     oldgr = lfor;
     oldgl = lfol;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         //Left Cds
         stepl = gl*(1.0f - alphal) + alphal*oldstepl;
         oldstepl = stepl;

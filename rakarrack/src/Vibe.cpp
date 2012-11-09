@@ -25,9 +25,10 @@
 
 #include <math.h>
 #include "Vibe.h"
-
-Vibe::Vibe (float * efxoutl_, float * efxoutr_)
-{
+#include "Windows.h"
+Vibe::Vibe (Parameters *param,float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -63,7 +64,9 @@ Vibe::Vibe (float * efxoutl_, float * efxoutr_)
     gl = 0.0f;
     gr = 0.0f;
     for(int jj = 0; jj<8; jj++) oldcvolt[jj] = 0.0f;
-    cperiod = 1.0f/fPERIOD;
+	param->PERIOD = 44101;
+	param->fPERIOD = 44101;
+    cperiod = 1.0f/param->fPERIOD;
 
     init_vibes();
     cleanup();
@@ -113,7 +116,7 @@ Vibe::out (float *smpsl, float *smpsr)
         lfor = 2.0f - 2.0f/(lfor + 1.0f);   //
     }
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         //Left Lamp
         gl = lfol*lampTC + oldgl*ilampTC;
         oldgl = gl;
@@ -299,9 +302,10 @@ Vibe::processReplacing (float **inputs,
 {
 
     int i,j;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
-	cperiod = 1.0f/fPERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
+	
+	cperiod = 1.0f/param->fPERIOD;
 	lfo.update();
     float lfol, lfor, xl, xr;
     float  fxl=0.0f;
@@ -329,8 +333,10 @@ Vibe::processReplacing (float **inputs,
         lfor = 2.0f - 2.0f/(lfor + 1.0f);   //
     }
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         //Left Lamp
+		//if(param->PERIOD == 44100)
+				//MessageBox(NULL, "", "", MB_OK);
         gl = lfol*lampTC + oldgl*ilampTC;
         oldgl = gl;
 

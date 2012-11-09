@@ -26,8 +26,9 @@
 #include "RyanWah.h"
 #include <stdio.h>
 
-RyanWah::RyanWah (float * efxoutl_, float * efxoutr_)
-{
+RyanWah::RyanWah (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -56,8 +57,8 @@ RyanWah::RyanWah (float * efxoutl_, float * efxoutr_)
 
     Fstages = 1;
     Ftype = 1;
-    filterl = new RBFilter (0, 80.0f, 70.0f, 1);
-    filterr = new RBFilter (0, 80.0f, 70.0f, 1);
+    filterl = new RBFilter (param,0, 80.0f, 70.0f, 1);
+    filterr = new RBFilter (param,0, 80.0f, 70.0f, 1);
     setpreset (Ppreset);
 
     cleanup ();
@@ -87,7 +88,7 @@ RyanWah::out (float * smpsl, float * smpsr)
         lfor *= depth * 5.0f;
     }
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i] = smpsl[i];
         efxoutr[i] = smpsr[i];
 
@@ -157,8 +158,8 @@ RyanWah::processReplacing (float **inputs,
     float lmod, rmod;
     float lfol, lfor;
     float rms = 0.0f;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	lfo.update();
     lfo.effectlfoout (&lfol, &lfor);
     if (Pamode) {
@@ -169,7 +170,7 @@ RyanWah::processReplacing (float **inputs,
         lfor *= depth * 5.0f;
     }
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         outputs[0][i] = inputs[0][i];
         outputs[1][i] = inputs[1][i];
 

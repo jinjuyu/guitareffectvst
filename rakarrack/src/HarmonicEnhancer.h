@@ -34,7 +34,8 @@
 class HarmEnhancer
 {
 public:
-    HarmEnhancer(float *harmonics, float hfreq, float lfreq, float gain);
+    HarmEnhancer(Parameters *param, float *harmonics, float hfreq, float lfreq, float gain);
+	Parameters *param;
     ~HarmEnhancer();
     void cleanup();
     void chebpc(float c[], float d[]);

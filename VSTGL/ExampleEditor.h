@@ -26,7 +26,11 @@
 #include "VSTGL/VSTGLEditor.h"
 #include "VSTGL/VSTGLTimer.h"
 #include <iostream>
+#include <stdio.h>
+#include <stdarg.h>
 ///	Simple VSTGL example.
+
+
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -45,9 +49,36 @@ class ExampleEditor : public VSTGLEditor,
 	void draw();
 
 	///	Called repeatedly, to update the graphics.
+	
 	void timerCallback();
+	GLvoid Print(const char *fmt, ...)
+	{
+		char        text[256];              // Holds Our String
+		va_list     ap;                 // Pointer To List Of Arguments
+		va_start(ap, fmt);                  // Parses The String For Variables
+		vsprintf(text, fmt, ap);                // And Converts Symbols To Actual Numbers
+		va_end(ap);       
+		glPushAttrib(GL_LIST_BIT);              // Pushes The Display List Bits     ( NEW )
+		glListBase(mFont1 - 32);    
+		glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text  ( NEW )
+		glPopAttrib();                      // Pops The Display List Bits   ( NEW )
+	}
+	GLvoid Print2(const char *fmt, ...) // Bigger Font
+	{
+		char        text[256];              // Holds Our String
+		va_list     ap;                 // Pointer To List Of Arguments
+		va_start(ap, fmt);                  // Parses The String For Variables
+		vsprintf(text, fmt, ap);                // And Converts Symbols To Actual Numbers
+		va_end(ap);       
+		glPushAttrib(GL_LIST_BIT);              // Pushes The Display List Bits     ( NEW )
+		glListBase(mFont2 + 32);    
+		glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text  ( NEW )
+		glPopAttrib();                      // Pops The Display List Bits   ( NEW )
+	}
   private:
 	GLuint image;
+	GLuint mFont1;
+	GLuint mFont2;
 	///	Variable used to rotate the pyramid.
 	float thing;
 };

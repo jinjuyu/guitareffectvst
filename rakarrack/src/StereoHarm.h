@@ -34,8 +34,9 @@ class StereoHarm
 {
 
 public:
-    StereoHarm (float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq);
+    StereoHarm (Parameters *param,float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq);
     ~StereoHarm ();
+	Parameters *param;
     void out (float *smpsl, float *smpsr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

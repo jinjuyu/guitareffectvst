@@ -34,8 +34,9 @@ class Opticaltrem
 
 public:
 
-    Opticaltrem (float * efxoutl_, float * efxoutr_);
+    Opticaltrem (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Opticaltrem ();
+	Parameters *param;
 
     void out (float * smpsl, float * smpsr);
     void setpanning(int value);

@@ -39,9 +39,9 @@ class Expander
 
 public:
 
-    Expander (float * efxoutl_, float * efxoutr_);
+    Expander (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Expander ();
-
+	Parameters *param;
     void out (float * smps_l, float * smps_r);
 
     void Expander_Change (int np, int value);

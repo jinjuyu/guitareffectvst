@@ -28,20 +28,20 @@
 
 
 
-StereoHarm::StereoHarm (float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq)
+StereoHarm::StereoHarm (Parameters *param,float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq)
 {
-
+	this->param = param;
 
 
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 96000*2;
-	fPERIOD = PERIOD;
+	param->PERIOD = 96000*2;
+	param->fPERIOD = param->PERIOD;
     hq = Quality;
     adjust(DS);
 
-    templ = (float *) malloc (sizeof (float) * PERIOD);
-    tempr = (float *) malloc (sizeof (float) * PERIOD);
+    templ = (float *) malloc (sizeof (float) * param->PERIOD);
+    tempr = (float *) malloc (sizeof (float) * param->PERIOD);
 
 
     outil = (float *) malloc (sizeof (float) * nPERIOD);
@@ -67,8 +67,8 @@ StereoHarm::StereoHarm (float *efxoutl_, float *efxoutr_, long int Quality, int 
     PSl->ratio = 1.0f;
     PSr = new PitchShifter (window, hq, nfSAMPLE_RATE);
     PSr->ratio = 1.0f;
-	PERIOD = 44100;
-	fPERIOD = PERIOD;
+	param->PERIOD = 44114;
+	param->fPERIOD = param->PERIOD;
 	adjust(DS);
 
     Ppreset = 0;
@@ -109,9 +109,9 @@ StereoHarm::out (float *smpsl, float *smpsr)
 
 
     if(DS_state != 0) {
-        memcpy(templ, smpsl,sizeof(float)*PERIOD);
-        memcpy(tempr, smpsr,sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,smpsl,smpsr,PERIOD,u_up);
+        memcpy(templ, smpsl,sizeof(float)*param->PERIOD);
+        memcpy(tempr, smpsr,sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,smpsl,smpsr,param->PERIOD,u_up);
     }
 
 
@@ -152,13 +152,13 @@ StereoHarm::out (float *smpsl, float *smpsr)
     if(DS_state != 0) {
         D_Resample->out(outol,outor,templ,tempr,nPERIOD,u_down);
     } else {
-        memcpy(templ, outol,sizeof(float)*PERIOD);
-        memcpy(tempr, outor,sizeof(float)*PERIOD);
+        memcpy(templ, outol,sizeof(float)*param->PERIOD);
+        memcpy(tempr, outor,sizeof(float)*param->PERIOD);
 
     }
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i] = templ[i] * gainl;
         efxoutr[i] = tempr[i] * gainr;
     }
@@ -176,8 +176,8 @@ StereoHarm::processReplacing (float **inputs,
 {
 
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	adjust(DS_state);
 
 	float *inputs2[2];
@@ -185,9 +185,9 @@ StereoHarm::processReplacing (float **inputs,
 	inputs2[1] = new float[nPERIOD+100];
 
     if(DS_state != 0) {
-        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+        memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
     }
 
 
@@ -228,13 +228,13 @@ StereoHarm::processReplacing (float **inputs,
     if(DS_state != 0) {
         D_Resample->out(outol,outor,templ,tempr,nPERIOD,u_down);
     } else {
-        memcpy(templ, outol,sizeof(float)*PERIOD);
-        memcpy(tempr, outor,sizeof(float)*PERIOD);
+        memcpy(templ, outol,sizeof(float)*param->PERIOD);
+        memcpy(tempr, outor,sizeof(float)*param->PERIOD);
 
     }
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         outputs[0][i] = templ[i] * gainl;
         outputs[1][i] = tempr[i] * gainr;
     }
@@ -360,14 +360,14 @@ StereoHarm::adjust(int DS)
     switch(DS) {
 
     case 0:
-        nPERIOD = PERIOD;
+        nPERIOD = param->PERIOD;
         nSAMPLE_RATE = SAMPLE_RATE;
         nfSAMPLE_RATE = fSAMPLE_RATE;
         window = 2048;
         break;
 
     case 1:
-        nPERIOD = lrintf(fPERIOD*96000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*96000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 96000;
         nfSAMPLE_RATE = 96000.0f;
         window = 2048;
@@ -375,56 +375,56 @@ StereoHarm::adjust(int DS)
 
 
     case 2:
-        nPERIOD = lrintf(fPERIOD*48000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*48000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 48000;
         nfSAMPLE_RATE = 48000.0f;
         window = 2048;
         break;
 
     case 3:
-        nPERIOD = lrintf(fPERIOD*44100.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*44100.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 44100;
         nfSAMPLE_RATE = 44100.0f;
         window = 2048;
         break;
 
     case 4:
-        nPERIOD = lrintf(fPERIOD*32000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*32000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 32000;
         nfSAMPLE_RATE = 32000.0f;
         window = 2048;
         break;
 
     case 5:
-        nPERIOD = lrintf(fPERIOD*22050.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*22050.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 22050;
         nfSAMPLE_RATE = 22050.0f;
         window = 1024;
         break;
 
     case 6:
-        nPERIOD = lrintf(fPERIOD*16000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*16000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 16000;
         nfSAMPLE_RATE = 16000.0f;
         window = 1024;
         break;
 
     case 7:
-        nPERIOD = lrintf(fPERIOD*12000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*12000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 12000;
         nfSAMPLE_RATE = 12000.0f;
         window = 512;
         break;
 
     case 8:
-        nPERIOD = lrintf(fPERIOD*8000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*8000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 8000;
         nfSAMPLE_RATE = 8000.0f;
         window = 512;
         break;
 
     case 9:
-        nPERIOD = lrintf(fPERIOD*4000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*4000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 4000;
         nfSAMPLE_RATE = 4000.0f;
         window = 256;
@@ -433,8 +433,8 @@ StereoHarm::adjust(int DS)
 
 
 
-    u_up= (double)nPERIOD / (double)PERIOD;
-    u_down= (double)PERIOD / (double)nPERIOD;
+    u_up= (double)nPERIOD / (double)param->PERIOD;
+    u_down= (double)param->PERIOD / (double)nPERIOD;
 }
 
 

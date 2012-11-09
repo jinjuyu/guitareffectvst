@@ -26,15 +26,16 @@
 #include "Infinity.h"
 #include <stdio.h>
 
-Infinity::Infinity (float * efxoutl_, float * efxoutr_)
+Infinity::Infinity (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
     int i;
     for (i = 0; i<NUM_INF_BANDS; i++) {
-        filterl[i] = new RBFilter (0, 80.0f, 70.0f, 1.0f);
-        filterr[i] = new RBFilter (0, 80.0f, 70.0f, 1.0f);
+        filterl[i] = new RBFilter (param,0, 80.0f, 70.0f, 1.0f);
+        filterr[i] = new RBFilter (param,0, 80.0f, 70.0f, 1.0f);
         rbandstate[i].level = 1.0f;
         rbandstate[i].vol = 1.0f;
         lphaser[i].gain = 0.5f;
@@ -185,7 +186,7 @@ Infinity::out (float * smpsl, float * smpsr)
     int i, j;
     float tmpr, tmpl;
 
-    for (i = 0; i<PERIOD; i++)  {
+    for (i = 0; i<param->PERIOD; i++)  {
         //modulate
         oscillator();
         tmpr = tmpl = 0.0f;
@@ -225,9 +226,9 @@ Infinity::processReplacing (float **inputs,
 {
     int i, j;
     float tmpr, tmpl;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
-    for (i = 0; i<PERIOD; i++)  {
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
+    for (i = 0; i<param->PERIOD; i++)  {
         //modulate
         oscillator();
         tmpr = tmpl = 0.0f;

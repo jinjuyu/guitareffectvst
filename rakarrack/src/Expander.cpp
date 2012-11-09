@@ -28,17 +28,17 @@
 #include "Expander.h"
 
 
-Expander::Expander (float * efxoutl_, float * efxoutr_)
+Expander::Expander (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
-
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
 
-    lpfl = new AnalogFilter (2, 22000, 1, 0);
-    lpfr = new AnalogFilter (2, 22000, 1, 0);
-    hpfl = new AnalogFilter (3, 20, 1, 0);
-    hpfr = new AnalogFilter (3, 20, 1, 0);
+    lpfl = new AnalogFilter (param,2, 22000, 1, 0);
+    lpfr = new AnalogFilter (param,2, 22000, 1, 0);
+    hpfl = new AnalogFilter (param,3, 20, 1, 0);
+    hpfr = new AnalogFilter (param,3, 20, 1, 0);
 
     env = 0.0;
     oldgain = 0.0;
@@ -209,7 +209,7 @@ Expander::out (float *efxoutl, float *efxoutr)
     hpfr->filterout (efxoutr);
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         delta = 0.5f*(fabsf (efxoutl[i]) + fabsf (efxoutr[i])) - env;    //envelope follower from Compressor.C
         if (delta > 0.0)
@@ -249,8 +249,8 @@ Expander::processReplacing (float **inputs,
     int i;
     float delta = 0.0f;
     float expenv = 0.0f;
-	PERIOD = sampleFrames;
-	fPERIOD = sampleFrames;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
 	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
 	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
 
@@ -260,7 +260,7 @@ Expander::processReplacing (float **inputs,
     hpfr->filterout (outputs[1]);
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         delta = 0.5f*(fabsf (outputs[0][i]) + fabsf (outputs[1][i])) - env;    //envelope follower from Compressor.C
         if (delta > 0.0)

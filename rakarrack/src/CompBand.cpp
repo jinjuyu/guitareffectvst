@@ -38,39 +38,40 @@
 
 
 
-CompBand::CompBand (float * efxoutl_, float * efxoutr_)
+CompBand::CompBand (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 44100;
-    lowl = (float *) malloc (sizeof (float) * PERIOD);
-    lowr = (float *) malloc (sizeof (float) * PERIOD);
-    midll = (float *) malloc (sizeof (float) * PERIOD);
-    midlr = (float *) malloc (sizeof (float) * PERIOD);
-    midhl = (float *) malloc (sizeof (float) * PERIOD);
-    midhr = (float *) malloc (sizeof (float) * PERIOD);
-    highl = (float *) malloc (sizeof (float) * PERIOD);
-    highr = (float *) malloc (sizeof (float) * PERIOD);
+	param->PERIOD = 44102;
+    lowl = (float *) malloc (sizeof (float) * param->PERIOD);
+    lowr = (float *) malloc (sizeof (float) * param->PERIOD);
+    midll = (float *) malloc (sizeof (float) * param->PERIOD);
+    midlr = (float *) malloc (sizeof (float) * param->PERIOD);
+    midhl = (float *) malloc (sizeof (float) * param->PERIOD);
+    midhr = (float *) malloc (sizeof (float) * param->PERIOD);
+    highl = (float *) malloc (sizeof (float) * param->PERIOD);
+    highr = (float *) malloc (sizeof (float) * param->PERIOD);
 
 
-    lpf1l = new AnalogFilter (2, 500.0f,.7071f, 0);
-    lpf1r = new AnalogFilter (2, 500.0f,.7071f, 0);
-    hpf1l = new AnalogFilter (3, 500.0f,.7071f, 0);
-    hpf1r = new AnalogFilter (3, 500.0f,.7071f, 0);
-    lpf2l = new AnalogFilter (2, 2500.0f,.7071f, 0);
-    lpf2r = new AnalogFilter (2, 2500.0f,.7071f, 0);
-    hpf2l = new AnalogFilter (3, 2500.0f,.7071f, 0);
-    hpf2r = new AnalogFilter (3, 2500.0f,.7071f, 0);
-    lpf3l = new AnalogFilter (2, 5000.0f,.7071f, 0);
-    lpf3r = new AnalogFilter (2, 5000.0f,.7071f, 0);
-    hpf3l = new AnalogFilter (3, 5000.0f,.7071f, 0);
-    hpf3r = new AnalogFilter (3, 5000.0f,.7071f, 0);
+    lpf1l = new AnalogFilter (param,2, 500.0f,.7071f, 0);
+    lpf1r = new AnalogFilter (param,2, 500.0f,.7071f, 0);
+    hpf1l = new AnalogFilter (param,3, 500.0f,.7071f, 0);
+    hpf1r = new AnalogFilter (param,3, 500.0f,.7071f, 0);
+    lpf2l = new AnalogFilter (param,2, 2500.0f,.7071f, 0);
+    lpf2r = new AnalogFilter (param,2, 2500.0f,.7071f, 0);
+    hpf2l = new AnalogFilter (param,3, 2500.0f,.7071f, 0);
+    hpf2r = new AnalogFilter (param,3, 2500.0f,.7071f, 0);
+    lpf3l = new AnalogFilter (param,2, 5000.0f,.7071f, 0);
+    lpf3r = new AnalogFilter (param,2, 5000.0f,.7071f, 0);
+    hpf3l = new AnalogFilter (param,3, 5000.0f,.7071f, 0);
+    hpf3r = new AnalogFilter (param,3, 5000.0f,.7071f, 0);
 
 
-    CL = new Compressor(efxoutl,efxoutr);
-    CML = new Compressor(efxoutl,efxoutr);
-    CMH = new Compressor(efxoutl,efxoutr);
-    CH = new Compressor(efxoutl,efxoutr);
+    CL = new Compressor(param,efxoutl,efxoutr);
+    CML = new Compressor(param,efxoutl,efxoutr);
+    CMH = new Compressor(param,efxoutl,efxoutr);
+    CH = new Compressor(param,efxoutl,efxoutr);
 
     CL->Compressor_Change_Preset(0,5);
     CML->Compressor_Change_Preset(0,5);
@@ -123,10 +124,10 @@ CompBand::out (float * smpsl, float * smpsr)
     int i;
 
 
-    memcpy(lowl,smpsl,sizeof(float) * PERIOD);
-    memcpy(midll,smpsl,sizeof(float) * PERIOD);
-    memcpy(midhl,smpsl,sizeof(float) * PERIOD);
-    memcpy(highl,smpsl,sizeof(float) * PERIOD);
+    memcpy(lowl,smpsl,sizeof(float) * param->PERIOD);
+    memcpy(midll,smpsl,sizeof(float) * param->PERIOD);
+    memcpy(midhl,smpsl,sizeof(float) * param->PERIOD);
+    memcpy(highl,smpsl,sizeof(float) * param->PERIOD);
 
     lpf1l->filterout(lowl);
     hpf1l->filterout(midll);
@@ -135,10 +136,10 @@ CompBand::out (float * smpsl, float * smpsr)
     lpf3l->filterout(midhl);
     hpf3l->filterout(highl);
 
-    memcpy(lowr,smpsr,sizeof(float) * PERIOD);
-    memcpy(midlr,smpsr,sizeof(float) * PERIOD);
-    memcpy(midhr,smpsr,sizeof(float) * PERIOD);
-    memcpy(highr,smpsr,sizeof(float) * PERIOD);
+    memcpy(lowr,smpsr,sizeof(float) * param->PERIOD);
+    memcpy(midlr,smpsr,sizeof(float) * param->PERIOD);
+    memcpy(midhr,smpsr,sizeof(float) * param->PERIOD);
+    memcpy(highr,smpsr,sizeof(float) * param->PERIOD);
 
     lpf1r->filterout(lowr);
     hpf1r->filterout(midlr);
@@ -154,7 +155,7 @@ CompBand::out (float * smpsl, float * smpsr)
     CH->out(highl,highr);
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i]=(lowl[i]+midll[i]+midhl[i]+highl[i])*level;
         efxoutr[i]=(lowr[i]+midlr[i]+midhr[i]+highr[i])*level;
     }
@@ -169,13 +170,13 @@ CompBand::processReplacing (float **inputs,
 								int sampleFrames)
 {
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = sampleFrames;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
 
-    memcpy(lowl,inputs[0],sizeof(float) * PERIOD);
-    memcpy(midll,inputs[0],sizeof(float) * PERIOD);
-    memcpy(midhl,inputs[0],sizeof(float) * PERIOD);
-    memcpy(highl,inputs[0],sizeof(float) * PERIOD);
+    memcpy(lowl,inputs[0],sizeof(float) * param->PERIOD);
+    memcpy(midll,inputs[0],sizeof(float) * param->PERIOD);
+    memcpy(midhl,inputs[0],sizeof(float) * param->PERIOD);
+    memcpy(highl,inputs[0],sizeof(float) * param->PERIOD);
 
     lpf1l->filterout(lowl);
     hpf1l->filterout(midll);
@@ -184,10 +185,10 @@ CompBand::processReplacing (float **inputs,
     lpf3l->filterout(midhl);
     hpf3l->filterout(highl);
 
-    memcpy(lowr,inputs[1],sizeof(float) * PERIOD);
-    memcpy(midlr,inputs[1],sizeof(float) * PERIOD);
-    memcpy(midhr,inputs[1],sizeof(float) * PERIOD);
-    memcpy(highr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(lowr,inputs[1],sizeof(float) * param->PERIOD);
+    memcpy(midlr,inputs[1],sizeof(float) * param->PERIOD);
+    memcpy(midhr,inputs[1],sizeof(float) * param->PERIOD);
+    memcpy(highr,inputs[1],sizeof(float) * param->PERIOD);
 
     lpf1r->filterout(lowr);
     hpf1r->filterout(midlr);
@@ -200,13 +201,13 @@ CompBand::processReplacing (float **inputs,
 	float *midls[2] = {midll, midlr};
 	float *midhs[2] = {midhl, midhr};
 	float *highes[2] = {highl, highr};
-    CL->processReplacing(lows,lows, PERIOD);
-    CML->processReplacing(midls,midls, PERIOD);
-    CMH->processReplacing(midhs,midhs, PERIOD);
-    CH->processReplacing(highes,highes, PERIOD);
+    CL->processReplacing(lows,lows, param->PERIOD);
+    CML->processReplacing(midls,midls, param->PERIOD);
+    CMH->processReplacing(midhs,midhs, param->PERIOD);
+    CH->processReplacing(highes,highes, param->PERIOD);
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         outputs[0][i]=(lowl[i]+midll[i]+midhl[i]+highl[i])*level;
         outputs[1][i]=(lowr[i]+midlr[i]+midhr[i]+highr[i])*level;
     }

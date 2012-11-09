@@ -34,8 +34,9 @@ class Vibe
 
 public:
 
-    Vibe (float * efxoutl_, float * efxoutr_);
+    Vibe (Parameters *param,float * efxoutl_, float * efxoutr_);
     ~Vibe ();
+	Parameters *param;
 
     void out (float * smpsl, float * smpsr);
     void setvolume(int value);

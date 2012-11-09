@@ -27,28 +27,29 @@
 #include <time.h>
 #include "f_sin.h"
 
-Sequence::Sequence (float * efxoutl_, float * efxoutr_, long int Quality, int DS, int uq, int dq)
+Sequence::Sequence (Parameters *param, float * efxoutl_, float * efxoutr_, long int Quality, int DS, int uq, int dq)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     hq = Quality;
-	PERIOD = 96000*2;
-	fPERIOD = PERIOD;
+	param->PERIOD = 96000*2;
+	param->fPERIOD = param->PERIOD;
     adjust(DS);
 	
-    templ = (float *) malloc (sizeof (float) * PERIOD);
-    tempr = (float *) malloc (sizeof (float) * PERIOD);
+    templ = (float *) malloc (sizeof (float) * param->PERIOD);
+    tempr = (float *) malloc (sizeof (float) * param->PERIOD);
 
     outi = (float *) malloc (sizeof (float) * nPERIOD);
     outo = (float *) malloc (sizeof (float) * nPERIOD);
-	PERIOD = 44100;
-	fPERIOD = PERIOD;
+	param->PERIOD = 44111;
+	param->fPERIOD = param->PERIOD;
     adjust(DS);
 
     U_Resample = new Resample(dq);
     D_Resample = new Resample(uq);
 
-    beats = new beattracker();
+    beats = new beattracker(param);
 
     filterl = NULL;
     filterr = NULL;
@@ -63,14 +64,14 @@ Sequence::Sequence (float * efxoutl_, float * efxoutr_, long int Quality, int DS
     subdiv = 2;
     lmod = 0.5f;
     rmod = 0.5f;
-    filterl = new RBFilter (0, 80.0f, 40.0f, 2);
-    filterr = new RBFilter (0, 80.0f, 40.0f, 2);
-    modfilterl = new RBFilter (0, 15.0f, 0.5f, 1);
-    modfilterr = new RBFilter (0, 15.0f, 0.5f, 1);
-    rmsfilter = new RBFilter (0, 15.0f, 0.15f, 1);
-    peaklpfilter = new RBFilter (0, 25.0f, 0.5f, 0);
-    peaklpfilter2 = new RBFilter (0, 25.0f, 0.5f, 0);
-    peakhpfilter = new RBFilter (1, 45.0f, 0.5f, 0);
+    filterl = new RBFilter (param,0, 80.0f, 40.0f, 2);
+    filterr = new RBFilter (param,0, 80.0f, 40.0f, 2);
+    modfilterl = new RBFilter (param,0, 15.0f, 0.5f, 1);
+    modfilterr = new RBFilter (param,0, 15.0f, 0.5f, 1);
+    rmsfilter = new RBFilter (param,0, 15.0f, 0.15f, 1);
+    peaklpfilter = new RBFilter (param,0, 25.0f, 0.5f, 0);
+    peaklpfilter2 = new RBFilter (param,0, 25.0f, 0.5f, 0);
+    peakhpfilter = new RBFilter (param,1, 45.0f, 0.5f, 0);
 
 //Trigger Filter Settings
     peakpulse = peak = envrms = 0.0f;
@@ -88,8 +89,8 @@ Sequence::Sequence (float * efxoutl_, float * efxoutr_, long int Quality, int DS
 
     maxdly = 4.0f;  //sets max time to 4 seconds
     tempodiv = maxdly;
-    ldelay = new delayline(maxdly, 1);
-    rdelay = new delayline(maxdly, 1);
+    ldelay = new delayline(param,maxdly, 1);
+    rdelay = new delayline(param,maxdly, 1);
     fb = 0.0f;
     rdlyfb = 0.0f;
     ldlyfb = 0.0f;
@@ -149,7 +150,7 @@ Sequence::out (float * smpsl, float * smpsr)
     }
 
     if((Pmode==3)||(Pmode ==5) || (Pmode==6)) hPERIOD=nPERIOD;
-    else hPERIOD=PERIOD;
+    else hPERIOD=param->PERIOD;
 
 
     if ((rndflag) && (tcount < hPERIOD + 1)) { //This is an Easter Egg
@@ -176,7 +177,7 @@ Sequence::out (float * smpsl, float * smpsr)
         rdiff = ifperiod * (fsequence[dnextcount] - fsequence[dscount]);
         lfor = fsequence[dscount];
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -226,7 +227,7 @@ Sequence::out (float * smpsl, float * smpsr)
     case 1:		//Up Down
 
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -266,7 +267,7 @@ Sequence::out (float * smpsl, float * smpsr)
 
     case 2:  //Stepper
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -313,9 +314,9 @@ Sequence::out (float * smpsl, float * smpsr)
         lfol = fsequence[scount];
 
         if(DS_state != 0) {
-            memcpy(templ, smpsl,sizeof(float)*PERIOD);
-            memcpy(tempr, smpsr,sizeof(float)*PERIOD);
-            U_Resample->out(templ,tempr,smpsl,smpsr,PERIOD,u_up);
+            memcpy(templ, smpsl,sizeof(float)*param->PERIOD);
+            memcpy(tempr, smpsr,sizeof(float)*param->PERIOD);
+            U_Resample->out(templ,tempr,smpsl,smpsr,param->PERIOD,u_up);
         }
 
 
@@ -357,8 +358,8 @@ Sequence::out (float * smpsl, float * smpsr)
         if(DS_state != 0) {
             D_Resample->out(templ,tempr,efxoutl,efxoutr,nPERIOD,u_down);
         } else {
-            memcpy(efxoutl, templ,sizeof(float)*PERIOD);
-            memcpy(efxoutr, tempr,sizeof(float)*PERIOD);
+            memcpy(efxoutl, templ,sizeof(float)*param->PERIOD);
+            memcpy(efxoutr, tempr,sizeof(float)*param->PERIOD);
         }
 
 
@@ -381,7 +382,7 @@ Sequence::out (float * smpsl, float * smpsr)
         rdiff = ifperiod * (fsequence[dnextcount] - fsequence[dscount]);
         lfor = fsequence[dscount];
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -429,9 +430,9 @@ Sequence::out (float * smpsl, float * smpsr)
         lfol = floorf(fsequence[scount]*12.75f);
 
         if(DS_state != 0) {
-            memcpy(templ, smpsl,sizeof(float)*PERIOD);
-            memcpy(tempr, smpsr,sizeof(float)*PERIOD);
-            U_Resample->out(templ,tempr,smpsl,smpsr,PERIOD,u_up);
+            memcpy(templ, smpsl,sizeof(float)*param->PERIOD);
+            memcpy(tempr, smpsr,sizeof(float)*param->PERIOD);
+            U_Resample->out(templ,tempr,smpsl,smpsr,param->PERIOD,u_up);
         }
 
 
@@ -483,9 +484,9 @@ Sequence::out (float * smpsl, float * smpsr)
         lfol = fsequence[scount];
 
         if(DS_state != 0) {
-            memcpy(templ, smpsl,sizeof(float)*PERIOD);
-            memcpy(tempr, smpsr,sizeof(float)*PERIOD);
-            U_Resample->out(templ,tempr,smpsl,smpsr,PERIOD,u_up);
+            memcpy(templ, smpsl,sizeof(float)*param->PERIOD);
+            memcpy(tempr, smpsr,sizeof(float)*param->PERIOD);
+            U_Resample->out(templ,tempr,smpsl,smpsr,param->PERIOD,u_up);
         }
 
 
@@ -551,7 +552,7 @@ Sequence::out (float * smpsl, float * smpsr)
         //to see how well it performs.
         beats->detect(smpsl, smpsr);
 
-        for ( i = 0; i < PERIOD; i++) { //Detect dynamics onset
+        for ( i = 0; i < param->PERIOD; i++) { //Detect dynamics onset
 
             tmp = 10.0f*fabs(smpsl[i] + smpsr[i]);
             envrms = rmsfilter->filterout_s(tmp);
@@ -623,7 +624,7 @@ Sequence::out (float * smpsl, float * smpsr)
 
     case 8:  //delay
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -680,8 +681,8 @@ Sequence::processReplacing (float **inputs,
     int i;
     int nextcount,dnextcount;
     int hPERIOD;
-	PERIOD = sampleFrames;
-	fPERIOD = sampleFrames;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
 	adjust(DS_state);
     float ldiff, rdiff, lfol, lfor, ftcount;
     float ldbl, ldbr;
@@ -696,7 +697,7 @@ Sequence::processReplacing (float **inputs,
     }
 
     if((Pmode==3)||(Pmode ==5) || (Pmode==6)) hPERIOD=nPERIOD;
-    else hPERIOD=PERIOD;
+    else hPERIOD=param->PERIOD;
 
 
     if ((rndflag) && (tcount < hPERIOD + 1)) { //This is an Easter Egg
@@ -725,7 +726,7 @@ Sequence::processReplacing (float **inputs,
         rdiff = ifperiod * (fsequence[dnextcount] - fsequence[dscount]);
         lfor = fsequence[dscount];
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -775,7 +776,7 @@ Sequence::processReplacing (float **inputs,
     case 1:		//Up Down
 
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -815,7 +816,7 @@ Sequence::processReplacing (float **inputs,
 
     case 2:  //Stepper
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -862,9 +863,9 @@ Sequence::processReplacing (float **inputs,
         lfol = fsequence[scount];
 
         if(DS_state != 0) {
-            memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-            memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-            U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+            memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+            memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+            U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
         }
 
 
@@ -906,8 +907,8 @@ Sequence::processReplacing (float **inputs,
         if(DS_state != 0) {
             D_Resample->out(templ,tempr,outputs[0],outputs[1],nPERIOD,u_down);
         } else {
-            memcpy(outputs[0], templ,sizeof(float)*PERIOD);
-            memcpy(outputs[1], tempr,sizeof(float)*PERIOD);
+            memcpy(outputs[0], templ,sizeof(float)*param->PERIOD);
+            memcpy(outputs[1], tempr,sizeof(float)*param->PERIOD);
         }
 
 
@@ -930,7 +931,7 @@ Sequence::processReplacing (float **inputs,
         rdiff = ifperiod * (fsequence[dnextcount] - fsequence[dscount]);
         lfor = fsequence[dscount];
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -978,9 +979,9 @@ Sequence::processReplacing (float **inputs,
         lfol = floorf(fsequence[scount]*12.75f);
 
         if(DS_state != 0) {
-            memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-            memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-            U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+            memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+            memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+            U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
         }
 
 
@@ -1032,9 +1033,9 @@ Sequence::processReplacing (float **inputs,
         lfol = fsequence[scount];
 
         if(DS_state != 0) {
-            memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-            memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-            U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+            memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+            memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+            U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
         }
 
 
@@ -1100,7 +1101,7 @@ Sequence::processReplacing (float **inputs,
         //to see how well it performs.
         beats->detect(inputs[0], inputs[1]);
 
-        for ( i = 0; i < PERIOD; i++) { //Detect dynamics onset
+        for ( i = 0; i < param->PERIOD; i++) { //Detect dynamics onset
 
             tmp = 10.0f*fabs(inputs[0][i] + inputs[1][i]);
             envrms = rmsfilter->filterout_s(tmp);
@@ -1172,7 +1173,7 @@ Sequence::processReplacing (float **inputs,
 
     case 8:  //delay
 
-        for ( i = 0; i < PERIOD; i++) { //Maintain sequenced modulator
+        for ( i = 0; i < param->PERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
                 tcount = 0;
@@ -1284,14 +1285,14 @@ Sequence::adjust(int DS)
     switch(DS) {
 
     case 0:
-        nPERIOD = PERIOD;
+        nPERIOD = param->PERIOD;
         nSAMPLE_RATE = SAMPLE_RATE;
         nfSAMPLE_RATE = fSAMPLE_RATE;
         window = 2048;
         break;
 
     case 1:
-        nPERIOD = lrintf(fPERIOD*96000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*96000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 96000;
         nfSAMPLE_RATE = 96000.0f;
         window = 2048;
@@ -1299,63 +1300,63 @@ Sequence::adjust(int DS)
 
 
     case 2:
-        nPERIOD = lrintf(fPERIOD*48000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*48000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 48000;
         nfSAMPLE_RATE = 48000.0f;
         window = 2048;
         break;
 
     case 3:
-        nPERIOD = lrintf(fPERIOD*44100.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*44100.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 44100;
         nfSAMPLE_RATE = 44100.0f;
         window = 2048;
         break;
 
     case 4:
-        nPERIOD = lrintf(fPERIOD*32000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*32000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 32000;
         nfSAMPLE_RATE = 32000.0f;
         window = 2048;
         break;
 
     case 5:
-        nPERIOD = lrintf(fPERIOD*22050.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*22050.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 22050;
         nfSAMPLE_RATE = 22050.0f;
         window = 1024;
         break;
 
     case 6:
-        nPERIOD = lrintf(fPERIOD*16000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*16000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 16000;
         nfSAMPLE_RATE = 16000.0f;
         window = 1024;
         break;
 
     case 7:
-        nPERIOD = lrintf(fPERIOD*12000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*12000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 12000;
         nfSAMPLE_RATE = 12000.0f;
         window = 512;
         break;
 
     case 8:
-        nPERIOD = lrintf(fPERIOD*8000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*8000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 8000;
         nfSAMPLE_RATE = 8000.0f;
         window = 512;
         break;
 
     case 9:
-        nPERIOD = lrintf(fPERIOD*4000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*4000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 4000;
         nfSAMPLE_RATE = 4000.0f;
         window = 256;
         break;
     }
-    u_up= (double)nPERIOD / (double)PERIOD;
-    u_down= (double)PERIOD / (double)nPERIOD;
+    u_up= (double)nPERIOD / (double)param->PERIOD;
+    u_down= (double)param->PERIOD / (double)nPERIOD;
 }
 
 

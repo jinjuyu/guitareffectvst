@@ -30,8 +30,9 @@
 class Ring
 {
 public:
-    Ring (float * efxoutl_, float * efxoutr_);
+    Ring (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Ring ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

@@ -33,8 +33,9 @@
 class Echo
 {
 public:
-    Echo (float * efxoutl_, float * efxoutr_);
+    Echo (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Echo ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
 	void processReplacing (float **inputs,
 										float **outputs,

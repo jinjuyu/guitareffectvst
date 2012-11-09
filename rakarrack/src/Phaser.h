@@ -30,8 +30,9 @@
 class Phaser
 {
 public:
-    Phaser (float * efxoutl_, float * efxoutr_);
+    Phaser (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Phaser ();
+	Parameters *param;
     void out (float * smpsl, float * smpsr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

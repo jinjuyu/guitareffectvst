@@ -26,10 +26,11 @@
 #include <math.h>
 #include "Vocoder.h"
 
-Vocoder::Vocoder (float * efxoutl_, float * efxoutr_, int bands, int DS, int uq, int dq)
+Vocoder::Vocoder (Parameters *param,float * efxoutl_, float * efxoutr_, int bands, int DS, int uq, int dq)
 {
-	PERIOD = 96000*2;
-	fPERIOD = PERIOD;
+	this->param = param;
+	param->PERIOD = 96000*2;
+	param->fPERIOD = param->PERIOD;
     adjust(DS);
 
     VOC_BANDS = bands;
@@ -81,21 +82,21 @@ Vocoder::Vocoder (float * efxoutl_, float * efxoutr_, int bands, int DS, int uq,
         center = (float) i * 20000.0f/((float) VOC_BANDS);
         qq = 60.0f;
 
-        filterbank[i].l = new AnalogFilter (4, center, qq, 0);
+        filterbank[i].l = new AnalogFilter (param,4, center, qq, 0);
         filterbank[i].l->setSR(nSAMPLE_RATE);
-        filterbank[i].r = new AnalogFilter (4, center, qq, 0);
+        filterbank[i].r = new AnalogFilter (param,4, center, qq, 0);
         filterbank[i].r->setSR(nSAMPLE_RATE);
-        filterbank[i].aux = new AnalogFilter (4, center, qq, 0);
+        filterbank[i].aux = new AnalogFilter (param,4, center, qq, 0);
         filterbank[i].aux->setSR(nSAMPLE_RATE);
     };
 
-    vlp = new AnalogFilter (2, 4000.0f, 1.0f, 1);
-    vhp = new AnalogFilter (3, 200.0f, 0.707f, 1);
+    vlp = new AnalogFilter (param,2, 4000.0f, 1.0f, 1);
+    vhp = new AnalogFilter (param,3, 200.0f, 0.707f, 1);
 
     vlp->setSR(nSAMPLE_RATE);
     vhp->setSR(nSAMPLE_RATE);
-	PERIOD = 44100;
-	fPERIOD = PERIOD;
+	param->PERIOD = 44116;
+	param->fPERIOD = param->PERIOD;
 	adjust(DS);
     setbands(VOC_BANDS, 200.0f, 4000.0f);
     setpreset (Ppreset);
@@ -139,62 +140,62 @@ Vocoder::adjust(int DS)
     switch(DS) {
 
     case 0:
-        nPERIOD = PERIOD;
+        nPERIOD = param->PERIOD;
         nSAMPLE_RATE = SAMPLE_RATE;
         nfSAMPLE_RATE = fSAMPLE_RATE;
         break;
 
     case 1:
-        nPERIOD = lrintf(fPERIOD*96000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*96000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 96000;
         nfSAMPLE_RATE = 96000.0f;
         break;
 
 
     case 2:
-        nPERIOD = lrintf(fPERIOD*48000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*48000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 48000;
         nfSAMPLE_RATE = 48000.0f;
         break;
 
     case 3:
-        nPERIOD = lrintf(fPERIOD*44100.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*44100.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 44100;
         nfSAMPLE_RATE = 44100.0f;
         break;
 
     case 4:
-        nPERIOD = lrintf(fPERIOD*32000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*32000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 32000;
         nfSAMPLE_RATE = 32000.0f;
         break;
 
     case 5:
-        nPERIOD = lrintf(fPERIOD*22050.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*22050.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 22050;
         nfSAMPLE_RATE = 22050.0f;
         break;
 
     case 6:
-        nPERIOD = lrintf(fPERIOD*16000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*16000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 16000;
         nfSAMPLE_RATE = 16000.0f;
         break;
 
     case 7:
-        nPERIOD = lrintf(fPERIOD*12000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*12000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 12000;
         nfSAMPLE_RATE = 12000.0f;
         break;
 
     case 8:
-        nPERIOD = lrintf(fPERIOD*8000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*8000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 8000;
         nfSAMPLE_RATE = 8000.0f;
         break;
 
     case 9:
-        nPERIOD = lrintf(fPERIOD*4000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*4000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 4000;
         nfSAMPLE_RATE = 4000.0f;
         break;
@@ -203,8 +204,8 @@ Vocoder::adjust(int DS)
 
     ncSAMPLE_RATE = 1.0f / nfSAMPLE_RATE;
 
-    u_up= (double)nPERIOD / (double)PERIOD;
-    u_down= (double)PERIOD / (double)nPERIOD;
+    u_up= (double)nPERIOD / (double)param->PERIOD;
+    u_down= (double)param->PERIOD / (double)nPERIOD;
 
 
 }
@@ -226,7 +227,7 @@ Vocoder::out (float * smpsl, float * smpsr)
 
 
     if(DS_state != 0) {
-        A_Resample->mono_out(auxresampled,tmpaux,PERIOD,u_up,nPERIOD);
+        A_Resample->mono_out(auxresampled,tmpaux,param->PERIOD,u_up,nPERIOD);
     } else
         memcpy(tmpaux,auxresampled,sizeof(float)*nPERIOD);
 
@@ -264,7 +265,7 @@ Vocoder::out (float * smpsl, float * smpsr)
     auxtemp = 0.0f;
 
     if(DS_state != 0) {
-        U_Resample->out(smpsl,smpsr,tsmpsl,tsmpsr,PERIOD,u_up);
+        U_Resample->out(smpsl,smpsr,tsmpsl,tsmpsr,param->PERIOD,u_up);
     } else {
         memcpy(tsmpsl,smpsl,sizeof(float)*nPERIOD);
         memcpy(tsmpsr,smpsr,sizeof(float)*nPERIOD);
@@ -333,12 +334,12 @@ Vocoder::processReplacing (float **inputs,
     float tempgain;
     float maxgain=0.0;
     float auxtemp, tmpgain;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	adjust(DS_state);
 
     if(DS_state != 0) {
-        A_Resample->mono_out(auxresampled,tmpaux,PERIOD,u_up,nPERIOD);
+        A_Resample->mono_out(auxresampled,tmpaux,param->PERIOD,u_up,nPERIOD);
     } else
         memcpy(tmpaux,auxresampled,sizeof(float)*nPERIOD);
 
@@ -376,7 +377,7 @@ Vocoder::processReplacing (float **inputs,
     auxtemp = 0.0f;
 
     if(DS_state != 0) {
-        U_Resample->out(smpsl,smpsr,tsmpsl,tsmpsr,PERIOD,u_up);
+        U_Resample->out(smpsl,smpsr,tsmpsl,tsmpsr,param->PERIOD,u_up);
     } else {
         memcpy(tsmpsl,smpsl,sizeof(float)*nPERIOD);
         memcpy(tsmpsr,smpsr,sizeof(float)*nPERIOD);

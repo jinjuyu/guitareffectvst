@@ -27,10 +27,10 @@
 #include "AnalogFilter.h"
 
 
-AnalogFilter::AnalogFilter (unsigned char Ftype, float Ffreq, float Fq,
+AnalogFilter::AnalogFilter (Parameters *param, unsigned char Ftype, float Ffreq, float Fq,
                             unsigned char Fstages)
 {
-
+	this->param = param;
     iSAMPLE_RATE=SAMPLE_RATE;
     ifSAMPLE_RATE=fSAMPLE_RATE;
 
@@ -402,7 +402,7 @@ AnalogFilter::singlefilterout (float * smp, fstage & x, fstage & y,
     float y0;
     if (order == 1) {
         //First order filter
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
 
             y0 = smp[i] * c[0] + x.c1 * c[1] + y.c1 * d[1];
             y.c1 = y0 + DENORMAL_GUARD;
@@ -413,7 +413,7 @@ AnalogFilter::singlefilterout (float * smp, fstage & x, fstage & y,
     };
     if (order == 2) {
         //Second order filter
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             y0 =
                 (smp[i] * c[0]) + (x.c1 * c[1]) + (x.c2 * c[2]) + (y.c1 * d[1]) +
                 (y.c2 * d[2]);
@@ -432,11 +432,11 @@ AnalogFilter::filterout (float * smp)
 {
 
     int i;
-	fPERIOD = PERIOD;
+	param->fPERIOD = param->PERIOD;
     float *ismp = NULL;	//used if it needs interpolation
     if (needsinterpolation != 0) {
-        ismp = new float[PERIOD];
-        for (i = 0; i < PERIOD; i++)
+        ismp = new float[param->PERIOD];
+        for (i = 0; i < param->PERIOD; i++)
             ismp[i] = smp[i];
         for (i = 0; i < stages + 1; i++)
             singlefilterout (ismp, oldx[i], oldy[i], oldc, oldd);
@@ -446,8 +446,8 @@ AnalogFilter::filterout (float * smp)
         singlefilterout (smp, x[i], y[i], c, d);
 
     if (needsinterpolation != 0) {
-        for (i = 0; i < PERIOD; i++) {
-            float x = (float) i / fPERIOD;
+        for (i = 0; i < param->PERIOD; i++) {
+            float x = (float) i / param->fPERIOD;
             smp[i] = ismp[i] * (1.0f - x) + smp[i] * x;
         };
         delete[] (ismp);

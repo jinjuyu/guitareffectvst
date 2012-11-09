@@ -26,11 +26,12 @@
 #include <math.h>
 #include "Reverbtron.h"
 //const char *DATADIR = "./data";
-Reverbtron::Reverbtron (float * efxoutl_, float * efxoutr_,int DS, int uq, int dq)
+Reverbtron::Reverbtron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 96000*2;
+	param->PERIOD = 96000*2;
     //default values
     Ppreset = 0;
     Pvolume = 50;
@@ -45,9 +46,9 @@ Reverbtron::Reverbtron (float * efxoutl_, float * efxoutr_,int DS, int uq, int d
     fb = 0.0f;
     feedback = 0.0f;
     maxtime = 0.0f;
-    templ = (float *) malloc (sizeof (float) * PERIOD);
-    tempr = (float *) malloc (sizeof (float) * PERIOD);
-	PERIOD = 44100;
+    templ = (float *) malloc (sizeof (float) * param->PERIOD);
+    tempr = (float *) malloc (sizeof (float) * param->PERIOD);
+	param->PERIOD = 44110;
 	adjust(DS);
 
     hrtf_size = nSAMPLE_RATE/2;
@@ -70,8 +71,8 @@ Reverbtron::Reverbtron (float * efxoutl_, float * efxoutr_,int DS, int uq, int d
     idelay = 0.0f;
     decay = f_exp(-1.0f/(0.2f*nfSAMPLE_RATE));  //0.2 seconds
 
-    lpfl =  new AnalogFilter (0, 800, 1, 0);;
-    lpfr =  new AnalogFilter (0, 800, 1, 0);;
+    lpfl =  new AnalogFilter (param,0, 800, 1, 0);;
+    lpfr =  new AnalogFilter (param,0, 800, 1, 0);;
 
     lpfl->setSR(nSAMPLE_RATE);
     lpfr->setSR(nSAMPLE_RATE);
@@ -118,9 +119,9 @@ Reverbtron::out (float * smpsl, float * smpsr)
     int doffset;
 
     if(DS_state != 0) {
-        memcpy(templ, smpsl,sizeof(float)*PERIOD);
-        memcpy(tempr, smpsr,sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,smpsl,smpsr,PERIOD,u_up);
+        memcpy(templ, smpsl,sizeof(float)*param->PERIOD);
+        memcpy(tempr, smpsr,sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,smpsl,smpsr,param->PERIOD,u_up);
     }
 
 
@@ -202,8 +203,8 @@ Reverbtron::out (float * smpsl, float * smpsr)
         D_Resample->out(templ,tempr,efxoutl,efxoutr,nPERIOD,u_down);
 
     } else {
-        memcpy(efxoutl, templ,sizeof(float)*PERIOD);
-        memcpy(efxoutr, tempr,sizeof(float)*PERIOD);
+        memcpy(efxoutl, templ,sizeof(float)*param->PERIOD);
+        memcpy(efxoutr, tempr,sizeof(float)*param->PERIOD);
     }
 
 
@@ -218,8 +219,8 @@ Reverbtron::processReplacing (float **inputs,
 								float **outputs,
 								int sampleFrames)
 {
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	adjust(DS_state);
     int i, j, xindex, hindex;
     float l,lyn, hyn;
@@ -231,9 +232,9 @@ Reverbtron::processReplacing (float **inputs,
 	inputs2[0] = new float[nPERIOD+100];
 	inputs2[1] = new float[nPERIOD+100];
     if(DS_state != 0) {
-        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+        memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
     }
 
 
@@ -315,8 +316,8 @@ Reverbtron::processReplacing (float **inputs,
         D_Resample->out(templ,tempr,outputs[0],outputs[1],nPERIOD,u_down);
 
     } else {
-        memcpy(outputs[0], templ,sizeof(float)*PERIOD);
-        memcpy(outputs[1], tempr,sizeof(float)*PERIOD);
+        memcpy(outputs[0], templ,sizeof(float)*param->PERIOD);
+        memcpy(outputs[1], tempr,sizeof(float)*param->PERIOD);
     }
 
 	delete[] inputs2[0];
@@ -567,68 +568,68 @@ Reverbtron::adjust(int DS)
     switch(DS) {
 
     case 0:
-        nPERIOD = PERIOD;
+        nPERIOD = param->PERIOD;
         nSAMPLE_RATE = SAMPLE_RATE;
         nfSAMPLE_RATE = fSAMPLE_RATE;
         break;
 
     case 1:
-        nPERIOD = lrintf(fPERIOD*96000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*96000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 96000;
         nfSAMPLE_RATE = 96000.0f;
         break;
 
 
     case 2:
-        nPERIOD = lrintf(fPERIOD*48000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*48000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 48000;
         nfSAMPLE_RATE = 48000.0f;
         break;
 
     case 3:
-        nPERIOD = lrintf(fPERIOD*44100.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*44100.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 44100;
         nfSAMPLE_RATE = 44100.0f;
         break;
 
     case 4:
-        nPERIOD = lrintf(fPERIOD*32000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*32000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 32000;
         nfSAMPLE_RATE = 32000.0f;
         break;
 
     case 5:
-        nPERIOD = lrintf(fPERIOD*22050.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*22050.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 22050;
         nfSAMPLE_RATE = 22050.0f;
         break;
 
     case 6:
-        nPERIOD = lrintf(fPERIOD*16000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*16000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 16000;
         nfSAMPLE_RATE = 16000.0f;
         break;
 
     case 7:
-        nPERIOD = lrintf(fPERIOD*12000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*12000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 12000;
         nfSAMPLE_RATE = 12000.0f;
         break;
 
     case 8:
-        nPERIOD = lrintf(fPERIOD*8000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*8000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 8000;
         nfSAMPLE_RATE = 8000.0f;
         break;
 
     case 9:
-        nPERIOD = lrintf(fPERIOD*4000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*4000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 4000;
         nfSAMPLE_RATE = 4000.0f;
         break;
     }
-    u_up= (double)nPERIOD / (double)PERIOD;
-    u_down= (double)PERIOD / (double)nPERIOD;
+    u_up= (double)nPERIOD / (double)param->PERIOD;
+    u_down= (double)param->PERIOD / (double)nPERIOD;
 }
 
 

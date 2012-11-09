@@ -33,7 +33,8 @@
 class MBVvol
 {
 public:
-    MBVvol (float * efxoutl_, float * efxoutr_);
+    MBVvol (Parameters *param, float * efxoutl_, float * efxoutr_);
+	Parameters *param;
     ~MBVvol ();
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);

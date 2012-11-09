@@ -31,8 +31,9 @@
 class Valve
 {
 public:
-    Valve (float * efxoutl_, float * efxoutr_);
+    Valve (Parameters *param,float * efxoutl_, float * efxoutr_);
     ~Valve ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

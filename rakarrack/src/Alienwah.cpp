@@ -26,8 +26,9 @@
 #include "Alienwah.h"
 #include <stdio.h>
 
-Alienwah::Alienwah (float * efxoutl_, float * efxoutr_)
-{
+Alienwah::Alienwah (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -63,8 +64,8 @@ Alienwah::out (float * smpsl, float * smpsr)
     clfor.a = cosf (lfor + phase) * fb;
     clfor.b = sinf (lfor + phase) * fb;
 
-    for (i = 0; i < PERIOD; i++) {
-        float x = (float)i / fPERIOD;
+    for (i = 0; i < param->PERIOD; i++) {
+        float x = (float)i / param->fPERIOD;
         float x1 = 1.0f - x;
         //left
         tmp.a = clfol.a * x + oldclfol.a * x1;
@@ -110,8 +111,8 @@ void Alienwah::processReplacing (float **inputs,
 {
     int i;
     float lfol, lfor;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
 	lfo.update();// lfo는 어찌할지 막막...
 
@@ -125,8 +126,8 @@ void Alienwah::processReplacing (float **inputs,
     clfor.a = cosf (lfor + phase) * fb;
     clfor.b = sinf (lfor + phase) * fb;
 
-    for (i = 0; i < PERIOD; i++) {
-        float x = (float)i / fPERIOD;
+    for (i = 0; i < param->PERIOD; i++) {
+        float x = (float)i / param->fPERIOD;
         float x1 = 1.0f - x;
         //left
         tmp.a = clfol.a * x + oldclfol.a * x1;

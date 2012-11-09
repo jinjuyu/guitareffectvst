@@ -28,11 +28,11 @@
 #include "HarmonicEnhancer.h"
 
 
-HarmEnhancer::HarmEnhancer(float *Rmag, float hfreq, float lfreq, float gain)
+HarmEnhancer::HarmEnhancer(Parameters *param, float *Rmag, float hfreq, float lfreq, float gain)
 {
-
-    inputl = (float *) malloc (sizeof (float) * 44100);//PERIOD);
-    inputr = (float *) malloc (sizeof (float) * 44100);//PERIOD);
+	this->param = param;
+    inputl = (float *) malloc (sizeof (float) * 44100);//param->PERIOD);
+    inputr = (float *) malloc (sizeof (float) * 44100);//param->PERIOD);
 
     set_vol(0,gain);
     realvol = gain;
@@ -43,12 +43,12 @@ HarmEnhancer::HarmEnhancer(float *Rmag, float hfreq, float lfreq, float gain)
 
     hpffreq = hfreq;
     lpffreq = lfreq;
-    hpfl = new AnalogFilter(3, hfreq, 1, 0);
-    hpfr = new AnalogFilter(3, hfreq, 1, 0);
-    lpfl = new AnalogFilter(2, lfreq, 1, 0);
-    lpfr = new AnalogFilter(2, lfreq, 1, 0);
+    hpfl = new AnalogFilter(param,3, hfreq, 1, 0);
+    hpfr = new AnalogFilter(param,3, hfreq, 1, 0);
+    lpfl = new AnalogFilter(param,2, lfreq, 1, 0);
+    lpfr = new AnalogFilter(param,2, lfreq, 1, 0);
 
-    limiter = new Compressor (inputl, inputr);
+    limiter = new Compressor (param,inputl, inputr);
     limiter->Compressor_Change_Preset(0,4);
     calcula_mag(Rmag);
 }
@@ -189,19 +189,19 @@ HarmEnhancer::harm_out(float *smpsl, float *smpsr)
 
     int i,j;
 
-    memcpy(inputl,smpsl, sizeof(float)*PERIOD);
-    memcpy(inputr,smpsr, sizeof(float)*PERIOD);
-	float *compressedl = new float[PERIOD];
-	float *compressedr = new float[PERIOD];
+    memcpy(inputl,smpsl, sizeof(float)*param->PERIOD);
+    memcpy(inputr,smpsr, sizeof(float)*param->PERIOD);
+	float *compressedl = new float[param->PERIOD];
+	float *compressedr = new float[param->PERIOD];
 
 
     hpfl->filterout(inputl);
     hpfr->filterout(inputr);
 	float *inputs[2] = {inputl, inputr};
 	float *outputs[2] = {compressedl, compressedr};
-    limiter->processReplacing(inputs, outputs, PERIOD);
+    limiter->processReplacing(inputs, outputs, param->PERIOD);
 
-    for (i=0; i<PERIOD; i++) {
+    for (i=0; i<param->PERIOD; i++) {
         float xl = inputl[i];
         float xr = inputr[i];
         float yl=0.0f;
@@ -231,7 +231,7 @@ HarmEnhancer::harm_out(float *smpsl, float *smpsr)
     lpfl->filterout(inputl);
     lpfr->filterout(inputr);
 
-    for (i=0; i<PERIOD; i++) {
+    for (i=0; i<param->PERIOD; i++) {
         smpsl[i] =(compressedl[i]+inputl[i]*vol);
         smpsr[i] =(compressedr[i]+inputr[i]*vol);
     }

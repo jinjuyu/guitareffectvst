@@ -36,8 +36,9 @@
 #include "Compressor.h"
 #define  MIN_GAIN  0.00001f        // -100dB  This will help prevent evaluation of denormal numbers
 
-Compressor::Compressor (float * efxoutl_, float * efxoutr_)
+Compressor::Compressor (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -253,7 +254,7 @@ Compressor::out (float *efxoutl, float *efxoutr)
     int i;
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         float rdelta = 0.0f;
         float ldelta = 0.0f;
 //Right Channel
@@ -402,10 +403,10 @@ Compressor::processReplacing (float **inputs, float **outputs, int sampleFrames)
 {
 
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = sampleFrames;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         float rdelta = 0.0f;
         float ldelta = 0.0f;
 //Right Channel

@@ -162,9 +162,6 @@
     <ClCompile Include="..\rakarrack\src\Phaser.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
-    <ClCompile Include="..\rakarrack\src\process.cpp">
-      <Filter>RAK</Filter>
-    </ClCompile>
     <ClCompile Include="..\rakarrack\src\RBEcho.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
@@ -244,6 +241,9 @@
       <Filter>RAK</Filter>
     </ClCompile>
     <ClCompile Include="..\rakarrack\src\Vocoder.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\process.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
   </ItemGroup>

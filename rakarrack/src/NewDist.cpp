@@ -31,31 +31,32 @@
  * Waveshape (this is called by OscilGen::waveshape and Distorsion::process)
  */
 
-NewDist::NewDist (float * efxoutl_, float * efxoutr_)
+NewDist::NewDist (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 44100;
-	fPERIOD = 44100;
-    octoutl = (float *) malloc (sizeof (float) * PERIOD);
-    octoutr = (float *) malloc (sizeof (float) * PERIOD);
+	param->PERIOD = 44108;
+	param->fPERIOD = 44100;
+    octoutl = (float *) malloc (sizeof (float) * param->PERIOD);
+    octoutr = (float *) malloc (sizeof (float) * param->PERIOD);
 
 
 
-    lpfl = new AnalogFilter (2, 22000, 1, 0);
-    lpfr = new AnalogFilter (2, 22000, 1, 0);
-    hpfl = new AnalogFilter (3, 20, 1, 0);
-    hpfr = new AnalogFilter (3, 20, 1, 0);
-    blockDCl = new AnalogFilter (2, 75.0f, 1, 0);
-    blockDCr = new AnalogFilter (2, 75.0f, 1, 0);
-    wshapel = new Waveshaper();
-    wshaper = new Waveshaper();
+    lpfl = new AnalogFilter (param, 2, 22000, 1, 0);
+    lpfr = new AnalogFilter (param, 2, 22000, 1, 0);
+    hpfl = new AnalogFilter (param, 3, 20, 1, 0);
+    hpfr = new AnalogFilter (param, 3, 20, 1, 0);
+    blockDCl = new AnalogFilter (param, 2, 75.0f, 1, 0);
+    blockDCr = new AnalogFilter (param, 2, 75.0f, 1, 0);
+    wshapel = new Waveshaper(param);
+    wshaper = new Waveshaper(param);
 
     blockDCl->setfreq (75.0f);
     blockDCr->setfreq (75.0f);
 
-    DCl = new AnalogFilter (3, 30, 1, 0);
-    DCr = new AnalogFilter (3, 30, 1, 0);
+    DCl = new AnalogFilter (param, 3, 30, 1, 0);
+    DCr = new AnalogFilter (param, 3, 30, 1, 0);
     DCl->setfreq (30.0f);
     DCr->setfreq (30.0f);
 
@@ -73,8 +74,8 @@ NewDist::NewDist (float * efxoutl_, float * efxoutr_)
 
 
 
-    filterl = new Filter (filterpars);
-    filterr = new Filter (filterpars);
+    filterl = new Filter (param, filterpars);
+    filterr = new Filter (param, filterpars);
 
     Ppreset=0;
     setpreset (Ppreset);
@@ -164,21 +165,21 @@ NewDist::out (float * smpsl, float * smpsr)
     //no optimised, yet (no look table)
 
 
-    wshapel->waveshapesmps (PERIOD, smpsl, Ptype, Pdrive, 2);
-    wshaper->waveshapesmps (PERIOD, smpsr, Ptype, Pdrive, 2);
+    wshapel->waveshapesmps (param->PERIOD, smpsl, Ptype, Pdrive, 2);
+    wshaper->waveshapesmps (param->PERIOD, smpsr, Ptype, Pdrive, 2);
 
 
 
 
-    memcpy(efxoutl,smpsl,PERIOD * sizeof(float));
-    memcpy(efxoutr,smpsl,PERIOD * sizeof(float));
+    memcpy(efxoutl,smpsl,param->PERIOD * sizeof(float));
+    memcpy(efxoutr,smpsl,param->PERIOD * sizeof(float));
 
 
 
 
 
     if (octmix > 0.01f) {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             lout = efxoutl[i];
             rout = efxoutr[i];
 
@@ -212,7 +213,7 @@ NewDist::out (float * smpsl, float * smpsr)
 
     float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         lout = efxoutl[i];
         rout = efxoutr[i];
 
@@ -245,8 +246,8 @@ NewDist::processReplacing (float **inputs,
 {
     int i;
     float l, r, lout, rout;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
     float inputvol = .5f;
 
     if (Pnegate != 0)
@@ -259,21 +260,21 @@ NewDist::processReplacing (float **inputs,
     //no optimised, yet (no look table)
 
 
-    wshapel->waveshapesmps (PERIOD, inputs[0], Ptype, Pdrive, 2);
-    wshaper->waveshapesmps (PERIOD, inputs[1], Ptype, Pdrive, 2);
+    wshapel->waveshapesmps (param->PERIOD, inputs[0], Ptype, Pdrive, 2);
+    wshaper->waveshapesmps (param->PERIOD, inputs[1], Ptype, Pdrive, 2);
 
 
 
 
-    memcpy(outputs[0],inputs[0],PERIOD * sizeof(float));
-    memcpy(outputs[1],inputs[1],PERIOD * sizeof(float));
+    memcpy(outputs[0],inputs[0],param->PERIOD * sizeof(float));
+    memcpy(outputs[1],inputs[1],param->PERIOD * sizeof(float));
 
 
 
 
 
     if (octmix > 0.01f) {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             lout = outputs[0][i];
             rout = outputs[1][i];
 
@@ -307,7 +308,7 @@ NewDist::processReplacing (float **inputs,
 
     float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         lout = outputs[0][i];
         rout = outputs[1][i];
 

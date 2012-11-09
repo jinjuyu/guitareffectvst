@@ -30,7 +30,8 @@
 class CoilCrafter
 {
 public:
-    CoilCrafter (float * efxoutl_, float * efxoutr_);
+    CoilCrafter (Parameters *param, float * efxoutl_, float * efxoutr_);
+	Parameters *param;
     ~CoilCrafter ();
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);

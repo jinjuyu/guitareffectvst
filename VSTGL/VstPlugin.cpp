@@ -66,8 +66,8 @@ effectName("guitareffectVST"),
 vendorName("Jinju")
 {
 	// Setup RAKARRACK global vars
-	fPERIOD = 32768.0f;
-	PERIOD = 32768;
+	mParam->fPERIOD = 32768.0f;
+	mParam->PERIOD = 32768;
 	SAMPLE_RATE = samplerate;
 	fSAMPLE_RATE = samplerate;
 	cSAMPLE_RATE = 1.0f / samplerate;
@@ -88,48 +88,48 @@ vendorName("Jinju")
 	strcpy(DATADIR, b.c_str());
 
 	// RAKARRACK effects
-	
-	mEffEcho = new Echo(nullptr, nullptr);
-	mEffDistorsion = new Distorsion(nullptr, nullptr);
-	mEffConvolotron = new Convolotron(nullptr, nullptr, 1, 4, 2);
-	mEffAlienwah = new Alienwah(nullptr, nullptr);
-	mEffAPhaser = new Analog_Phaser(nullptr, nullptr);
-	mEffArpie = new Arpie(nullptr, nullptr);
-	mEffChorus = new Chorus(nullptr, nullptr);
-	mEffCoil = new CoilCrafter(nullptr, nullptr);
-	mEffCompBand = new CompBand(nullptr, nullptr);
-	mEffCompressor = new Compressor(nullptr, nullptr);
-	mEffDualFlange = new Dflange(nullptr, nullptr);
-	mEffEchotron = new Echotron(nullptr, nullptr);
-	mEffEQ1 = new EQ(nullptr, nullptr);
-	mEffEQ2 = new EQ(nullptr, nullptr);
-	mEffExciter = new Exciter(nullptr, nullptr);
-	mEffExpander = new Expander(nullptr, nullptr);
-	mEffGate = new Gate(nullptr, nullptr);
-	mEffHarmonizer = new Harmonizer(nullptr, nullptr, 32, 1, 4, 2); // keep quality at 4 or 32, DS == 1 means 96000 and so on, leave uq dq at 4,2 for now
-	mEffInfinity = new Infinity(nullptr, nullptr);
-	mEffMBDist = new MBDist(nullptr, nullptr);
-	mEffMBVvol = new MBVvol(nullptr, nullptr);
-	mEffMusicDelay= new MusicDelay(nullptr, nullptr);
-	mEffNewDist = new NewDist(nullptr, nullptr);
-	mEffOpticalTrem = new Opticaltrem(nullptr, nullptr);
-	mEffPan = new Pan(nullptr, nullptr);
-	mEffPhaser = new Phaser(nullptr, nullptr);
-	mEffRBEcho = new RBEcho(nullptr, nullptr);
-	mEffReverb = new Reverb(nullptr, nullptr);
-	mEffReverbtron = new Reverbtron(nullptr, nullptr, 1, 4, 2);
-	mEffRing = new Ring(nullptr, nullptr);
-	mEffRyanWah = new RyanWah(nullptr, nullptr);
-	mEffSequence = new Sequence(nullptr, nullptr, 32, 1, 4, 2);
-	mEffShelfBoost = new ShelfBoost(nullptr, nullptr);
-	mEffShifter = new Shifter(nullptr, nullptr, 32, 1, 4, 2);
-	mEffShuffle = new Shuffle(nullptr, nullptr);
-	mEffStereoHarm = new StereoHarm(nullptr, nullptr, 32, 1, 4, 2);
-	mEffStompBox = new StompBox(nullptr, nullptr);
-	mEffSustainer = new Sustainer(nullptr, nullptr);
-	mEffSynthfilter = new Synthfilter(nullptr, nullptr);
-	mEffValve = new Valve(nullptr, nullptr);
-	mEffVibe = new Vibe(nullptr, nullptr);
+	mParam = new Parameters();
+	mEffEcho = new Echo(mParam, nullptr, nullptr);
+	mEffDistorsion = new Distorsion(mParam, nullptr, nullptr);
+	mEffConvolotron = new Convolotron(mParam, nullptr, nullptr, 1, 4, 2);
+	mEffAlienwah = new Alienwah(mParam, nullptr, nullptr);
+	mEffAPhaser = new Analog_Phaser(mParam, nullptr, nullptr);
+	mEffArpie = new Arpie(mParam, nullptr, nullptr);
+	mEffChorus = new Chorus(mParam, nullptr, nullptr);
+	mEffCoil = new CoilCrafter(mParam, nullptr, nullptr);
+	mEffCompBand = new CompBand(mParam, nullptr, nullptr);
+	mEffCompressor = new Compressor(mParam, nullptr, nullptr);
+	mEffDualFlange = new Dflange(mParam, nullptr, nullptr);
+	mEffEchotron = new Echotron(mParam, nullptr, nullptr);
+	mEffEQ1 = new EQ(mParam, nullptr, nullptr);
+	mEffEQ2 = new EQ(mParam, nullptr, nullptr);
+	mEffExciter = new Exciter(mParam, nullptr, nullptr);
+	mEffExpander = new Expander(mParam, nullptr, nullptr);
+	mEffGate = new Gate(mParam, nullptr, nullptr);
+	mEffHarmonizer = new Harmonizer(mParam, nullptr, nullptr, 32, 1, 4, 2); // keep quality at 4 or 32, DS == 1 means 96000 and so on, leave uq dq at 4,2 for now
+	mEffInfinity = new Infinity(mParam, nullptr, nullptr);
+	mEffMBDist = new MBDist(mParam, nullptr, nullptr);
+	mEffMBVvol = new MBVvol(mParam, nullptr, nullptr);
+	mEffMusicDelay= new MusicDelay(mParam, nullptr, nullptr);
+	mEffNewDist = new NewDist(mParam, nullptr, nullptr);
+	mEffOpticalTrem = new Opticaltrem(mParam, nullptr, nullptr);
+	mEffPan = new Pan(mParam, nullptr, nullptr);
+	mEffPhaser = new Phaser(mParam, nullptr, nullptr);
+	mEffRBEcho = new RBEcho(mParam, nullptr, nullptr);
+	mEffReverb = new Reverb(mParam, nullptr, nullptr);
+	mEffReverbtron = new Reverbtron(mParam, nullptr, nullptr, 1, 4, 2);
+	mEffRing = new Ring(mParam, nullptr, nullptr);
+	mEffRyanWah = new RyanWah(mParam, nullptr, nullptr);
+	mEffSequence = new Sequence(mParam, nullptr, nullptr, 32, 1, 4, 2);
+	mEffShelfBoost = new ShelfBoost(mParam, nullptr, nullptr);
+	mEffShifter = new Shifter(mParam, nullptr, nullptr, 32, 1, 4, 2);
+	mEffShuffle = new Shuffle(mParam, nullptr, nullptr);
+	mEffStereoHarm = new StereoHarm(mParam, nullptr, nullptr, 32, 1, 4, 2);
+	mEffStompBox = new StompBox(mParam, nullptr, nullptr);
+	mEffSustainer = new Sustainer(mParam, nullptr, nullptr);
+	mEffSynthfilter = new Synthfilter(mParam, nullptr, nullptr);
+	mEffValve = new Valve(mParam, nullptr, nullptr);
+	mEffVibe = new Vibe(mParam, nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -325,7 +325,7 @@ VstPlugin::~VstPlugin()
 	delete mEffSynthfilter;
 	delete mEffValve;
 	delete mEffVibe;
-
+	delete mParam;
 	int i;
 
 	//Delete event queue.

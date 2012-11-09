@@ -35,8 +35,9 @@ class Harmonizer
 {
 
 public:
-    Harmonizer (float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq);
+    Harmonizer (Parameters *param, float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq);
     ~Harmonizer ();
+	Parameters *param;
     void out (float *smpsl, float *smpsr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

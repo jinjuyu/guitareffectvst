@@ -26,14 +26,15 @@
 #include <stdio.h>
 #include "FormantFilter.h"
 
-FormantFilter::FormantFilter (FilterParams * pars)
+FormantFilter::FormantFilter (Parameters *param, FilterParams * pars)
 {
+	this->param = param;
     numformants = pars->Pnumformants;
     for (int i = 0; i < numformants; i++)
-        formant[i] = new AnalogFilter (4 /*BPF*/, 1000.0f, 10.0f, pars->Pstages);
+        formant[i] = new AnalogFilter (param, 4 /*BPF*/, 1000.0f, 10.0f, pars->Pstages);
     cleanup ();
-    inbuffer = new float[PERIOD];
-    tmpbuf = new float[PERIOD];
+    inbuffer = new float[param->PERIOD];
+    tmpbuf = new float[param->PERIOD];
 
     for (int j = 0; j < FF_MAX_VOWELS; j++)
         for (int i = 0; i < numformants; i++) {
@@ -200,25 +201,25 @@ void
 FormantFilter::filterout (float * smp)
 {
     int i, j;
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         inbuffer[i] = smp[i];
         smp[i] = 0.0;
     };
 
     for (j = 0; j < numformants; j++) {
-        for (i = 0; i < PERIOD; i++)
+        for (i = 0; i < param->PERIOD; i++)
             tmpbuf[i] = inbuffer[i] * outgain;
         formant[j]->filterout (tmpbuf);
 
         if (ABOVE_AMPLITUDE_THRESHOLD
                 (oldformantamp[j], currentformants[j].amp))
-            for (i = 0; i < PERIOD; i++)
+            for (i = 0; i < param->PERIOD; i++)
                 smp[i] +=
                     tmpbuf[i] * INTERPOLATE_AMPLITUDE (oldformantamp[j],
                                                        currentformants[j].amp, i,
-                                                       PERIOD);
+                                                       param->PERIOD);
         else
-            for (i = 0; i < PERIOD; i++)
+            for (i = 0; i < param->PERIOD; i++)
                 smp[i] += tmpbuf[i] * currentformants[j].amp;
         oldformantamp[j] = currentformants[j].amp;
     };

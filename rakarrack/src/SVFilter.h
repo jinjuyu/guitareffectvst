@@ -30,8 +30,9 @@
 class SVFilter:public Filter_
 {
 public:
-    SVFilter (unsigned char Ftype, float Ffreq, float Fq,
+    SVFilter (Parameters *param, unsigned char Ftype, float Ffreq, float Fq,
               unsigned char Fstages);
+	Parameters *param;
     ~SVFilter ();
     void filterout (float * smp);
     void setfreq (float frequency);

@@ -27,8 +27,9 @@
 #include "Windows.h"
 #include "Echotron.h"
 //const char *DATADIR = "./data";
-Echotron::Echotron (float * efxoutl_, float * efxoutr_)
-{
+Echotron::Echotron (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo(param),dlfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -48,21 +49,21 @@ Echotron::Echotron (float * efxoutl_, float * efxoutr_)
     subdiv_dmod = 1.0f;
     subdiv_fmod = 1.0f;
     f_qmode = 0;
-	PERIOD = 44100;
-	fPERIOD = 44100;
+	param->PERIOD = 44103;
+	param->fPERIOD = 44103;
 
     maxx_size = (SAMPLE_RATE * 6);   //6 Seconds delay time
 
-    lxn = new delayline(6.0f, ECHOTRON_F_SIZE);
-    rxn = new delayline(6.0f, ECHOTRON_F_SIZE);
+    lxn = new delayline(param,6.0f, ECHOTRON_F_SIZE);
+    rxn = new delayline(param,6.0f, ECHOTRON_F_SIZE);
 
     lxn->set_mix(0.0f);
     rxn->set_mix(0.0f);
 
     offset = 0;
 
-    lpfl =  new AnalogFilter (0, 800, 1, 0);;
-    lpfr =  new AnalogFilter (0, 800, 1, 0);;
+    lpfl =  new AnalogFilter (param,0, 800, 1, 0);;
+    lpfr =  new AnalogFilter (param,0, 800, 1, 0);;
 
     float center, qq;
     for (int i = 0; i < ECHOTRON_MAXFILTERS; i++) {
@@ -74,8 +75,8 @@ Echotron::Echotron (float * efxoutl_, float * efxoutr_)
         filterbank[i].sBP = -1.0f;
         filterbank[i].sHP = 0.5f;
         filterbank[i].sStg = 1.0f;
-        filterbank[i].l = new RBFilter (0, center, qq, 0);
-        filterbank[i].r = new RBFilter (0, center, qq, 0);
+        filterbank[i].l = new RBFilter (param,0, center, qq, 0);
+        filterbank[i].r = new RBFilter (param,0, center, qq, 0);
 
         filterbank[i].l->setmix (1,filterbank[i].sLP , filterbank[i].sBP,filterbank[i].sHP);
         filterbank[i].r->setmix (1,filterbank[i].sLP , filterbank[i].sBP,filterbank[i].sHP);
@@ -125,7 +126,7 @@ Echotron::out (float * smpsl, float * smpsr)
     float tmpmodl = oldldmod;
     float tmpmodr = oldrdmod;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         tmpmodl+=interpl;
         tmpmodr+=interpr;
 
@@ -188,8 +189,8 @@ Echotron::processReplacing (float **inputs,
     int length = Plength;
     float l,r,lyn, ryn;
     float rxindex,lxindex;
-	PERIOD = sampleFrames;
-	fPERIOD = sampleFrames;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
 	lfo.update();
 	dlfo.update();
 
@@ -199,7 +200,7 @@ Echotron::processReplacing (float **inputs,
     float tmpmodl = oldldmod;
     float tmpmodr = oldrdmod;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         tmpmodl+=interpl;
         tmpmodr+=interpr;
 
@@ -463,7 +464,7 @@ void Echotron::modulate_delay()
 {
 
     float lfmod, rfmod, lfol, lfor, dlfol, dlfor;
-    float fperiod = 1.0f/fPERIOD;
+    float fperiod = 1.0f/param->fPERIOD;
 
     lfo.effectlfoout (&lfol, &lfor);
     dlfo.effectlfoout (&dlfol, &dlfor);

@@ -32,39 +32,40 @@
 
 
 
-MBVvol::MBVvol (float * efxoutl_, float * efxoutr_)
-{
+MBVvol::MBVvol (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo1(param),lfo2(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 44100;
-    lowl = (float *) malloc (sizeof (float) * PERIOD);
-    lowr = (float *) malloc (sizeof (float) * PERIOD);
-    midll = (float *) malloc (sizeof (float) * PERIOD);
-    midlr = (float *) malloc (sizeof (float) * PERIOD);
-    midhl = (float *) malloc (sizeof (float) * PERIOD);
-    midhr = (float *) malloc (sizeof (float) * PERIOD);
-    highl = (float *) malloc (sizeof (float) * PERIOD);
-    highr = (float *) malloc (sizeof (float) * PERIOD);
+	param->PERIOD = 44107;
+    lowl = (float *) malloc (sizeof (float) * param->PERIOD);
+    lowr = (float *) malloc (sizeof (float) * param->PERIOD);
+    midll = (float *) malloc (sizeof (float) * param->PERIOD);
+    midlr = (float *) malloc (sizeof (float) * param->PERIOD);
+    midhl = (float *) malloc (sizeof (float) * param->PERIOD);
+    midhr = (float *) malloc (sizeof (float) * param->PERIOD);
+    highl = (float *) malloc (sizeof (float) * param->PERIOD);
+    highr = (float *) malloc (sizeof (float) * param->PERIOD);
 
 
-    lpf1l = new AnalogFilter (2, 500.0f, .7071f, 0);
-    lpf1r = new AnalogFilter (2, 500.0f, .7071f, 0);
-    hpf1l = new AnalogFilter (3, 500.0f, .7071f, 0);
-    hpf1r = new AnalogFilter (3, 500.0f, .7071f, 0);
-    lpf2l = new AnalogFilter (2, 2500.0f, .7071f, 0);
-    lpf2r = new AnalogFilter (2, 2500.0f, .7071f, 0);
-    hpf2l = new AnalogFilter (3, 2500.0f, .7071f, 0);
-    hpf2r = new AnalogFilter (3, 2500.0f, .7071f, 0);
-    lpf3l = new AnalogFilter (2, 5000.0f, .7071f, 0);
-    lpf3r = new AnalogFilter (2, 5000.0f, .7071f, 0);
-    hpf3l = new AnalogFilter (3, 5000.0f, .7071f, 0);
-    hpf3r = new AnalogFilter (3, 5000.0f, .7071f, 0);
+    lpf1l = new AnalogFilter (param,2, 500.0f, .7071f, 0);
+    lpf1r = new AnalogFilter (param,2, 500.0f, .7071f, 0);
+    hpf1l = new AnalogFilter (param,3, 500.0f, .7071f, 0);
+    hpf1r = new AnalogFilter (param,3, 500.0f, .7071f, 0);
+    lpf2l = new AnalogFilter (param,2, 2500.0f, .7071f, 0);
+    lpf2r = new AnalogFilter (param,2, 2500.0f, .7071f, 0);
+    hpf2l = new AnalogFilter (param,3, 2500.0f, .7071f, 0);
+    hpf2r = new AnalogFilter (param,3, 2500.0f, .7071f, 0);
+    lpf3l = new AnalogFilter (param,2, 5000.0f, .7071f, 0);
+    lpf3r = new AnalogFilter (param,2, 5000.0f, .7071f, 0);
+    hpf3l = new AnalogFilter (param,3, 5000.0f, .7071f, 0);
+    hpf3r = new AnalogFilter (param,3, 5000.0f, .7071f, 0);
 
 
     //default values
     Ppreset = 0;
     Pvolume = 50;
-    coeff = 1.0 / (float) PERIOD;
+    coeff = 1.0 / (float) param->PERIOD;
     volL=volLr=volML=volMLr=volMH=volMHr=volH=volHr=2.0f;
 
     setpreset (Ppreset);
@@ -104,10 +105,10 @@ MBVvol::out (float * smpsl, float * smpsr)
     int i;
 
 
-    memcpy(lowl,smpsl,sizeof(float) * PERIOD);
-    memcpy(midll,smpsl,sizeof(float) * PERIOD);
-    memcpy(midhl,smpsl,sizeof(float) * PERIOD);
-    memcpy(highl,smpsl,sizeof(float) * PERIOD);
+    memcpy(lowl,smpsl,sizeof(float) * param->PERIOD);
+    memcpy(midll,smpsl,sizeof(float) * param->PERIOD);
+    memcpy(midhl,smpsl,sizeof(float) * param->PERIOD);
+    memcpy(highl,smpsl,sizeof(float) * param->PERIOD);
 
     lpf1l->filterout(lowl);
     hpf1l->filterout(midll);
@@ -116,10 +117,10 @@ MBVvol::out (float * smpsl, float * smpsr)
     lpf3l->filterout(midhl);
     hpf3l->filterout(highl);
 
-    memcpy(lowr,smpsr,sizeof(float) * PERIOD);
-    memcpy(midlr,smpsr,sizeof(float) * PERIOD);
-    memcpy(midhr,smpsr,sizeof(float) * PERIOD);
-    memcpy(highr,smpsr,sizeof(float) * PERIOD);
+    memcpy(lowr,smpsr,sizeof(float) * param->PERIOD);
+    memcpy(midlr,smpsr,sizeof(float) * param->PERIOD);
+    memcpy(midhr,smpsr,sizeof(float) * param->PERIOD);
+    memcpy(highr,smpsr,sizeof(float) * param->PERIOD);
 
     lpf1r->filterout(lowr);
     hpf1r->filterout(midlr);
@@ -136,7 +137,7 @@ MBVvol::out (float * smpsl, float * smpsr)
     d3=(lfo2l-v2l)*coeff;
     d4=(lfo2r-v2r)*coeff;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         setCombi(Pcombi);
 
@@ -152,16 +153,16 @@ MBVvol::processReplacing (float **inputs,
 								int sampleFrames)
 {
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	lfo1.update();
 	lfo2.update();
 
 
-    memcpy(lowl,inputs[0],sizeof(float) * PERIOD);
-    memcpy(midll,inputs[0],sizeof(float) * PERIOD);
-    memcpy(midhl,inputs[0],sizeof(float) * PERIOD);
-    memcpy(highl,inputs[0],sizeof(float) * PERIOD);
+    memcpy(lowl,inputs[0],sizeof(float) * param->PERIOD);
+    memcpy(midll,inputs[0],sizeof(float) * param->PERIOD);
+    memcpy(midhl,inputs[0],sizeof(float) * param->PERIOD);
+    memcpy(highl,inputs[0],sizeof(float) * param->PERIOD);
 
     lpf1l->filterout(lowl);
     hpf1l->filterout(midll);
@@ -170,10 +171,10 @@ MBVvol::processReplacing (float **inputs,
     lpf3l->filterout(midhl);
     hpf3l->filterout(highl);
 
-    memcpy(lowr,inputs[1],sizeof(float) * PERIOD);
-    memcpy(midlr,inputs[1],sizeof(float) * PERIOD);
-    memcpy(midhr,inputs[1],sizeof(float) * PERIOD);
-    memcpy(highr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(lowr,inputs[1],sizeof(float) * param->PERIOD);
+    memcpy(midlr,inputs[1],sizeof(float) * param->PERIOD);
+    memcpy(midhr,inputs[1],sizeof(float) * param->PERIOD);
+    memcpy(highr,inputs[1],sizeof(float) * param->PERIOD);
 
     lpf1r->filterout(lowr);
     hpf1r->filterout(midlr);
@@ -190,7 +191,7 @@ MBVvol::processReplacing (float **inputs,
     d3=(lfo2l-v2l)*coeff;
     d4=(lfo2r-v2r)*coeff;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         setCombi(Pcombi);
 

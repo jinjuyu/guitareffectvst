@@ -116,15 +116,14 @@ void ExampleEditor::guiOpen()
 			//exit(1);
 			//return -1;
 		}
-		glGenTextures(1, &image); /* Texture name generation */
-		glBindTexture(GL_TEXTURE_2D, image); /* Binding of texture name */
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); /* We will use linear
-		interpolation for magnification filter */
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); /* We will use linear
-		interpolation for minifying filter */
+		glGenTextures(1, &image);
+		glBindTexture(GL_TEXTURE_2D, image);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 		glTexImage2D(GL_TEXTURE_2D, 0, ilGetInteger(IL_IMAGE_BPP), ilGetInteger(IL_IMAGE_WIDTH),
 		ilGetInteger(IL_IMAGE_HEIGHT), 0, ilGetInteger(IL_IMAGE_FORMAT), GL_UNSIGNED_BYTE,
-		ilGetData()); /* Texture specification */
+		ilGetData());
 	}
 	else
 	{
@@ -133,12 +132,51 @@ void ExampleEditor::guiOpen()
 		//exit(1);
 		//return -1;
 	}
-	ilDeleteImages(1, &texid); /* Because we have already copied image data into texture data
-	we can release memory used by image. */
+	ilDeleteImages(1, &texid);
 
+	mFont1 = glGenLists(96);
+	mFont2 = glGenLists(96);
+	
+	float cx;
+	float cy;
+    for (int loop = 0; loop < 96; loop++)      // Loop Through All 256 Lists
+    {
+        cx = (float) (loop % 16) / 16.0f;  // X Position Of Current Character
+        cy = (float) (loop / 16) / 16.0f;  // Y Position Of Current Character
 
+        glNewList(mFont1 + loop, GL_COMPILE);  // Start Building A List
+        glBegin(GL_QUADS);      // Use A Quad For Each Character
+        glTexCoord2f(cx, 1 - cy);    // Texture Coord (Top Left)
+        glVertex2i(0, 0);      // Vertex Coord (Bottom Left)
+        glTexCoord2f(cx + 0.0625f, 1 - cy);  // Texture Coord (Top Right)
+        glVertex2i(16, 0);      // Vertex Coord (Bottom Right)
+        glTexCoord2f(cx + 0.0625f, 1 - cy - 0.0625f);  // Texture Coord (Bottom Right)
+        glVertex2i(16, 16);      // Vertex Coord (Top Right)
+        glTexCoord2f(cx, 1 - cy - 0.0625f);  // Texture Coord (Bottom Left)
+        glVertex2i(0, 16);      // Vertex Coord (Top Left)
+        glEnd();          // Done Building Our Quad (Character)
+        glTranslated(10, 0, 0);      // Move To The Right Of The Character
+        glEndList();        // Done Building The Display List
+    }            // Loop Until All 256 Are Built
+    for (int loop = 0; loop < 96; loop++)      // Loop Through All 256 Lists
+    {
+        cx = (float) (loop % 16) / 16.0f;  // X Position Of Current Character
+        cy = 0.5f+(float) (loop / 16) / 16.0f;  // Y Position Of Current Character
 
-
+        glNewList(mFont2 + loop, GL_COMPILE);  // Start Building A List
+        glBegin(GL_QUADS);      // Use A Quad For Each Character
+        glTexCoord2f(cx, 1 - cy);    // Texture Coord (Top Left)
+        glVertex2i(0, 0);      // Vertex Coord (Bottom Left)
+        glTexCoord2f(cx + 0.0625f, 1 - cy);  // Texture Coord (Top Right)
+        glVertex2i(16, 0);      // Vertex Coord (Bottom Right)
+        glTexCoord2f(cx + 0.0625f, 1 - cy - 0.0625f);  // Texture Coord (Bottom Right)
+        glVertex2i(16, 16);      // Vertex Coord (Top Right)
+        glTexCoord2f(cx, 1 - cy - 0.0625f);  // Texture Coord (Bottom Left)
+        glVertex2i(0, 16);      // Vertex Coord (Top Left)
+        glEnd();          // Done Building Our Quad (Character)
+        glTranslated(10, 0, 0);      // Move To The Right Of The Character
+        glEndList();        // Done Building The Display List
+    }            // Loop Until All 256 Are Built
 
 	start();
 }
@@ -146,6 +184,8 @@ void ExampleEditor::guiOpen()
 //----------------------------------------------------------------------------
 void ExampleEditor::guiClose()
 {
+	glDeleteLists(mFont1, 96);
+	glDeleteLists(mFont2, 96);
 	glDeleteTextures(1, &image);
 	//Stop the timer.
 	stop();
@@ -161,12 +201,16 @@ void ExampleEditor::draw()
 
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, image);
-	glBegin(GL_QUADS);
+	Print(" !\"");
+	glTranslatef(0, 20.0f, 0);
+	//Print2("abcd");
+	/*glBegin(GL_QUADS);
+	glColor4ub(0,0,255,255);
 	glTexCoord2f(0.0f, 0.0f); glVertex2i(0,   0);
 	glTexCoord2f(0.0f, 1.0f); glVertex2i(0,   256);
 	glTexCoord2f(1.0f, 1.0f); glVertex2i(256, 256);
 	glTexCoord2f(1.0f, 0.0f); glVertex2i(256, 0);
-	glEnd();
+	glEnd();*/
 	/*
 	glTranslatef(0.0f, 0.0f, -6.0f);
 	glRotatef(thing, 1.0f, 1.0f, 1.0f);

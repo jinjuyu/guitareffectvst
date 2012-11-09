@@ -40,11 +40,12 @@
 #define ONE_  0.99999f        // To prevent LFO ever reaching 1.0 for filter stability purposes
 #define ZERO_ 0.00001f        // Same idea as above.
 
-Analog_Phaser::Analog_Phaser (float * efxoutl_, float * efxoutr_)
+Analog_Phaser::Analog_Phaser (Parameters *param, float * efxoutl_, float * efxoutr_)
+	:lfo(param)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-
+	this->param = param;
     lxn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES);
 
     lyn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES);
@@ -76,7 +77,7 @@ Analog_Phaser::Analog_Phaser (float * efxoutl_, float * efxoutr_)
     Rconst = 1.0f + Rmx;  // Handle parallel resistor relationship
     C = 0.00000005f;	     // 50 nF
     CFs = 2.0f*fSAMPLE_RATE*C;
-    invperiod = 1.0f / fPERIOD;
+    invperiod = 1.0f / param->fPERIOD;
 
 
     Ppreset = 0;
@@ -134,7 +135,7 @@ Analog_Phaser::out (float * smpsl, float * smpsr)
     oldlgain = lmod;
     oldrgain = rmod;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         gl += ldiff;	// Linear interpolation between LFO samples
         gr += rdiff;
@@ -193,7 +194,7 @@ Analog_Phaser::out (float * smpsl, float * smpsr)
     };
 
     if (Poutsub != 0)
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] *= -1.0f;
             efxoutr[i] *= -1.0f;
         };
@@ -208,9 +209,9 @@ void Analog_Phaser::processReplacing (float **inputs,
     float lfol, lfor, lgain, rgain, bl, br, gl, gr, rmod, lmod, d, hpfr, hpfl;
     lgain = 0.0;
     rgain = 0.0;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
-	invperiod = 1.0f/fPERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
+	invperiod = 1.0f/param->fPERIOD;
 	lfo.update();
     //initialize hpf
     hpfl = 0.0;
@@ -246,7 +247,7 @@ void Analog_Phaser::processReplacing (float **inputs,
     oldlgain = lmod;
     oldrgain = rmod;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         gl += ldiff;	// Linear interpolation between LFO samples
         gr += rdiff;
@@ -305,7 +306,7 @@ void Analog_Phaser::processReplacing (float **inputs,
     };
 
     if (Poutsub != 0)
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] *= -1.0f;
             outputs[1][i] *= -1.0f;
         };

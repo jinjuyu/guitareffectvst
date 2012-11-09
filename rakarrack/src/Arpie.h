@@ -30,8 +30,9 @@
 class Arpie
 {
 public:
-    Arpie (float * efxoutl_, float * efxoutr_);
+    Arpie (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Arpie ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

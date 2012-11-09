@@ -28,18 +28,18 @@
 
 
 
-Harmonizer::Harmonizer (float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq)
+Harmonizer::Harmonizer (Parameters *param, float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq)
 {
-
+	this->param = param;
 
 
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     hq = Quality;
-	PERIOD = 44100;
+	param->PERIOD = 44104;
     adjust(DS);
-    templ = (float *) malloc (sizeof (float) * (PERIOD+100));
-    tempr = (float *) malloc (sizeof (float) * (PERIOD+100));
+    templ = (float *) malloc (sizeof (float) * (param->PERIOD+100));
+    tempr = (float *) malloc (sizeof (float) * (param->PERIOD+100));
 
 
     outi = (float *) malloc (sizeof (float) * nPERIOD);
@@ -52,7 +52,7 @@ Harmonizer::Harmonizer (float *efxoutl_, float *efxoutr_, long int Quality, int 
     D_Resample = new Resample(uq);
 
 
-    pl = new AnalogFilter (6, 22000, 1, 0);
+    pl = new AnalogFilter (param,6, 22000, 1, 0);
 
     PS = new PitchShifter (window, hq, nfSAMPLE_RATE);
     PS->ratio = 1.0f;
@@ -97,9 +97,9 @@ Harmonizer::out (float *smpsl, float *smpsr)
     int i;
 
     if((DS_state != 0) && (Pinterval !=12)) {
-        memcpy(templ, smpsl,sizeof(float)*PERIOD);
-        memcpy(tempr, smpsr,sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,smpsl,smpsr,PERIOD,u_up);
+        memcpy(templ, smpsl,sizeof(float)*param->PERIOD);
+        memcpy(tempr, smpsr,sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,smpsl,smpsr,param->PERIOD,u_up);
     }
 
 
@@ -119,16 +119,16 @@ Harmonizer::out (float *smpsl, float *smpsr)
         PS->smbPitchShift (PS->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outi, outo);
 
         if((DS_state != 0) && (Pinterval != 12)) {
-            D_Resample->mono_out(outo,templ,nPERIOD,u_down,PERIOD);
+            D_Resample->mono_out(outo,templ,nPERIOD,u_down,param->PERIOD);
         } else {
-            memcpy(templ, outo,sizeof(float)*PERIOD);
+            memcpy(templ, outo,sizeof(float)*param->PERIOD);
         }
 
 
 
         applyfilters (templ);
 
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] = templ[i] * gain * panning;
             efxoutr[i] = templ[i] * gain * (1.0f - panning);
         }
@@ -143,17 +143,17 @@ Harmonizer::processReplacing (float **inputs,
 								int sampleFrames)
 {
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	adjust(DS_state);
 
 	float *tempinputsl = (float*)malloc(sizeof(float)*(nPERIOD+100));
 	float *tempinputsr = (float*)malloc(sizeof(float)*(nPERIOD+100)); // + 100 for possible memory leak
 
     if((DS_state != 0) && (Pinterval !=12)) {
-        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,tempinputsl,tempinputsr,PERIOD,u_up);
+        memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,tempinputsl,tempinputsr,param->PERIOD,u_up);
     }
 
 
@@ -173,16 +173,16 @@ Harmonizer::processReplacing (float **inputs,
         PS->smbPitchShift (PS->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outi, outo);
 
         if((DS_state != 0) && (Pinterval != 12)) {
-            D_Resample->mono_out(outo,templ,nPERIOD,u_down,PERIOD);
+            D_Resample->mono_out(outo,templ,nPERIOD,u_down,param->PERIOD);
         } else {
-            memcpy(templ, outo,sizeof(float)*PERIOD);
+            memcpy(templ, outo,sizeof(float)*param->PERIOD);
         }
 
 
 
         applyfilters (templ);
 
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] = templ[i] * gain * panning;
             outputs[1][i] = templ[i] * gain * (1.0f - panning);
         }
@@ -284,14 +284,14 @@ Harmonizer::adjust(int DS)
     switch(DS) {
 
     case 0:
-        nPERIOD = PERIOD;
+        nPERIOD = param->PERIOD;
         nSAMPLE_RATE = SAMPLE_RATE;
         nfSAMPLE_RATE = fSAMPLE_RATE;
         window = 2048;
         break;
 
     case 1:
-        nPERIOD = lrintf(fPERIOD*96000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*96000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 96000;
         nfSAMPLE_RATE = 96000.0f;
         window = 2048;
@@ -299,63 +299,63 @@ Harmonizer::adjust(int DS)
 
 
     case 2:
-        nPERIOD = lrintf(fPERIOD*48000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*48000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 48000;
         nfSAMPLE_RATE = 48000.0f;
         window = 2048;
         break;
 
     case 3:
-        nPERIOD = lrintf(fPERIOD*44100.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*44100.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 44100;
         nfSAMPLE_RATE = 44100.0f;
         window = 2048;
         break;
 
     case 4:
-        nPERIOD = lrintf(fPERIOD*32000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*32000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 32000;
         nfSAMPLE_RATE = 32000.0f;
         window = 2048;
         break;
 
     case 5:
-        nPERIOD = lrintf(fPERIOD*22050.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*22050.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 22050;
         nfSAMPLE_RATE = 22050.0f;
         window = 1024;
         break;
 
     case 6:
-        nPERIOD = lrintf(fPERIOD*16000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*16000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 16000;
         nfSAMPLE_RATE = 16000.0f;
         window = 1024;
         break;
 
     case 7:
-        nPERIOD = lrintf(fPERIOD*12000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*12000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 12000;
         nfSAMPLE_RATE = 12000.0f;
         window = 512;
         break;
 
     case 8:
-        nPERIOD = lrintf(fPERIOD*8000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*8000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 8000;
         nfSAMPLE_RATE = 8000.0f;
         window = 512;
         break;
 
     case 9:
-        nPERIOD = lrintf(fPERIOD*4000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*4000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 4000;
         nfSAMPLE_RATE = 4000.0f;
         window = 256;
         break;
     }
-    u_up= (double)nPERIOD / (double)PERIOD;
-    u_down= (double)PERIOD / (double)nPERIOD;
+    u_up= (double)nPERIOD / (double)param->PERIOD;
+    u_down= (double)param->PERIOD / (double)nPERIOD;
 }
 
 

@@ -32,8 +32,9 @@
 class Distorsion
 {
 public:
-    Distorsion (float * efxoutl_, float * efxoutr_);
+    Distorsion (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Distorsion ();
+	Parameters *param;
     void setpreset (int dgui, int npreset);
     void changepar (int npar, int value);
     int getpar (int npar);

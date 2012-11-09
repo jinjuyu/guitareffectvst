@@ -32,8 +32,9 @@
 class Convolotron
 {
 public:
-    Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int dq);
+    Convolotron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq);
     ~Convolotron ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

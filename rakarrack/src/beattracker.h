@@ -39,7 +39,7 @@ So you loop through index[] until index[n] = 0.
 
 These numbers may be used directly to index the onset of a beat in the audio stream.
 
-index[] is initialized to the length of PERIOD, but it is unlikely that more than 1 beat per PERIOD will ever be found, so maybe
+index[] is initialized to the length of param->PERIOD, but it is unlikely that more than 1 beat per param->PERIOD will ever be found, so maybe
 I need to change the design...for now it will do the job.
 
 Next is the tempo calculator, but that code has not yet been started. The plan is:
@@ -51,7 +51,8 @@ call get_tempo() whenever you want the most current tempo calculation.
 class beattracker
 {
 public:
-    beattracker ();
+    beattracker (Parameters *param);
+	Parameters *param;
     ~beattracker ();
     void cleanup ();
     void detect (float * smpsl, float * smpsr);

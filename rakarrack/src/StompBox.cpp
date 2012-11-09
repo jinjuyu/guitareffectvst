@@ -25,8 +25,9 @@
 
 
 
-StompBox::StompBox (float * efxoutl_, float * efxoutr_)
+StompBox::StompBox (Parameters *param,float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -36,31 +37,31 @@ StompBox::StompBox (float * efxoutl_, float * efxoutr_)
     Pvolume = 50;
 
     //left channel filters
-    linput = new AnalogFilter (1, 80.0f, 1.0f, 0);  //  AnalogFilter (unsigned char Ftype, float Ffreq, float Fq,unsigned char Fstages);
-    lpre1 = new AnalogFilter (1, 630.0f, 1.0f, 0);   // LPF = 0, HPF = 1
-    lpre2 = new AnalogFilter (1, 220.0f, 1.0f, 0);
-    lpost = new AnalogFilter (0, 720.0f, 1.0f, 0);
-    ltonehg = new AnalogFilter (1, 1500.0f, 1.0f, 0);
-    ltonemd = new AnalogFilter (4, 1000.0f, 1.0f, 0);
-    ltonelw = new AnalogFilter (0, 500.0f, 1.0, 0);
+    linput = new AnalogFilter (param,1, 80.0f, 1.0f, 0);  //  AnalogFilter (unsigned char Ftype, float Ffreq, float Fq,unsigned char Fstages);
+    lpre1 = new AnalogFilter (param,1, 630.0f, 1.0f, 0);   // LPF = 0, HPF = 1
+    lpre2 = new AnalogFilter (param,1, 220.0f, 1.0f, 0);
+    lpost = new AnalogFilter (param,0, 720.0f, 1.0f, 0);
+    ltonehg = new AnalogFilter (param,1, 1500.0f, 1.0f, 0);
+    ltonemd = new AnalogFilter (param,4, 1000.0f, 1.0f, 0);
+    ltonelw = new AnalogFilter (param,0, 500.0f, 1.0, 0);
 
     //Right channel filters
-    rinput = new AnalogFilter (1, 80.0f, 1.0f, 0);  //  AnalogFilter (unsigned char Ftype, float Ffreq, float Fq,unsigned char Fstages);
-    rpre1 = new AnalogFilter (1, 630.0f, 1.0f, 0);   // LPF = 0, HPF = 1
-    rpre2 = new AnalogFilter (1, 220.0f, 1.0f, 0);
-    rpost = new AnalogFilter (0, 720.0f, 1.0f, 0);
-    rtonehg = new AnalogFilter (1, 1500.0f, 1.0f, 0);
-    rtonemd = new AnalogFilter (4, 1000.0f, 1.0f, 0);
-    rtonelw = new AnalogFilter (0, 500.0f, 1.0f, 0);
+    rinput = new AnalogFilter (param,1, 80.0f, 1.0f, 0);  //  AnalogFilter (unsigned char Ftype, float Ffreq, float Fq,unsigned char Fstages);
+    rpre1 = new AnalogFilter (param,1, 630.0f, 1.0f, 0);   // LPF = 0, HPF = 1
+    rpre2 = new AnalogFilter (param,1, 220.0f, 1.0f, 0);
+    rpost = new AnalogFilter (param,0, 720.0f, 1.0f, 0);
+    rtonehg = new AnalogFilter (param,1, 1500.0f, 1.0f, 0);
+    rtonemd = new AnalogFilter (param,4, 1000.0f, 1.0f, 0);
+    rtonelw = new AnalogFilter (param,0, 500.0f, 1.0f, 0);
 
     //Anti-aliasing for between stages
-    ranti = new AnalogFilter (0, 6000.0f, 0.707f, 1);
-    lanti = new AnalogFilter (0, 6000.0f, 0.707f, 1);
+    ranti = new AnalogFilter (param,0, 6000.0f, 0.707f, 1);
+    lanti = new AnalogFilter (param,0, 6000.0f, 0.707f, 1);
 
-    rwshape = new Waveshaper();
-    lwshape = new Waveshaper();
-    rwshape2 = new Waveshaper();
-    lwshape2 = new Waveshaper();
+    rwshape = new Waveshaper(param);
+    lwshape = new Waveshaper(param);
+    rwshape2 = new Waveshaper(param);
+    lwshape2 = new Waveshaper(param);
 
     cleanup ();
 
@@ -124,19 +125,19 @@ StompBox::out (float * smpsl, float * smpsr)
 
         lpre2->filterout(smpsl);
         rpre2->filterout(smpsr);
-        rwshape->waveshapesmps (PERIOD, smpsl, 28, 20, 1);  //Valve2
-        lwshape->waveshapesmps (PERIOD, smpsr, 28, 20, 1);
+        rwshape->waveshapesmps (param->PERIOD, smpsl, 28, 20, 1);  //Valve2
+        lwshape->waveshapesmps (param->PERIOD, smpsr, 28, 20, 1);
         ranti->filterout(smpsr);
         lanti->filterout(smpsl);
         lpre1->filterout(smpsl);
         rpre1->filterout(smpsr);
-        rwshape2->waveshapesmps (PERIOD, smpsl, 28, Pgain, 1);  //Valve2
-        lwshape2->waveshapesmps (PERIOD, smpsr, 28, Pgain, 1);
+        rwshape2->waveshapesmps (param->PERIOD, smpsl, 28, Pgain, 1);  //Valve2
+        lwshape2->waveshapesmps (param->PERIOD, smpsr, 28, Pgain, 1);
 
         lpost->filterout(smpsl);
         rpost->filterout(smpsr);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(smpsl[i]);
             mfilter =  ltonemd->filterout_s(smpsl[i]);
@@ -161,23 +162,23 @@ StompBox::out (float * smpsl, float * smpsr)
         linput->filterout(smpsl);
         rinput->filterout(smpsr);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             templ = smpsl[i] * (gain * pgain + 0.01f);
             tempr = smpsr[i] * (gain * pgain + 0.01f);
             smpsl[i] += lpre1->filterout_s(templ);
             smpsr[i] += rpre1->filterout_s(tempr);
         }
-        rwshape->waveshapesmps (PERIOD, smpsl, 24, 1, 1);  // Op amp limiting
-        lwshape->waveshapesmps (PERIOD, smpsr, 24, 1, 1);
+        rwshape->waveshapesmps (param->PERIOD, smpsl, 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (param->PERIOD, smpsr, 24, 1, 1);
 
         ranti->filterout(smpsr);
         lanti->filterout(smpsl);
 
-        rwshape2->waveshapesmps (PERIOD, smpsl, 23, Pgain, 1);  // hard comp
-        lwshape2->waveshapesmps (PERIOD, smpsr, 23, Pgain, 1);
+        rwshape2->waveshapesmps (param->PERIOD, smpsl, 23, Pgain, 1);  // hard comp
+        lwshape2->waveshapesmps (param->PERIOD, smpsr, 23, Pgain, 1);
 
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             smpsl[i] = smpsl[i] + RGP2 * lpre2->filterout_s(smpsl[i]);
             smpsr[i] = smpsr[i] + RGP2 * rpre2->filterout_s(smpsr[i]);
             smpsl[i] = smpsl[i] + RGPST * lpost->filterout_s(smpsl[i]);
@@ -208,7 +209,7 @@ StompBox::out (float * smpsl, float * smpsr)
         linput->filterout(smpsl);
         rinput->filterout(smpsr);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             templ = smpsl[i];
             tempr = smpsr[i];
             smpsl[i] += lpre1->filterout_s(pre1gain*gain*templ);
@@ -219,17 +220,17 @@ StompBox::out (float * smpsl, float * smpsr)
         }
 
 
-        rwshape->waveshapesmps (PERIOD, smpsl, 24, 1, 1);  // Op amp limiting
-        lwshape->waveshapesmps (PERIOD, smpsr, 24, 1, 1);
+        rwshape->waveshapesmps (param->PERIOD, smpsl, 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (param->PERIOD, smpsr, 24, 1, 1);
 
         ranti->filterout(smpsr);
         lanti->filterout(smpsl);
 
-        rwshape2->waveshapesmps (PERIOD, smpsl, 23, 1, 0);  // hard comp
-        lwshape2->waveshapesmps (PERIOD, smpsr, 23, 1, 0);
+        rwshape2->waveshapesmps (param->PERIOD, smpsl, 23, 1, 0);  // hard comp
+        lwshape2->waveshapesmps (param->PERIOD, smpsr, 23, 1, 0);
 
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(smpsl[i]);
             mfilter =  ltonemd->filterout_s(smpsl[i]);
@@ -250,7 +251,7 @@ StompBox::out (float * smpsl, float * smpsr)
         linput->filterout(smpsl);
         rinput->filterout(smpsr);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             templ = smpsl[i];
             tempr = smpsr[i];
             smpsl[i] += lpre1->filterout_s(pre1gain*gain*templ);
@@ -258,17 +259,17 @@ StompBox::out (float * smpsl, float * smpsr)
         }
 
 
-        rwshape->waveshapesmps (PERIOD, smpsl, 24, 1, 1);  // Op amp limiting
-        lwshape->waveshapesmps (PERIOD, smpsr, 24, 1, 1);
+        rwshape->waveshapesmps (param->PERIOD, smpsl, 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (param->PERIOD, smpsr, 24, 1, 1);
 
         ranti->filterout(smpsr);
         lanti->filterout(smpsl);
 
-        rwshape2->waveshapesmps (PERIOD, smpsl, 29, 1, 0);  // diode limit
-        lwshape2->waveshapesmps (PERIOD, smpsr, 29, 1, 0);
+        rwshape2->waveshapesmps (param->PERIOD, smpsl, 29, 1, 0);  // diode limit
+        lwshape2->waveshapesmps (param->PERIOD, smpsr, 29, 1, 0);
 
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(smpsl[i]);
             mfilter =  ltonemd->filterout_s(smpsl[i]);
@@ -291,10 +292,10 @@ StompBox::out (float * smpsl, float * smpsr)
         rpre1->filterout(smpsr);
         linput->filterout(smpsl);
         rinput->filterout(smpsr);
-        rwshape->waveshapesmps (PERIOD, smpsr, 19, 25, 1);  //compress
-        lwshape->waveshapesmps (PERIOD, smpsl, 19, 25, 1);
+        rwshape->waveshapesmps (param->PERIOD, smpsr, 19, 25, 1);  //compress
+        lwshape->waveshapesmps (param->PERIOD, smpsl, 19, 25, 1);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
 
             //left channel
             mfilter =  ltonemd->filterout_s(smpsl[i]);
@@ -312,12 +313,12 @@ StompBox::out (float * smpsl, float * smpsr)
 
         ranti->filterout(smpsr);
         lanti->filterout(smpsl);
-        rwshape2->waveshapesmps (PERIOD, smpsr, 25, Pgain, 1);  //JFET
-        lwshape2->waveshapesmps (PERIOD, smpsl, 25, Pgain, 1);
+        rwshape2->waveshapesmps (param->PERIOD, smpsr, 25, Pgain, 1);  //JFET
+        lwshape2->waveshapesmps (param->PERIOD, smpsl, 25, Pgain, 1);
         lpre2->filterout(smpsl);
         rpre2->filterout(smpsr);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(smpsl[i]);
             hfilter =  ltonehg->filterout_s(smpsl[i]);
@@ -351,26 +352,26 @@ StompBox:: processReplacing (float **inputs,
     float lfilter;
     float tempr;
     float templ;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
     switch (Pmode) {
     case 0:          //Odie
 
         lpre2->filterout(inputs[0]);
         rpre2->filterout(inputs[1]);
-        rwshape->waveshapesmps (PERIOD, inputs[0], 28, 20, 1);  //Valve2
-        lwshape->waveshapesmps (PERIOD, inputs[1], 28, 20, 1);
+        rwshape->waveshapesmps (param->PERIOD, inputs[0], 28, 20, 1);  //Valve2
+        lwshape->waveshapesmps (param->PERIOD, inputs[1], 28, 20, 1);
         ranti->filterout(inputs[1]);
         lanti->filterout(inputs[0]);
         lpre1->filterout(inputs[0]);
         rpre1->filterout(inputs[1]);
-        rwshape2->waveshapesmps (PERIOD, inputs[0], 28, Pgain, 1);  //Valve2
-        lwshape2->waveshapesmps (PERIOD, inputs[1], 28, Pgain, 1);
+        rwshape2->waveshapesmps (param->PERIOD, inputs[0], 28, Pgain, 1);  //Valve2
+        lwshape2->waveshapesmps (param->PERIOD, inputs[1], 28, Pgain, 1);
 
         lpost->filterout(inputs[0]);
         rpost->filterout(inputs[1]);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(inputs[0][i]);
             mfilter =  ltonemd->filterout_s(inputs[0][i]);
@@ -395,23 +396,23 @@ StompBox:: processReplacing (float **inputs,
         linput->filterout(inputs[0]);
         rinput->filterout(inputs[1]);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             templ = inputs[0][i] * (gain * pgain + 0.01f);
             tempr = inputs[1][i] * (gain * pgain + 0.01f);
             inputs[0][i] += lpre1->filterout_s(templ);
             inputs[1][i] += rpre1->filterout_s(tempr);
         }
-        rwshape->waveshapesmps (PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
-        lwshape->waveshapesmps (PERIOD, inputs[1], 24, 1, 1);
+        rwshape->waveshapesmps (param->PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (param->PERIOD, inputs[1], 24, 1, 1);
 
         ranti->filterout(inputs[1]);
         lanti->filterout(inputs[0]);
 
-        rwshape2->waveshapesmps (PERIOD, inputs[0], 23, Pgain, 1);  // hard comp
-        lwshape2->waveshapesmps (PERIOD, inputs[1], 23, Pgain, 1);
+        rwshape2->waveshapesmps (param->PERIOD, inputs[0], 23, Pgain, 1);  // hard comp
+        lwshape2->waveshapesmps (param->PERIOD, inputs[1], 23, Pgain, 1);
 
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             inputs[0][i] = inputs[0][i] + RGP2 * lpre2->filterout_s(inputs[0][i]);
             inputs[1][i] = inputs[1][i] + RGP2 * rpre2->filterout_s(inputs[1][i]);
             inputs[0][i] = inputs[0][i] + RGPST * lpost->filterout_s(inputs[0][i]);
@@ -442,7 +443,7 @@ StompBox:: processReplacing (float **inputs,
         linput->filterout(inputs[0]);
         rinput->filterout(inputs[1]);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             templ = inputs[0][i];
             tempr = inputs[1][i];
             inputs[0][i] += lpre1->filterout_s(pre1gain*gain*templ);
@@ -453,17 +454,17 @@ StompBox:: processReplacing (float **inputs,
         }
 
 
-        rwshape->waveshapesmps (PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
-        lwshape->waveshapesmps (PERIOD, inputs[1], 24, 1, 1);
+        rwshape->waveshapesmps (param->PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (param->PERIOD, inputs[1], 24, 1, 1);
 
         ranti->filterout(inputs[1]);
         lanti->filterout(inputs[0]);
 
-        rwshape2->waveshapesmps (PERIOD, inputs[0], 23, 1, 0);  // hard comp
-        lwshape2->waveshapesmps (PERIOD, inputs[1], 23, 1, 0);
+        rwshape2->waveshapesmps (param->PERIOD, inputs[0], 23, 1, 0);  // hard comp
+        lwshape2->waveshapesmps (param->PERIOD, inputs[1], 23, 1, 0);
 
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(inputs[0][i]);
             mfilter =  ltonemd->filterout_s(inputs[0][i]);
@@ -484,7 +485,7 @@ StompBox:: processReplacing (float **inputs,
         linput->filterout(inputs[0]);
         rinput->filterout(inputs[1]);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             templ = inputs[0][i];
             tempr = inputs[1][i];
             inputs[0][i] += lpre1->filterout_s(pre1gain*gain*templ);
@@ -492,17 +493,17 @@ StompBox:: processReplacing (float **inputs,
         }
 
 
-        rwshape->waveshapesmps (PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
-        lwshape->waveshapesmps (PERIOD, inputs[1], 24, 1, 1);
+        rwshape->waveshapesmps (param->PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (param->PERIOD, inputs[1], 24, 1, 1);
 
         ranti->filterout(inputs[1]);
         lanti->filterout(inputs[0]);
 
-        rwshape2->waveshapesmps (PERIOD, inputs[0], 29, 1, 0);  // diode limit
-        lwshape2->waveshapesmps (PERIOD, inputs[1], 29, 1, 0);
+        rwshape2->waveshapesmps (param->PERIOD, inputs[0], 29, 1, 0);  // diode limit
+        lwshape2->waveshapesmps (param->PERIOD, inputs[1], 29, 1, 0);
 
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(inputs[0][i]);
             mfilter =  ltonemd->filterout_s(inputs[0][i]);
@@ -525,10 +526,10 @@ StompBox:: processReplacing (float **inputs,
         rpre1->filterout(inputs[1]);
         linput->filterout(inputs[0]);
         rinput->filterout(inputs[1]);
-        rwshape->waveshapesmps (PERIOD, inputs[1], 19, 25, 1);  //compress
-        lwshape->waveshapesmps (PERIOD, inputs[0], 19, 25, 1);
+        rwshape->waveshapesmps (param->PERIOD, inputs[1], 19, 25, 1);  //compress
+        lwshape->waveshapesmps (param->PERIOD, inputs[0], 19, 25, 1);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
 
             //left channel
             mfilter =  ltonemd->filterout_s(inputs[0][i]);
@@ -546,12 +547,12 @@ StompBox:: processReplacing (float **inputs,
 
         ranti->filterout(inputs[1]);
         lanti->filterout(inputs[0]);
-        rwshape2->waveshapesmps (PERIOD, inputs[1], 25, Pgain, 1);  //JFET
-        lwshape2->waveshapesmps (PERIOD, inputs[0], 25, Pgain, 1);
+        rwshape2->waveshapesmps (param->PERIOD, inputs[1], 25, Pgain, 1);  //JFET
+        lwshape2->waveshapesmps (param->PERIOD, inputs[0], 25, Pgain, 1);
         lpre2->filterout(inputs[0]);
         rpre2->filterout(inputs[1]);
 
-        for (i = 0; i<PERIOD; i++) {
+        for (i = 0; i<param->PERIOD; i++) {
             //left channel
             lfilter =  ltonelw->filterout_s(inputs[0][i]);
             hfilter =  ltonehg->filterout_s(inputs[0][i]);

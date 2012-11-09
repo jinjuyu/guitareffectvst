@@ -32,8 +32,9 @@
 class Reverb
 {
 public:
-    Reverb (float * efxoutl_, float * efxoutr_);
+    Reverb (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Reverb ();
+	Parameters *param;
     void out (float * smps_l, float * smps_r);
     void cleanup ();
 				void processReplacing (float **inputs,

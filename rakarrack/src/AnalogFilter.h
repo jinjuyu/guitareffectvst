@@ -31,9 +31,10 @@
 class AnalogFilter:public Filter_
 {
 public:
-    AnalogFilter (unsigned char Ftype, float Ffreq, float Fq,
+    AnalogFilter (Parameters *param, unsigned char Ftype, float Ffreq, float Fq,
                   unsigned char Fstages);
     ~AnalogFilter ();
+	Parameters *param;
     void filterout (float * smp);
     float filterout_s (float smp);
 

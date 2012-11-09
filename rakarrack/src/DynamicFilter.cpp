@@ -26,8 +26,9 @@
 #include "DynamicFilter.h"
 #include <stdio.h>
 
-DynamicFilter::DynamicFilter (float * efxoutl_, float * efxoutr_)
-{
+DynamicFilter::DynamicFilter (Parameters *param, float * efxoutl_, float * efxoutr_)
+:lfo(param){
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -65,7 +66,7 @@ DynamicFilter::out (float * smpsl, float * smpsr)
     float freq = filterpars->getfreq ();
     float q = filterpars->getq ();
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i] = smpsl[i];
         efxoutr[i] = smpsr[i];
 
@@ -91,7 +92,7 @@ DynamicFilter::out (float * smpsl, float * smpsr)
     filterr->filterout (efxoutr);
 
     //panning
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i] *= panning;
         efxoutr[i] *= (1.0f - panning);
     };
@@ -157,8 +158,8 @@ DynamicFilter::reinitfilter ()
         delete (filterl);
     if (filterr != NULL)
         delete (filterr);
-    filterl = new Filter (filterpars);
-    filterr = new Filter (filterpars);
+    filterl = new Filter (param,filterpars);
+    filterr = new Filter (param,filterpars);
 };
 
 void

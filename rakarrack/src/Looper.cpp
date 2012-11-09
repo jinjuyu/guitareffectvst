@@ -49,7 +49,7 @@ Looper::Looper (float * efxoutl_, float * efxoutr_, float size)
     settempo(120);
     Pbar = 2;
     setbar(2);
-	PERIOD = 44100;
+	param->PERIOD = 44105;
     ticker.cleanup();
 
     Srate_Attack_Coeff = 1.0f / (fSAMPLE_RATE * ATTACK);
@@ -133,10 +133,10 @@ Looper::out (float * smpsl, float * smpsr)
 {
     int i;
     float rswell, lswell;
-    float *ticktock = new float[PERIOD];
+    float *ticktock = new float[param->PERIOD];
     if((Pmetro) && (Pplay) && (!Pstop)) ticker.metronomeout(ticktock);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         if((Pplay) && (!Pstop)) {
             if(Precord) {
@@ -211,13 +211,13 @@ Looper::processReplacing (float **inputs,
 {
     int i;
     float rswell, lswell;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
-    float *ticktock = new float[PERIOD];
+    float *ticktock = new float[param->PERIOD];
     //if((Pmetro) && (Pplay) && (!Pstop)) ticker.metronomeout(ticktock);
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         if((Pplay) && (!Pstop)) {
             if(Precord) {

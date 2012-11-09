@@ -26,8 +26,9 @@
 
 
 
-Exciter::Exciter (float * efxoutl_, float * efxoutr_)
+Exciter::Exciter (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -43,7 +44,7 @@ Exciter::Exciter (float * efxoutl_, float * efxoutr_)
         rm[i]=0.0f;
     }
 
-    harm = new HarmEnhancer (rm, 2500.0f,8000.0,1.0f);
+    harm = new HarmEnhancer (param,rm, 2500.0f,8000.0,1.0f);
 
     cleanup ();
 
@@ -79,8 +80,8 @@ Exciter::processReplacing (float **inputs,
 								int sampleFrames)
 
 {
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
 	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
     harm->harm_out(outputs[0],outputs[1]);

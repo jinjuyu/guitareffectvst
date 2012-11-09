@@ -30,10 +30,11 @@
 #include <math.h>
 #include "Echo.h"
 
-Echo::Echo (float * efxoutl_, float * efxoutr_)
+Echo::Echo (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
-	PERIOD = 32768;
-	fPERIOD = PERIOD;
+	this->param = param;
+	param->PERIOD = 32768;
+	param->fPERIOD = param->PERIOD;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     //default values
@@ -51,8 +52,8 @@ Echo::Echo (float * efxoutl_, float * efxoutr_)
     maxx_delay = SAMPLE_RATE * MAX_DELAY;
     fade = SAMPLE_RATE / 5;    //1/5 SR fade time available
 
-    ldelay = new delayline(2.0f, 1);
-    rdelay = new delayline(2.0f, 1);
+    ldelay = new delayline(param,2.0f, 1);
+    rdelay = new delayline(param,2.0f, 1);
 
     setpreset (Ppreset);
     cleanup ();
@@ -105,7 +106,7 @@ Echo::out (float * smpsl, float * smpsr)
     int i;
     float l, r, ldl, rdl, ldlout, rdlout, rvl, rvr;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         ldl = ldelay->delay_simple(oldl, ltime, 0, 1, 0);
         rdl = rdelay->delay_simple(oldr, rtime, 0, 1, 0);
@@ -151,8 +152,8 @@ Echo::processReplacingGL (float **inputs,
 {
     int i;
     float l, r, ldl, rdl, ldlout, rdlout, rvl, rvr;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
     for (i = 0; i < sampleFrames; i++) {
 
         ldl = ldelay->delay_simple(oldl, ltime, 0, 1, 0);
@@ -200,8 +201,8 @@ Echo::processReplacing (float **inputs,
 {
     int i;
     float l, r, ldl, rdl, ldlout, rdlout, rvl, rvr;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
     for (i = 0; i < sampleFrames; i++) {
 

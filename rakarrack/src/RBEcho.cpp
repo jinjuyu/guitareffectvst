@@ -28,8 +28,9 @@
 #include <math.h>
 #include "RBEcho.h"
 
-RBEcho::RBEcho (float * efxoutl_, float * efxoutr_)
+RBEcho::RBEcho (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -52,8 +53,8 @@ RBEcho::RBEcho (float * efxoutl_, float * efxoutr_)
     Srate_Attack_Coeff = 1.0f / (fSAMPLE_RATE * ATTACK);
     maxx_delay = 1 + SAMPLE_RATE * MAX_DELAY;
 
-    ldelay = new delayline(2.0f, 3);
-    rdelay = new delayline(2.0f, 3);
+    ldelay = new delayline(param,2.0f, 3);
+    rdelay = new delayline(param,2.0f, 3);
 
     setpreset (Ppreset);
     cleanup ();
@@ -115,7 +116,7 @@ RBEcho::out (float * smpsl, float * smpsr)
     float avg, ldiff, rdiff, tmp;
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         //LowPass Filter
         ldl = lfeedback * hidamp + oldl * (1.0f - hidamp);
@@ -172,10 +173,10 @@ RBEcho::processReplacing (float **inputs,
     int i;
     float ldl, rdl;
     float avg, ldiff, rdiff, tmp;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         //LowPass Filter
         ldl = lfeedback * hidamp + oldl * (1.0f - hidamp);

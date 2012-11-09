@@ -19,8 +19,9 @@
 #include <stdlib.h>
 #include "f_sin.h"
 
-delayline::delayline(float maxdelay, int maxtaps_)
+delayline::delayline(Parameters *param, float maxdelay, int maxtaps_)
 {
+	this->param = param;
     maxtaps = maxtaps_;
     maxtime = fSAMPLE_RATE * maxdelay;
     maxdelaysmps = SAMPLE_RATE * lrintf(ceilf(maxdelay));

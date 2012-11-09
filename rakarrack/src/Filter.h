@@ -36,8 +36,9 @@
 class Filter
 {
 public:
-    Filter (FilterParams * pars);
+    Filter (Parameters *param, FilterParams * pars);
     ~Filter ();
+	Parameters *param;
     void filterout (float * smp);
     void setfreq (float frequency);
     void setfreq_and_q (float frequency, float q_);

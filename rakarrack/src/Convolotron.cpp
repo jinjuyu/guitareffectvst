@@ -26,8 +26,9 @@
 #include <math.h>
 #include "Convolotron.h"
 
-Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int dq)
+Convolotron::Convolotron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -46,17 +47,17 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     fb = 0.0f;
     feedback = 0.0f;
     
-	PERIOD = 96000*2;
-	fPERIOD = PERIOD;
+	param->PERIOD = 96000*2;
+	param->fPERIOD = param->PERIOD;
 
-    maxx_size = PERIOD;//(int) (nfSAMPLE_RATE * convlength);
+    maxx_size = param->PERIOD;//(int) (nfSAMPLE_RATE * convlength);
     buf = (float *) malloc (sizeof (float) * maxx_size);
     rbuf = (float *) malloc (sizeof (float) * maxx_size);
     lxn = (float *) malloc (sizeof (float) * maxx_size);
     maxx_size = 96000;
 	maxx_size--;
-	PERIOD = 1;
-	fPERIOD = PERIOD;
+	param->PERIOD = 1;
+	param->fPERIOD = param->PERIOD;
 	adjust(DS);
 	
     offset = 0;
@@ -88,72 +89,72 @@ Convolotron::adjust(int DS)
 
     DS_state=DS;
 
-	fPERIOD = (float)PERIOD;
+	param->fPERIOD = (float)param->PERIOD;
     switch(DS) {
 
     case 0:
-        nPERIOD = PERIOD;
+        nPERIOD = param->PERIOD;
         nSAMPLE_RATE = SAMPLE_RATE;
         nfSAMPLE_RATE = fSAMPLE_RATE;
         break;
 
     case 1:
-        nPERIOD = lrintf(fPERIOD*96000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*96000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 96000;
         nfSAMPLE_RATE = 96000.0f;
         break;
 
 
     case 2:
-        nPERIOD = lrintf(fPERIOD*48000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*48000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 48000;
         nfSAMPLE_RATE = 48000.0f;
         break;
 
     case 3:
-        nPERIOD = lrintf(fPERIOD*44100.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*44100.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 44100;
         nfSAMPLE_RATE = 44100.0f;
         break;
 
     case 4:
-        nPERIOD = lrintf(fPERIOD*32000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*32000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 32000;
         nfSAMPLE_RATE = 32000.0f;
         break;
 
     case 5:
-        nPERIOD = lrintf(fPERIOD*22050.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*22050.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 22050;
         nfSAMPLE_RATE = 22050.0f;
         break;
 
     case 6:
-        nPERIOD = lrintf(fPERIOD*16000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*16000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 16000;
         nfSAMPLE_RATE = 16000.0f;
         break;
 
     case 7:
-        nPERIOD = lrintf(fPERIOD*12000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*12000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 12000;
         nfSAMPLE_RATE = 12000.0f;
         break;
 
     case 8:
-        nPERIOD = lrintf(fPERIOD*8000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*8000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 8000;
         nfSAMPLE_RATE = 8000.0f;
         break;
 
     case 9:
-        nPERIOD = lrintf(fPERIOD*4000.0f/fSAMPLE_RATE);
+        nPERIOD = lrintf(param->fPERIOD*4000.0f/fSAMPLE_RATE);
         nSAMPLE_RATE = 4000;
         nfSAMPLE_RATE = 4000.0f;
         break;
     }
-    u_up= (double)nPERIOD / (double)PERIOD;
-    u_down= (double)PERIOD / (double)nPERIOD;
+    u_up= (double)nPERIOD / (double)param->PERIOD;
+    u_down= (double)param->PERIOD / (double)nPERIOD;
 }
 
 
@@ -170,9 +171,9 @@ Convolotron::out (float * smpsl, float * smpsr)
     float l,lyn;
 
     if(DS_state != 0) {
-        memcpy(templ, smpsl,sizeof(float)*PERIOD);
-        memcpy(tempr, smpsr,sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,smpsl,smpsr,PERIOD,u_up);
+        memcpy(templ, smpsl,sizeof(float)*param->PERIOD);
+        memcpy(tempr, smpsr,sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,smpsl,smpsr,param->PERIOD,u_up);
     }
 
 
@@ -205,8 +206,8 @@ Convolotron::out (float * smpsl, float * smpsr)
         D_Resample->out(templ,tempr,efxoutl,efxoutr,nPERIOD,u_down);
 
     } else {
-        memcpy(efxoutl, templ,sizeof(float)*PERIOD);
-        memcpy(efxoutr, tempr,sizeof(float)*PERIOD);
+        memcpy(efxoutl, templ,sizeof(float)*param->PERIOD);
+        memcpy(efxoutr, tempr,sizeof(float)*param->PERIOD);
     }
 
 
@@ -223,8 +224,8 @@ Convolotron::processReplacing (float **inputs,
 {
     int i, j, xindex;
     float l,lyn;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
 	adjust(DS_state);
 	//update(67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0); // process_rbuf를 해야하니까, period가 바꼈으니까, adjust에서 값이 다 바뀌니까
@@ -234,21 +235,21 @@ Convolotron::processReplacing (float **inputs,
 
 	float *tempinputsl = (float*)malloc(sizeof(float)*(nPERIOD+100));
 	float *tempinputsr = (float*)malloc(sizeof(float)*(nPERIOD+100)); // + 100 for possible memory leak
-	float *tempoutputsl = (float*)malloc(sizeof(float)*(PERIOD+100));
-	float *tempoutputsr = (float*)malloc(sizeof(float)*(PERIOD+100)); // + 100 for possible memory leak
-    templ = (float *) malloc (sizeof (float) * (PERIOD+100));
-    tempr = (float *) malloc (sizeof (float) * (PERIOD+100));
+	float *tempoutputsl = (float*)malloc(sizeof(float)*(param->PERIOD+100));
+	float *tempoutputsr = (float*)malloc(sizeof(float)*(param->PERIOD+100)); // + 100 for possible memory leak
+    templ = (float *) malloc (sizeof (float) * (param->PERIOD+100));
+    tempr = (float *) malloc (sizeof (float) * (param->PERIOD+100));
     if(DS_state != 0) {
-        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-        U_Resample->out(templ,tempr,tempinputsl,tempinputsr,PERIOD,u_up);
+        memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+        U_Resample->out(templ,tempr,tempinputsl,tempinputsr,param->PERIOD,u_up);
     }
 	else
 	{
-        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
-        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
-        memcpy(tempinputsl, inputs[0],sizeof(float)*PERIOD);
-        memcpy(tempinputsr, inputs[1],sizeof(float)*PERIOD);
+        memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
+        memcpy(tempinputsl, inputs[0],sizeof(float)*param->PERIOD);
+        memcpy(tempinputsr, inputs[1],sizeof(float)*param->PERIOD);
 	}
 
     for (i = 0; i < nPERIOD; i++) {
@@ -278,12 +279,12 @@ Convolotron::processReplacing (float **inputs,
 
     if(DS_state != 0) {
         D_Resample->out(templ,tempr,tempoutputsl,tempoutputsr,nPERIOD,u_down);
-        memcpy(outputs[0], tempoutputsl,sizeof(float)*PERIOD);
-        memcpy(outputs[1], tempoutputsr,sizeof(float)*PERIOD);
+        memcpy(outputs[0], tempoutputsl,sizeof(float)*param->PERIOD);
+        memcpy(outputs[1], tempoutputsr,sizeof(float)*param->PERIOD);
 
     } else {
-        memcpy(outputs[0], templ,sizeof(float)*PERIOD);
-        memcpy(outputs[1], tempr,sizeof(float)*PERIOD);
+        memcpy(outputs[0], templ,sizeof(float)*param->PERIOD);
+        memcpy(outputs[1], tempr,sizeof(float)*param->PERIOD);
     }
 	free(tempinputsl);
 	free(tempinputsr);

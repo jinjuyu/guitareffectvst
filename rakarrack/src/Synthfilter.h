@@ -36,7 +36,8 @@
 class Synthfilter
 {
 public:
-    Synthfilter (float * efxoutl_, float * efxoutr_);
+    Synthfilter (Parameters *param,float * efxoutl_, float * efxoutr_);
+	Parameters *param;
     ~Synthfilter ();
     void out (float * smpsl, float * smpsr);
     void setpreset (int npreset);

@@ -33,19 +33,20 @@
 
 
 
-Shuffle::Shuffle (float * efxoutl_, float * efxoutr_)
+Shuffle::Shuffle (Parameters *param,float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-	PERIOD = 44100;
-    inputl = (float *) malloc (sizeof (float) * PERIOD);
-    inputr = (float *) malloc (sizeof (float) * PERIOD);
+	param->PERIOD = 44113;
+    inputl = (float *) malloc (sizeof (float) * param->PERIOD);
+    inputr = (float *) malloc (sizeof (float) * param->PERIOD);
 
 
-    lr = new AnalogFilter (6, 300.0f, .3f, 0);
-    hr = new AnalogFilter (6, 8000.0f,.3f, 0);
-    mlr = new AnalogFilter (6, 1200.0f,.3f, 0);
-    mhr = new AnalogFilter (6, 2400.0f,.3f, 0);
+    lr = new AnalogFilter (param,6, 300.0f, .3f, 0);
+    hr = new AnalogFilter (param,6, 8000.0f,.3f, 0);
+    mlr = new AnalogFilter (param,6, 1200.0f,.3f, 0);
+    mhr = new AnalogFilter (param,6, 2400.0f,.3f, 0);
 
 
     //default values
@@ -84,7 +85,7 @@ Shuffle::out (float * smpsl, float * smpsr)
 {
     int i;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         inputl[i] = smpsl[i] + smpsr[i];
         inputr[i] = smpsl[i] - smpsr[i];
@@ -104,7 +105,7 @@ Shuffle::out (float * smpsl, float * smpsr)
     }
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         efxoutl[i]=(inputl[i]+inputr[i]-smpsl[i])*.333333f;
         efxoutr[i]=(inputl[i]-inputr[i]-smpsr[i])*.333333f;
 
@@ -120,10 +121,10 @@ Shuffle::processReplacing (float **inputs,
 								int sampleFrames)
 {
     int i;
-	PERIOD = sampleFrames;
-	fPERIOD = sampleFrames;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
 
         inputl[i] = inputs[0][i] + inputs[1][i];
         inputr[i] = inputs[0][i] - inputs[1][i];
@@ -143,7 +144,7 @@ Shuffle::processReplacing (float **inputs,
     }
 
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         outputs[0][i]=(inputl[i]+inputr[i]-inputs[0][i])*.333333f;
         outputs[1][i]=(inputl[i]-inputr[i]-inputs[1][i])*.333333f;
 

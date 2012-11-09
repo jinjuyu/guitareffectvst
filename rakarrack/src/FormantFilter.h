@@ -34,8 +34,9 @@
 class FormantFilter:public Filter_
 {
 public:
-    FormantFilter (class FilterParams * pars);
+    FormantFilter (Parameters *param, class FilterParams * pars);
     ~FormantFilter ();
+	Parameters *param;
     void filterout (float * smp);
     void setfreq (float frequency);
     void setfreq_and_q (float frequency, float q_);

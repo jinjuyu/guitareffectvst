@@ -88,6 +88,7 @@ public:
 	VstPlugin(audioMasterCallback audioMaster);
 	///	Destructor.
 	~VstPlugin();
+	Parameters *mParam;
 	Echo *mEffEcho;
 	Distorsion *mEffDistorsion;
 	Convolotron *mEffConvolotron;

@@ -31,8 +31,9 @@
 class Reverbtron
 {
 public:
-    Reverbtron (float * efxoutl_, float * efxoutr_,int DS, int uq, int dq);
+    Reverbtron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq);
     ~Reverbtron ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void changepar (int npar, int value);

@@ -29,8 +29,9 @@
 
 
 
-Ring::Ring (float * efxoutl_, float * efxoutr_)
+Ring::Ring (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
 
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
@@ -120,7 +121,7 @@ Ring::out (float * smpsl, float * smpsr)
 
     if (Pstereo != 0) {
         //Stereo
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] = smpsl[i] * inputvol;
             efxoutr[i] = smpsr[i] * inputvol;
             if(inputvol == 0.0) {
@@ -129,7 +130,7 @@ Ring::out (float * smpsl, float * smpsr)
             }
         };
     } else {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             efxoutl[i] =
                 (smpsl[i]  +  smpsr[i] ) * inputvol;
             if (inputvol == 0.0) efxoutl[i]=1.0;
@@ -137,7 +138,7 @@ Ring::out (float * smpsl, float * smpsr)
     };
 
 
-    for (i=0; i < PERIOD; i++) {
+    for (i=0; i < param->PERIOD; i++) {
         tmpfactor =  depth * (scale * ( sin * sin_tbl[offset] + tri * tri_tbl[offset] + saw * saw_tbl[offset] + squ * squ_tbl[offset] ) + idepth) ;    //This is now mathematically equivalent, but less computation
         efxoutl[i] *= tmpfactor;
 
@@ -149,11 +150,11 @@ Ring::out (float * smpsl, float * smpsr)
     }
 
 
-    if (Pstereo == 0) memcpy (efxoutr , efxoutl, PERIOD * sizeof(float));
+    if (Pstereo == 0) memcpy (efxoutr , efxoutl, param->PERIOD * sizeof(float));
 
     float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
 
-    for (i= 0; i<PERIOD; i++) {
+    for (i= 0; i<param->PERIOD; i++) {
         lout = efxoutl[i];
         rout = efxoutr[i];
 
@@ -181,14 +182,14 @@ Ring::processReplacing (float **inputs,
 {
     int i;
     float l, r, lout, rout, tmpfactor;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
     float inputvol = (float) Pinput /127.0f;
 
     if (Pstereo != 0) {
         //Stereo
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] = inputs[0][i] * inputvol;
             outputs[1][i] = inputs[1][i] * inputvol;
             if(inputvol == 0.0) {
@@ -197,7 +198,7 @@ Ring::processReplacing (float **inputs,
             }
         };
     } else {
-        for (i = 0; i < PERIOD; i++) {
+        for (i = 0; i < param->PERIOD; i++) {
             outputs[0][i] =
                 (inputs[0][i]  +  inputs[1][i] ) * inputvol;
             if (inputvol == 0.0) outputs[0][i]=1.0;
@@ -205,7 +206,7 @@ Ring::processReplacing (float **inputs,
     };
 
 
-    for (i=0; i < PERIOD; i++) {
+    for (i=0; i < param->PERIOD; i++) {
         tmpfactor =  depth * (scale * ( sin * sin_tbl[offset] + tri * tri_tbl[offset] + saw * saw_tbl[offset] + squ * squ_tbl[offset] ) + idepth) ;    //This is now mathematically equivalent, but less computation
         outputs[0][i] *= tmpfactor;
 
@@ -217,11 +218,11 @@ Ring::processReplacing (float **inputs,
     }
 
 
-    if (Pstereo == 0) memcpy (outputs[1] , outputs[0], PERIOD * sizeof(float));
+    if (Pstereo == 0) memcpy (outputs[1] , outputs[0], param->PERIOD * sizeof(float));
 
     float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
 
-    for (i= 0; i<PERIOD; i++) {
+    for (i= 0; i<param->PERIOD; i++) {
         lout = outputs[0][i];
         rout = outputs[1][i];
 

@@ -38,7 +38,7 @@ public:
     void set_tempo (int bpm);
     void set_meter (int counts);
     int markctr;
-
+	Parameters *param;
 private:
     int tick_interval;
     int tickctr;

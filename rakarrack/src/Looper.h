@@ -34,6 +34,7 @@ class Looper
 public:
     Looper (float * efxoutl_, float * efxoutr_, float size);
     ~Looper ();
+	Parameters *param;
     void out (float * smpsl, float * smpr);
     void setpreset (int npreset);
     void loadpreset (int npar, int value);  // to set one from a preset

@@ -27,8 +27,9 @@
 #include <math.h>
 #include "MusicDelay.h"
 
-MusicDelay::MusicDelay (float * efxoutl_, float * efxoutr_)
+MusicDelay::MusicDelay (Parameters *param, float * efxoutl_, float * efxoutr_)
 {
+	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
@@ -146,7 +147,7 @@ MusicDelay::out (float * smpsl, float * smpsr)
     int i;
     float l1, r1, ldl1, rdl1, l2, r2, ldl2, rdl2;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         ldl1 = ldelay1[kl1];
         rdl1 = rdelay1[kr1];
         l1 = ldl1 * (1.0f - lrcross) + rdl1 * lrcross;
@@ -204,10 +205,10 @@ MusicDelay::processReplacing (float **inputs,
 {
     int i;
     float l1, r1, ldl1, rdl1, l2, r2, ldl2, rdl2;
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = param->PERIOD;
 
-    for (i = 0; i < PERIOD; i++) {
+    for (i = 0; i < param->PERIOD; i++) {
         ldl1 = ldelay1[kl1];
         rdl1 = rdelay1[kr1];
         l1 = ldl1 * (1.0f - lrcross) + rdl1 * lrcross;

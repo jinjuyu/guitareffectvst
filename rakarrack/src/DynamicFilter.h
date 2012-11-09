@@ -31,8 +31,9 @@
 class DynamicFilter
 {
 public:
-    DynamicFilter (float * efxoutl_, float * efxoutr_);
+    DynamicFilter (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~DynamicFilter ();
+	Parameters *param;
     void out (float * smpsl, float * smpsr);
 
     void setpreset (int npreset);
