@@ -71,7 +71,7 @@ class ExampleEditor : public VSTGLEditor,
 		vsprintf(text, fmt, ap);                // And Converts Symbols To Actual Numbers
 		va_end(ap);       
 		glPushAttrib(GL_LIST_BIT);              // Pushes The Display List Bits     ( NEW )
-		glListBase(mFont2 + 32);    
+		glListBase(mFont2 - 32);    
 		glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text  ( NEW )
 		glPopAttrib();                      // Pops The Display List Bits   ( NEW )
 	}

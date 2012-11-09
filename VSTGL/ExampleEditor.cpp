@@ -102,7 +102,7 @@ void ExampleEditor::guiOpen()
 	string a(buffer);
 	int pos = a.find_last_of('\\');
 	string filename = a.substr(0, pos);
-	filename += "\\images\\font.tga";
+	filename += "\\images\\font.png";
 
 	success = ilLoadImage((const ILstring)filename.c_str()); /* Loading of image "image.jpg" */
 	if (success) /* If no error occured: */
@@ -155,7 +155,7 @@ void ExampleEditor::guiOpen()
         glTexCoord2f(cx, 1 - cy - 0.0625f);  // Texture Coord (Bottom Left)
         glVertex2i(0, 16);      // Vertex Coord (Top Left)
         glEnd();          // Done Building Our Quad (Character)
-        glTranslated(10, 0, 0);      // Move To The Right Of The Character
+        glTranslated(7, 0, 0);      // Move To The Right Of The Character
         glEndList();        // Done Building The Display List
     }            // Loop Until All 256 Are Built
     for (int loop = 0; loop < 96; loop++)      // Loop Through All 256 Lists
@@ -174,7 +174,7 @@ void ExampleEditor::guiOpen()
         glTexCoord2f(cx, 1 - cy - 0.0625f);  // Texture Coord (Bottom Left)
         glVertex2i(0, 16);      // Vertex Coord (Top Left)
         glEnd();          // Done Building Our Quad (Character)
-        glTranslated(10, 0, 0);      // Move To The Right Of The Character
+        glTranslated(8, 0, 0);      // Move To The Right Of The Character
         glEndList();        // Done Building The Display List
     }            // Loop Until All 256 Are Built
 
@@ -201,9 +201,9 @@ void ExampleEditor::draw()
 
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, image);
-	Print(" !\"");
+	Print("1234!@#$asdf");
 	glTranslatef(0, 20.0f, 0);
-	//Print2("abcd");
+	Print2("qwer9puroiwq");
 	/*glBegin(GL_QUADS);
 	glColor4ub(0,0,255,255);
 	glTexCoord2f(0.0f, 0.0f); glVertex2i(0,   0);
