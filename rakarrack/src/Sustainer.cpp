@@ -112,8 +112,51 @@ Sustainer::out (float * smpsl, float * smpsr)
     };
     //End compression
 };
+void
+Sustainer::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float auxtempl = 0.0f;
+    float auxtempr = 0.0f;
+    float auxcombi = 0.0f;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+    for (i = 0; i<PERIOD; i++) {  //apply compression to auxresampled
+        auxtempl = input * inputs[0][i];
+        auxtempr = input * inputs[1][i];
+        auxcombi = 0.5f * (auxtempl + auxtempr);
+        if(fabs(auxcombi) > compeak) {
+            compeak = fabs(auxcombi);   //First do peak detection on the signal
+            timer = 0;
+        }
+        if(timer>hold) {
+            compeak *= prls;
+            timer--;
+        }
+        timer++;
+        compenv = cbeta * oldcompenv + calpha * compeak;       //Next average into envelope follower
+        oldcompenv = compenv;
 
+        if(compenv > cpthresh) {                              //if envelope of signal exceeds thresh, then compress
+            compg = cpthresh + cpthresh*(compenv - cpthresh)/compenv;
+            cpthresh = cthresh + cratio*(compg - cpthresh);   //cpthresh changes dynamically
+            tmpgain = compg/compenv;
+        } else {
+            tmpgain = 1.0f;
+        }
 
+        if(compenv < cpthresh) cpthresh = compenv;
+        if(cpthresh < cthresh) cpthresh = cthresh;
+
+        inputs[0][i] = auxtempl * tmpgain * level;
+        inputs[1][i] = auxtempr * tmpgain * level;
+    };
+	memcpy(outputs[0], inputs[0], sizeof(float)*PERIOD);
+	memcpy(outputs[1], inputs[1], sizeof(float)*PERIOD);
+    //End compression
+};
 /*
  * Parameter control
  */

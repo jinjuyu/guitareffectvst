@@ -36,7 +36,9 @@ public:
     void changepar (int npar, int value);
     int getpar (int npar);
     void setpreset (int npreset);
-
+				void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Ppreset;
 
     float *efxoutl;
