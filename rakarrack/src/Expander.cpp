@@ -238,3 +238,54 @@ Expander::out (float *efxoutl, float *efxoutr)
 
 
 };
+
+void
+Expander::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+
+
+    int i;
+    float delta = 0.0f;
+    float expenv = 0.0f;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
+	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
+
+    lpfl->filterout (outputs[0]);
+    hpfl->filterout (outputs[0]);
+    lpfr->filterout (outputs[1]);
+    hpfr->filterout (outputs[1]);
+
+
+    for (i = 0; i < PERIOD; i++) {
+
+        delta = 0.5f*(fabsf (outputs[0][i]) + fabsf (outputs[1][i])) - env;    //envelope follower from Compressor.C
+        if (delta > 0.0)
+            env += a_rate * delta;
+        else
+            env += d_rate * delta;
+
+        //End envelope power detection
+
+        if (env > tlevel) env = tlevel;
+        expenv = sgain * (expf(env*sfactor*tfactor) - 1.0f);		//Envelope waveshaping
+
+        gain = (1.0f - d_rate) * oldgain + d_rate * expenv;
+        oldgain = gain;				//smooth it out a little bit
+
+        if(efollower) {
+            outputs[0][i] = gain;
+            outputs[1][i] += gain;
+        } else {
+            outputs[0][i] *= gain*level;
+            outputs[1][i] *= gain*level;
+        }
+
+    }
+
+
+
+};

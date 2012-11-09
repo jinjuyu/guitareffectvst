@@ -48,7 +48,9 @@ public:
     void Expander_Change_Preset (int npreset);
     void cleanup ();
     int getpar (int npar);
-
+			void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     float *efxoutl;
     float *efxoutr;
 
