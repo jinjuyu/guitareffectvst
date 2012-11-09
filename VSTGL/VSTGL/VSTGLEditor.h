@@ -30,6 +30,7 @@
 #include <windows.h>
 #include <GL/glew.h>
 #include <GL/wglew.h>
+#include <IL/il.h>
 
 ///	Editor window for VST plugins, using OpenGL to handle all the drawing.
 /*!
@@ -75,7 +76,7 @@ class VSTGLEditor : public AEffEditor
 		Antialias4x,		///<Specifies the drawing should use 4x hardware antialiasing if the graphics card supports it.
 		Antialias6x			///<Specifies the drawing should use 6x hardware antialiasing if the graphics card supports it.
 	} WindowFlags;
-
+	void* m_hInstance;
 	///	Constructor.
 	/*!
 		\param effect Pointer to the plugin class.

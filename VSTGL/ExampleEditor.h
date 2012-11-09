@@ -26,7 +26,6 @@
 #include "VSTGL/VSTGLEditor.h"
 #include "VSTGL/VSTGLTimer.h"
 #include <iostream>
-
 ///	Simple VSTGL example.
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
@@ -48,6 +47,7 @@ class ExampleEditor : public VSTGLEditor,
 	///	Called repeatedly, to update the graphics.
 	void timerCallback();
   private:
+	GLuint image;
 	///	Variable used to rotate the pyramid.
 	float thing;
 };

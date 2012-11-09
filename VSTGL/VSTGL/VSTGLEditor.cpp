@@ -81,7 +81,7 @@ antialiasing(0)
 	winClass.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);
 	winClass.lpszMenuName = 0;
 	//sprintf(tempstr, "VSTGLWindow%08x", static_cast<HINSTANCE>(hInstance));
-	sprintf(tempstr, "VSTGLWindow%08x", reinterpret_cast<int>(this));
+	sprintf(tempstr, "guitareffectVST%08x", reinterpret_cast<int>(this));
 	winClass.lpszClassName = tempstr;
 	winClass.hIconSm = NULL;
 
@@ -89,6 +89,8 @@ antialiasing(0)
 	//destructor).
 	RegisterClassEx(&winClass);
 	GLenum err = glewInit();
+
+	m_hInstance = hInstance;
 }
 
 //-----------------------------------------------------------------------------
@@ -97,7 +99,7 @@ VSTGLEditor::~VSTGLEditor()
 	char tempstr[32];
 
 	//sprintf(tempstr, "VSTGLWindow%08x", static_cast<HINSTANCE>(hInstance));
-	sprintf(tempstr, "VSTGLWindow%08x", reinterpret_cast<int>(this));
+	sprintf(tempstr, "guitareffectVST%08x", reinterpret_cast<int>(this));
 	//unregisters the window class
 	UnregisterClass(tempstr, static_cast<HINSTANCE>(hInstance));
 	
@@ -193,10 +195,10 @@ void VSTGLEditor::createWindow()
 	HWND parentHWnd = static_cast<HWND>(systemWindow);
 
 	//sprintf(tempstr, "VSTGLWindow%08x", static_cast<HINSTANCE>(hInstance));
-	sprintf(tempstr, "VSTGLWindow%08x", reinterpret_cast<int>(this));
+	sprintf(tempstr, "guitareffectVST%08x", reinterpret_cast<int>(this));
 	tempHWnd = CreateWindowEx(0,					//extended window style
 							  tempstr,				//pointer to registered class name
-							  "VSTGLEditor",		//pointer to window name
+							  "guitareffectVST",		//pointer to window name
 							  WS_CHILD|
 							  WS_VISIBLE,			//window style
 							  0,					//horizontal position of window

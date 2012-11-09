@@ -42,7 +42,7 @@
     <LibraryPath>C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;C:\Program Files\Mega-Nerd\libsndfile\include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Documents and Settings\Jin\My Documents\GitHub\vst;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\rakarrack\src;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\Mega-Nerd\libsndfile\include;C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\DevIL-SDK-x86-1.7.8\include;$(IncludePath)</IncludePath>
     <TargetExt>.dll</TargetExt>
     <LibraryPath>C:\Documents and Settings\Jin\My Documents\GitHub\guitareffectvst\GLEW;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)\..\ExtraReleaseFiles\</OutDir>
@@ -73,7 +73,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>libsndfile-1.lib;libsamplerate-0.lib;glu32.lib;opengl32.lib;libfftw3l-3.lib;libfftw3f-3.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ilu.lib;DevIL.lib;libsndfile-1.lib;libsamplerate-0.lib;glu32.lib;opengl32.lib;libfftw3l-3.lib;libfftw3f-3.lib;libfftw3-3.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>./vstplug.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>

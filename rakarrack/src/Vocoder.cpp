@@ -328,7 +328,7 @@ Vocoder::processReplacing (float **inputs,
 								float **outputs,
 								int sampleFrames)
 {
-    int i, j;
+/*    int i, j;
 
     float tempgain;
     float maxgain=0.0;
@@ -432,7 +432,7 @@ Vocoder::processReplacing (float **inputs,
     vulevel = (float)CLAMP(rap2dB(maxgain), -48.0, 15.0);
 
 
-
+	*/
 };
 
 
