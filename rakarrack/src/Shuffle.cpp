@@ -37,7 +37,7 @@ Shuffle::Shuffle (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-
+	PERIOD = 44100;
     inputl = (float *) malloc (sizeof (float) * PERIOD);
     inputr = (float *) malloc (sizeof (float) * PERIOD);
 
@@ -113,6 +113,44 @@ Shuffle::out (float * smpsl, float * smpsr)
 
 };
 
+
+void
+Shuffle::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+
+    for (i = 0; i < PERIOD; i++) {
+
+        inputl[i] = inputs[0][i] + inputs[1][i];
+        inputr[i] = inputs[0][i] - inputs[1][i];
+    }
+
+    if(E) {
+
+        lr->filterout(inputr);
+        mlr->filterout(inputr);
+        mhr->filterout(inputr);
+        hr->filterout(inputr);
+    } else {
+        lr->filterout(inputl);
+        mlr->filterout(inputl);
+        mhr->filterout(inputl);
+        hr->filterout(inputl);
+    }
+
+
+    for (i = 0; i < PERIOD; i++) {
+        outputs[0][i]=(inputl[i]+inputr[i]-inputs[0][i])*.333333f;
+        outputs[1][i]=(inputl[i]-inputr[i]-inputs[1][i])*.333333f;
+
+    }
+
+
+};
 
 /*
  * Parameter control
