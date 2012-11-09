@@ -91,7 +91,7 @@ vendorName("ndc Plugs")
 	
 	mEffEcho = new Echo(nullptr, nullptr);
 	mEffDistorsion = new Distorsion(nullptr, nullptr);
-	mEffConvolotron = new Convolotron(nullptr, nullptr, 0, 4, 2);
+	mEffConvolotron = new Convolotron(nullptr, nullptr, 1, 4, 2);
 	mEffAlienwah = new Alienwah(nullptr, nullptr);
 	mEffAPhaser = new Analog_Phaser(nullptr, nullptr);
 	mEffArpie = new Arpie(nullptr, nullptr);
@@ -106,6 +106,7 @@ vendorName("ndc Plugs")
 	mEffExciter = new Exciter(nullptr, nullptr);
 	mEffExpander = new Expander(nullptr, nullptr);
 	mEffGate = new Gate(nullptr, nullptr);
+	mEffHarmonizer = new Harmonizer(nullptr, nullptr, 32, 1, 4, 2);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -190,6 +191,7 @@ vendorName("ndc Plugs")
 	mEffExciter->setpreset(2);
 	mEffExpander->Expander_Change_Preset(1);
 	mEffGate->Gate_Change_Preset(2);
+	mEffHarmonizer->setpreset(2);
 
 	// originals
 	int i;
@@ -253,6 +255,7 @@ VstPlugin::~VstPlugin()
 	delete mEffExciter;
 	delete mEffExpander;
 	delete mEffGate;
+	delete mEffHarmonizer;
 	int i;
 
 	//Delete event queue.
@@ -331,7 +334,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffEQ2->processReplacing(outputs, outputs, sampleFrames);
 	//mEffExciter->processReplacing(outputs, outputs, sampleFrames);
 	//mEffExpander->processReplacing(outputs, outputs, sampleFrames);
-	mEffGate->processReplacing(outputs, outputs, sampleFrames);
+	//mEffGate->processReplacing(outputs, outputs, sampleFrames);
+	mEffHarmonizer->processReplacing(outputs, outputs, sampleFrames);
 
 
 

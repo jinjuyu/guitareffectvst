@@ -46,7 +46,7 @@ Convolotron::Convolotron (float * efxoutl_, float * efxoutr_,int DS, int uq, int
     fb = 0.0f;
     feedback = 0.0f;
     
-	PERIOD = 96000*10;
+	PERIOD = 96000*2;
 	fPERIOD = PERIOD;
 
     maxx_size = PERIOD;//(int) (nfSAMPLE_RATE * convlength);

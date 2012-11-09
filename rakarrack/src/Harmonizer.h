@@ -45,7 +45,9 @@ public:
     void applyfilters (float * efxoutl);
     void adjust(int DS);
 
-
+	void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Ppreset;
     int Pinterval;
     int PMIDI;

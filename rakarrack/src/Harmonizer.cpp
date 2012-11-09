@@ -36,10 +36,10 @@ Harmonizer::Harmonizer (float *efxoutl_, float *efxoutr_, long int Quality, int 
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     hq = Quality;
+	PERIOD = 44100;
     adjust(DS);
-
-    templ = (float *) malloc (sizeof (float) * PERIOD);
-    tempr = (float *) malloc (sizeof (float) * PERIOD);
+    templ = (float *) malloc (sizeof (float) * (PERIOD+100));
+    tempr = (float *) malloc (sizeof (float) * (PERIOD+100));
 
 
     outi = (float *) malloc (sizeof (float) * nPERIOD);
@@ -137,7 +137,61 @@ Harmonizer::out (float *smpsl, float *smpsr)
 
 };
 
+void
+Harmonizer::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	adjust(DS_state);
 
+	float *tempinputsl = (float*)malloc(sizeof(float)*(nPERIOD+100));
+	float *tempinputsr = (float*)malloc(sizeof(float)*(nPERIOD+100)); // + 100 for possible memory leak
+
+    if((DS_state != 0) && (Pinterval !=12)) {
+        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
+        U_Resample->out(templ,tempr,tempinputsl,tempinputsr,PERIOD,u_up);
+    }
+
+
+    for (i = 0; i < nPERIOD; i++) {
+        outi[i] = (tempinputsl[i] + tempinputsr[i])*.5;
+        if (outi[i] > 1.0)
+            outi[i] = 1.0f;
+        if (outi[i] < -1.0)
+            outi[i] = -1.0f;
+
+    }
+
+    if ((PMIDI) || (PSELECT))
+        PS->ratio = r__ratio[0];
+
+    if (Pinterval != 12) {
+        PS->smbPitchShift (PS->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outi, outo);
+
+        if((DS_state != 0) && (Pinterval != 12)) {
+            D_Resample->mono_out(outo,templ,nPERIOD,u_down,PERIOD);
+        } else {
+            memcpy(templ, outo,sizeof(float)*PERIOD);
+        }
+
+
+
+        applyfilters (templ);
+
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] = templ[i] * gain * panning;
+            outputs[1][i] = templ[i] * gain * (1.0f - panning);
+        }
+
+    }
+	free(tempinputsl);
+	free(tempinputsr);
+
+};
 
 void
 Harmonizer::setvolume (int value)
