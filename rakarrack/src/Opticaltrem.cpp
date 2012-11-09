@@ -132,6 +132,73 @@ Opticaltrem::out (float *smpsl, float *smpsr)
 };
 
 void
+Opticaltrem::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+
+    int i;
+    float lfol, lfor, xl, xr, fxl, fxr;
+    float rdiff, ldiff;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	lfo.update();
+    lfo.effectlfoout (&lfol, &lfor);
+
+    lfol = 1.0f - lfol*fdepth;
+    lfor = 1.0f - lfor*fdepth;
+
+    if (lfol > 1.0f)
+        lfol = 1.0f;
+    else if (lfol < 0.0f)
+        lfol = 0.0f;
+    if (lfor > 1.0f)
+        lfor = 1.0f;
+    else if (lfor < 0.0f)
+        lfor = 0.0f;
+
+    lfor = powf(lfor, 1.9f);
+    lfol = powf(lfol, 1.9f);  //emulate lamp turn on/off characteristic
+
+    //lfo interpolation
+    rdiff = (lfor - oldgr)*cperiod;
+    ldiff = (lfol - oldgl)*cperiod;
+    gr = lfor;
+    gl = lfol;
+    oldgr = lfor;
+    oldgl = lfol;
+
+    for (i = 0; i < PERIOD; i++) {
+        //Left Cds
+        stepl = gl*(1.0f - alphal) + alphal*oldstepl;
+        oldstepl = stepl;
+        dRCl = dTC*f_exp(stepl*minTC);
+        alphal = 1.0f - cSAMPLE_RATE/(dRCl + cSAMPLE_RATE);
+        xl = CNST_E + stepl*b;
+        fxl = f_exp(Ra/logf(xl));
+        fxl = R1/(fxl + R1);
+
+        //Right Cds
+        stepr = gr*(1.0f - alphar) + alphar*oldstepr;
+        oldstepr = stepr;
+        dRCr = dTC*f_exp(stepr*minTC);
+        alphar = 1.0f - cSAMPLE_RATE/(dRCr + cSAMPLE_RATE);
+        xr = CNST_E + stepr*b;
+        fxr = f_exp(Ra/logf(xr));
+        fxr = R1/(fxr + R1);
+
+        //Modulate input signal
+        outputs[0][i] = lpanning*fxl*inputs[0][i];
+        outputs[1][i] = rpanning*fxr*inputs[1][i];
+
+        gl += ldiff;
+        gr += rdiff;  //linear interpolation of LFO
+
+    };
+
+};
+
+void
 Opticaltrem::setpanning (int value)
 {
     Ppanning = value;

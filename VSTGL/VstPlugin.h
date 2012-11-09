@@ -49,6 +49,7 @@
 #include "MBVvol.h"
 #include "MusicDelay.h"
 #include "NewDist.h"
+#include "OpticalTrem.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -93,6 +94,7 @@ public:
 	MBVvol *mEffMBVvol;
 	MusicDelay *mEffMusicDelay;
 	NewDist *mEffNewDist;
+	Opticaltrem *mEffOpticalTrem;
 
 	///	Processes a block of audio, accumulating.
 	/*!
@@ -196,7 +198,7 @@ public:
 	{
 		param1,
 
-		numParameters
+		numParameters=160+10,
 	};
   private:
 	///	Called for every sample, to dispatch MIDI events appropriately.
