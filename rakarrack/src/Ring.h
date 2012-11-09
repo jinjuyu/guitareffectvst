@@ -39,7 +39,9 @@ public:
     void setscale();
     void cleanup ();
     void Create_Tables();
-
+				void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Ppreset;
     int Pafreq;
     int Pfreq;

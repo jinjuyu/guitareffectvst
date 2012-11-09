@@ -55,6 +55,7 @@
 #include "RBEcho.h"
 #include "Reverb.h"
 #include "Reverbtron.h"
+#include "Ring.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -105,6 +106,7 @@ public:
 	RBEcho *mEffRBEcho;
 	Reverb *mEffReverb;
 	Reverbtron *mEffReverbtron;
+	Ring *mEffRing;
 
 	///	Processes a block of audio, accumulating.
 	/*!

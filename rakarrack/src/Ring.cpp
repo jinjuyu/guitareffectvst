@@ -35,10 +35,10 @@ Ring::Ring (float * efxoutl_, float * efxoutr_)
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
-    sin_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE);
-    tri_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE);
-    squ_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE);
-    saw_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE);
+    sin_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
+    tri_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
+    squ_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
+    saw_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
 
     Create_Tables();
 
@@ -64,6 +64,7 @@ Ring::Ring (float * efxoutl_, float * efxoutr_)
 
 Ring::~Ring ()
 {
+	free(sin_tbl); // etc TODO: free it
 };
 
 /*
@@ -80,6 +81,11 @@ Ring::Create_Tables()
     for (i=0; i<SAMPLE_RATE; i++) tri_tbl[i]=acosf(cosf((float)i*D_PI/SR))/D_PI-1.0f;
     for (i=0; i<SAMPLE_RATE; i++) squ_tbl[i]=(i < SAMPLE_RATE/2) ? 1.0f : -1.0f;
     for (i=0; i<SAMPLE_RATE; i++) saw_tbl[i]=((2.0f*i)-SR)/SR;
+
+	for (i=0; i<SAMPLE_RATE; i++) sin_tbl[i+SAMPLE_RATE]=sin_tbl[i];
+    for (i=0; i<SAMPLE_RATE; i++) tri_tbl[i+SAMPLE_RATE]=tri_tbl[i];
+    for (i=0; i<SAMPLE_RATE; i++) squ_tbl[i+SAMPLE_RATE]=squ_tbl[i];
+    for (i=0; i<SAMPLE_RATE; i++) saw_tbl[i+SAMPLE_RATE]=saw_tbl[i];
 
 }
 
@@ -167,6 +173,72 @@ Ring::out (float * smpsl, float * smpsr)
 
 };
 
+
+void
+Ring::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float l, r, lout, rout, tmpfactor;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+
+    float inputvol = (float) Pinput /127.0f;
+
+    if (Pstereo != 0) {
+        //Stereo
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] = inputs[0][i] * inputvol;
+            outputs[1][i] = inputs[1][i] * inputvol;
+            if(inputvol == 0.0) {
+                outputs[0][i]=1.0;
+                outputs[1][i]=1.0;
+            }
+        };
+    } else {
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] =
+                (inputs[0][i]  +  inputs[1][i] ) * inputvol;
+            if (inputvol == 0.0) outputs[0][i]=1.0;
+        };
+    };
+
+
+    for (i=0; i < PERIOD; i++) {
+        tmpfactor =  depth * (scale * ( sin * sin_tbl[offset] + tri * tri_tbl[offset] + saw * saw_tbl[offset] + squ * squ_tbl[offset] ) + idepth) ;    //This is now mathematically equivalent, but less computation
+        outputs[0][i] *= tmpfactor;
+
+        if (Pstereo != 0) {
+            outputs[1][i] *= tmpfactor;
+        }
+        offset += Pfreq;
+        while (offset > SAMPLE_RATE) offset -=SAMPLE_RATE;
+    }
+
+
+    if (Pstereo == 0) memcpy (outputs[1] , outputs[0], PERIOD * sizeof(float));
+
+    float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
+
+    for (i= 0; i<PERIOD; i++) {
+        lout = outputs[0][i];
+        rout = outputs[1][i];
+
+
+        l = lout * (1.0f - lrcross) + rout * lrcross;
+        r = rout * (1.0f - lrcross) + lout * lrcross;
+
+        lout = l;
+        rout = r;
+
+        outputs[0][i] = lout * level * panning;
+
+    }
+
+
+
+};
 
 /*
  * Parameter control
