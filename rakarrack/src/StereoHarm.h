@@ -42,7 +42,9 @@ public:
     int getpar (int npar);
     void cleanup ();
     void adjust(int DS);
-
+				void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
 
     int Ppreset;
     int Pintervall;

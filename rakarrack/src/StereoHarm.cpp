@@ -35,6 +35,8 @@ StereoHarm::StereoHarm (float *efxoutl_, float *efxoutr_, long int Quality, int 
 
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
+	PERIOD = 96000*2;
+	fPERIOD = PERIOD;
     hq = Quality;
     adjust(DS);
 
@@ -57,7 +59,6 @@ StereoHarm::StereoHarm (float *efxoutl_, float *efxoutr_, long int Quality, int 
     U_Resample = new Resample(dq);
     D_Resample = new Resample(uq);
 
-
     chromel=0.0;
     chromer=0.0;
 
@@ -66,6 +67,9 @@ StereoHarm::StereoHarm (float *efxoutl_, float *efxoutr_, long int Quality, int 
     PSl->ratio = 1.0f;
     PSr = new PitchShifter (window, hq, nfSAMPLE_RATE);
     PSr->ratio = 1.0f;
+	PERIOD = 44100;
+	fPERIOD = PERIOD;
+	adjust(DS);
 
     Ppreset = 0;
     PMIDI = 0;
@@ -159,6 +163,83 @@ StereoHarm::out (float *smpsl, float *smpsr)
         efxoutr[i] = tempr[i] * gainr;
     }
 
+
+
+};
+
+
+
+void
+StereoHarm::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	adjust(DS_state);
+
+	float *inputs2[2];
+	inputs2[0] = new float[nPERIOD+100];
+	inputs2[1] = new float[nPERIOD+100];
+
+    if(DS_state != 0) {
+        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
+        U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+    }
+
+
+    for (i = 0; i < nPERIOD; i++) {
+
+
+        outil[i] = inputs2[0][i] * (1.0f - lrcross) + inputs2[1][i] * lrcross;
+        if (outil[i] > 1.0)
+            outil[i] = 1.0f;
+        if (outil[i] < -1.0)
+            outil[i] = -1.0f;
+
+        outir[i] = inputs2[1][i] * (1.0f - lrcross) + inputs2[0][i] * lrcross;
+        if (outir[i] > 1.0)
+            outir[i] = 1.0f;
+        if (outir[i] < -1.0)
+            outir[i] = -1.0f;
+
+    }
+
+    if ((PMIDI) || (PSELECT)) {
+        PSl->ratio = r__ratio[1];
+        PSr->ratio = r__ratio[2];
+    }
+
+    if (PSl->ratio != 1.0f) {
+        PSl->smbPitchShift (PSl->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outil, outol);
+    } else
+        memcpy(outol,outil,sizeof(float)*nPERIOD);
+
+
+    if (PSr->ratio != 1.0f) {
+        PSr->smbPitchShift (PSr->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outir, outor);
+    } else
+        memcpy(outor,outir,sizeof(float)*nPERIOD);
+
+
+    if(DS_state != 0) {
+        D_Resample->out(outol,outor,templ,tempr,nPERIOD,u_down);
+    } else {
+        memcpy(templ, outol,sizeof(float)*PERIOD);
+        memcpy(tempr, outor,sizeof(float)*PERIOD);
+
+    }
+
+
+    for (i = 0; i < PERIOD; i++) {
+        outputs[0][i] = templ[i] * gainl;
+        outputs[1][i] = tempr[i] * gainr;
+    }
+	delete[] inputs2[0];
+	delete[] inputs2[1];
 
 
 };

@@ -61,6 +61,7 @@
 #include "ShelfBoost.h"
 #include "Shifter.h"
 #include "Shuffle.h"
+#include "StereoHarm.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -117,6 +118,7 @@ public:
 	ShelfBoost *mEffShelfBoost;
 	Shifter *mEffShifter;
 	Shuffle *mEffShuffle;
+	StereoHarm *mEffStereoHarm;
 
 	///	Processes a block of audio, accumulating.
 	/*!
