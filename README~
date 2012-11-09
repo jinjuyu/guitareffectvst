@@ -4,6 +4,8 @@ you need to put all the other dlls(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.
 in where the Podium.exe(REAPER.exe, Cubase.exe, etc) is. System32 doesn't work.
 
 
+
+Currently, all the codes are converted and usable in VST code but no GUI interface whatsoever.(not even parameters are mapped)
 ----------------------------------------------------------------------------------------
 Code guideline:
 
