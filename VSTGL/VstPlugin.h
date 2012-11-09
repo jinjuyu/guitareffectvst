@@ -51,6 +51,7 @@
 #include "NewDist.h"
 #include "OpticalTrem.h"
 #include "Pan.h"
+#include "Phaser.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -97,6 +98,7 @@ public:
 	NewDist *mEffNewDist;
 	Opticaltrem *mEffOpticalTrem;
 	Pan *mEffPan;
+	Phaser *mEffPhaser;
 
 	///	Processes a block of audio, accumulating.
 	/*!

@@ -121,6 +121,86 @@ Phaser::out (float * smpsl, float * smpsr)
 
 };
 
+
+void
+Phaser::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i, j;
+    float lfol, lfor, lgain, rgain, tmp;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	lfo.update();
+    lfo.effectlfoout (&lfol, &lfor);
+    lgain = lfol;
+    rgain = lfor;
+    lgain =
+        (expf (lgain * PHASER_LFO_SHAPE) - 1.0f) / (expf (PHASER_LFO_SHAPE) - 1.0f);
+    rgain =
+        (expf (rgain * PHASER_LFO_SHAPE) - 1.0f) / (expf (PHASER_LFO_SHAPE) - 1.0f);
+
+
+    lgain = 1.0f - phase * (1.0f - depth) - (1.0f - phase) * lgain * depth;
+    rgain = 1.0f - phase * (1.0f - depth) - (1.0f - phase) * rgain * depth;
+
+    if (lgain > 1.0)
+        lgain = 1.0f;
+    else if (lgain < 0.0)
+        lgain = 0.0f;
+    if (rgain > 1.0)
+        rgain = 1.0f;
+    else if (rgain < 0.0)
+        rgain = 0.0f;
+
+    for (i = 0; i < PERIOD; i++) {
+        float x = (float) i / fPERIOD;
+        float x1 = 1.0f - x;
+        float gl = lgain * x + oldlgain * x1;
+        float gr = rgain * x + oldrgain * x1;
+        float inl = inputs[0][i] * panning + fbl;
+        float inr = inputs[1][i] * (1.0f - panning) + fbr;
+
+        //Left channel
+        for (j = 0; j < Pstages * 2; j++) {
+            //Phasing routine
+            tmp = oldl[j] + DENORMAL_GUARD;
+            oldl[j] = gl * tmp + inl;
+            inl = tmp - gl * oldl[j];
+        };
+        //Right channel
+        for (j = 0; j < Pstages * 2; j++) {
+            //Phasing routine
+            tmp = oldr[j] + DENORMAL_GUARD;
+            oldr[j] = (gr * tmp) + inr;
+            inr = tmp - (gr * oldr[j]);
+        };
+        //Left/Right crossing
+        float l = inl;
+        float r = inr;
+        inl = l * (1.0f - lrcross) + r * lrcross;
+        inr = r * (1.0f - lrcross) + l * lrcross;
+
+        fbl = inl * fb;
+        fbr = inr * fb;
+        outputs[0][i] = inl;
+        outputs[1][i] = inr;
+
+    };
+
+    oldlgain = lgain;
+    oldrgain = rgain;
+
+    if (Poutsub != 0)
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] *= -1.0f;
+            outputs[1][i] *= -1.0f;
+        };
+
+};
+
+
+
 /*
  * Cleanup the effect
  */
