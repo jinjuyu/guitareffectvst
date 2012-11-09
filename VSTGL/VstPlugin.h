@@ -50,6 +50,7 @@
 #include "MusicDelay.h"
 #include "NewDist.h"
 #include "OpticalTrem.h"
+#include "Pan.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -95,6 +96,7 @@ public:
 	MusicDelay *mEffMusicDelay;
 	NewDist *mEffNewDist;
 	Opticaltrem *mEffOpticalTrem;
+	Pan *mEffPan;
 
 	///	Processes a block of audio, accumulating.
 	/*!

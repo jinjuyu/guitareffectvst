@@ -121,6 +121,73 @@ Pan::out (float *smpsl, float *smpsr)
 };
 
 
+void
+Pan::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+    int i;
+    float avg, ldiff, rdiff, tmp;
+    float pp;
+    float coeff_PERIOD = 1.0 / fPERIOD;
+    float fi,P_i;
+
+	lfo.update();
+
+
+    if (PextraON) {
+
+        for (i = 0; i < PERIOD; i++)
+
+        {
+
+            avg = (inputs[0][i] + inputs[1][i]) * .5f;
+
+            ldiff = inputs[0][i] - avg;
+            rdiff = inputs[1][i] - avg;
+
+            tmp = avg + ldiff * mul;
+            inputs[0][i] = tmp*cdvalue;
+
+            tmp = avg + rdiff * mul;
+            inputs[1][i] = tmp*sdvalue;
+
+
+        }
+
+    }
+
+    if (PAutoPan) {
+
+        ll = lfol;
+        lr = lfor;
+        lfo.effectlfoout (&lfol, &lfor);
+        for (i = 0; i < PERIOD; i++) {
+            fi = (float) i;
+            P_i = (float) (PERIOD - i);
+
+            pp = (ll * P_i + lfol * fi) * coeff_PERIOD;
+
+            inputs[0][i] *= pp * panning;
+
+            pp =  (lr * P_i + lfor * fi) * coeff_PERIOD;
+
+            inputs[1][i] *= pp * (1.0f - panning);
+
+        }
+
+    }
+
+
+	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
+	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
+
+
+
+
+};
 
 void
 Pan::setvolume (int Pvolume)

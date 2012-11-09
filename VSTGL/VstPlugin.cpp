@@ -113,6 +113,7 @@ vendorName("ndc Plugs")
 	mEffMusicDelay= new MusicDelay(nullptr, nullptr);
 	mEffNewDist = new NewDist(nullptr, nullptr);
 	mEffOpticalTrem = new Opticaltrem(nullptr, nullptr);
+	mEffPan = new Pan(nullptr, nullptr);
 
 	//presets
 	
@@ -205,6 +206,7 @@ vendorName("ndc Plugs")
 	mEffMusicDelay->setpreset(0);
 	mEffNewDist->setpreset(0);
 	mEffOpticalTrem->setpreset(0);
+	mEffPan->setpreset(0);
 	// originals
 	int i;
 
@@ -274,6 +276,7 @@ VstPlugin::~VstPlugin()
 	delete mEffMusicDelay;
 	delete mEffNewDist;
 	delete mEffOpticalTrem;
+	delete mEffPan;
 
 	int i;
 
@@ -360,7 +363,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffMBVvol->processReplacing(outputs, outputs, sampleFrames);
 	//mEffMusicDelay->processReplacing(outputs, outputs, sampleFrames);
 	//mEffNewDist->processReplacing(outputs, outputs, sampleFrames);
-	mEffOpticalTrem->processReplacing(outputs, outputs, sampleFrames);
+	//mEffOpticalTrem->processReplacing(outputs, outputs, sampleFrames);
+	mEffPan->processReplacing(outputs, outputs, sampleFrames);
 
 
 
