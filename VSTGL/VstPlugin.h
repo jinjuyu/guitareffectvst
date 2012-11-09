@@ -48,6 +48,7 @@
 #include "MBDist.h"
 #include "MBVvol.h"
 #include "MusicDelay.h"
+#include "NewDist.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -91,6 +92,7 @@ public:
 	MBDist *mEffMBDist;
 	MBVvol *mEffMBVvol;
 	MusicDelay *mEffMusicDelay;
+	NewDist *mEffNewDist;
 
 	///	Processes a block of audio, accumulating.
 	/*!

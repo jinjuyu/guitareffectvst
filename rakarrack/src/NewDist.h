@@ -44,7 +44,9 @@ public:
     int getpar (int npar);
     void cleanup ();
     void applyfilters (float * efxoutl, float * efxoutr);
-
+				void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Ppreset;
     float outvolume;
 

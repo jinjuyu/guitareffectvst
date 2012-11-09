@@ -35,7 +35,8 @@ NewDist::NewDist (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-
+	PERIOD = 44100;
+	fPERIOD = 44100;
     octoutl = (float *) malloc (sizeof (float) * PERIOD);
     octoutr = (float *) malloc (sizeof (float) * PERIOD);
 
@@ -233,6 +234,101 @@ NewDist::out (float * smpsl, float * smpsr)
 
     DCr->filterout (efxoutr);
     DCl->filterout (efxoutl);
+
+
+};
+
+void
+NewDist::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float l, r, lout, rout;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+    float inputvol = .5f;
+
+    if (Pnegate != 0)
+        inputvol *= -1.0f;
+
+
+    if (Pprefiltering != 0)
+        applyfilters (inputs[0], inputs[1]);
+
+    //no optimised, yet (no look table)
+
+
+    wshapel->waveshapesmps (PERIOD, inputs[0], Ptype, Pdrive, 2);
+    wshaper->waveshapesmps (PERIOD, inputs[1], Ptype, Pdrive, 2);
+
+
+
+
+    memcpy(outputs[0],inputs[0],PERIOD * sizeof(float));
+    memcpy(outputs[1],inputs[1],PERIOD * sizeof(float));
+
+
+
+
+
+    if (octmix > 0.01f) {
+        for (i = 0; i < PERIOD; i++) {
+            lout = outputs[0][i];
+            rout = outputs[1][i];
+
+            if ( (octave_memoryl < 0.0f) && (lout > 0.0f) ) togglel *= -1.0f;
+            octave_memoryl = lout;
+
+            if ( (octave_memoryr < 0.0f) && (rout > 0.0f) ) toggler *= -1.0f;
+            octave_memoryr = rout;
+
+            octoutl[i] = lout *  togglel;
+            octoutr[i] = rout *  toggler;
+
+        }
+
+
+        blockDCr->filterout (octoutr);
+        blockDCl->filterout (octoutl);
+    }
+
+
+
+    filterl->filterout(inputs[0]);
+    filterr->filterout(inputs[1]);
+
+
+
+    if (Pprefiltering == 0)
+        applyfilters (outputs[0], outputs[1]);
+
+
+
+    float level = dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
+
+    for (i = 0; i < PERIOD; i++) {
+        lout = outputs[0][i];
+        rout = outputs[1][i];
+
+        l = lout * (1.0f - lrcross) + rout * lrcross;
+        r = rout * (1.0f - lrcross) + lout * lrcross;
+
+        if (octmix > 0.01f) {
+            lout = l * (1.0f - octmix) + octoutl[i] * octmix;
+            rout = r * (1.0f - octmix) + octoutr[i] * octmix;
+        } else {
+            lout = l;
+            rout = r;
+        }
+
+        outputs[0][i] = lout * level * panning;
+        outputs[1][i] = rout * level * ( 1.0f - panning);
+
+    };
+
+    DCr->filterout (outputs[1]);
+    DCl->filterout (outputs[0]);
 
 
 };
