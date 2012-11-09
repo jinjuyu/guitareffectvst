@@ -40,7 +40,9 @@ public:
     void cleanup ();
     float getfreqresponse (float freq);
     void setvolume (int Pvolume);
-
+			void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Ppreset;
     int Pvolume;	//Volumul
 

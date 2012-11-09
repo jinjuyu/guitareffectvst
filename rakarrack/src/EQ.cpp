@@ -90,8 +90,29 @@ EQ::out (float * smpsl, float * smpsr)
     };
 
 };
+		
+void
+EQ::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
 
 
+    for (i = 0; i < PERIOD; i++) {
+        outputs[0][i] = inputs[0][i] * outvolume;
+        outputs[1][i] = inputs[1][i] * outvolume;
+    };
+
+	for (i = 0; i < MAX_EQ_BANDS; i++) {
+        if (filter[i].Ptype == 0)
+            continue;
+        filter[i].l->filterout (outputs[0]);
+        filter[i].r->filterout (outputs[1]);
+    };
+};
 /*
  * Parameter control
  */

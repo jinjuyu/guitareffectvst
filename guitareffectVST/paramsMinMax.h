@@ -1,6 +1,34 @@
 #pragma once
 
+class
 /*
+    for (int i = 0; i <= 45; i += 5) {
+        efx_EQ1->changepar (i + 10, 7);
+        efx_EQ1->changepar (i + 14, 0);
+    }
+
+    efx_EQ1->changepar (11, 31);
+    efx_EQ1->changepar (16, 63);
+    efx_EQ1->changepar (21, 125);
+    efx_EQ1->changepar (26, 250);
+    efx_EQ1->changepar (31, 500);
+    efx_EQ1->changepar (36, 1000);
+    efx_EQ1->changepar (41, 2000);
+    efx_EQ1->changepar (46, 4000);
+    efx_EQ1->changepar (51, 8000);
+    efx_EQ1->changepar (56, 16000);
+
+    for (int i = 0; i <= 10; i += 5) {
+        efx_EQ2->changepar (i + 10, 7);
+        efx_EQ2->changepar (i + 13, 64);
+        efx_EQ2->changepar (i + 14, 0);
+
+    }
+
+
+
+
+
 주파수같은 건 로가리즘으로 매핑하고
 나머지는 선형적으로 매핑하면 될 듯.
 
@@ -64,7 +92,7 @@ rkr->efx_EQ1->changepar(0,(int)(o->value()+64));}
  return;
 } 
 int i;
-for(i=0;i<10;i++) rkr->efx_EQ1->changepar(i*5+13,(int)(o->value()+64));}
+for(i=0;i<10;i++) rkr->efx_EQ1->changepar(i*5+13,(int)(o->value()+64));} // q value
           xywh {51 249 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
           class SliderW
         }
@@ -75,7 +103,7 @@ for(i=0;i<10;i++) rkr->efx_EQ1->changepar(i*5+13,(int)(o->value()+64));}
  getMIDIControl(132);
  return;
 } 
-rkr->efx_EQ1->changepar(12,(int)(o->value()+64));}
+rkr->efx_EQ1->changepar(12,(int)(o->value()+64));} // gain
           xywh {51 268 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
           class SliderW
         }

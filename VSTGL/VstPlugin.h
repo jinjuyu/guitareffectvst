@@ -38,6 +38,7 @@
 #include "Compressor.h"
 #include "Dual_Flange.h"
 #include "Echotron.h"
+#include "EQ.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -71,6 +72,8 @@ public:
 	Compressor *mEffCompressor;
 	Dflange *mEffDualFlange;
 	Echotron *mEffEchotron;
+	EQ *mEffEQ1;
+	EQ *mEffEQ2;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples
