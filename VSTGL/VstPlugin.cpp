@@ -103,6 +103,7 @@ vendorName("ndc Plugs")
 	mEffEchotron = new Echotron(nullptr, nullptr);
 	mEffEQ1 = new EQ(nullptr, nullptr);
 	mEffEQ2 = new EQ(nullptr, nullptr);
+	mEffExciter = new Exciter(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -184,6 +185,8 @@ vendorName("ndc Plugs")
 
     }
 
+	mEffExciter->setpreset(2);
+
 	// originals
 	int i;
 
@@ -243,6 +246,7 @@ VstPlugin::~VstPlugin()
 	delete mEffEchotron;
 	delete mEffEQ1;
 	delete mEffEQ2;
+	delete mEffExciter;
 	int i;
 
 	//Delete event queue.
@@ -305,7 +309,7 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[1][i] = inputs[1][i];
 	}
 	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
-	mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
+	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
 	//mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEcho->processReplacing(outputs, outputs, sampleFrames);
 	//mEffAPhaser->processReplacing(outputs, outputs, sampleFrames);
@@ -316,9 +320,10 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffCompressor->processReplacing(outputs, outputs, sampleFrames);
 	//mEffDualFlange->processReplacing(outputs, outputs, sampleFrames);
 	//mEffCompBand->processReplacing(outputs, outputs, sampleFrames);
-	mEffEchotron->processReplacing(outputs, outputs, sampleFrames);
+	//mEffEchotron->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEQ1->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEQ2->processReplacing(outputs, outputs, sampleFrames);
+	mEffExciter->processReplacing(outputs, outputs, sampleFrames);
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
 	{

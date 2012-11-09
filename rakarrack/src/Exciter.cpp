@@ -73,8 +73,19 @@ Exciter::out (float * smpsl, float * smpsr)
     harm->harm_out(smpsl,smpsr);
 
 };
+void
+Exciter::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
 
+{
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
+	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
+    harm->harm_out(outputs[0],outputs[1]);
 
+};
 /*
  * Parameter control
  */

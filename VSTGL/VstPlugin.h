@@ -39,6 +39,7 @@
 #include "Dual_Flange.h"
 #include "Echotron.h"
 #include "EQ.h"
+#include "Exciter.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -74,6 +75,7 @@ public:
 	Echotron *mEffEchotron;
 	EQ *mEffEQ1;
 	EQ *mEffEQ2;
+	Exciter *mEffExciter;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples
