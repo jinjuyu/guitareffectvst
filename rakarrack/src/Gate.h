@@ -42,7 +42,9 @@ public:
     ~Gate ();
 
     void out (float * smps_l, float * smps_r);
-
+			void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     void Gate_Change (int np, int value);
     void Gate_Change_Preset (int npreset);
     void cleanup ();

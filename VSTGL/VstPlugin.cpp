@@ -105,6 +105,7 @@ vendorName("ndc Plugs")
 	mEffEQ2 = new EQ(nullptr, nullptr);
 	mEffExciter = new Exciter(nullptr, nullptr);
 	mEffExpander = new Expander(nullptr, nullptr);
+	mEffGate = new Gate(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -188,6 +189,7 @@ vendorName("ndc Plugs")
 
 	mEffExciter->setpreset(2);
 	mEffExpander->Expander_Change_Preset(1);
+	mEffGate->Gate_Change_Preset(2);
 
 	// originals
 	int i;
@@ -250,6 +252,7 @@ VstPlugin::~VstPlugin()
 	delete mEffEQ2;
 	delete mEffExciter;
 	delete mEffExpander;
+	delete mEffGate;
 	int i;
 
 	//Delete event queue.
@@ -327,7 +330,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffEQ1->processReplacing(outputs, outputs, sampleFrames);
 	//mEffEQ2->processReplacing(outputs, outputs, sampleFrames);
 	//mEffExciter->processReplacing(outputs, outputs, sampleFrames);
-	mEffExpander->processReplacing(outputs, outputs, sampleFrames);
+	//mEffExpander->processReplacing(outputs, outputs, sampleFrames);
+	mEffGate->processReplacing(outputs, outputs, sampleFrames);
 
 
 

@@ -41,6 +41,7 @@
 #include "EQ.h"
 #include "Exciter.h"
 #include "Expander.h"
+#include "Gate.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -78,6 +79,7 @@ public:
 	EQ *mEffEQ2;
 	Exciter *mEffExciter;
 	Expander *mEffExpander;
+	Gate *mEffGate;
 
 	///	Processes a block of audio, accumulating.
 	/*!

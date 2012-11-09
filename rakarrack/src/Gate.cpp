@@ -251,3 +251,71 @@ Gate::out (float *efxoutl, float *efxoutr)
 
 
 };
+
+		
+void
+Gate::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+
+
+    int i;
+    float sum;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
+	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
+
+    lpfl->filterout (outputs[0]);
+    hpfl->filterout (outputs[0]);
+    lpfr->filterout (outputs[1]);
+    hpfr->filterout (outputs[1]);
+
+
+    for (i = 0; i < PERIOD; i++) {
+
+        sum = fabsf (outputs[0][i]) + fabsf (outputs[1][i]);
+
+
+        if (sum > env)
+            env = sum;
+        else
+            env = sum * ENV_TR + env * (1.0f - ENV_TR);
+
+        if (state == CLOSED) {
+            if (env >= t_level)
+                state = OPENING;
+        } else if (state == OPENING) {
+            gate += a_rate;
+            if (gate >= 1.0) {
+                gate = 1.0f;
+                state = OPEN;
+                hold_count = lrintf (hold * fs * 0.001f);
+            }
+        } else if (state == OPEN) {
+            if (hold_count <= 0) {
+                if (env < t_level) {
+                    state = CLOSING;
+                }
+            } else
+                hold_count--;
+
+        } else if (state == CLOSING) {
+            gate -= d_rate;
+            if (env >= t_level)
+                state = OPENING;
+            else if (gate <= 0.0) {
+                gate = 0.0;
+                state = CLOSED;
+            }
+        }
+
+        outputs[0][i] *= (cut * (1.0f - gate) + gate);
+        outputs[1][i] *= (cut * (1.0f - gate) + gate);
+
+    }
+
+
+
+};
