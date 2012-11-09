@@ -66,6 +66,7 @@ effectName("guitareffectVST"),
 vendorName("Jinju")
 {
 	// Setup RAKARRACK global vars
+	mParam = new Parameters();
 	mParam->fPERIOD = 32768.0f;
 	mParam->PERIOD = 32768;
 	SAMPLE_RATE = samplerate;
@@ -88,7 +89,6 @@ vendorName("Jinju")
 	strcpy(DATADIR, b.c_str());
 
 	// RAKARRACK effects
-	mParam = new Parameters();
 	mEffEcho = new Echo(mParam, nullptr, nullptr);
 	mEffDistorsion = new Distorsion(mParam, nullptr, nullptr);
 	mEffConvolotron = new Convolotron(mParam, nullptr, nullptr, 1, 4, 2);
