@@ -64,6 +64,7 @@
 #include "StereoHarm.h"
 #include "StompBox.h"
 #include "Sustainer.h"
+#include "Synthfilter.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -123,6 +124,7 @@ public:
 	StereoHarm *mEffStereoHarm;
 	StompBox *mEffStompBox;
 	Sustainer *mEffSustainer;
+	Synthfilter *mEffSynthfilter;
 
 	///	Processes a block of audio, accumulating.
 	/*!

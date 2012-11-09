@@ -44,6 +44,8 @@ Synthfilter::Synthfilter (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
+	PERIOD = 44100;
+	fPERIOD = PERIOD;
 
     lyn1 = new float[MAX_SFILTER_STAGES];
     ryn1 = new float[MAX_SFILTER_STAGES];
@@ -201,6 +203,135 @@ Synthfilter::out (float * smpsl, float * smpsr)
         for (i = 0; i < PERIOD; i++) {
             efxoutl[i] *= -1.0f;
             efxoutr[i] *= -1.0f;
+        };
+
+};
+void
+Synthfilter::			processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i, j;
+    float lfol, lfor, lgain, rgain,rmod, lmod, d;
+    lgain = 0.0;
+    rgain = 0.0;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	inv_period = 1.0f/fPERIOD;
+	lfo.update();
+    lfo.effectlfoout (&lfol, &lfor);
+    lmod = lfol*width + depth + env*sns;
+    rmod = lfor*width + depth + env*sns;
+
+    if (lmod > ONE_)
+        lmod = ONE_;
+    else if (lmod < ZERO_)
+        lmod = ZERO_;
+    if (rmod > ONE_)
+        rmod = ONE_;
+    else if (rmod < ZERO_)
+        rmod = ZERO_;
+
+    lmod = 1.0f - lmod;
+    rmod = 1.0f - rmod;
+    lmod*=lmod;
+    rmod*=rmod;
+
+    float xl = (lmod - oldlgain) * inv_period;
+    float xr = (rmod - oldrgain) * inv_period;
+    float gl = oldlgain;	// Linear interpolation between LFO samples
+    float gr = oldrgain;
+
+    for (i = 0; i < PERIOD; i++) {
+
+        float lxn = bandgain*inputs[0][i];
+        float rxn = bandgain*inputs[1][i]; //extra gain
+
+        gl += xl;
+        gr += xr;   //linear interpolation of LFO
+
+        //Envelope detection
+        envdelta = (fabsf (inputs[0][i]) + fabsf (inputs[1][i])) - env;    //envelope follower from Compressor.C
+        if (delta > 0.0)
+            env += att * envdelta;
+        else
+            env += rls * envdelta;
+
+        //End envelope power detection
+
+        if (Plpstages<1) {
+            lxn += fbl;
+            rxn += fbr;
+        }
+
+
+        //Left channel Low Pass Filter
+        for (j = 0; j < Plpstages; j++) {
+            d = 1.0f + fabs(lxn)*distortion;  // gain decreases as signal amplitude increases.
+
+            //low pass filter:  alpha*x[n] + (1-alpha)*y[n-1]
+            // alpha = lgain = dt/(RC + dt)
+            lgain = delta/( (Rmax * gl * d + Rmin) * Clp + delta);
+            lyn1[j] = lgain * lxn + (1.0f - lgain) * lyn1[j];
+            lyn1[j] += DENORMAL_GUARD;
+            lxn = lyn1[j];
+            if (j==0) lxn += fbl;  //Insert feedback after first filter stage
+        };
+
+
+        //Left channel High Pass Filter
+        for (j = 0; j < Phpstages; j++) {
+
+            //high pass filter:  alpha*(y[n-1] + x[n] - x[n-1]) // alpha = lgain = RC/(RC + dt)
+            lgain = (Rmax * gl + Rmin) * Chp/( (Rmax * gl  + Rmin) * Chp + delta);
+            ly1hp[j] = lgain * (lxn + ly1hp[j] - lx1hp[j]);
+
+            ly1hp[j] += DENORMAL_GUARD;
+            lx1hp[j] = lxn;
+            lxn = ly1hp[j];
+
+        };
+
+
+        //Right channel Low Pass Filter
+        for (j = 0; j < Plpstages; j++) {
+            d = 1.0f + fabs(rxn)*distortion;  //This is symmetrical. FET is not, so this deviates slightly, however sym dist. is better sounding than a real FET.
+
+            rgain = delta/((Rmax*gr*d + Rmin)*Clp + delta);
+            ryn1[j] = rgain * rxn + (1.0f - rgain) * ryn1[j];
+            ryn1[j] += DENORMAL_GUARD;
+            rxn = ryn1[j];
+            if (j==0) rxn += fbr;  //Insert feedback after first filter stage
+        };
+
+        //Right channel High Pass Filter
+        for (j = 0; j < Phpstages; j++) {
+            d = 1.0f + fabs(rxn)*distortion;  // gain decreases as signal amplitude increases.
+
+            //high pass filter:  alpha*(y[n-1] + x[n] - x[n-1]) // alpha = rgain = RC/(RC + dt)
+            rgain = (Rmax * gr  + Rmin) * Chp/( (Rmax * gr + Rmin) * Chp + delta);
+            ry1hp[j] = rgain * (rxn + ry1hp[j] - rx1hp[j]);
+
+            ry1hp[j] += DENORMAL_GUARD;
+            rx1hp[j] = rxn;
+            rxn = ry1hp[j];
+        };
+
+        fbl = lxn * fb;
+        fbr = rxn * fb;
+
+        outputs[0][i] = lxn;
+        outputs[1][i] = rxn;
+
+    };
+
+    oldlgain = lmod;
+    oldrgain = rmod;
+
+    if (Poutsub != 0)
+        for (i = 0; i < PERIOD; i++) {
+            outputs[0][i] *= -1.0f;
+            outputs[1][i] *= -1.0f;
         };
 
 };
