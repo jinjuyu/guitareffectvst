@@ -109,6 +109,7 @@ vendorName("ndc Plugs")
 	mEffHarmonizer = new Harmonizer(nullptr, nullptr, 32, 1, 4, 2);
 	mEffInfinity = new Infinity(nullptr, nullptr);
 	mEffMBDist = new MBDist(nullptr, nullptr);
+	mEffMBVvol = new MBVvol(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -196,6 +197,7 @@ vendorName("ndc Plugs")
 	mEffHarmonizer->setpreset(2);
 	mEffInfinity->setpreset(5);
 	mEffMBDist->setpreset(1);
+	mEffMBVvol->setpreset(0);
 
 	// originals
 	int i;
@@ -262,6 +264,7 @@ VstPlugin::~VstPlugin()
 	delete mEffHarmonizer;
 	delete mEffInfinity;
 	delete mEffMBDist;
+	delete mEffMBVvol;
 	int i;
 
 	//Delete event queue.
@@ -343,7 +346,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffGate->processReplacing(outputs, outputs, sampleFrames);
 	//mEffHarmonizer->processReplacing(outputs, outputs, sampleFrames);
 	//mEffInfinity->processReplacing(outputs, outputs, sampleFrames);
-	mEffMBDist->processReplacing(outputs, outputs, sampleFrames);
+	//mEffMBDist->processReplacing(outputs, outputs, sampleFrames);
+	mEffMBVvol->processReplacing(outputs, outputs, sampleFrames);
 
 
 

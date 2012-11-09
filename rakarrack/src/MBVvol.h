@@ -43,7 +43,9 @@ public:
 
     int Ppreset;
     float outvolume;
-
+			void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     float *efxoutl;
     float *efxoutr;
     float *lowl;

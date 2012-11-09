@@ -36,7 +36,7 @@ MBVvol::MBVvol (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-
+	PERIOD = 44100;
     lowl = (float *) malloc (sizeof (float) * PERIOD);
     lowr = (float *) malloc (sizeof (float) * PERIOD);
     midll = (float *) malloc (sizeof (float) * PERIOD);
@@ -146,7 +146,59 @@ MBVvol::out (float * smpsl, float * smpsr)
 
 };
 
+void
+MBVvol::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	lfo1.update();
+	lfo2.update();
 
+
+    memcpy(lowl,inputs[0],sizeof(float) * PERIOD);
+    memcpy(midll,inputs[0],sizeof(float) * PERIOD);
+    memcpy(midhl,inputs[0],sizeof(float) * PERIOD);
+    memcpy(highl,inputs[0],sizeof(float) * PERIOD);
+
+    lpf1l->filterout(lowl);
+    hpf1l->filterout(midll);
+    lpf2l->filterout(midll);
+    hpf2l->filterout(midhl);
+    lpf3l->filterout(midhl);
+    hpf3l->filterout(highl);
+
+    memcpy(lowr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(midlr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(midhr,inputs[1],sizeof(float) * PERIOD);
+    memcpy(highr,inputs[1],sizeof(float) * PERIOD);
+
+    lpf1r->filterout(lowr);
+    hpf1r->filterout(midlr);
+    lpf2r->filterout(midlr);
+    hpf2r->filterout(midhr);
+    lpf3r->filterout(midhr);
+    hpf3r->filterout(highr);
+
+    lfo1.effectlfoout (&lfo1l, &lfo1r);
+    lfo2.effectlfoout (&lfo2l, &lfo2r);
+
+    d1=(lfo1l-v1l)*coeff;
+    d2=(lfo1r-v1r)*coeff;
+    d3=(lfo2l-v2l)*coeff;
+    d4=(lfo2r-v2r)*coeff;
+
+    for (i = 0; i < PERIOD; i++) {
+
+        setCombi(Pcombi);
+
+        outputs[0][i]=lowl[i]*volL+midll[i]*volML+midhl[i]*volMH+highl[i]*volH;
+        outputs[1][i]=lowr[i]*volLr+midlr[i]*volMLr+midhr[i]*volMHr+highr[i]*volHr;
+    }
+
+};
 /*
  * Parameter control
  */

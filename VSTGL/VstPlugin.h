@@ -46,6 +46,7 @@
 #include "Infinity.h"
 #include "Looper.h"
 #include "MBDist.h"
+#include "MBVvol.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -87,6 +88,7 @@ public:
 	Harmonizer *mEffHarmonizer;
 	Infinity *mEffInfinity;
 	MBDist *mEffMBDist;
+	MBVvol *mEffMBVvol;
 
 	///	Processes a block of audio, accumulating.
 	/*!
