@@ -148,6 +148,88 @@ RyanWah::out (float * smpsl, float * smpsr)
 
 };
 
+void
+RyanWah::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float lmod, rmod;
+    float lfol, lfor;
+    float rms = 0.0f;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	lfo.update();
+    lfo.effectlfoout (&lfol, &lfor);
+    if (Pamode) {
+        lfol *= depth;
+        lfor *= depth;
+    } else {
+        lfol *= depth * 5.0f;
+        lfor *= depth * 5.0f;
+    }
+
+    for (i = 0; i < PERIOD; i++) {
+        outputs[0][i] = inputs[0][i];
+        outputs[1][i] = inputs[1][i];
+
+        float x = (fabsf (inputs[0][i]) + fabsf (inputs[1][i])) * 0.5f;
+        ms1 = ms1 * ampsmooth + x * (1.0f - ampsmooth) + 1e-10f;
+
+        //oldfbias -= 0.001 * oldfbias2;
+        oldfbias = oldfbias * (1.0f - wahsmooth) + fbias * wahsmooth + 1e-10f;  //smooth MIDI control
+        oldfbias1 = oldfbias1 * (1.0f - wahsmooth) + oldfbias * wahsmooth + 1e-10f;
+        oldfbias2 = oldfbias2 * (1.0f - wahsmooth) + oldfbias1 * wahsmooth + 1e-10f;
+
+        if (Pamode) {
+            rms = ms1 * ampsns + oldfbias2;
+            if (rms<0.0f) rms = 0.0f;
+            lmod = (minfreq + lfol + rms)*maxfreq;
+            rmod = (minfreq + lfor + rms)*maxfreq;
+            if(variq) q = f_pow2((2.0f*(1.0f-rms)+1.0f));
+            filterl->setq(q);
+            filterr->setq(q);
+            filterl->directmod(rmod);
+            filterr->directmod(lmod);
+            outputs[0][i] = filterl->filterout_s (inputs[0][i]);
+            outputs[1][i] = filterr->filterout_s (inputs[1][i]);
+
+        }
+    };
+
+    if (!Pamode) {
+        rms = ms1 * ampsns + oldfbias2;
+
+        if(rms>0.0f) { //apply some smooth limiting
+            rms = 1.0f - 1.0f/(rms*rms + 1.0f);
+        } else {
+            rms = -1.0f + 1.0f/(rms*rms + 1.0f);
+        }
+
+        if(variq) q = f_pow2((2.0f*(1.0f-rms)+1.0f));
+
+        lmod =(lfol + rms);
+        rmod = (lfor + rms);
+        if(lmod>1.0f) lmod = 1.0f;
+        if(lmod<0.0f) lmod = 0.0f;
+        if(rmod>1.0f) rmod = 1.0f;
+        if(rmod<0.0f) rmod = 0.0f;
+
+        //rms*=rms;
+        float frl = minfreq + maxfreq*(powf(base, lmod) - 1.0f)*ibase;
+        float frr = minfreq + maxfreq*(powf(base, rmod) - 1.0f)*ibase;
+
+        centfreq = frl; //testing variable
+
+        filterl->setfreq_and_q (frl, q);
+        filterr->setfreq_and_q (frr, q);
+
+        filterl->filterout (outputs[0]);
+        filterr->filterout (outputs[1]);
+    }
+
+};			
+			
 /*
  * Cleanup the effect
  */
