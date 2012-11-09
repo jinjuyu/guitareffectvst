@@ -42,7 +42,9 @@ public:
     void setranges(int value);
     void settempo(int value);
     void adjust(int DS);
-
+				void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Ppreset;
 
     float outvolume;

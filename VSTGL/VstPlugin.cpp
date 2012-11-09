@@ -120,6 +120,7 @@ vendorName("ndc Plugs")
 	mEffReverbtron = new Reverbtron(nullptr, nullptr, 1, 4, 2);
 	mEffRing = new Ring(nullptr, nullptr);
 	mEffRyanWah = new RyanWah(nullptr, nullptr);
+	mEffSequence = new Sequence(nullptr, nullptr, 32, 1, 4, 2);
 	
 	//presets
 	
@@ -219,6 +220,7 @@ vendorName("ndc Plugs")
 	mEffReverbtron->setpreset(0);
 	mEffRing->setpreset(1);
 	mEffRyanWah->setpreset(1);
+	mEffSequence->setpreset(0);
 	
 	// originals
 	int i;
@@ -296,6 +298,7 @@ VstPlugin::~VstPlugin()
 	delete mEffReverbtron;
 	delete mEffRing;
 	delete mEffRyanWah;
+	delete mEffSequence;
 
 	int i;
 
@@ -389,7 +392,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffReverb->processReplacing(outputs, outputs, sampleFrames);
 	//mEffReverbtron->processReplacing(outputs, outputs, sampleFrames);
 	//mEffRing->processReplacing(outputs, outputs, sampleFrames);
-	mEffRyanWah->processReplacing(outputs, outputs, sampleFrames);
+	//mEffRyanWah->processReplacing(outputs, outputs, sampleFrames);
+	mEffSequence->processReplacing(outputs, outputs, sampleFrames);
 
 
 

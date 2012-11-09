@@ -57,6 +57,7 @@
 #include "Reverbtron.h"
 #include "Ring.h"
 #include "RyanWah.h"
+#include "Sequence.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -109,6 +110,7 @@ public:
 	Reverbtron *mEffReverbtron;
 	Ring *mEffRing;
 	RyanWah *mEffRyanWah;
+	Sequence *mEffSequence;
 
 	///	Processes a block of audio, accumulating.
 	/*!
