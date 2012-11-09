@@ -215,6 +215,47 @@ Infinity::out (float * smpsl, float * smpsr)
 
 };
 
+
+
+
+void
+Infinity::processReplacing (float **inputs,
+						float **outputs,
+						int sampleFrames)
+{
+    int i, j;
+    float tmpr, tmpl;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+    for (i = 0; i<PERIOD; i++)  {
+        //modulate
+        oscillator();
+        tmpr = tmpl = 0.0f;
+        //run filter
+
+
+
+        if(Pstages) {
+            for (j=0; j<NUM_INF_BANDS; j++)  {
+                tmpl+=phaser(lphaser, filterl[j]->filterout_s(lbandstate[j].vol*inputs[0][i]), j );
+                tmpr+=phaser(rphaser, filterr[j]->filterout_s(rbandstate[j].vol*inputs[1][i]), j );
+            }
+        } else {
+            for (j=0; j<NUM_INF_BANDS; j++)  {
+                tmpl+=filterl[j]->filterout_s(lbandstate[j].vol*inputs[0][i]);
+                tmpr+=filterr[j]->filterout_s(rbandstate[j].vol*inputs[1][i]);
+            }
+        }
+
+
+        outputs[0][i] = (1.0f + autopan*mcos)*volmaster*tmpl;
+        outputs[1][i] = (1.0f - autopan*mcos)*volmaster*tmpr;
+
+
+
+    }
+
+};
 /*
  * Cleanup the effect
  */
