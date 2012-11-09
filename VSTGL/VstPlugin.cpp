@@ -128,6 +128,7 @@ vendorName("ndc Plugs")
 	mEffStompBox = new StompBox(nullptr, nullptr);
 	mEffSustainer = new Sustainer(nullptr, nullptr);
 	mEffSynthfilter = new Synthfilter(nullptr, nullptr);
+	mEffValve = new Valve(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -234,6 +235,7 @@ vendorName("ndc Plugs")
 	mEffStompBox->setpreset(0);
 	mEffSustainer->setpreset(0);
 	mEffSynthfilter->setpreset(0);
+	mEffValve->setpreset(0);
 	
 	// originals
 	int i;
@@ -319,6 +321,7 @@ VstPlugin::~VstPlugin()
 	delete mEffStompBox;
 	delete mEffSustainer;
 	delete mEffSynthfilter;
+	delete mEffValve;
 
 	int i;
 
@@ -420,7 +423,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffStereoHarm->processReplacing(outputs, outputs, sampleFrames);
 	//mEffStompBox->processReplacing(outputs, outputs, sampleFrames);
 	//mEffSustainer->processReplacing(outputs, outputs, sampleFrames);
-	mEffSynthfilter->processReplacing(outputs, outputs, sampleFrames);
+	//mEffSynthfilter->processReplacing(outputs, outputs, sampleFrames);
+	mEffValve->processReplacing(outputs, outputs, sampleFrames);
 
 
 	//If there are events remaining in the queue, update their delta values.

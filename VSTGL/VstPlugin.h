@@ -65,6 +65,7 @@
 #include "StompBox.h"
 #include "Sustainer.h"
 #include "Synthfilter.h"
+#include "Valve.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -125,7 +126,7 @@ public:
 	StompBox *mEffStompBox;
 	Sustainer *mEffSustainer;
 	Synthfilter *mEffSynthfilter;
-
+	Valve *mEffValve;
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples
