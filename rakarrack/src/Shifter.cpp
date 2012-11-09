@@ -36,6 +36,9 @@ Shifter::Shifter (float *efxoutl_, float *efxoutr_, long int Quality, int DS, in
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
     hq = Quality;
+	
+	PERIOD = 96000*2;
+	fPERIOD = PERIOD;
     adjust(DS);
 
     templ = (float *) malloc (sizeof (float) * PERIOD);
@@ -46,10 +49,12 @@ Shifter::Shifter (float *efxoutl_, float *efxoutr_, long int Quality, int DS, in
 
     U_Resample = new Resample(dq);
     D_Resample = new Resample(uq);
-
+	
     PS = new PitchShifter (window, hq, nfSAMPLE_RATE);
     PS->ratio = 1.0f;
-
+	PERIOD = 44100;
+	fPERIOD = PERIOD;
+	adjust(DS);
     state = IDLE;
     env = 0.0f;
     tune = 0.0f;
@@ -253,6 +258,104 @@ Shifter::out (float *smpsl, float *smpsr)
 
 };
 
+
+void
+Shifter::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+
+    int i;
+    float sum;
+    float use;
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+	adjust(DS_state);
+
+	float *inputs2[2];
+	inputs2[0] = new float[nPERIOD];
+	inputs2[1] = new float[nPERIOD];
+
+    if(DS_state != 0) {
+        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
+        U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+    }
+
+    for (i=0; i < nPERIOD; i++) {
+        if((Pmode == 0) || (Pmode ==2)) {
+            sum = fabsf(inputs2[0][i])+fabsf(inputs2[1][i]);
+            if (sum>env) env = sum;
+            else env=sum*ENV_TR+env*(1.0f-ENV_TR);
+
+            if (env <= tz_level) {
+                state=IDLE;
+                tune = 0.0;
+            }
+
+            if ((state == IDLE) && (env >= t_level)) state=UP;
+
+            if (state==UP) {
+                tune +=a_rate;
+                if (tune >=1.0f) state = WAIT;
+            }
+
+            if (state==WAIT) {
+                tune = 1.0f;
+                if (env<td_level)
+                    state=DOWN;
+            }
+
+            if (state==DOWN) {
+                tune -= d_rate;
+                if(tune<=0.0) {
+                    tune = 0.0;
+                    state=IDLE;
+                }
+            }
+        }
+        outi[i] = (inputs2[0][i] + inputs2[1][i])*.5;
+        if (outi[i] > 1.0)
+            outi[i] = 1.0f;
+        if (outi[i] < -1.0)
+            outi[i] = -1.0f;
+
+    }
+
+
+    if (Pmode == 1) use = whammy;
+    else use = tune;
+    if ((Pmode == 0) && (Pinterval == 0)) use = tune * whammy;
+    if (Pmode == 2) use = 1.0f - tune;
+
+    if(Pupdown)
+        PS->ratio = 1.0f-(1.0f-range)*use;
+    else
+        PS->ratio = 1.0f+((range-1.0f)*use);
+
+
+    PS->smbPitchShift (PS->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outi, outo);
+
+    for (i = 0; i < nPERIOD; i++) {
+        templ[i] = outo[i] * gain * panning;
+        tempr[i] = outo[i] * gain * (1.0f - panning);
+    }
+
+
+    if(DS_state != 0) {
+        D_Resample->out(templ,tempr,outputs[0],outputs[1],nPERIOD,u_down);
+
+    } else {
+        memcpy(outputs[0], templ,sizeof(float)*PERIOD);
+        memcpy(outputs[1], tempr,sizeof(float)*PERIOD);
+    }
+
+
+
+	delete[] inputs2[0];
+	delete[] inputs2[1];
+
+};
 
 
 void

@@ -33,6 +33,7 @@ Sequence::Sequence (float * efxoutl_, float * efxoutr_, long int Quality, int DS
     efxoutr = efxoutr_;
     hq = Quality;
 	PERIOD = 96000*2;
+	fPERIOD = PERIOD;
     adjust(DS);
 	
     templ = (float *) malloc (sizeof (float) * PERIOD);
@@ -41,6 +42,7 @@ Sequence::Sequence (float * efxoutl_, float * efxoutr_, long int Quality, int DS
     outi = (float *) malloc (sizeof (float) * nPERIOD);
     outo = (float *) malloc (sizeof (float) * nPERIOD);
 	PERIOD = 44100;
+	fPERIOD = PERIOD;
     adjust(DS);
 
     U_Resample = new Resample(dq);
@@ -706,8 +708,8 @@ Sequence::processReplacing (float **inputs,
 
 
 	float *inputs2[2];
-	inputs2[0] = new float[sizeof(float)*sampleFrames];
-	inputs2[1] = new float[sizeof(float)*sampleFrames];
+	inputs2[0] = new float[sizeof(float)*nPERIOD];
+	inputs2[1] = new float[sizeof(float)*nPERIOD];
 
     switch(Pmode) {
     case 0:	//Lineal
@@ -1215,6 +1217,8 @@ Sequence::processReplacing (float **inputs,
 
 
     }
+	delete[] inputs2[0];
+	delete[] inputs2[1];
 
 };
 

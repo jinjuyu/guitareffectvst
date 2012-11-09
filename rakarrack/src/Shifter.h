@@ -48,7 +48,9 @@ public:
     void cleanup ();
     void applyfilters (float * efxoutl);
     void adjust(int DS);
-
+				void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     int Ppreset;
     long int hq;
     float outvolume;

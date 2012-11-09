@@ -59,6 +59,7 @@
 #include "RyanWah.h"
 #include "Sequence.h"
 #include "ShelfBoost.h"
+#include "Shifter.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -113,6 +114,7 @@ public:
 	RyanWah *mEffRyanWah;
 	Sequence *mEffSequence;
 	ShelfBoost *mEffShelfBoost;
+	Shifter *mEffShifter;
 
 	///	Processes a block of audio, accumulating.
 	/*!

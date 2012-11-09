@@ -106,7 +106,7 @@ vendorName("ndc Plugs")
 	mEffExciter = new Exciter(nullptr, nullptr);
 	mEffExpander = new Expander(nullptr, nullptr);
 	mEffGate = new Gate(nullptr, nullptr);
-	mEffHarmonizer = new Harmonizer(nullptr, nullptr, 32, 1, 4, 2);
+	mEffHarmonizer = new Harmonizer(nullptr, nullptr, 32, 1, 4, 2); // keep quality at 4 or 32, DS == 1 means 96000 and so on, leave uq dq at 4,2 for now
 	mEffInfinity = new Infinity(nullptr, nullptr);
 	mEffMBDist = new MBDist(nullptr, nullptr);
 	mEffMBVvol = new MBVvol(nullptr, nullptr);
@@ -122,6 +122,7 @@ vendorName("ndc Plugs")
 	mEffRyanWah = new RyanWah(nullptr, nullptr);
 	mEffSequence = new Sequence(nullptr, nullptr, 32, 1, 4, 2);
 	mEffShelfBoost = new ShelfBoost(nullptr, nullptr);
+	mEffShifter = new Shifter(nullptr, nullptr, 32, 1, 4, 2);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -222,6 +223,7 @@ vendorName("ndc Plugs")
 	mEffRyanWah->setpreset(1);
 	mEffSequence->setpreset(0);
 	mEffShelfBoost->setpreset(0);
+	mEffShifter->setpreset(0);
 	
 	// originals
 	int i;
@@ -301,6 +303,7 @@ VstPlugin::~VstPlugin()
 	delete mEffRyanWah;
 	delete mEffSequence;
 	delete mEffShelfBoost;
+	delete mEffShifter;
 
 	int i;
 
@@ -396,7 +399,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffRing->processReplacing(outputs, outputs, sampleFrames);
 	//mEffRyanWah->processReplacing(outputs, outputs, sampleFrames);
 	//mEffSequence->processReplacing(outputs, outputs, sampleFrames);
-	mEffShelfBoost->processReplacing(outputs, outputs, sampleFrames);
+	//mEffShelfBoost->processReplacing(outputs, outputs, sampleFrames);
+	mEffShifter->processReplacing(outputs, outputs, sampleFrames);
 
 
 
