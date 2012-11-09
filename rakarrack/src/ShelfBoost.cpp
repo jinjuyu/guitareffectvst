@@ -87,7 +87,31 @@ ShelfBoost::out (float * smpsl, float * smpsr)
 
 };
 
+void ShelfBoost::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
 
+    RB1l->filterout(inputs[0]);
+    if(Pstereo) RB1r->filterout(inputs[1]);
+
+
+    for(i=0; i<PERIOD; i++) {
+        inputs[0][i]*=outvolume*u_gain;
+        if(Pstereo) inputs[1][i]*=outvolume*u_gain;
+    }
+
+    if(!Pstereo) memcpy(inputs[1],inputs[0],sizeof(float)*PERIOD);
+	memcpy(outputs[0],inputs[0],sizeof(float)*PERIOD);
+	memcpy(outputs[1],inputs[1],sizeof(float)*PERIOD);
+
+
+
+
+};
 /*
  * Parameter control
  */

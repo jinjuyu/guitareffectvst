@@ -58,6 +58,7 @@
 #include "Ring.h"
 #include "RyanWah.h"
 #include "Sequence.h"
+#include "ShelfBoost.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -111,6 +112,7 @@ public:
 	Ring *mEffRing;
 	RyanWah *mEffRyanWah;
 	Sequence *mEffSequence;
+	ShelfBoost *mEffShelfBoost;
 
 	///	Processes a block of audio, accumulating.
 	/*!
