@@ -34,6 +34,7 @@ Reverb::Reverb (float * efxoutl_, float * efxoutr_)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
+	PERIOD = 44100;
     inputbuf = new float[PERIOD];
     //filterpars=NULL;
 
@@ -197,6 +198,46 @@ Reverb::out (float * smps_l, float * smps_r)
 };
 
 
+
+void
+Reverb::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+
+	PERIOD = sampleFrames;
+	fPERIOD = sampleFrames;
+    for (i = 0; i < PERIOD; i++) {
+        inputbuf[i] = (inputs[0][i] + inputs[1][i]) * .5f;
+        //Initial delay r
+        if (idelay != NULL) {
+            float tmp = inputbuf[i] + idelay[idelayk] * idelayfb;
+            inputbuf[i] = idelay[idelayk];
+            idelay[idelayk] = tmp;
+            idelayk++;
+            if (idelayk >= idelaylen)
+                idelayk = 0;
+        };
+    };
+
+
+    lpf->filterout (inputbuf);
+    hpf->filterout (inputbuf);
+
+    processmono (0, inputs[0]);	//left
+    processmono (1, inputs[1]);	//right
+
+
+
+    float lvol = rs_coeff * pan * 2.0f;
+    float rvol = rs_coeff * (1.0f - pan) * 2.0f;
+
+    for (int i = 0; i < PERIOD; i++) {
+        outputs[0][i] = inputs[0][i]*lvol;
+        outputs[1][i] = inputs[1][i]*rvol;
+    };
+};
 /*
  * Parameter control
  */

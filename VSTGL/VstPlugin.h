@@ -53,6 +53,7 @@
 #include "Pan.h"
 #include "Phaser.h"
 #include "RBEcho.h"
+#include "Reverb.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -101,6 +102,7 @@ public:
 	Pan *mEffPan;
 	Phaser *mEffPhaser;
 	RBEcho *mEffRBEcho;
+	Reverb *mEffReverb;
 
 	///	Processes a block of audio, accumulating.
 	/*!

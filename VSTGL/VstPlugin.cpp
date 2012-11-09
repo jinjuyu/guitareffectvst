@@ -116,7 +116,8 @@ vendorName("ndc Plugs")
 	mEffPan = new Pan(nullptr, nullptr);
 	mEffPhaser = new Phaser(nullptr, nullptr);
 	mEffRBEcho = new RBEcho(nullptr, nullptr);
-
+	mEffReverb = new Reverb(nullptr, nullptr);
+	
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -211,6 +212,7 @@ vendorName("ndc Plugs")
 	mEffPan->setpreset(0);
 	mEffPhaser->setpreset(0);
 	mEffRBEcho->setpreset(0);
+	mEffReverb->setpreset(0);
 	
 	// originals
 	int i;
@@ -284,6 +286,7 @@ VstPlugin::~VstPlugin()
 	delete mEffPan;
 	delete mEffPhaser;
 	delete mEffRBEcho;
+	delete mEffReverb;
 
 	int i;
 
@@ -373,7 +376,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffOpticalTrem->processReplacing(outputs, outputs, sampleFrames);
 	//mEffPan->processReplacing(outputs, outputs, sampleFrames);
 	//mEffPhaser->processReplacing(outputs, outputs, sampleFrames);
-	mEffRBEcho->processReplacing(outputs, outputs, sampleFrames);
+	//mEffRBEcho->processReplacing(outputs, outputs, sampleFrames);
+	mEffReverb->processReplacing(outputs, outputs, sampleFrames);
 
 
 
