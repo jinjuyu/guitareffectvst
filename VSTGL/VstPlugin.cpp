@@ -62,8 +62,8 @@ tempEvents(0),
 numEvents(0),
 numPendingEvents(0),
 frames(0),
-effectName("VSTGLExample"),
-vendorName("ndc Plugs")
+effectName("guitareffectVST"),
+vendorName("Jinju")
 {
 	// Setup RAKARRACK global vars
 	fPERIOD = 32768.0f;
@@ -129,6 +129,7 @@ vendorName("ndc Plugs")
 	mEffSustainer = new Sustainer(nullptr, nullptr);
 	mEffSynthfilter = new Synthfilter(nullptr, nullptr);
 	mEffValve = new Valve(nullptr, nullptr);
+	mEffVibe = new Vibe(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -236,6 +237,7 @@ vendorName("ndc Plugs")
 	mEffSustainer->setpreset(0);
 	mEffSynthfilter->setpreset(0);
 	mEffValve->setpreset(0);
+	mEffVibe->setpreset(0);
 	
 	// originals
 	int i;
@@ -271,7 +273,7 @@ vendorName("ndc Plugs")
     setNumOutputs(2);
     canProcessReplacing(true);
     isSynth(false);
-    setUniqueID('TmpC');
+    setUniqueID('JinJ');
 
 	//Construct editor here.
 	editor = new ExampleEditor(this);
@@ -322,6 +324,7 @@ VstPlugin::~VstPlugin()
 	delete mEffSustainer;
 	delete mEffSynthfilter;
 	delete mEffValve;
+	delete mEffVibe;
 
 	int i;
 
@@ -424,7 +427,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffStompBox->processReplacing(outputs, outputs, sampleFrames);
 	//mEffSustainer->processReplacing(outputs, outputs, sampleFrames);
 	//mEffSynthfilter->processReplacing(outputs, outputs, sampleFrames);
-	mEffValve->processReplacing(outputs, outputs, sampleFrames);
+	//mEffValve->processReplacing(outputs, outputs, sampleFrames);
+	mEffVibe->processReplacing(outputs, outputs, sampleFrames);
 
 
 	//If there are events remaining in the queue, update their delta values.
