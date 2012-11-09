@@ -26,15 +26,16 @@
 #include <math.h>
 #include "Vocoder.h"
 
-Vocoder::Vocoder (float * efxoutl_, float * efxoutr_, float *auxresampled_,int bands, int DS, int uq, int dq)
+Vocoder::Vocoder (float * efxoutl_, float * efxoutr_, int bands, int DS, int uq, int dq)
 {
-
+	PERIOD = 96000*2;
+	fPERIOD = PERIOD;
     adjust(DS);
 
     VOC_BANDS = bands;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-    auxresampled = auxresampled_;
+    auxresampled = new float[nPERIOD*2];
     //default values
     Ppreset = 0;
     Pvolume = 50;
@@ -93,7 +94,9 @@ Vocoder::Vocoder (float * efxoutl_, float * efxoutr_, float *auxresampled_,int b
 
     vlp->setSR(nSAMPLE_RATE);
     vhp->setSR(nSAMPLE_RATE);
-
+	PERIOD = 44100;
+	fPERIOD = PERIOD;
+	adjust(DS);
     setbands(VOC_BANDS, 200.0f, 4000.0f);
     setpreset (Ppreset);
 
@@ -319,6 +322,119 @@ Vocoder::out (float * smpsl, float * smpsr)
 
 
 };
+
+void
+Vocoder::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i, j;
+
+    float tempgain;
+    float maxgain=0.0;
+    float auxtemp, tmpgain;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	adjust(DS_state);
+
+    if(DS_state != 0) {
+        A_Resample->mono_out(auxresampled,tmpaux,PERIOD,u_up,nPERIOD);
+    } else
+        memcpy(tmpaux,auxresampled,sizeof(float)*nPERIOD);
+
+
+    for (i = 0; i<nPERIOD; i++) {  //apply compression to auxresampled
+        auxtemp = input * tmpaux[i];
+        if(fabs(auxtemp) > fabs(compeak)) compeak = fabs(auxtemp);   //First do peak detection on the signal
+        compeak *= prls;
+        compenv = cbeta * oldcompenv + calpha * compeak;       //Next average into envelope follower
+        oldcompenv = compenv;
+
+        if(compenv > cpthresh) {                              //if envelope of signal exceeds thresh, then compress
+            compg = cpthresh + cpthresh*(compenv - cpthresh)/compenv;
+            cpthresh = cthresh + cratio*(compg - cpthresh);   //cpthresh changes dynamically
+            tmpgain = compg/compenv;
+        } else {
+            tmpgain = 1.0f;
+        }
+
+
+
+        if(compenv < cpthresh) cpthresh = compenv;
+        if(cpthresh < cthresh) cpthresh = cthresh;
+
+        tmpaux[i] = auxtemp * tmpgain;
+
+        tmpaux[i]=vlp->filterout_s(tmpaux[i]);
+        tmpaux[i]=vhp->filterout_s(tmpaux[i]);
+
+    };
+
+
+    //End compression
+
+    auxtemp = 0.0f;
+
+    if(DS_state != 0) {
+        U_Resample->out(smpsl,smpsr,tsmpsl,tsmpsr,PERIOD,u_up);
+    } else {
+        memcpy(tsmpsl,smpsl,sizeof(float)*nPERIOD);
+        memcpy(tsmpsr,smpsr,sizeof(float)*nPERIOD);
+    }
+
+
+    memset(tmpl,0,sizeof(float)*nPERIOD);
+    memset(tmpr,0,sizeof(float)*nPERIOD);
+
+
+
+    for (j = 0; j < VOC_BANDS; j++) {
+
+        for (i = 0; i<nPERIOD; i++) {
+            auxtemp = tmpaux[i];
+
+            if(filterbank[j].speak < gate) filterbank[j].speak = 0.0f;  //gate
+            if(auxtemp>maxgain) maxgain = auxtemp; //vu meter level.
+
+            auxtemp = filterbank[j].aux->filterout_s(auxtemp);
+            if(fabs(auxtemp) > filterbank[j].speak) filterbank[j].speak = fabs(auxtemp);  //Leaky Peak detector
+
+            filterbank[j].speak*=prls;
+
+            filterbank[j].gain = beta * filterbank[j].oldgain + alpha * filterbank[j].speak;
+            filterbank[j].oldgain = filterbank[j].gain;
+
+
+            tempgain = (1.0f-ringworm)*filterbank[j].oldgain+ringworm*auxtemp;
+
+            tmpl[i] +=filterbank[j].l->filterout_s(tsmpsl[i])*tempgain;
+            tmpr[i] +=filterbank[j].r->filterout_s(tsmpsr[i])*tempgain;
+
+        };
+
+
+    };
+
+
+    for (i = 0; i<nPERIOD; i++) {
+        tmpl[i]*=lpanning*level;
+        tmpr[i]*=rpanning*level;
+    };
+
+
+    if(DS_state != 0) {
+        D_Resample->out(tmpl,tmpr,efxoutl,efxoutr,nPERIOD,u_down);
+    } else {
+        memcpy(efxoutl,tmpl,sizeof(float)*nPERIOD);
+        memcpy(efxoutr,tmpr,sizeof(float)*nPERIOD);
+    }
+
+    vulevel = (float)CLAMP(rap2dB(maxgain), -48.0, 15.0);
+
+
+
+};
+
 
 void
 Vocoder::setbands (int numbands, float startfreq, float endfreq)

@@ -234,9 +234,6 @@
     <ClCompile Include="..\rakarrack\src\Vibe.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
-    <ClCompile Include="..\rakarrack\src\Vocoder.cpp">
-      <Filter>RAK</Filter>
-    </ClCompile>
     <ClCompile Include="..\rakarrack\src\Waveshaper.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
@@ -244,6 +241,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\rakarrack\src\DynamicFilter.cpp">
+      <Filter>RAK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\rakarrack\src\Vocoder.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
   </ItemGroup>
