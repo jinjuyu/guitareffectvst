@@ -52,6 +52,7 @@
 #include "OpticalTrem.h"
 #include "Pan.h"
 #include "Phaser.h"
+#include "RBEcho.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -99,6 +100,7 @@ public:
 	Opticaltrem *mEffOpticalTrem;
 	Pan *mEffPan;
 	Phaser *mEffPhaser;
+	RBEcho *mEffRBEcho;
 
 	///	Processes a block of audio, accumulating.
 	/*!

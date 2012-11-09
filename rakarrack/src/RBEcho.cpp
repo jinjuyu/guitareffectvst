@@ -163,7 +163,66 @@ RBEcho::out (float * smpsl, float * smpsr)
 };
 
 
-/*
+void
+RBEcho::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+
+{
+    int i;
+    float ldl, rdl;
+    float avg, ldiff, rdiff, tmp;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+
+    for (i = 0; i < PERIOD; i++) {
+
+        //LowPass Filter
+        ldl = lfeedback * hidamp + oldl * (1.0f - hidamp);
+        rdl = rfeedback * hidamp + oldr * (1.0f - hidamp);
+        oldl = ldl + DENORMAL_GUARD;
+        oldr = rdl + DENORMAL_GUARD;
+
+        ldl = ldelay->delay_simple((ldl + inputs[0][i]), delay, 0, 1, 0);
+        rdl = rdelay->delay_simple((rdl + inputs[1][i]), delay, 0, 1, 0);
+
+
+        if(Preverse) {
+            rvl = ldelay->delay_simple(oldl, delay, 1, 0, 1)*ldelay->envelope();
+            rvr = rdelay->delay_simple(oldr, delay, 1, 0, 1)*rdelay->envelope();
+            ldl = ireverse*ldl + reverse*rvl;
+            rdl = ireverse*rdl + reverse*rvr;
+
+        }
+
+
+        lfeedback = lpanning * fb * ldl;
+        rfeedback = rpanning * fb * rdl;
+
+        if(Pes) {
+            ldl *= cosf(lrcross);
+            rdl *= sinf(lrcross);
+
+            avg = (ldl + rdl) * 0.5f;
+            ldiff = ldl - avg;
+            rdiff = rdl - avg;
+
+            tmp = avg + ldiff * pes;
+            ldl = 0.5 * tmp;
+
+            tmp = avg + rdiff * pes;
+            rdl = 0.5f * tmp;
+
+
+        }
+        outputs[0][i] = (ipingpong*ldl + pingpong *ldelay->delay_simple(0.0f, ltime, 2, 0, 0)) * lpanning;
+        outputs[1][i] = (ipingpong*rdl + pingpong *rdelay->delay_simple(0.0f, rtime, 2, 0, 0)) * rpanning;
+
+    };
+
+};
+			
+			/*
  * Parameter control
  */
 void
