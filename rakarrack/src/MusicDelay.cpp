@@ -197,6 +197,66 @@ MusicDelay::out (float * smpsl, float * smpsr)
 
 };
 
+void
+MusicDelay::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float l1, r1, ldl1, rdl1, l2, r2, ldl2, rdl2;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+
+    for (i = 0; i < PERIOD; i++) {
+        ldl1 = ldelay1[kl1];
+        rdl1 = rdelay1[kr1];
+        l1 = ldl1 * (1.0f - lrcross) + rdl1 * lrcross;
+        r1 = rdl1 * (1.0f - lrcross) + ldl1 * lrcross;
+        ldl1 = l1;
+        rdl1 = r1;
+
+        ldl2 = ldelay2[kl2];
+        rdl2 = rdelay2[kr2];
+        l2 = ldl2 * (1.0f - lrcross) + rdl2 * lrcross;
+        r2 = rdl2 * (1.0f - lrcross) + ldl2 * lrcross;
+        ldl2 = l2;
+        rdl2 = r2;
+
+        ldl1 = inputs[0][i] * gain1 * panning1 - ldl1 * fb1;
+        rdl1 = inputs[1][i] * gain1 * (1.0f - panning1) - rdl1 * fb1;
+
+        ldl2 = inputs[0][i] * gain2 * panning2 - ldl2 * fb2;
+        rdl2 = inputs[1][i] * gain2 * (1.0f - panning2) - rdl2 * fb2;
+
+        outputs[0][i] = (ldl1 + ldl2) * 2.0f;
+        outputs[1][i] = (rdl1 + rdl2) * 2.0f;
+
+
+
+        //LowPass Filter
+        ldelay1[kl1] = ldl1 = ldl1 * hidamp + oldl1 * (1.0f - hidamp);
+        rdelay1[kr1] = rdl1 = rdl1 * hidamp + oldr1 * (1.0f - hidamp);
+        oldl1 = ldl1;
+        oldr1 = rdl1;
+
+        ldelay2[kl2] = ldl2 = ldl2 * hidamp + oldl2 * (1.0f - hidamp);
+        rdelay2[kr2] = rdl2 = rdl2 * hidamp + oldr2 * (1.0f - hidamp);
+        oldl2 = ldl2;
+        oldr2 = rdl2;
+
+        if (++kl1 >= dl1)
+            kl1 = 0;
+        if (++kr1 >= dr1)
+            kr1 = 0;
+
+        if (++kl2 >= dl2)
+            kl2 = 0;
+        if (++kr2 >= dr2)
+            kr2 = 0;
+
+    };
+
+};
 
 /*
  * Parameter control
