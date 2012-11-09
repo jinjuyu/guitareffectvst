@@ -62,6 +62,7 @@
 #include "Shifter.h"
 #include "Shuffle.h"
 #include "StereoHarm.h"
+#include "StompBox.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -119,6 +120,7 @@ public:
 	Shifter *mEffShifter;
 	Shuffle *mEffShuffle;
 	StereoHarm *mEffStereoHarm;
+	StompBox *mEffStompBox;
 
 	///	Processes a block of audio, accumulating.
 	/*!

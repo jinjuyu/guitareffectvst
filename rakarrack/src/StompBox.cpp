@@ -337,7 +337,240 @@ StompBox::out (float * smpsl, float * smpsr)
 
 
 };
+			
 
+void
+StompBox:: processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+
+    float hfilter;  //temporary variables
+    float mfilter;
+    float lfilter;
+    float tempr;
+    float templ;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+    switch (Pmode) {
+    case 0:          //Odie
+
+        lpre2->filterout(inputs[0]);
+        rpre2->filterout(inputs[1]);
+        rwshape->waveshapesmps (PERIOD, inputs[0], 28, 20, 1);  //Valve2
+        lwshape->waveshapesmps (PERIOD, inputs[1], 28, 20, 1);
+        ranti->filterout(inputs[1]);
+        lanti->filterout(inputs[0]);
+        lpre1->filterout(inputs[0]);
+        rpre1->filterout(inputs[1]);
+        rwshape2->waveshapesmps (PERIOD, inputs[0], 28, Pgain, 1);  //Valve2
+        lwshape2->waveshapesmps (PERIOD, inputs[1], 28, Pgain, 1);
+
+        lpost->filterout(inputs[0]);
+        rpost->filterout(inputs[1]);
+
+        for (i = 0; i<PERIOD; i++) {
+            //left channel
+            lfilter =  ltonelw->filterout_s(inputs[0][i]);
+            mfilter =  ltonemd->filterout_s(inputs[0][i]);
+            hfilter =  ltonehg->filterout_s(inputs[0][i]);
+
+            outputs[0][i] = 0.5f * volume * (inputs[0][i] + lowb*lfilter + midb*mfilter + highb*hfilter);
+
+            //Right channel
+            lfilter =  rtonelw->filterout_s(inputs[1][i]);
+            mfilter =  rtonemd->filterout_s(inputs[1][i]);
+            hfilter =  rtonehg->filterout_s(inputs[1][i]);
+
+            outputs[1][i] = 0.5f * volume * (inputs[1][i] + lowb*lfilter + midb*mfilter + highb*hfilter);
+
+        }
+
+        break;
+
+    case 1:  //Grunge
+    case 5:  //Death Metal
+    case 6:  //Metal Zone
+        linput->filterout(inputs[0]);
+        rinput->filterout(inputs[1]);
+
+        for (i = 0; i<PERIOD; i++) {
+            templ = inputs[0][i] * (gain * pgain + 0.01f);
+            tempr = inputs[1][i] * (gain * pgain + 0.01f);
+            inputs[0][i] += lpre1->filterout_s(templ);
+            inputs[1][i] += rpre1->filterout_s(tempr);
+        }
+        rwshape->waveshapesmps (PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (PERIOD, inputs[1], 24, 1, 1);
+
+        ranti->filterout(inputs[1]);
+        lanti->filterout(inputs[0]);
+
+        rwshape2->waveshapesmps (PERIOD, inputs[0], 23, Pgain, 1);  // hard comp
+        lwshape2->waveshapesmps (PERIOD, inputs[1], 23, Pgain, 1);
+
+
+        for (i = 0; i<PERIOD; i++) {
+            inputs[0][i] = inputs[0][i] + RGP2 * lpre2->filterout_s(inputs[0][i]);
+            inputs[1][i] = inputs[1][i] + RGP2 * rpre2->filterout_s(inputs[1][i]);
+            inputs[0][i] = inputs[0][i] + RGPST * lpost->filterout_s(inputs[0][i]);
+            inputs[1][i] = inputs[1][i] + RGPST * rpost->filterout_s(inputs[1][i]);
+
+            //left channel
+            lfilter =  ltonelw->filterout_s(inputs[0][i]);
+            mfilter =  ltonemd->filterout_s(inputs[0][i]);
+            hfilter =  ltonehg->filterout_s(inputs[0][i]);
+
+            outputs[0][i] = 0.1f * volume * (inputs[0][i] + lowb*lfilter + midb*mfilter + highb*hfilter);
+
+            //Right channel
+            lfilter =  rtonelw->filterout_s(inputs[1][i]);
+            mfilter =  rtonemd->filterout_s(inputs[1][i]);
+            hfilter =  rtonehg->filterout_s(inputs[1][i]);
+
+            outputs[1][i] = 0.1f * volume * (inputs[1][i] + lowb*lfilter + midb*mfilter + highb*hfilter);
+
+        }
+
+
+
+        break;
+    case 2:  //Rat
+    case 3:  //Fat Cat  //Pre gain & filter freqs the only difference
+
+        linput->filterout(inputs[0]);
+        rinput->filterout(inputs[1]);
+
+        for (i = 0; i<PERIOD; i++) {
+            templ = inputs[0][i];
+            tempr = inputs[1][i];
+            inputs[0][i] += lpre1->filterout_s(pre1gain*gain*templ);
+            inputs[1][i] += rpre1->filterout_s(pre1gain*gain*tempr);  //Low freq gain stage
+            inputs[0][i] += lpre2->filterout_s(pre2gain*gain*templ);
+            inputs[1][i] += rpre2->filterout_s(pre2gain*gain*tempr); //High freq gain stage
+
+        }
+
+
+        rwshape->waveshapesmps (PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (PERIOD, inputs[1], 24, 1, 1);
+
+        ranti->filterout(inputs[1]);
+        lanti->filterout(inputs[0]);
+
+        rwshape2->waveshapesmps (PERIOD, inputs[0], 23, 1, 0);  // hard comp
+        lwshape2->waveshapesmps (PERIOD, inputs[1], 23, 1, 0);
+
+
+        for (i = 0; i<PERIOD; i++) {
+            //left channel
+            lfilter =  ltonelw->filterout_s(inputs[0][i]);
+            mfilter =  ltonemd->filterout_s(inputs[0][i]);
+
+            outputs[0][i] = 0.5f * ltonehg->filterout_s(volume * (inputs[0][i] + lowb*lfilter + midb*mfilter));
+
+            //Right channel
+            lfilter =  rtonelw->filterout_s(inputs[1][i]);
+            mfilter =  rtonemd->filterout_s(inputs[1][i]);
+
+            outputs[1][i] = 0.5f * rtonehg->filterout_s(volume * (inputs[1][i] + lowb*lfilter + midb*mfilter));
+
+        }
+
+        break;
+    case 4:  //Dist+
+
+        linput->filterout(inputs[0]);
+        rinput->filterout(inputs[1]);
+
+        for (i = 0; i<PERIOD; i++) {
+            templ = inputs[0][i];
+            tempr = inputs[1][i];
+            inputs[0][i] += lpre1->filterout_s(pre1gain*gain*templ);
+            inputs[1][i] += rpre1->filterout_s(pre1gain*gain*tempr);  //Low freq gain stage
+        }
+
+
+        rwshape->waveshapesmps (PERIOD, inputs[0], 24, 1, 1);  // Op amp limiting
+        lwshape->waveshapesmps (PERIOD, inputs[1], 24, 1, 1);
+
+        ranti->filterout(inputs[1]);
+        lanti->filterout(inputs[0]);
+
+        rwshape2->waveshapesmps (PERIOD, inputs[0], 29, 1, 0);  // diode limit
+        lwshape2->waveshapesmps (PERIOD, inputs[1], 29, 1, 0);
+
+
+        for (i = 0; i<PERIOD; i++) {
+            //left channel
+            lfilter =  ltonelw->filterout_s(inputs[0][i]);
+            mfilter =  ltonemd->filterout_s(inputs[0][i]);
+
+            outputs[0][i] = 0.5f * ltonehg->filterout_s(volume * (inputs[0][i] + lowb*lfilter + midb*mfilter));
+
+            //Right channel
+            lfilter =  rtonelw->filterout_s(inputs[1][i]);
+            mfilter =  rtonemd->filterout_s(inputs[1][i]);
+
+            outputs[1][i] = 0.5f * rtonehg->filterout_s(volume * (inputs[1][i] + lowb*lfilter + midb*mfilter));
+
+        }
+
+        break;
+
+    case 7:          //Classic Fuzz
+
+        lpre1->filterout(inputs[0]);
+        rpre1->filterout(inputs[1]);
+        linput->filterout(inputs[0]);
+        rinput->filterout(inputs[1]);
+        rwshape->waveshapesmps (PERIOD, inputs[1], 19, 25, 1);  //compress
+        lwshape->waveshapesmps (PERIOD, inputs[0], 19, 25, 1);
+
+        for (i = 0; i<PERIOD; i++) {
+
+            //left channel
+            mfilter =  ltonemd->filterout_s(inputs[0][i]);
+
+            templ = lpost->filterout_s(fabs(inputs[0][i]));
+            tempr = rpost->filterout_s(fabs(inputs[1][i]));   //dynamic symmetry
+
+            inputs[0][i] += lowb*templ + midb*mfilter;      //In this case, lowb control tweaks symmetry
+
+            //Right channel
+            mfilter =  rtonemd->filterout_s(inputs[1][i]);
+            inputs[1][i] += lowb*tempr + midb*mfilter;
+
+        }
+
+        ranti->filterout(inputs[1]);
+        lanti->filterout(inputs[0]);
+        rwshape2->waveshapesmps (PERIOD, inputs[1], 25, Pgain, 1);  //JFET
+        lwshape2->waveshapesmps (PERIOD, inputs[0], 25, Pgain, 1);
+        lpre2->filterout(inputs[0]);
+        rpre2->filterout(inputs[1]);
+
+        for (i = 0; i<PERIOD; i++) {
+            //left channel
+            lfilter =  ltonelw->filterout_s(inputs[0][i]);
+            hfilter =  ltonehg->filterout_s(inputs[0][i]);
+
+            outputs[0][i] = volume * ((1.0f - highb)*lfilter + highb*hfilter);  //classic BMP tone stack
+
+            //Right channel
+            lfilter =  rtonelw->filterout_s(inputs[1][i]);
+            hfilter =  rtonehg->filterout_s(inputs[1][i]);
+
+            outputs[1][i] = volume * ((1.0f - highb)*lfilter + highb*hfilter);
+
+        }
+        break;
+    }
+
+
+
+};
 
 /*
  * Parameter control

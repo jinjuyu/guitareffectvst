@@ -125,6 +125,7 @@ vendorName("ndc Plugs")
 	mEffShifter = new Shifter(nullptr, nullptr, 32, 1, 4, 2);
 	mEffShuffle = new Shuffle(nullptr, nullptr);
 	mEffStereoHarm = new StereoHarm(nullptr, nullptr, 32, 1, 4, 2);
+	mEffStompBox = new StompBox(nullptr, nullptr);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -228,6 +229,7 @@ vendorName("ndc Plugs")
 	mEffShifter->setpreset(0);
 	mEffShuffle->setpreset(0);
 	mEffStereoHarm->setpreset(0);
+	mEffStompBox->setpreset(0);
 	
 	// originals
 	int i;
@@ -310,6 +312,7 @@ VstPlugin::~VstPlugin()
 	delete mEffShifter;
 	delete mEffShuffle;
 	delete mEffStereoHarm;
+	delete mEffStompBox;
 
 	int i;
 
@@ -408,7 +411,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffShelfBoost->processReplacing(outputs, outputs, sampleFrames);
 	//mEffShifter->processReplacing(outputs, outputs, sampleFrames);
 	//mEffShuffle->processReplacing(outputs, outputs, sampleFrames);
-	mEffStereoHarm->processReplacing(outputs, outputs, sampleFrames);
+	//mEffStereoHarm->processReplacing(outputs, outputs, sampleFrames);
+	mEffStompBox->processReplacing(outputs, outputs, sampleFrames);
 
 
 	//If there are events remaining in the queue, update their delta values.
