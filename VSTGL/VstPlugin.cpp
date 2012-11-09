@@ -108,6 +108,7 @@ vendorName("ndc Plugs")
 	mEffGate = new Gate(nullptr, nullptr);
 	mEffHarmonizer = new Harmonizer(nullptr, nullptr, 32, 1, 4, 2);
 	mEffInfinity = new Infinity(nullptr, nullptr);
+	mEffLooper = new Looper(nullptr, nullptr, 32);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -194,6 +195,7 @@ vendorName("ndc Plugs")
 	mEffGate->Gate_Change_Preset(2);
 	mEffHarmonizer->setpreset(2);
 	mEffInfinity->setpreset(5);
+	mEffLooper->setpreset(0);
 	// originals
 	int i;
 
@@ -258,6 +260,7 @@ VstPlugin::~VstPlugin()
 	delete mEffGate;
 	delete mEffHarmonizer;
 	delete mEffInfinity;
+	delete mEffLooper;
 	int i;
 
 	//Delete event queue.
@@ -338,7 +341,8 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffExpander->processReplacing(outputs, outputs, sampleFrames);
 	//mEffGate->processReplacing(outputs, outputs, sampleFrames);
 	//mEffHarmonizer->processReplacing(outputs, outputs, sampleFrames);
-	mEffInfinity->processReplacing(outputs, outputs, sampleFrames);
+	//mEffInfinity->processReplacing(outputs, outputs, sampleFrames);
+	mEffLooper->processReplacing(outputs, outputs, sampleFrames);
 
 
 

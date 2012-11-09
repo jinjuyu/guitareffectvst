@@ -49,6 +49,7 @@ Looper::Looper (float * efxoutl_, float * efxoutr_, float size)
     settempo(120);
     Pbar = 2;
     setbar(2);
+	PERIOD = 44100;
     ticker.cleanup();
 
     Srate_Attack_Coeff = 1.0f / (fSAMPLE_RATE * ATTACK);
@@ -203,6 +204,86 @@ Looper::out (float * smpsl, float * smpsr)
 	delete[] ticktock;
 };
 
+void
+Looper::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+    int i;
+    float rswell, lswell;
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+
+    float *ticktock = new float[PERIOD];
+    //if((Pmetro) && (Pplay) && (!Pstop)) ticker.metronomeout(ticktock);
+
+    for (i = 0; i < PERIOD; i++) {
+
+        if((Pplay) && (!Pstop)) {
+            if(Precord) {
+                if((Prec1) && (PT1)) {
+                    ldelay[kl] += pregain1*inputs[0][i];
+                    rdelay[kl] += pregain1*inputs[1][i];
+                }
+                if((Prec2) && (PT2)) {
+                    t2ldelay[kl2] += pregain2*inputs[0][i];
+                    t2rdelay[kl2] += pregain2*inputs[1][i];
+                }
+
+            }
+
+
+            if(!Pclear) {
+                if (++kl >= dl)
+                    kl = 0;
+                rvkl = dl - 1 - kl;
+                if (++kl2 >= dl2)
+                    kl2 = 0;
+                rvkl2 = dl2 - 1 - kl2;
+                if((Plink) || (PT1)) timeposition(kl);
+                else timeposition(kl2);
+
+
+            }
+
+            if(Preverse) {
+
+                lswell =	(float)(abs(kl - rvkl)) * Srate_Attack_Coeff;
+                if (lswell <= PI) {
+                    lswell = 0.5f * (1.0f - cosf(lswell));  //Clickless transition
+                    outputs[0][i] = (fade1 * ldelay[rvkl] + fade2 * t2ldelay[rvkl2]) * lswell;   //Volume ducking near zero crossing.
+                } else {
+                    outputs[0][i] = fade1 * ldelay[rvkl] + fade2 * t2ldelay[rvkl2];
+                }
+
+                rswell = 	(float)(abs(kl - rvkl)) * Srate_Attack_Coeff;
+                if (rswell <= PI) {
+                    rswell = 0.5f * (1.0f - cosf(rswell));   //Clickless transition
+                    outputs[1][i] = ( fade1 * rdelay[rvkl] + fade2 * t2rdelay[rvkl2] )* rswell;  //Volume ducking near zero crossing.
+                } else {
+                    outputs[1][i] = fade1 * rdelay[rvkl] + fade2 * t2rdelay[rvkl2];
+                }
+
+            } else {
+
+                outputs[0][i]= fade1*ldelay[kl] + fade2*t2ldelay[kl2];
+                outputs[1][i]= fade1*rdelay[kl] + fade2*t2rdelay[kl2];
+
+            }
+
+        } else {
+            outputs[0][i]= 0.0f;
+            outputs[1][i]= 0.0f;
+        }
+
+        /*if((Pmetro) && (Pplay) && (!Pstop)) {
+            outputs[0][i] += ticktock[i]*mvol;  //if you want to hear the metronome in Looper
+            outputs[1][i] += ticktock[i]*mvol;
+        }*/
+    };
+
+	delete[] ticktock;
+};
 
 /*
  * Parameter control

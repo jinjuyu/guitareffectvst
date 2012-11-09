@@ -48,7 +48,9 @@ public:
     int looper_qua;
     int Ppreset;
     int progstate[6];
-
+			void processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames);
     void getstate ();
 
     float outvolume;
