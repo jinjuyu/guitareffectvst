@@ -30,7 +30,7 @@ Reverbtron::Reverbtron (float * efxoutl_, float * efxoutr_,int DS, int uq, int d
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-
+	PERIOD = 96000*2;
     //default values
     Ppreset = 0;
     Pvolume = 50;
@@ -45,9 +45,10 @@ Reverbtron::Reverbtron (float * efxoutl_, float * efxoutr_,int DS, int uq, int d
     fb = 0.0f;
     feedback = 0.0f;
     maxtime = 0.0f;
-    adjust(DS);
     templ = (float *) malloc (sizeof (float) * PERIOD);
     tempr = (float *) malloc (sizeof (float) * PERIOD);
+	PERIOD = 44100;
+	adjust(DS);
 
     hrtf_size = nSAMPLE_RATE/2;
     maxx_size = (int) (nfSAMPLE_RATE * convlength);  //just to get the max memory allocated
@@ -210,6 +211,119 @@ Reverbtron::out (float * smpsl, float * smpsr)
 
 };
 
+
+
+void
+Reverbtron::processReplacing (float **inputs,
+								float **outputs,
+								int sampleFrames)
+{
+	PERIOD = sampleFrames;
+	fPERIOD = PERIOD;
+	adjust(DS_state);
+    int i, j, xindex, hindex;
+    float l,lyn, hyn;
+    float ldiff,rdiff;
+    int length = Plength;
+    hlength = Pdiff;
+    int doffset;
+	float *inputs2[2];
+	inputs2[0] = new float[nPERIOD+100];
+	inputs2[1] = new float[nPERIOD+100];
+    if(DS_state != 0) {
+        memcpy(templ, inputs[0],sizeof(float)*PERIOD);
+        memcpy(tempr, inputs[1],sizeof(float)*PERIOD);
+        U_Resample->out(templ,tempr,inputs2[0],inputs2[1],PERIOD,u_up);
+    }
+
+
+    for (i = 0; i < nPERIOD; i++) {
+
+        l = 0.5f*(inputs2[0][i] + inputs2[1][i]);
+        oldl = l * hidamp + oldl * (alpha_hidamp);  //apply damping while I'm in the loop
+        if(Prv) {
+            oldl = 0.5f*oldl - inputs2[0][i];
+        }
+
+        lxn[offset] = oldl;
+
+        //Convolve
+        lyn = 0.0f;
+        xindex = offset;
+
+        for (j =0; j<length; j++) {
+            xindex = offset + time[j];
+            if(xindex>=maxx_size) xindex -= maxx_size;
+            lyn += lxn[xindex] * data[j];		//this is all of the magic
+        }
+
+        hrtf[hoffset] = lyn;
+
+        if(Pdiff > 0) {
+            //Convolve again with approximated hrtf
+            hyn = 0.0f;
+            hindex = hoffset;
+
+            for (j =0; j<hlength; j++) {
+                hindex = hoffset + rndtime[j];
+                if(hindex>=hrtf_size) hindex -= hrtf_size;
+                hyn += hrtf[hindex] * rnddata[j];		//more magic
+            }
+            lyn = hyn + (1.0f - diffusion)*lyn;
+        }
+
+        if(Pes) { // just so I have the code to get started
+
+            ldiff = lyn;
+            rdiff = imdelay[imctr];
+
+            ldiff = lpfl->filterout_s(ldiff);
+            rdiff = lpfr->filterout_s(rdiff);
+
+            imdelay[imctr] = decay*ldiff;
+            imctr--;
+            if (imctr<0) imctr = roomsize;
+
+            templ[i] = (lyn + ldiff ) * levpanl;
+            tempr[i] = (lyn + rdiff ) * levpanr;
+
+            feedback = fb*rdiff*decay;
+
+        } else {
+            feedback = fb * lyn;
+            templ[i] = lyn * levpanl;
+            tempr[i] = lyn * levpanr;
+
+        }
+
+        offset--;
+        if (offset<0) offset = maxx_size;
+
+        doffset = (offset + roomsize);
+        if (doffset>maxx_size) doffset -= maxx_size;
+
+        hoffset--;
+        if (hoffset<0) hoffset = hrtf_size;
+
+        lxn[doffset] += feedback;
+
+        xindex = offset + roomsize;
+
+    };
+
+    if(DS_state != 0) {
+        D_Resample->out(templ,tempr,outputs[0],outputs[1],nPERIOD,u_down);
+
+    } else {
+        memcpy(outputs[0], templ,sizeof(float)*PERIOD);
+        memcpy(outputs[1], tempr,sizeof(float)*PERIOD);
+    }
+
+	delete[] inputs2[0];
+	delete[] inputs2[1];
+
+
+};
 
 /*
  * Parameter control
