@@ -24,151 +24,7 @@
 #include "ExampleEditor.h"
 #include <string>
 using namespace std;
-//----------------------------------------------------------------------------
-ExampleEditor::ExampleEditor(AudioEffect *effect):
-VSTGLEditor(effect, Antialias4x),
-Timer(30), //30ms == ~30fps?
-thing(0.0f)
-{
-	//Set the opengl context's size - This must be called here!
-	setRect(0, 0, 900, 650);
-}
 
-//----------------------------------------------------------------------------
-ExampleEditor::~ExampleEditor()
-{
-	delete mGUI;
-}
-
-//----------------------------------------------------------------------------
-void ExampleEditor::guiOpen()
-{
-	glEnable(GL_TEXTURE_2D);
-	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-
-
-	//Setup OpenGL stuff.
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-	glClearDepth(1.0f);
-	glDisable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
-	
-
-	glViewport(0, 0, getWidth(), getHeight());
-	/*
-    //Set viewing projection.
-    glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	gluPerspective(45.0f,
-				   (GLfloat)getWidth()/(GLfloat)getHeight(),
-				   0.1f,
-				   100.0f);
-
-    //Position viewer.
-    glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();*/
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(0.0, (double)getWidth(), (double)getHeight(), 0.0, 0.0, 100.0);
-	glMatrixMode(GL_MODELVIEW);
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-	glClearDepth(0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-    glDisable(GL_DEPTH_TEST);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_LINE_SMOOTH);
-	glLineWidth(2.0f);
-
-
-	mGUI = new GLGUI(m_hInstance);
-	mGUI->init();
-	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
-	mGUI->SetSliderVal(mSlider, 50);
-	mGUI->SetSliderCallback(mSlider, &myCB);
-	start();
-}
-
-//----------------------------------------------------------------------------
-void ExampleEditor::guiClose()
-{
-	mGUI->cleanup();
-	//Stop the timer.
-	stop();
-}
-
-//----------------------------------------------------------------------------
-void ExampleEditor::draw()
-{
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
-	glClearDepth(0.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-
-	QuadOption opQ(0,0,100,100, 0, 128, 128,255);
-	mGUI->DrawQuad(opQ);
-	TextOption op(0,0,100,100,0,0,255,255);
-	mGUI->Print(op, "1234!@#$asd23");
-
-	QuadOptionBorder opQ2(0,100,100,100, 0, 128, 128,255, 0,0,0,255);
-	mGUI->DrawQuadBorder(opQ2);
-	TextOption op2(0,100,100,100, 0,0,255,255);
-	mGUI->Print2(op2, "AAAAAAAAAAAA");
-
-
-	mGUI->DrawElements();
-	/*glBegin(GL_QUADS);
-	glColor4ub(0,0,255,255);
-	glTexCoord2f(0.0f, 0.0f); glVertex2i(0,   0);
-	glTexCoord2f(0.0f, 1.0f); glVertex2i(0,   256);
-	glTexCoord2f(1.0f, 1.0f); glVertex2i(256, 256);
-	glTexCoord2f(1.0f, 0.0f); glVertex2i(256, 0);
-	glEnd();*/
-	/*
-	glTranslatef(0.0f, 0.0f, -6.0f);
-	glRotatef(thing, 1.0f, 1.0f, 1.0f);
-	thing += 2.0f;
-
-	glBegin(GL_TRIANGLES);
-		glColor3f(1.0f,0.0f,0.0f);
-		glVertex3f( 0.0f, 1.0f, 0.0f);
-		glColor3f(0.0f,1.0f,0.0f);
-		glVertex3f(-1.0f,-1.0f, 1.0f);
-		glColor3f(0.0f,0.0f,1.0f);
-		glVertex3f( 1.0f,-1.0f, 1.0f);
-
-		glColor3f(1.0f,0.0f,0.0f);
-		glVertex3f( 0.0f, 1.0f, 0.0f);
-		glColor3f(0.0f,0.0f,1.0f);
-		glVertex3f( 1.0f,-1.0f, 1.0f);
-		glColor3f(0.0f,1.0f,0.0f);
-		glVertex3f( 1.0f,-1.0f, -1.0f);
-
-		glColor3f(1.0f,0.0f,0.0f);
-		glVertex3f( 0.0f, 1.0f, 0.0f);
-		glColor3f(0.0f,1.0f,0.0f);
-		glVertex3f( 1.0f,-1.0f, -1.0f);
-		glColor3f(0.0f,0.0f,1.0f);
-		glVertex3f(-1.0f,-1.0f, -1.0f);
-
-		glColor3f(1.0f,0.0f,0.0f);
-		glVertex3f( 0.0f, 1.0f, 0.0f);
-		glColor3f(0.0f,0.0f,1.0f);
-		glVertex3f(-1.0f,-1.0f,-1.0f);
-		glColor3f(0.0f,1.0f,0.0f);
-		glVertex3f(-1.0f,-1.0f, 1.0f);
-	glEnd();
-	*/
-}
-
-//----------------------------------------------------------------------------
-void ExampleEditor::timerCallback()
-{
-	refreshGraphics();
-}
 //----------------------------------------------------------------------------
 void GLGUI::init()
 {
@@ -401,6 +257,154 @@ void GLGUI::DrawQuadBorder(QuadOptionBorder &op, int borderThick)
 	glEnd();
 }
 //-------------
+
+//----------------------------------------------------------------------------
+ExampleEditor::ExampleEditor(AudioEffect *effect):
+VSTGLEditor(effect, Antialias4x),
+Timer(30), //30ms == ~30fps?
+thing(0.0f)
+{
+	//Set the opengl context's size - This must be called here!
+	setRect(0, 0, 900, 650);
+}
+
+//----------------------------------------------------------------------------
+ExampleEditor::~ExampleEditor()
+{
+	delete mGUI;
+}
+
+//----------------------------------------------------------------------------
+void ExampleEditor::guiOpen()
+{
+	glEnable(GL_TEXTURE_2D);
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+
+	//Setup OpenGL stuff.
+	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	glClearDepth(1.0f);
+	glDisable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	
+
+	glViewport(0, 0, getWidth(), getHeight());
+	/*
+    //Set viewing projection.
+    glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluPerspective(45.0f,
+				   (GLfloat)getWidth()/(GLfloat)getHeight(),
+				   0.1f,
+				   100.0f);
+
+    //Position viewer.
+    glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();*/
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0.0, (double)getWidth(), (double)getHeight(), 0.0, 0.0, 100.0);
+	glMatrixMode(GL_MODELVIEW);
+	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	glClearDepth(0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+    glDisable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_LINE_SMOOTH);
+	glLineWidth(2.0f);
+
+
+	mGUI = new GLGUI(m_hInstance);
+	mGUI->init();
+	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
+	mGUI->SetSliderVal(mSlider, 50);
+	mGUI->SetSliderCallback(mSlider, &myCB);
+	int button = mGUI->NewButton(0, 400, 100, 30, "Test", &myButtonCB);
+	start();
+}
+
+//----------------------------------------------------------------------------
+void ExampleEditor::guiClose()
+{
+	mGUI->cleanup();
+	//Stop the timer.
+	stop();
+}
+
+//----------------------------------------------------------------------------
+void ExampleEditor::draw()
+{
+	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	glClearDepth(0.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+
+	QuadOption opQ(0,0,100,100, 0, 128, 128,255);
+	mGUI->DrawQuad(opQ);
+	TextOption op(0,0,100,100,0,0,255,255);
+	mGUI->Print(op, "1234!@#$asd23");
+
+	QuadOptionBorder opQ2(0,100,100,100, 0, 128, 128,255, 0,0,0,255);
+	mGUI->DrawQuadBorder(opQ2);
+	TextOption op2(0,100,100,100, 0,0,255,255);
+	mGUI->Print2(op2, "AAAAAAAAAAAA");
+
+
+	mGUI->DrawElements();
+	/*glBegin(GL_QUADS);
+	glColor4ub(0,0,255,255);
+	glTexCoord2f(0.0f, 0.0f); glVertex2i(0,   0);
+	glTexCoord2f(0.0f, 1.0f); glVertex2i(0,   256);
+	glTexCoord2f(1.0f, 1.0f); glVertex2i(256, 256);
+	glTexCoord2f(1.0f, 0.0f); glVertex2i(256, 0);
+	glEnd();*/
+	/*
+	glTranslatef(0.0f, 0.0f, -6.0f);
+	glRotatef(thing, 1.0f, 1.0f, 1.0f);
+	thing += 2.0f;
+
+	glBegin(GL_TRIANGLES);
+		glColor3f(1.0f,0.0f,0.0f);
+		glVertex3f( 0.0f, 1.0f, 0.0f);
+		glColor3f(0.0f,1.0f,0.0f);
+		glVertex3f(-1.0f,-1.0f, 1.0f);
+		glColor3f(0.0f,0.0f,1.0f);
+		glVertex3f( 1.0f,-1.0f, 1.0f);
+
+		glColor3f(1.0f,0.0f,0.0f);
+		glVertex3f( 0.0f, 1.0f, 0.0f);
+		glColor3f(0.0f,0.0f,1.0f);
+		glVertex3f( 1.0f,-1.0f, 1.0f);
+		glColor3f(0.0f,1.0f,0.0f);
+		glVertex3f( 1.0f,-1.0f, -1.0f);
+
+		glColor3f(1.0f,0.0f,0.0f);
+		glVertex3f( 0.0f, 1.0f, 0.0f);
+		glColor3f(0.0f,1.0f,0.0f);
+		glVertex3f( 1.0f,-1.0f, -1.0f);
+		glColor3f(0.0f,0.0f,1.0f);
+		glVertex3f(-1.0f,-1.0f, -1.0f);
+
+		glColor3f(1.0f,0.0f,0.0f);
+		glVertex3f( 0.0f, 1.0f, 0.0f);
+		glColor3f(0.0f,0.0f,1.0f);
+		glVertex3f(-1.0f,-1.0f,-1.0f);
+		glColor3f(0.0f,1.0f,0.0f);
+		glVertex3f(-1.0f,-1.0f, 1.0f);
+	glEnd();
+	*/
+}
+
+//----------------------------------------------------------------------------
+void ExampleEditor::timerCallback()
+{
+	refreshGraphics();
+}
+
 GUIElement::GUIElement(int handle, GLGUI *gui)
 	:mGUI(gui), mHandle(handle)
 {
@@ -436,6 +440,13 @@ SetSliderCallback(int handle, SliderCallback *cb)
 		}
 		break;
 	}
+}
+int GLGUI::NewButton(int x, int y, int w, int h, string label, ButtonCallback *cb)
+{
+	int handle = GetNewHandle();
+	Button *bu = new Button(handle, this, x,y,w,h,label);
+	bu->SetCallback(cb);
+	return handle;
 }
 //------
 bool InRect(int x,int y,int w,int h,int x2,int y2)

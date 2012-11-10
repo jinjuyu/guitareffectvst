@@ -97,6 +97,16 @@ public:
 	{
 	}
 };
+class ButtonCallback
+{
+public:
+	ButtonCallback()
+	{
+	}
+	virtual void OnClick()
+	{
+	}
+};
 class GLGUI
 {
 public:
@@ -125,6 +135,7 @@ public:
 	int NewSlider(int x, int y, int w, int min_, int max_);
 	void SetSliderVal(int handle, int val);
 	void SetSliderCallback(int handle, SliderCallback *cb);
+	int NewButton(int x, int y, int w, int h, string label, ButtonCallback *cb);
 	void DeleteGUIElement(int handle)
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
@@ -270,6 +281,45 @@ public:
 	int curVal;
 };
 
+
+class Button : public GUIElement
+{
+public:
+	Button(int handle, GLGUI* gui, int x, int y, int w, int h, string label)
+		:GUIElement(handle, gui), 
+		x(x),y(y),w(w),h(h), mLabel(label),
+		top(x,y,w,h, 0,0,0,255),
+		button(x,y,w,h, 255,255,255,255, 0,0,0,255)
+
+	{
+		mCB = nullptr;
+	}
+	string mLabel;
+	ButtonCallback *mCB;
+	void SetCallback(ButtonCallback *cb)
+	{
+		mCB = cb;
+	}
+
+	void Draw()
+	{
+		mGUI->DrawQuadBorder(button);
+		mGUI->Print(top, "%s", mLabel.c_str());
+	}
+	void OnMouseDown(int button, int x_, int y_)
+	{
+		if(button == 1 && InRect(x,y,w,h,x_,y_))
+		{
+			if(mCB) mCB->OnClick();
+		}
+	}
+	TextOption top;
+	QuadOptionBorder button;
+
+	int x,y,w,h;
+};
+
+
 class MySliderCallback : public SliderCallback
 {
 public:
@@ -282,6 +332,18 @@ public:
 		
 	}
 };
+class MyButtonCallback : public ButtonCallback
+{
+public:
+	MyButtonCallback()
+		:ButtonCallback()
+	{
+	}
+	void OnClick()
+	{
+		MessageBox(NULL, "", "", MB_OK);
+	}
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -291,6 +353,7 @@ class ExampleEditor : public VSTGLEditor,
 	///	Destructor.
 	~ExampleEditor();
 	MySliderCallback myCB;
+	MyButtonCallback myButtonCB;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.
