@@ -87,6 +87,16 @@ public:
 	GLGUI *mGUI;
 	int mHandle;
 };
+class SliderCallback
+{
+public:
+	SliderCallback()
+	{
+	}
+	virtual void SetVal(int val)
+	{
+	}
+};
 class GLGUI
 {
 public:
@@ -113,6 +123,8 @@ public:
 		return result;
 	}
 	int NewSlider(int x, int y, int w, int min_, int max_);
+	void SetSliderVal(int handle, int val);
+	void SetSliderCallback(int handle, SliderCallback *cb);
 	void DeleteGUIElement(int handle)
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
@@ -169,7 +181,7 @@ private:
 };
 
 bool InRect(int x,int y,int w,int h,int x2,int y2);
-class Slider : GUIElement
+class Slider : public GUIElement
 {
 public:
 	Slider(int handle, GLGUI* gui, int x, int y, int w, int min_, int max_)
@@ -182,7 +194,14 @@ public:
 	{
 		h = 13;
 		LMouseDown = false;
+		mCB = nullptr;
 	}
+	SliderCallback *mCB;
+	void SetCallback(SliderCallback *cb)
+	{
+		mCB = cb;
+	}
+
 	void Draw()
 	{
 		mGUI->Print(top, "%d", curVal);
@@ -214,8 +233,9 @@ public:
 				slider.x = x+30;
 			if(slider.x > x+w-1-20)
 				slider.x = x+w-1-20;
+			UpdateVal();
+			if(mCB) mCB->SetVal(curVal);
 		}
-		UpdateVal();
 	}
 	void UpdateVal()
 	{
@@ -223,6 +243,18 @@ public:
 		int val = slider.x - startPosX;
 		float valFloat = (float)val / (float)CalculateTotalSliderLength();
 		curVal = min_ + (max_-min_)*valFloat;
+	}
+	void SetVal(int val)
+	{
+		curVal = val;
+		SetPosByVal();
+	}
+	void SetPosByVal()
+	{
+		int startPosX = x+30;
+		float valFloat = float(curVal) / (float)(min_+(max_-min_));
+		int val = valFloat * CalculateTotalSliderLength();
+		slider.x = val + startPosX;
 	}
 	int CalculateTotalSliderLength()
 	{
@@ -238,6 +270,18 @@ public:
 	int curVal;
 };
 
+class MySliderCallback : public SliderCallback
+{
+public:
+	MySliderCallback()
+		:SliderCallback()
+	{
+	}
+	void SetVal(int val)
+	{
+		
+	}
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -246,7 +290,7 @@ class ExampleEditor : public VSTGLEditor,
 	ExampleEditor(AudioEffect *effect);
 	///	Destructor.
 	~ExampleEditor();
-
+	MySliderCallback myCB;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.

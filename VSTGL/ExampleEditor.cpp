@@ -87,6 +87,8 @@ void ExampleEditor::guiOpen()
 	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
+	mGUI->SetSliderVal(mSlider, 50);
+	mGUI->SetSliderCallback(mSlider, &myCB);
 	start();
 }
 
@@ -410,6 +412,30 @@ int GLGUI::	NewSlider(int x, int y, int w, int min_, int max_)
 	int handle = GetNewHandle();
 	Slider *sl = new Slider(handle, this, x,y,w,min_,max_);
 	return handle;
+}
+void GLGUI::
+SetSliderVal(int handle, int val)
+{
+	for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
+	{
+		if((*i)->mHandle == handle)
+		{
+			((Slider*)(*i))->SetVal(val);
+		}
+		break;
+	}
+}
+void GLGUI::
+SetSliderCallback(int handle, SliderCallback *cb)
+{
+	for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
+	{
+		if((*i)->mHandle == handle)
+		{
+			((Slider*)(*i))->SetCallback(cb);
+		}
+		break;
+	}
 }
 //------
 bool InRect(int x,int y,int w,int h,int x2,int y2)
