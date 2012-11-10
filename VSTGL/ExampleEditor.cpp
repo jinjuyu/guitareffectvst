@@ -86,6 +86,7 @@ void ExampleEditor::guiOpen()
 
 	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
+	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	start();
 }
 
@@ -114,6 +115,9 @@ void ExampleEditor::draw()
 	mGUI->DrawQuadBorder(opQ2);
 	TextOption op2(0,100,100,100, 0,0,255,255);
 	mGUI->Print2(op2, "AAAAAAAAAAAA");
+
+
+	mGUI->DrawElements();
 	/*glBegin(GL_QUADS);
 	glColor4ub(0,0,255,255);
 	glTexCoord2f(0.0f, 0.0f); glVertex2i(0,   0);
@@ -393,4 +397,26 @@ void GLGUI::DrawQuadBorder(QuadOptionBorder &op, int borderThick)
 	glVertex2i(op.x+op.w, op.y);
 
 	glEnd();
+}
+//-------------
+GUIElement::GUIElement(int handle, GLGUI *gui)
+	:mGUI(gui), mHandle(handle)
+{
+	gui->AddElement(this);
+}
+//===================
+int GLGUI::	NewSlider(int x, int y, int w, int min_, int max_)
+{
+	int handle = GetNewHandle();
+	Slider *sl = new Slider(handle, this, x,y,w,min_,max_);
+	return handle;
+}
+//------
+bool InRect(int x,int y,int w,int h,int x2,int y2)
+{
+	if(x <= x2 && x2 < x+w && y <= y2 && y2 < y+h)
+	{
+		return true;
+	}
+	return false;
 }

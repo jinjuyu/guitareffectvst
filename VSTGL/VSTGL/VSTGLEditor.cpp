@@ -24,7 +24,7 @@
 
 #include "VSTGLEditor.h"
 #include "audioeffect.h"
-
+#include <Windowsx.h>
 #include <cstdio>
 
 #ifdef WIN32
@@ -330,8 +330,8 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 			{
 				SetCapture(hwnd);
 				ed->onMouseDown(1,
-								(int)(short)LOWORD(lParam),
-								(int)(short)HIWORD(lParam));
+								(int)(short)GET_X_LPARAM(lParam),
+								(int)(short)GET_Y_LPARAM(lParam));
 			}
 			break;
 		case WM_MBUTTONDOWN:
@@ -339,8 +339,8 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 			{
 				SetCapture(hwnd);
 				ed->onMouseDown(3,
-								(int)(short)LOWORD(lParam),
-								(int)(short)HIWORD(lParam));
+								(int)(short)GET_X_LPARAM(lParam),
+								(int)(short)GET_Y_LPARAM(lParam));
 			}
 			break;
 		case WM_RBUTTONDOWN:
@@ -348,8 +348,8 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 			{
 				SetCapture(hwnd);
 				ed->onMouseDown(2,
-								(int)(short)LOWORD(lParam),
-								(int)(short)HIWORD(lParam));
+								(int)(short)GET_X_LPARAM(lParam),
+								(int)(short)GET_Y_LPARAM(lParam));
 			}
 			break;
 		case WM_LBUTTONUP:
@@ -357,8 +357,8 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 			{
 				ReleaseCapture();
 				ed->onMouseUp(1,
-							  (int)(short)LOWORD(lParam),
-							  (int)(short)HIWORD(lParam));
+							  (int)(short)GET_X_LPARAM(lParam),
+							  (int)(short)GET_Y_LPARAM(lParam));
 			}
 			break;
 		case WM_MBUTTONUP:
@@ -366,8 +366,8 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 			{
 				ReleaseCapture();
 				ed->onMouseUp(3,
-							  (int)(short)LOWORD(lParam),
-							  (int)(short)HIWORD(lParam));
+							  (int)(short)GET_X_LPARAM(lParam),
+							  (int)(short)GET_Y_LPARAM(lParam));
 			}
 			break;
 		case WM_RBUTTONUP:
@@ -375,22 +375,22 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 			{
 				ReleaseCapture();
 				ed->onMouseUp(2,
-							  (int)(short)LOWORD(lParam),
-							  (int)(short)HIWORD(lParam));
+							  (int)(short)GET_X_LPARAM(lParam),
+							  (int)(short)GET_Y_LPARAM(lParam));
 			}
 			break;
 		case WM_MOUSEMOVE:
 			if(ed)
 			{
-				ed->onMouseMove((int)(short)LOWORD(lParam),
-								(int)(short)HIWORD(lParam));
+				ed->onMouseMove(GET_X_LPARAM(lParam),
+								GET_Y_LPARAM(lParam));
 			}
 			break;
 		case WM_MOUSEWHEEL:
 			if(ed)
 				ed->onMouseWheel(HIWORD(wParam),
-								 (int)(short)LOWORD(lParam),
-								 (int)(short)HIWORD(lParam));
+								 (int)(short)GET_X_LPARAM(lParam),
+								 (int)(short)GET_Y_LPARAM(lParam));
 			break;
 		case WM_KEYDOWN:
 			if(ed)
