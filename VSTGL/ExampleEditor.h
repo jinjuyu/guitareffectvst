@@ -29,8 +29,66 @@
 #include <stdio.h>
 #include <stdarg.h>
 ///	Simple VSTGL example.
+#pragma warning(disable:4244)
+class TextOption
+{
+public:
+	TextOption(int x,int y,int w,int h, unsigned int r, unsigned int g, unsigned int b, unsigned int a, bool centerX=true, bool centerY=true)
+		:x(x),y(y),w(w),h(h),centerX(centerX),centerY(centerY),r(r),g(g),b(b),a(a)
+	{
+	}
+	int x,y,w,h;
+	bool centerX;
+	bool centerY;
+	unsigned int r,g,b,a;
+};
+class QuadOption
+{
+public:
+	QuadOption(int x,int y,int w,int h, unsigned int r, unsigned int g, unsigned int b, unsigned int a)
+		:x(x),y(y),w(w),h(h),r(r),g(g),b(b),a(a)
+	{
+	}
+	int x,y,w,h;
+	unsigned int r,g,b,a;
+};
 
+class QuadOptionBorder
+{
+public:
+	QuadOptionBorder(int x,int y,int w,int h, unsigned int r, unsigned int g, unsigned int b, unsigned int a, unsigned int rb, unsigned int gb, unsigned int bb, unsigned int ab)
+		:x(x),y(y),w(w),h(h),r(r),g(g),b(b),a(a),rb(rb),gb(gb),bb(bb),ab(ab)
+	{
+	}
+	int x,y,w,h;
+	unsigned int r,g,b,a;
+	unsigned int rb,gb,bb,ab;
+};
 
+class GLGUI
+{
+public:
+	GLGUI(void *hInstance):m_hInstance(hInstance)
+	{
+	}
+	~GLGUI()
+	{
+		cleanup();
+	}
+	void DrawQuad(QuadOption &op);
+	void DrawQuadBorder(QuadOptionBorder &op, int borderThick=1);
+	void *m_hInstance;
+	void init();
+	void cleanup();
+	GLvoid Print(TextOption &op, const char *fmt, ...);
+	GLvoid Print2(TextOption &op, const char *fmt, ...);
+
+private:
+	GLuint image;
+	GLuint mFont1;
+	GLuint mFont2;
+
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -51,34 +109,8 @@ class ExampleEditor : public VSTGLEditor,
 	///	Called repeatedly, to update the graphics.
 	
 	void timerCallback();
-	GLvoid Print(const char *fmt, ...)
-	{
-		char        text[256];              // Holds Our String
-		va_list     ap;                 // Pointer To List Of Arguments
-		va_start(ap, fmt);                  // Parses The String For Variables
-		vsprintf(text, fmt, ap);                // And Converts Symbols To Actual Numbers
-		va_end(ap);       
-		glPushAttrib(GL_LIST_BIT);              // Pushes The Display List Bits     ( NEW )
-		glListBase(mFont1 - 32);    
-		glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text  ( NEW )
-		glPopAttrib();                      // Pops The Display List Bits   ( NEW )
-	}
-	GLvoid Print2(const char *fmt, ...) // Bigger Font
-	{
-		char        text[256];              // Holds Our String
-		va_list     ap;                 // Pointer To List Of Arguments
-		va_start(ap, fmt);                  // Parses The String For Variables
-		vsprintf(text, fmt, ap);                // And Converts Symbols To Actual Numbers
-		va_end(ap);       
-		glPushAttrib(GL_LIST_BIT);              // Pushes The Display List Bits     ( NEW )
-		glListBase(mFont2 - 32);    
-		glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text  ( NEW )
-		glPopAttrib();                      // Pops The Display List Bits   ( NEW )
-	}
   private:
-	GLuint image;
-	GLuint mFont1;
-	GLuint mFont2;
+	  GLGUI *mGUI;
 	///	Variable used to rotate the pyramid.
 	float thing;
 };
