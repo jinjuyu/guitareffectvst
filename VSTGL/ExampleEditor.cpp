@@ -271,7 +271,9 @@ thing(0.0f)
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
 	mGUI->SetSliderCallback(mSlider, &myCB);
-	int button = mGUI->NewButton(0, 400, 100, 30, "Test", &myButtonCB);}
+	int button = mGUI->NewButton(0, 400, 100, 30, "Test", &myButtonCB);
+	int b2 = mGUI->NewOnOffButton(0, 500, 100, 30, "Test", &myButton2CB);
+}
 
 //----------------------------------------------------------------------------
 ExampleEditor::~ExampleEditor()
@@ -446,6 +448,13 @@ int GLGUI::NewButton(int x, int y, int w, int h, string label, ButtonCallback *c
 {
 	int handle = GetNewHandle();
 	Button *bu = new Button(handle, this, x,y,w,h,label);
+	bu->SetCallback(cb);
+	return handle;
+}
+int GLGUI::NewOnOffButton(int x, int y, int w, int h, string label, OnOffButtonCallback *cb)
+{
+	int handle = GetNewHandle();
+	OnOffButton *bu = new OnOffButton(handle, this, x,y,w,h,label);
 	bu->SetCallback(cb);
 	return handle;
 }

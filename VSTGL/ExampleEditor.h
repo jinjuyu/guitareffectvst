@@ -107,6 +107,19 @@ public:
 	{
 	}
 };
+class OnOffButtonCallback
+{
+public:
+	OnOffButtonCallback()
+	{
+	}
+	virtual void OnOn()
+	{
+	}
+	virtual void OnOff()
+	{
+	}
+};
 class GLGUI
 {
 public:
@@ -136,6 +149,7 @@ public:
 	void SetSliderVal(int handle, int val);
 	void SetSliderCallback(int handle, SliderCallback *cb);
 	int NewButton(int x, int y, int w, int h, string label, ButtonCallback *cb);
+	int NewOnOffButton(int x, int y, int w, int h, string label, OnOffButtonCallback *cb);
 	void DeleteGUIElement(int handle)
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
@@ -323,6 +337,71 @@ public:
 	int x,y,w,h;
 };
 
+class OnOffButton : public GUIElement
+{
+public:
+	OnOffButton(int handle, GLGUI* gui, int x, int y, int w, int h, string label)
+		:GUIElement(handle, gui), 
+		x(x),y(y),w(w),h(h), mLabel(label),
+		top(x+17,y,w,h, 0,0,0,255),
+		button(x,y,w,h, 255,255,255,255, 0,0,0,255),
+		indicatorOn(x+14/2-10/2, y+h/2-10/2, 10, 10, 0, 255, 0, 255,  0,0,0,255),
+		indicatorOff(x+14/2-10/2, y+h/2-10/2, 10, 10, 0, 0, 0, 255,  0,0,0,255)
+
+	{
+		mOn = false;
+		mCB = nullptr;
+	}
+	bool mOn;
+	string mLabel;
+	OnOffButtonCallback *mCB;
+	void SetCallback(OnOffButtonCallback *cb)
+	{
+		mCB = cb;
+	}
+
+	void Draw()
+	{
+		mGUI->DrawQuadBorder(button);
+		if(mOn)
+			mGUI->DrawQuadBorder(indicatorOn);
+		else
+			mGUI->DrawQuadBorder(indicatorOff);
+		mGUI->Print(top, "%s", mLabel.c_str());
+	}
+	void OnMouseDown(int button, int x_, int y_)
+	{
+		if(button == 1 && InRect(x,y,w,h,x_,y_))
+		{
+			mOn = !mOn;
+			if(mCB) 
+			{
+				if(mOn)
+					mCB->OnOn();
+				else
+					mCB->OnOff();
+			}
+		}
+	}
+	void SetOn(bool onOff)
+	{
+		mOn = onOff;
+		if(mCB) 
+		{
+			if(mOn)
+				mCB->OnOn();
+			else
+				mCB->OnOff();
+		}
+	}
+	TextOption top;
+	QuadOptionBorder button;
+	QuadOptionBorder indicatorOn;
+	QuadOptionBorder indicatorOff;
+
+	int x,y,w,h;
+};
+
 
 class MySliderCallback : public SliderCallback
 {
@@ -348,6 +427,22 @@ public:
 		MessageBox(NULL, "", "", MB_OK);
 	}
 };
+class MyButtonCallback2 : public OnOffButtonCallback
+{
+public:
+	MyButtonCallback2()
+		:OnOffButtonCallback()
+	{
+	}
+	void OnOn()
+	{
+		MessageBox(NULL, "On", "", MB_OK);
+	}
+	void OnOff()
+	{
+		MessageBox(NULL, "Off", "", MB_OK);
+	}
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -358,6 +453,7 @@ class ExampleEditor : public VSTGLEditor,
 	~ExampleEditor();
 	MySliderCallback myCB;
 	MyButtonCallback myButtonCB;
+	MyButtonCallback2 myButton2CB;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.
