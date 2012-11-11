@@ -116,10 +116,10 @@ public:
 	}
 	~GLGUI()
 	{
-		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
+		/*for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
 			delete (*i);
-		}
+		}*/
 		cleanup();
 	}
 	void AddElement(GUIElement *ele)
@@ -244,8 +244,10 @@ public:
 				slider.x = x+30;
 			if(slider.x > x+w-1-20)
 				slider.x = x+w-1-20;
+			int prevVal = curVal;
 			UpdateVal();
-			if(mCB) mCB->SetVal(curVal);
+			if(prevVal != curVal && mCB)
+				mCB->SetVal(curVal);
 		}
 	}
 	void UpdateVal()
@@ -257,7 +259,9 @@ public:
 	}
 	void SetVal(int val)
 	{
+		int prevVal = curVal;
 		curVal = val;
+		if(prevVal != curVal && mCB) mCB->SetVal(curVal);
 		SetPosByVal();
 	}
 	void SetPosByVal()

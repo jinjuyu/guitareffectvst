@@ -1,6 +1,13 @@
 #pragma once
 
-class
+#include "../VSTGL/ExampleEditor.h"
+// 모든 파라메터(랙의 위치라던가 등등)를 vst param으로 내보내어 저장할 수 있게 한다.
+// EQ1 Freq 등등으로 파라메터의 이름을 모두 저장하고 minmax를 여기에 넣는다.
+// Rack 0 -> 0이면 EQ1이고 1이면 EQ2 등등.
+class EQ1Params
+{
+public:
+};
 /*
     for (int i = 0; i <= 45; i += 5) {
         efx_EQ1->changepar (i + 10, 7);

@@ -153,6 +153,7 @@
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLEditor.cpp" />
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLTimer.cpp" />
     <ClCompile Include="..\VSTGL\VstPlugin.cpp" />
+    <ClCompile Include="paramsMinMax.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vst\aeffeditor.h" />

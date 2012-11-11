@@ -246,6 +246,9 @@
     <ClCompile Include="..\rakarrack\src\process.cpp">
       <Filter>RAK</Filter>
     </ClCompile>
+    <ClCompile Include="paramsMinMax.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vst\audioeffect.h">

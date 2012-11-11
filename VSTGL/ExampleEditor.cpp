@@ -266,7 +266,12 @@ thing(0.0f)
 {
 	//Set the opengl context's size - This must be called here!
 	setRect(0, 0, 900, 650);
-}
+	mGUI = new GLGUI(m_hInstance);
+	mGUI->init();
+	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
+	mGUI->SetSliderVal(mSlider, 50);
+	mGUI->SetSliderCallback(mSlider, &myCB);
+	int button = mGUI->NewButton(0, 400, 100, 30, "Test", &myButtonCB);}
 
 //----------------------------------------------------------------------------
 ExampleEditor::~ExampleEditor()
@@ -317,13 +322,9 @@ void ExampleEditor::guiOpen()
 	glEnable(GL_LINE_SMOOTH);
 	glLineWidth(2.0f);
 
-
-	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
-	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
-	mGUI->SetSliderVal(mSlider, 50);
-	mGUI->SetSliderCallback(mSlider, &myCB);
-	int button = mGUI->NewButton(0, 400, 100, 30, "Test", &myButtonCB);
+
+
 	start();
 }
 
