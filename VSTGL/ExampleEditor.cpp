@@ -273,6 +273,13 @@ thing(0.0f)
 	mGUI->SetSliderCallback(mSlider, &myCB);
 	int button = mGUI->NewButton(0, 400, 100, 30, "Test", &myButtonCB);
 	int b2 = mGUI->NewOnOffButton(0, 500, 100, 30, "Test", &myButton2CB);
+	int list = mGUI->NewList(130, 500, 100, 35, &myListCB);
+	mGUI->AddToList(list, "test1");
+	mGUI->AddToList(list, "test2");
+	mGUI->AddToList(list, "test3");
+	mGUI->AddToList(list, "test4");
+	mGUI->AddToList(list, "test5");
+
 }
 
 //----------------------------------------------------------------------------
@@ -411,6 +418,7 @@ void ExampleEditor::timerCallback()
 GUIElement::GUIElement(int handle, GLGUI *gui)
 	:mGUI(gui), mHandle(handle)
 {
+	hidden = false;
 	gui->AddElement(this);
 }
 //===================
@@ -419,6 +427,21 @@ int GLGUI::	NewSlider(int x, int y, int w, int min_, int max_)
 	int handle = GetNewHandle();
 	Slider *sl = new Slider(handle, this, x,y,w,min_,max_);
 	return handle;
+}
+void GLGUI::	AddToList(int handle, string label, int idx)
+{
+	((ListBox*)(mGUIElements[handle]))->Add(label, idx);
+}
+int GLGUI::	NewList(int x,int y,int w,int h, ListBoxCallback *cb)
+{
+	int handle = GetNewHandle();
+	ListBox *sl = new ListBox(handle, this, x,y,w,h);
+	sl->SetCallback(cb);
+	return handle;
+}
+void GLGUI::	DeleteListItem(int handle, int idx)
+{
+	((ListBox*)(mGUIElements[handle]))->Delete(idx);
 }
 void GLGUI::
 SetSliderVal(int handle, int val)

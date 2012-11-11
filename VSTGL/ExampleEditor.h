@@ -28,10 +28,10 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdarg.h>
-#include <list>
+#include <vector>
 using namespace std;
 ///	Simple VSTGL example.
-#pragma warning(disable:4244)
+#pragma warning(disable:4244 4018)
 class TextOption
 {
 public:
@@ -86,6 +86,7 @@ public:
 	}
 	GLGUI *mGUI;
 	int mHandle;
+	bool hidden;
 };
 class SliderCallback
 {
@@ -120,6 +121,16 @@ public:
 	{
 	}
 };
+class ListBoxCallback
+{
+public:
+	ListBoxCallback()
+	{
+	}
+	virtual void OnSelect(int idx)
+	{
+	}
+};
 class GLGUI
 {
 public:
@@ -145,9 +156,16 @@ public:
 		handleCounter++;
 		return result;
 	}
+	void Show(int handle, bool show)
+	{
+		mGUIElements[handle]->hidden = show;
+	}
 	int NewSlider(int x, int y, int w, int min_, int max_);
 	void SetSliderVal(int handle, int val);
 	void SetSliderCallback(int handle, SliderCallback *cb);
+	int NewList(int x,int y,int w,int h, ListBoxCallback *cb);
+	void AddToList(int handle, string label, int idx=-1);
+	void DeleteListItem(int handle, int idx);
 	int NewButton(int x, int y, int w, int h, string label, ButtonCallback *cb);
 	int NewOnOffButton(int x, int y, int w, int h, string label, OnOffButtonCallback *cb);
 	void DeleteGUIElement(int handle)
@@ -172,32 +190,36 @@ public:
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
-			(*i)->Draw();
+			if(!(*i)->hidden)
+				(*i)->Draw();
 		}
 	}
 	void onMouseDown(int button, int x, int y)
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
-			(*i)->OnMouseDown(button,x,y);
+			if(!(*i)->hidden)
+				(*i)->OnMouseDown(button,x,y);
 		}
 	}
 	void onMouseUp(int button, int x, int y)
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
-			(*i)->OnMouseUp(button,x,y);
+			if(!(*i)->hidden)
+				(*i)->OnMouseUp(button,x,y);
 		}
 	}
 	void onMouseMove(int x, int y)
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
-			(*i)->OnMouseMove(x,y);
+			if(!(*i)->hidden)
+				(*i)->OnMouseMove(x,y);
 		}
 	}
 private:
-	typedef list<GUIElement *> GUIElements;
+	typedef vector<GUIElement *> GUIElements;
 	GUIElements mGUIElements;
 	GLuint image;
 	GLuint mFont1;
@@ -337,6 +359,92 @@ public:
 	int x,y,w,h;
 };
 
+class ListBox : public GUIElement
+{
+public:
+	ListBox(int handle, GLGUI* gui, int x, int y, int w, int h)
+		:GUIElement(handle, gui), 
+		x(x),y(y),w(w),h(h),
+		box(x,y,w,h, 255,255,255,255, 0,0,0,255)
+
+	{
+		mCB = nullptr;
+		selected = -1;
+		listH = 15;
+	}
+	ListBoxCallback *mCB;
+	void SetCallback(ListBoxCallback *cb)
+	{
+		mCB = cb;
+	}
+	vector<string> mStrs;
+	void Add(string label, int idx = -1)
+	{
+		if(idx != -1)
+			mStrs.insert(mStrs.begin()+idx, label);
+		else
+			mStrs.push_back(label);
+	}
+	void Delete(int idx)
+	{
+		if(idx >= 0 && idx < mStrs.size())
+			mStrs.erase(mStrs.begin()+idx);
+	}
+	int selected;
+	int listH;
+	void Draw()
+	{
+		mGUI->DrawQuadBorder(box);
+		int curY = y;
+		int idx=0;
+		for(vector<string>::iterator it = mStrs.begin(); it != mStrs.end(); ++it)
+		{
+			if(curY + listH > y+h) break;
+			TextOption top(x,curY,w,listH, 0,0,0,255);
+			if(idx == selected)
+			{
+				QuadOptionBorder sel(x,curY,w,listH, 32,128,32,255,  0,0,0,255);
+				mGUI->DrawQuadBorder(sel);
+			}
+			curY += listH;
+			idx++;
+			mGUI->Print(top, "%s", (*it).c_str());
+		}
+		
+	}
+	void OnMouseDown(int button, int x_, int y_)
+	{
+		if(button == 1)
+		{
+			int curY = y;
+			int idx=0;
+			bool found = false;
+			for(vector<string>::iterator it = mStrs.begin(); it != mStrs.end(); ++it)
+			{
+				if(curY + listH > y+h) break;
+				if(InRect(x,curY,w,listH,x_,y_))
+				{
+					selected = idx;
+					found = true;
+				}
+				idx++;
+				curY += listH;
+			}
+			if(!found)
+		 	{
+				selected = -1;
+			}
+			if(found)
+			{
+				if(mCB) mCB->OnSelect(selected);
+			}
+		}
+	}
+	QuadOptionBorder box;
+
+	int x,y,w,h;
+};
+
 class OnOffButton : public GUIElement
 {
 public:
@@ -415,6 +523,21 @@ public:
 		
 	}
 };
+class MyListCallback : public ListBoxCallback
+{
+public:
+	MyListCallback()
+		:ListBoxCallback()
+	{
+	}
+	void OnSelect(int idx)
+	{
+		char temp[32];
+		sprintf(temp, "%d", idx);
+		MessageBox(NULL, temp, temp, MB_OK);
+
+	}
+};
 class MyButtonCallback : public ButtonCallback
 {
 public:
@@ -454,6 +577,7 @@ class ExampleEditor : public VSTGLEditor,
 	MySliderCallback myCB;
 	MyButtonCallback myButtonCB;
 	MyButtonCallback2 myButton2CB;
+	MyListCallback myListCB;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.
