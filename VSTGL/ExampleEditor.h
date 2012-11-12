@@ -335,7 +335,8 @@ public:
 	void SetPosByVal()
 	{
 		int startPosX = x+30;
-		float valFloat = float(curVal) / (float)(min_+(max_-min_));
+
+		float valFloat = float(curVal-min_) / (float)((max_-min_));
 		int val = (int)(valFloat * (float)CalculateTotalSliderLength());
 		slider.x = val + startPosX;
 	}
@@ -750,7 +751,7 @@ class ExampleEditor : public VSTGLEditor,
 	MyListCallback myListCB;
 	MyTLButtonCallback myTLCB;
 	
-	DistorsionPanelNS::DistorsionPanel *mPanel;
+	DistorsionPanelNS::DistorsionPanel *mDistPanel;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.

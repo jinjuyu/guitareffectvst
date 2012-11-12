@@ -304,7 +304,7 @@ thing(0.0f)
 		mOnOffButtons[i] = b;
 	}
 
-	mPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, 0);
+	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, 0);
 	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
@@ -420,11 +420,9 @@ void ExampleEditor::draw()
 		QuadOptionBorder opEff(i*180,650-250,180,250,  255, 128, 64,255, 128,64,32,255);
 		mGUI->DrawQuadBorder(opEff);
 	}
-	TextOption op2(0,153,180,10, 0,0,0,255);
-	mGUI->Print2(op2, "Distortion");
-	TextOption op3(0,185,60,13, 0,0,0,255);
-	mGUI->Print(op3, "Option1");
+
 	mGUI->DrawElements();
+	mDistPanel->DrawText();
 	/*glBegin(GL_QUADS);
 	glColor4ub(0,0,255,255);
 	glTexCoord2f(0.0f, 0.0f); glVertex2i(0,   0);
@@ -528,8 +526,8 @@ SetSliderVal(int handle, int val)
 		if((*i)->mHandle == handle)
 		{
 			((Slider*)(*i))->SetVal(val);
+			break;
 		}
-		break;
 	}
 }
 void GLGUI::

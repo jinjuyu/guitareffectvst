@@ -1,6 +1,49 @@
 #include "DistorsionPanel.h"
 namespace DistorsionPanelNS
 {
+void DistorsionPanel::DrawText()
+{
+	int x,y,w=180,h=250;
+	if(mWhereis < 5)
+	{
+		x = 180*mWhereis;
+		y = 150+35;
+	}
+	else
+	{
+		x = 180*(mWhereis-5);
+		y = 150+250+35;
+	}
+	TextOption op2(0,y-35+3,180,10, 0,0,0,255);
+	mGUI->Print2(op2, "Distortion");
+
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Wet/Dry");
+	y += 15;
+
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "L/R.Cr");
+	y += 15;
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Drive");
+	y += 15;
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Level");
+	y += 15;
+		
+	y += 23;
+
+	y += 23;
+
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Pan");
+	y += 15;
+
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Sub Octv");
+	y += 15;
+
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "LPF");
+	y += 15; 
+
+	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "HPF");
+	y += 15;
+
+}
 DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	:mGUI(gui), mWhereis(whereis), mPlug(plug)
 {
@@ -27,8 +70,10 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbWetDry);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
+	/*
 	i=2;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // L/R.Cr
 	y += 15;
