@@ -714,6 +714,7 @@ public:
 		//MessageBox(NULL, temp, temp, MB_OK);
 	}
 };
+class DistorsionPanel;
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -727,6 +728,8 @@ class ExampleEditor : public VSTGLEditor,
 	MyButtonCallback2 myButton2CB;
 	MyListCallback myListCB;
 	MyTLButtonCallback myTLCB;
+	
+	DistorsionPanel *mPanel;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.

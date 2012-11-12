@@ -494,5 +494,8 @@
     <ClInclude Include="paramsMinMax.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="aaa.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
