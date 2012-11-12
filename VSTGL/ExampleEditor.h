@@ -131,6 +131,19 @@ public:
 	{
 	}
 };
+class TabbedListBoxCallback
+{
+public:
+	TabbedListBoxCallback()
+	{
+	}
+	virtual void OnSelect(int idx)
+	{
+	}
+	virtual void OnPageSelect(int idx)
+	{
+	}
+};
 class GLGUI
 {
 public:
@@ -166,6 +179,9 @@ public:
 	int NewList(int x,int y,int w,int h, ListBoxCallback *cb);
 	void AddToList(int handle, string label, int idx=-1);
 	void DeleteListItem(int handle, int idx);
+	int NewTList(int x,int y,int w,int h, TabbedListBoxCallback *cb);
+	void AddToTList(int handle, string label, int idx=-1);
+	void DeleteTabbedListItem(int handle, int idx);
 	int NewButton(int x, int y, int w, int h, string label, ButtonCallback *cb);
 	int NewOnOffButton(int x, int y, int w, int h, string label, OnOffButtonCallback *cb);
 	void DeleteGUIElement(int handle)
@@ -433,11 +449,132 @@ public:
 			if(!found)
 		 	{
 				selected = -1;
-			}
-			if(found)
-			{
 				if(mCB) mCB->OnSelect(selected);
 			}
+			if(found && mCB) mCB->OnSelect(selected);
+		}
+	}
+	QuadOptionBorder box;
+
+	int x,y,w,h;
+};
+
+class TabbedListBox : public GUIElement
+{
+public:
+	TabbedListBox(int handle, GLGUI* gui, int x, int y, int w, int h)
+		:GUIElement(handle, gui), 
+		x(x),y(y),w(w),h(h),
+		box(x,y,w,h, 255,255,255,255, 0,0,0,255)
+
+	{
+		mCB = nullptr;
+		selected = -1;
+		listH = 15;
+		buttonH = 20;
+		margin = 3;
+	}
+	int buttonH;
+	int margin;
+	TabbedListBoxCallback *mCB;
+	void SetCallback(TabbedListBoxCallback *cb)
+	{
+		mCB = cb;
+	}
+	vector<string> mStrs;
+	void Add(string label, int idx = -1)
+	{
+		if(idx != -1)
+			mStrs.insert(mStrs.begin()+idx, label);
+		else
+			mStrs.push_back(label);
+	}
+	int curPage;
+	void Delete(int idx)
+	{
+		if(idx >= 0 && idx < mStrs.size())
+			mStrs.erase(mStrs.begin()+idx);
+	}
+	int selected;
+	int listH;
+	int GetNumItemsPerPage()
+	{
+		return (h-margin*2-buttonH)/listH;
+	}
+	int GetNumButtons()
+	{
+		int numItemPerPage = (h-margin*2-buttonH)/listH;
+		return (mStrs.size()/numItemPerPage)+1;
+	}
+	void Draw()
+	{
+		mGUI->DrawQuadBorder(box);
+		QuadOptionBorder boxList(x,y,w,h-margin*2-buttonH, 255,255,255,255, 0,0,0,255);
+		mGUI->DrawQuadBorder(boxList);
+
+		for(int i=0; i<GetNumButtons();++i)
+		{
+			QuadOptionBorder button(x+margin + i*margin + i*buttonH,y+h-margin-buttonH,buttonH, buttonH, 255,255,255,255, 0,0,0,255);
+			mGUI->DrawQuadBorder(button);
+			TextOption top2(x+margin + i*margin + i*buttonH,y+h-margin-buttonH,buttonH, buttonH, 0,0,0,255);
+			mGUI->Print(top2, "%d", i+1);
+		}
+		int curY = y;
+		int idx=0;
+		for(vector<string>::iterator it = mStrs.begin()+curPage*GetNumItemsPerPage(); it != mStrs.end(); ++it)
+		{
+			if(curY + listH > y+h-margin*2-buttonH) break;
+			TextOption top(x,curY,w,listH, 0,0,0,255);
+			if(idx+curPage*GetNumItemsPerPage() == selected)
+			{
+				QuadOptionBorder sel(x,curY,w,listH, 32,128,32,255,  0,0,0,255);
+				mGUI->DrawQuadBorder(sel);
+			}
+			curY += listH;
+			idx++;
+			mGUI->Print(top, "%s", (*it).c_str());
+		}
+		
+	}
+	void OnMouseDown(int button, int x_, int y_)
+	{
+		if(button == 1)
+		{
+			int curY = y;
+			int idx=0;
+			bool found = false;
+			for(vector<string>::iterator it = mStrs.begin()+curPage*GetNumItemsPerPage(); it != mStrs.end(); ++it)
+			{
+				if(curY + listH > y+h-margin*2-buttonH) break;
+				if(InRect(x,curY,w,listH,x_,y_))
+				{
+					selected = idx+curPage*GetNumItemsPerPage();
+					found = true;
+					break;
+				}
+				idx++;
+				curY += listH;
+			}
+			if(!found)
+		 	{
+				selected = -1;
+				if(mCB) mCB->OnSelect(selected);
+			}
+			if(found && mCB) mCB->OnSelect(selected);
+			
+			for(int i=0; i<GetNumButtons();++i)
+			{
+				if(InRect(x+margin + i*margin + i*buttonH,y+h-margin-buttonH,buttonH, buttonH,x_,y_))
+				{
+					curPage = i;
+					if(mCB) mCB->OnPageSelect(curPage);
+					selected = -1;
+					if(mCB) mCB->OnSelect(selected);
+					break;
+				}
+			}
+
+
 		}
 	}
 	QuadOptionBorder box;
@@ -534,7 +671,7 @@ public:
 	{
 		char temp[32];
 		sprintf(temp, "%d", idx);
-		MessageBox(NULL, temp, temp, MB_OK);
+		//MessageBox(NULL, temp, temp, MB_OK);
 
 	}
 };
@@ -547,7 +684,7 @@ public:
 	}
 	void OnClick()
 	{
-		MessageBox(NULL, "", "", MB_OK);
+		//MessageBox(NULL, "", "", MB_OK);
 	}
 };
 class MyButtonCallback2 : public OnOffButtonCallback
@@ -566,6 +703,26 @@ public:
 		MessageBox(NULL, "Off", "", MB_OK);
 	}
 };
+class MyTLButtonCallback : public TabbedListBoxCallback
+{
+public:
+	MyTLButtonCallback()
+		:TabbedListBoxCallback()
+	{
+	}
+	void OnPageSelect(int idx)
+	{
+		char temp[123];
+		sprintf(temp, "%d", idx);
+		//MessageBox(NULL, temp, "asd", MB_OK);
+	}
+	void OnSelect(int idx)
+	{
+		char temp[123];
+		sprintf(temp, "%d", idx);
+		//MessageBox(NULL, temp, temp, MB_OK);
+	}
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -578,6 +735,7 @@ class ExampleEditor : public VSTGLEditor,
 	MyButtonCallback myButtonCB;
 	MyButtonCallback2 myButton2CB;
 	MyListCallback myListCB;
+	MyTLButtonCallback myTLCB;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.

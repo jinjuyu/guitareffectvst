@@ -280,6 +280,14 @@ thing(0.0f)
 	mGUI->AddToList(list, "test4");
 	mGUI->AddToList(list, "test5");
 
+	int list2 = mGUI->NewTList(130, 0, 100, 300, &myTLCB);
+	char temp[123];
+	for(int i=0;i<100;++i)
+	{
+		sprintf(temp, "test%d", i);
+		mGUI->AddToTList(list2, temp);
+	}
+
 }
 
 //----------------------------------------------------------------------------
@@ -428,6 +436,23 @@ int GLGUI::	NewSlider(int x, int y, int w, int min_, int max_)
 	Slider *sl = new Slider(handle, this, x,y,w,min_,max_);
 	return handle;
 }
+int GLGUI::NewTList(int x,int y,int w,int h, TabbedListBoxCallback *cb)
+{
+	int handle = GetNewHandle();
+	TabbedListBox *sl = new TabbedListBox(handle, this, x,y,w,h);
+	sl->SetCallback(cb);
+	return handle;
+
+}
+void GLGUI::AddToTList(int handle, string label, int idx)
+{
+	((TabbedListBox*)(mGUIElements[handle]))->Add(label, idx);
+}
+void GLGUI::DeleteTabbedListItem(int handle, int idx)
+{
+	((TabbedListBox*)(mGUIElements[handle]))->Delete(idx);
+}
+
 void GLGUI::	AddToList(int handle, string label, int idx)
 {
 	((ListBox*)(mGUIElements[handle]))->Add(label, idx);
