@@ -578,7 +578,7 @@ public:
 	OnOffButton(int handle, GLGUI* gui, int x, int y, int w, int h, string label)
 		:GUIElement(handle, gui), 
 		x(x),y(y),w(w),h(h), mLabel(label),
-		top(x+17,y,w,h, 0,0,0,255),
+		top(x+17,y,w-17,h, 0,0,0,255),
 		button(x,y,w,h, 255,255,255,255, 0,0,0,255),
 		indicatorOn(x+14/2-10/2, y+h/2-10/2, 10, 10, 0, 255, 0, 255,  0,0,0,255),
 		indicatorOff(x+14/2-10/2, y+h/2-10/2, 10, 10, 0, 0, 0, 255,  0,0,0,255)

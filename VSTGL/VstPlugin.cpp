@@ -130,6 +130,8 @@ vendorName("Jinju")
 	mEffSynthfilter = new Synthfilter(mParam, nullptr, nullptr);
 	mEffValve = new Valve(mParam, nullptr, nullptr);
 	mEffVibe = new Vibe(mParam, nullptr, nullptr);
+	mEffLimiter = new Compressor(mParam, nullptr, nullptr);
+	mEffLimiter->Compressor_Change_Preset(0,3);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};

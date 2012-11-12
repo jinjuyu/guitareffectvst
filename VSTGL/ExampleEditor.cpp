@@ -288,7 +288,7 @@ thing(0.0f)
 		sprintf(temp, "EffectName%d", i);
 		mGUI->AddToTList(list2, temp);
 	}
-
+	int b2 = mGUI->NewOnOffButton(x+240+180+15, 150/2-25/2, 50, 25, "On", &myButton2CB);
 	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
