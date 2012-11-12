@@ -200,6 +200,7 @@ GLvoid GLGUI::Print2(TextOption &op, const char *fmt, ...) // Bigger Font
 }
 void GLGUI::DrawQuad(QuadOption &op)
 {
+	glDisable(GL_TEXTURE_2D);
 	glBegin(GL_QUADS);
 	glColor4ub(op.r,op.g,op.b,op.a);
 	//glTexCoord2f(0.0f, 0.0f);
@@ -215,6 +216,7 @@ void GLGUI::DrawQuad(QuadOption &op)
 
 void GLGUI::DrawQuadBorder(QuadOptionBorder &op, int borderThick)
 {
+	glDisable(GL_TEXTURE_2D);
 	glBegin(GL_QUADS);
 	glColor4ub(op.r,op.g,op.b,op.a);
 	//DrawQuad
@@ -266,8 +268,11 @@ thing(0.0f)
 {
 	//Set the opengl context's size - This must be called here!
 	setRect(0, 0, 900, 650);
+
 	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
+	mSlider = mGUI->NewSlider(60, 165, 120, 0, 100);
+	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
 	mGUI->SetSliderCallback(mSlider, &myCB);
@@ -287,7 +292,7 @@ thing(0.0f)
 		sprintf(temp, "test%d", i);
 		mGUI->AddToTList(list2, temp);
 	}
-
+	*/
 }
 
 //----------------------------------------------------------------------------
@@ -356,11 +361,12 @@ void ExampleEditor::guiClose()
 //----------------------------------------------------------------------------
 void ExampleEditor::draw()
 {
-	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClearDepth(0.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
+	/*
 	QuadOption opQ(0,0,100,100, 0, 128, 128,255);
 	mGUI->DrawQuad(opQ);
 	TextOption op(0,0,100,100,0,0,255,255);
@@ -370,8 +376,21 @@ void ExampleEditor::draw()
 	mGUI->DrawQuadBorder(opQ2);
 	TextOption op2(0,100,100,100, 0,0,255,255);
 	mGUI->Print2(op2, "AAAAAAAAAAAA");
-
-
+	*/
+	for(int i=0;i<5;++i)
+	{
+		QuadOptionBorder opEff(i*180,650-250-250,180,250,  255, 128, 64,255, 128,64,32,255);
+		mGUI->DrawQuadBorder(opEff);
+	}
+	for(int i=0;i<5;++i)
+	{
+		QuadOptionBorder opEff(i*180,650-250,180,250,  255, 128, 64,255, 128,64,32,255);
+		mGUI->DrawQuadBorder(opEff);
+	}
+	TextOption op2(0,153,180,10, 0,0,0,255);
+	mGUI->Print2(op2, "EffectName");
+	TextOption op3(0,165,60,13, 0,0,0,255);
+	mGUI->Print(op3, "Option1");
 	mGUI->DrawElements();
 	/*glBegin(GL_QUADS);
 	glColor4ub(0,0,255,255);
