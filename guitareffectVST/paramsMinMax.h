@@ -105,17 +105,17 @@ public:
 			y = 150+250+35;
 		}
 		int i=0;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 		y += 15;
 
 		i=2;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // L/R.Cr
 		y += 15;
 		i=3;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Drive
 		y += 15;
 		i=4;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Level
 		y += 15;
 		
 		mButtons.push_back(mGUI->NewButton(x+5,y,60, 20, "Type", myCB1));
@@ -128,18 +128,18 @@ public:
 		y += 23;
 
 		i=1;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Pan
 		y += 15;
 
 		i=12;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Sub Octv
 		y += 15;
 
 		i=7;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
-		y += 15;
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // LPF
+		y += 15; 
 		i=8;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1]));
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // HPF
 		y += 15;
 
 
