@@ -23,6 +23,7 @@
 
 #include "VstPlugin.h"
 #include "ExampleEditor.h"
+#include "../guitareffectVST/paramsMinMax.h"
 #include <string>
 using namespace std;
 
@@ -430,7 +431,31 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffSustainer->processReplacing(outputs, outputs, sampleFrames);
 	//mEffSynthfilter->processReplacing(outputs, outputs, sampleFrames);
 	//mEffValve->processReplacing(outputs, outputs, sampleFrames);
-	mEffVibe->processReplacing(outputs, outputs, sampleFrames);
+	float *tempOutputs[2];
+	tempOutputs[0] = new float[sampleFrames];
+	tempOutputs[1] = new float[sampleFrames];
+	float outVolume;
+
+	/*
+	outVolume = mEffVibe->outvolume;
+	mEffVibe->processReplacing(outputs, tempOutputs, sampleFrames);
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}
+	*/
+
+	outVolume = mEffDistorsion->outvolume;
+	mEffDistorsion->processReplacing(outputs, tempOutputs, sampleFrames);
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}
+
+	delete tempOutputs[0];
+	delete tempOutputs[1];
 
 
 	//If there are events remaining in the queue, update their delta values.

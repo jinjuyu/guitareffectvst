@@ -38,8 +38,6 @@ Chorus::Chorus (Parameters *param, float * efxoutl_, float * efxoutr_)
     delayl = new float[maxdelay];
     delayr = new float[maxdelay];
 
-    Ppreset = 0;
-    setpreset (0,Ppreset);
 
     float tmp = 0.08f;
     ldelay = new delayline(param,tmp, 2);
@@ -56,6 +54,10 @@ Chorus::Chorus (Parameters *param, float * efxoutl_, float * efxoutr_)
     lfo.effectlfoout (&lfol, &lfor);
     dl2 = getdelay (lfol);
     dr2 = getdelay (lfor);
+
+	Ppreset = 0;
+    setpreset (0,Ppreset);
+
     cleanup ();
 };
 

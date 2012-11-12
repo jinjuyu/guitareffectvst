@@ -249,6 +249,9 @@
     <ClCompile Include="paramsMinMax.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DistorsionPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vst\audioeffect.h">
@@ -496,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="aaa.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DistorsionPanel.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

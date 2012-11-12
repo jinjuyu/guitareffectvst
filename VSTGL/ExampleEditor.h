@@ -32,7 +32,7 @@
 #include <math.h>
 using namespace std;
 ///	Simple VSTGL example.
-#pragma warning(disable:4244 4018)
+#pragma warning(disable: 4018)
 class TextOption
 {
 public:
@@ -249,9 +249,9 @@ public:
 				(*i)->OnMouseMove(x,y);
 		}
 	}
-private:
 	typedef vector<GUIElement *> GUIElements;
 	GUIElements mGUIElements;
+private:
 	GLuint image;
 	GLuint mFont1;
 	GLuint mFont2;
@@ -323,7 +323,7 @@ public:
 		int startPosX = x+30;
 		int val = slider.x - startPosX;
 		float valFloat = (float)val / (float)CalculateTotalSliderLength();
-		curVal = min_ + (max_-min_)*valFloat;
+		curVal = (int)((float)min_ + float(max_-min_)*valFloat);
 	}
 	void SetVal(int val)
 	{
@@ -336,7 +336,7 @@ public:
 	{
 		int startPosX = x+30;
 		float valFloat = float(curVal) / (float)(min_+(max_-min_));
-		int val = valFloat * CalculateTotalSliderLength();
+		int val = (int)(valFloat * (float)CalculateTotalSliderLength());
 		slider.x = val + startPosX;
 	}
 	int CalculateTotalSliderLength()
@@ -732,7 +732,10 @@ public:
 		//MessageBox(NULL, temp, temp, MB_OK);
 	}
 };
-class DistorsionPanel;
+namespace DistorsionPanelNS
+{
+	class DistorsionPanel;
+}
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -747,7 +750,7 @@ class ExampleEditor : public VSTGLEditor,
 	MyListCallback myListCB;
 	MyTLButtonCallback myTLCB;
 	
-	DistorsionPanel *mPanel;
+	DistorsionPanelNS::DistorsionPanel *mPanel;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.

@@ -23,6 +23,7 @@
 
 #include "ExampleEditor.h"
 #include "../guitareffectVST/paramsMinMax.h"
+#include "../guitareffectVST/DistorsionPanel.h"
 #include <string>
 using namespace std;
 
@@ -303,7 +304,7 @@ thing(0.0f)
 		mOnOffButtons[i] = b;
 	}
 
-	mPanel = new DistorsionPanel(mGUI,0);
+	mPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, 0);
 	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
@@ -539,8 +540,9 @@ SetSliderCallback(int handle, SliderCallback *cb)
 		if((*i)->mHandle == handle)
 		{
 			((Slider*)(*i))->SetCallback(cb);
+			break;
 		}
-		break;
+		
 	}
 }
 int GLGUI::NewButton(int x, int y, int w, int h, string label, ButtonCallback *cb)
