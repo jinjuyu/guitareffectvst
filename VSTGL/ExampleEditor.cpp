@@ -272,6 +272,23 @@ thing(0.0f)
 	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
 	mSlider = mGUI->NewSlider(60, 165, 120, 0, 100);
+	int x = 400;
+	int button = mGUI->NewButton(x+190, 75-25/2, 40, 25, "<==>", &myButtonCB);
+	int list = mGUI->NewList(x+240, 0, 180, 150, &myListCB);
+	int list2 = mGUI->NewTList(x+0, 0, 180, 150, &myTLCB);
+	char temp[123];
+	for(int i=0;i<10;++i)
+	{
+		sprintf(temp, "EffectName%d", i);
+		mGUI->AddToList(list, temp);
+	}
+
+	for(int i=0;i<50;++i)
+	{
+		sprintf(temp, "EffectName%d", i);
+		mGUI->AddToTList(list2, temp);
+	}
+
 	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);

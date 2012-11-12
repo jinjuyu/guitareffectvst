@@ -446,11 +446,6 @@ public:
 				idx++;
 				curY += listH;
 			}
-			if(!found)
-		 	{
-				selected = -1;
-				if(mCB) mCB->OnSelect(selected);
-			}
 			if(found && mCB) mCB->OnSelect(selected);
 		}
 	}
@@ -554,11 +549,6 @@ public:
 				}
 				idx++;
 				curY += listH;
-			}
-			if(!found)
-		 	{
-				selected = -1;
-				if(mCB) mCB->OnSelect(selected);
 			}
 			if(found && mCB) mCB->OnSelect(selected);
 			
