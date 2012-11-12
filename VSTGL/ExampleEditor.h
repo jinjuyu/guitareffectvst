@@ -29,6 +29,7 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <vector>
+#include <math.h>
 using namespace std;
 ///	Simple VSTGL example.
 #pragma warning(disable:4244 4018)
@@ -67,6 +68,19 @@ public:
 	unsigned int rb,gb,bb,ab;
 };
 
+inline double logB(double x, double base) {
+  return log(x) / log(base);
+}
+
+inline float GetFreqByRealMinMax(int val)
+{
+	return 440.0f * powf(2.0f,(((float)val-100.0f)/12.0f));
+}
+inline int GetRealMinMaxByFreq(float freq)
+{
+	return (int)((12.0f*(logB(freq/440.0f, 2.0))+100)+0.5f);
+}
+
 class GLGUI;
 class GUIElement
 {
@@ -97,6 +111,7 @@ public:
 	virtual void SetVal(int val)
 	{
 	}
+	
 };
 class ButtonCallback
 {
@@ -173,7 +188,7 @@ public:
 	{
 		mGUIElements[handle]->hidden = show;
 	}
-	int NewSlider(int x, int y, int w, int min_, int max_);
+	int NewSlider(int x, int y, int w, int min_, int max_, bool isFreq=false);
 	void SetSliderVal(int handle, int val);
 	void SetSliderCallback(int handle, SliderCallback *cb);
 	int NewList(int x,int y,int w,int h, ListBoxCallback *cb);
@@ -247,18 +262,19 @@ bool InRect(int x,int y,int w,int h,int x2,int y2);
 class Slider : public GUIElement
 {
 public:
-	Slider(int handle, GLGUI* gui, int x, int y, int w, int min_, int max_)
+	Slider(int handle, GLGUI* gui, int x, int y, int w, int min_, int max_, bool isFreq=false)
 		:GUIElement(handle, gui), 
 		x(x),y(y),w(w),min_(min_),max_(max_),
 		line(x+29, y+13/2, w-29, 3, 255,255,255,255, 0,0,0,255),
 		slider(x+30, y, 20, 13, 255,255,255,255, 0,0,0,255),
-		top(x,y,29,13, 0,0,0,255)
+		top(x,y,29,13, 0,0,0,255), mIsFreq(isFreq)
 
 	{
 		h = 13;
 		LMouseDown = false;
 		mCB = nullptr;
 	}
+	bool mIsFreq;
 	SliderCallback *mCB;
 	void SetCallback(SliderCallback *cb)
 	{
@@ -663,7 +679,7 @@ public:
 		char temp[32];
 		sprintf(temp, "%d", idx);
 		//MessageBox(NULL, temp, temp, MB_OK);
-
+		
 	}
 };
 class MyButtonCallback : public ButtonCallback
@@ -687,7 +703,9 @@ public:
 	}
 	void OnOn()
 	{
-		MessageBox(NULL, "On", "", MB_OK);
+		char temp[123];
+		sprintf(temp, "%d", GetRealMinMaxByFreq(GetFreqByRealMinMax(48)));
+		MessageBox(NULL, temp, "", MB_OK);
 	}
 	void OnOff()
 	{

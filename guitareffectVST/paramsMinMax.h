@@ -47,6 +47,13 @@ public:
 	DistorsionNegCallback(DistorsionPanel *a);
 	void OnClick();
 };
+class LPFCallBack : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	LPFCallBack(DistorsionPanel *a);
+	void SetVal(int val);
+};
 class DistorsionPanel
 {
 public:
@@ -69,8 +76,8 @@ public:
 			0, 127,
 			0,29,
 			0,1,
-			20,26000,
-			20,20000,
+			47,171, // 20~26000, 이 값을 GetFreqByRealMinMax로 변환하면 주파수가 나온다.
+			47,166, // 20~20000
 			0,1,
 			0,1,
 			0,0,
@@ -85,8 +92,8 @@ public:
 			0,127, // Level
 			0,29, // Type, Label로 타입을 가져옴 음 그러면 이 버튼을 누르면 위에 빈 공간에 탭드리스트 옵션창이 생성되어 고를수있게 한다.
 			0,1, // Neg.:Boolean
-			20,26000, // LPF
-			20,20000, // HPF
+			0,100, // LPF
+			0,100, // HPF
 			0,1, // Stereo:Boolean
 			0,1, // Pre Filter:Boolean
 			0,0, // 없음
@@ -136,13 +143,39 @@ public:
 		y += 15;
 
 		i=7;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // LPF
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1], true)); // LPF
 		y += 15; 
+
 		i=8;
-		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // HPF
+		mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1], true)); // HPF
 		y += 15;
-
-
+		char temp[123];
+		sprintf(temp, "%d %d", RealToPrint(7, 47), PrintToReal(7, 100));
+		MessageBox(NULL, temp, temp, MB_OK);
+	}
+	int PrintToReal(int idx, int val)
+	{
+		int printMin = print[idx*2];
+		int printMax = print[idx*2+1];
+		int realMin = real[idx*2];
+		int realMax = real[idx*2+1];
+		int printLength = printMax-printMin;
+		int realLength = realMax-realMin;
+		
+		float printVal = float(val - printMin)/float(printLength);
+		return realMin + (int)(printVal*realLength+0.5f);
+	}
+	int RealToPrint(int idx, int val)
+	{
+		int printMin = print[idx*2];
+		int printMax = print[idx*2+1];
+		int realMin = real[idx*2];
+		int realMax = real[idx*2+1];
+		int printLength = printMax-printMin;
+		int realLength = realMax-realMin;
+		
+		float realVal = float(val - realMin)/float(realLength);
+		return printMin + (int)(realVal*printLength+0.5f);
 	}
 	~DistorsionPanel()
 	{

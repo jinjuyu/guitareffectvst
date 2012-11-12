@@ -15,3 +15,11 @@ DistorsionNegCallback::	DistorsionNegCallback(DistorsionPanel *a)
 void DistorsionNegCallback::OnClick()
 {
 }
+
+
+LPFCallBack::LPFCallBack(DistorsionPanel *a):SliderCallback() ,mPanel(a)
+{
+}
+void LPFCallBack::SetVal(int val)
+{
+}

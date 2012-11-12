@@ -481,10 +481,10 @@ GUIElement::GUIElement(int handle, GLGUI *gui)
 	gui->AddElement(this);
 }
 //===================
-int GLGUI::	NewSlider(int x, int y, int w, int min_, int max_)
+int GLGUI::	NewSlider(int x, int y, int w, int min_, int max_, bool isFreq)
 {
 	int handle = GetNewHandle();
-	Slider *sl = new Slider(handle, this, x,y,w,min_,max_);
+	Slider *sl = new Slider(handle, this, x,y,w,min_,max_, isFreq);
 	return handle;
 }
 int GLGUI::NewTList(int x,int y,int w,int h, TabbedListBoxCallback *cb)
