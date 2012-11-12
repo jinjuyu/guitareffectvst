@@ -589,6 +589,7 @@ public:
 	}
 	bool mOn;
 	string mLabel;
+	
 	OnOffButtonCallback *mCB;
 	void SetCallback(OnOffButtonCallback *cb)
 	{
@@ -751,6 +752,7 @@ class ExampleEditor : public VSTGLEditor,
   private:
 	GLGUI *mGUI;
 	int mSlider;
+	int mOnOffButtons[10];
 	///	Variable used to rotate the pyramid.
 	float thing;
 };

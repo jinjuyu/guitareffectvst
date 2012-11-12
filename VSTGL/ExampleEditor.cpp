@@ -271,7 +271,7 @@ thing(0.0f)
 
 	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
-	mSlider = mGUI->NewSlider(60, 165, 120, 0, 100);
+	mSlider = mGUI->NewSlider(60, 185, 120, 0, 100);
 	int x = 400;
 	int button = mGUI->NewButton(x+190, 75-25/2, 40, 25, "<==>", &myButtonCB);
 	int list = mGUI->NewList(x+240, 0, 180, 150, &myListCB);
@@ -289,6 +289,16 @@ thing(0.0f)
 		mGUI->AddToTList(list2, temp);
 	}
 	int b2 = mGUI->NewOnOffButton(x+240+180+15, 150/2-25/2, 50, 25, "On", &myButton2CB);
+	for(int i=0;i<5;++i)
+	{
+		int b = mGUI->NewOnOffButton(i*180, 13+150, 50, 20, "On", &myButton2CB);
+		mOnOffButtons[i] = b;
+	}
+	for(int i=5;i<10;++i)
+	{
+		int b = mGUI->NewOnOffButton((i-5)*180, 13+150+250, 50, 20, "On", &myButton2CB);
+		mOnOffButtons[i] = b;
+	}
 	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
@@ -406,7 +416,7 @@ void ExampleEditor::draw()
 	}
 	TextOption op2(0,153,180,10, 0,0,0,255);
 	mGUI->Print2(op2, "EffectName");
-	TextOption op3(0,165,60,13, 0,0,0,255);
+	TextOption op3(0,185,60,13, 0,0,0,255);
 	mGUI->Print(op3, "Option1");
 	mGUI->DrawElements();
 	/*glBegin(GL_QUADS);
