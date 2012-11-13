@@ -58,8 +58,44 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	cbPrefilter = new DistorsionPrefilterCallback(this);
 	myCB1 = new DistorsionTypeCallback(this);
 	myCB2 = new DistorsionNegCallback(this);
+	cbType = new TypeCallback(this);
 	mBypass = true;
-	mHidden = true;
+	//mHidden = true;
+
+	mTypeStrs.push_back("Atan");
+	mTypeStrs.push_back("Asym");
+	mTypeStrs.push_back("Pow");
+	mTypeStrs.push_back("Sine");
+	mTypeStrs.push_back("Quant");
+	mTypeStrs.push_back("ZigZag");
+	mTypeStrs.push_back("Lim");
+	mTypeStrs.push_back("UpLim");
+	mTypeStrs.push_back("LoLim");
+	mTypeStrs.push_back("InvLim");
+
+	mTypeStrs.push_back("Clip");
+	mTypeStrs.push_back("Asym2");
+	mTypeStrs.push_back("Pow2");
+	mTypeStrs.push_back("Sigmoid");
+	mTypeStrs.push_back("Crunch");
+	mTypeStrs.push_back("HardCr");
+	mTypeStrs.push_back("OctvUp");
+	mTypeStrs.push_back("MSquare");
+	mTypeStrs.push_back("MSaw");
+	mTypeStrs.push_back("Compres");
+
+	mTypeStrs.push_back("Overdrv");
+	mTypeStrs.push_back("Soft");
+	mTypeStrs.push_back("SupSoft");
+	mTypeStrs.push_back("HardCmp");
+	mTypeStrs.push_back("LmtNoG");
+	mTypeStrs.push_back("FET");
+	mTypeStrs.push_back("DynoFET");
+	mTypeStrs.push_back("Valve1");
+	mTypeStrs.push_back("Valve2");
+	mTypeStrs.push_back("DiodeClp");
+
+
 	real = DistortionReal;
 
 	print = DistortionPrint;
@@ -78,7 +114,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	//mGUI->Print(TextOption(x+45,y-20,60, 20, 0,0,0,255), "Preset:");
 	
 	mButtons.push_back(mGUI->NewButton(x+105,y-35+13,70, 20, "Default", myCB1)); // Preset
-
+	mPresetButton = *(mButtons.end()-1);
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbWetDry);
 	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
@@ -102,7 +138,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	y += 15;
 		
 	mButtons.push_back(mGUI->NewButton(x+5+40,y,60, 20, "ATan", myCB1)); // Type
-		
+	mTypeButton = *(mButtons.end()-1);
 	mButtons.push_back(mGUI->NewOnOffButton(x+180-55,y,50, 20, "Neg.", myCB2)); // Neg.
 	y += 23;
 
@@ -148,6 +184,34 @@ DistorsionTypeCallback::	DistorsionTypeCallback(DistorsionPanel *a)
 }
 void DistorsionTypeCallback::OnClick()
 {
+	mPanel->mGUI->mPopupList->hidden = false;
+	mPanel->mGUI->mPopupList->Clear();
+
+	for(int i=0;i<30;++i)
+	{
+		mPanel->mGUI->mPopupList->Add(mPanel->mTypeStrs[i]);
+	}
+	mPanel->mGUI->mPopupList->SetCallback(mPanel->cbType);
+	
+}
+
+TypeCallback::TypeCallback(DistorsionPanel *a):mPanel(a), TabbedListBoxCallback()
+{
+}
+void TypeCallback::OnPageSelect(int idx)
+{
+}
+void TypeCallback::OnSelect(int idx)
+{
+	if(idx != -1)
+	{
+		mPanel->mGUI->mPopupList->hidden = true;
+		mPanel->mGUI->mPopupList->Clear();
+		mPanel->mPlug->mEffDistorsion->changepar(5, idx);
+		Button *but = (Button *)mPanel->mGUI->GetElement(mPanel->mTypeButton);
+		but->mLabel = mPanel->mTypeStrs[idx];
+	}
+
 }
 
 DistorsionNegCallback::	DistorsionNegCallback(DistorsionPanel *a)

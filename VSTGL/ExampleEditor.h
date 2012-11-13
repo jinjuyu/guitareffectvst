@@ -159,13 +159,12 @@ public:
 	{
 	}
 };
+class TabbedListBox;
 class GLGUI
 {
 public:
-	GLGUI(void *hInstance):m_hInstance(hInstance)
-	{
-		handleCounter = 0;
-	}
+	GLGUI(void *hInstance);
+	TabbedListBox *mPopupList;
 	~GLGUI()
 	{
 		/*for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
@@ -177,6 +176,17 @@ public:
 	void AddElement(GUIElement *ele)
 	{
 		mGUIElements.push_back(ele);
+	}
+	GUIElement *GetElement(int handle)
+	{
+		for(GUIElements::iterator it=mGUIElements.begin(); it != mGUIElements.end(); ++it)
+		{
+			if((*it)->mHandle == handle)
+			{
+				return *it;
+			}
+		}
+		return nullptr;
 	}
 	int GetNewHandle()
 	{
@@ -494,6 +504,12 @@ public:
 		mCB = cb;
 	}
 	vector<string> mStrs;
+	void Clear()
+	{
+		mStrs.clear();
+		selected = -1;
+		curPage = 0;
+	}
 	void Add(string label, int idx = -1)
 	{
 		if(idx != -1)

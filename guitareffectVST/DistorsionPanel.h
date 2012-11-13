@@ -73,6 +73,14 @@ public:
 	PanCallback(DistorsionPanel *a);
 	void SetVal(int val);
 };
+class TypeCallback : public TabbedListBoxCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	TypeCallback(DistorsionPanel *a);
+	void OnSelect(int idx);
+	void OnPageSelect(int idx);
+};
 class LPFCallback : public SliderCallback
 {
 public:
@@ -101,6 +109,9 @@ class DistorsionPanel
 public:
 	int *real;
 	int *print;
+	int mTypeButton;
+	int mPresetButton;
+	vector<string> mTypeStrs;
 	WetDryCallback *cbWetDry;
 	LRCRCallback *cbLRCR;
 	DriveCallback *cbDrive;
@@ -108,6 +119,7 @@ public:
 	PanCallback *cbPan;
 	HPFCallback *cbHPF;
 	LPFCallback *cbLPF;
+	TypeCallback *cbType;
 	SubOctvCallback *cbSubOctv;
 	DistorsionTypeCallback *myCB1;
 	DistorsionNegCallback *myCB2;

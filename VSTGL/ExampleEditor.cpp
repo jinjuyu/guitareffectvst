@@ -557,6 +557,12 @@ int GLGUI::NewOnOffButton(int x, int y, int w, int h, string label, OnOffButtonC
 	bu->SetCallback(cb);
 	return handle;
 }
+GLGUI::GLGUI(void *hInstance):m_hInstance(hInstance)
+{
+	handleCounter = 0;
+	mPopupList = new TabbedListBox(GetNewHandle(), this, 0, 0, 200, 150);
+	mPopupList->hidden = true;
+}
 //------
 bool InRect(int x,int y,int w,int h,int x2,int y2)
 {
