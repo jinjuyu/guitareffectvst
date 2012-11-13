@@ -206,7 +206,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	int i=0;
 	//mGUI->Print(TextOption(x+45,y-20,60, 20, 0,0,0,255), "Preset:");
 	
-	mButtons.push_back(mGUI->NewButton(x+105,y-35+13,70, 20, "Default", cbPresetSelect)); // Preset
+	mButtons.push_back(mGUI->NewButton(x+100,y-35+13,80, 20, "Default", cbPresetSelect)); // Preset
 	mPresetButton = *(mButtons.end()-1);
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 	mVolume = *(mButtons.end()-1);
@@ -276,6 +276,8 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mPlug->mEffDistorsion->changepar(6, 0); // neg
 	mPlug->mEffDistorsion->changepar(10, 0); // prefilter
 	y += 15;
+
+	SetPreset(0);
 	/*
 	char temp[123];
 	sprintf(temp, "%.4f %d", RealToVst(7, 47), VstToReal(7, 1.0));
