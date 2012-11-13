@@ -14,6 +14,13 @@ public:
 	DistorsionTypeCallback(DistorsionPanel *a);
 	void OnClick();
 };
+class PresetCallback : public ButtonCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	PresetCallback(DistorsionPanel *a);
+	void OnClick();
+};
 class DistorsionNegCallback : public OnOffButtonCallback
 {
 public:
@@ -81,6 +88,14 @@ public:
 	void OnSelect(int idx);
 	void OnPageSelect(int idx);
 };
+class PresetListCallback : public TabbedListBoxCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	PresetListCallback(DistorsionPanel *a);
+	void OnSelect(int idx);
+	void OnPageSelect(int idx);
+};
 class LPFCallback : public SliderCallback
 {
 public:
@@ -124,7 +139,20 @@ public:
 	DistorsionTypeCallback *myCB1;
 	DistorsionNegCallback *myCB2;
 	DistorsionPrefilterCallback *cbPrefilter;
+	PresetCallback *cbPresetSelect;
+	PresetListCallback *cbPresetSelected;
 	VstPlugin *mPlug;
+	int mVolume;
+	int mPanning;
+	int mLRCr;
+	int mDrive;
+	int mLevel;
+	int mNeg;
+	int mLPF;
+	int mHPF;
+	int mPreFilter;
+	int mSubOctv;
+
 	~DistorsionPanel()
 	{
 		for(vector<int>::iterator it = mButtons.begin(); it != mButtons.end(); ++it)
@@ -134,9 +162,23 @@ public:
 		delete cbWetDry;
 		delete myCB1;
 		delete myCB2;
+		delete cbLRCR;
+		delete cbDrive;
+		delete cbLevel;
+		delete cbPan;
+		delete cbHPF;
+		delete cbLPF;
+		delete cbSubOctv;
+		delete cbPrefilter;
+		delete cbPresetSelect;
+		delete cbPresetSelected;
+		delete cbType;
+
 	}
 	DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis);
-
+	void SetPreset(int preset);
+	vector<string> mPresetStrs;
+	int *mPresets;
 	int PrintToReal(int idx, int val)
 	{
 		int printMin = print[idx*2];
