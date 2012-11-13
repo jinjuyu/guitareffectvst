@@ -1,4 +1,9 @@
 /*
+SetPAramater에서 값을 읽어서 슬라이더등에 SetVal을 한다.
+
+
+
+
     for (int i = 0; i <= 45; i += 5) {
         efx_EQ1->changepar (i + 10, 7);
         efx_EQ1->changepar (i + 14, 0);

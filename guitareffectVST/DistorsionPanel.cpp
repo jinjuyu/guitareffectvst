@@ -16,7 +16,7 @@ void DistorsionPanel::DrawText()
 	}
 	TextOption op2(0,y-35+3,180,10, 0,0,0,255);
 	mGUI->Print2(op2, "Distortion");
-
+	mGUI->Print(TextOption(x+45,y-35+13,60, 20, 0,0,0,255), "Preset:");
 	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Wet/Dry");
 	y += 15;
 
@@ -26,9 +26,9 @@ void DistorsionPanel::DrawText()
 	y += 15;
 	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Level");
 	y += 15;
+	mGUI->Print(TextOption(x,y,40, 20, 0,0,0,255), "Type");
 		
 	y += 23;
-
 	y += 23;
 
 	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Pan");
@@ -67,13 +67,15 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 		y = 150+250+35;
 	}
 	int i=0;
+	//mGUI->Print(TextOption(x+45,y-20,60, 20, 0,0,0,255), "Preset:");
+	mButtons.push_back(mGUI->NewButton(x+105,y-35+13,70, 20, "Default", myCB1)); // Preset
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbWetDry);
 	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
-	/*
+	
 	i=2;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // L/R.Cr
 	y += 15;
@@ -84,9 +86,9 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Level
 	y += 15;
 		
-	mButtons.push_back(mGUI->NewButton(x+5,y,60, 20, "Type", myCB1));
+	mButtons.push_back(mGUI->NewButton(x+5+40,y,60, 20, "ATan", myCB1));
 		
-	mButtons.push_back(mGUI->NewOnOffButton(x+5+65,y,50, 20, "Neg.", myCB2));
+	mButtons.push_back(mGUI->NewOnOffButton(x+180-55,y,50, 20, "Neg.", myCB2));
 	y += 23;
 
 	mButtons.push_back(mGUI->NewOnOffButton(x+5,y,75, 20, "Prefilter", myCB2));
