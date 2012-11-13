@@ -1,6 +1,9 @@
 /*
 SetPAramater에서 값을 읽어서 슬라이더등에 SetVal을 한다.
-
+// 팝업을 띄우는데, 리스트이므로 리스트를 띄운다.
+	// PopupTabbedList라고 이름을 붙이고 TabbedList를 팝업으로 띄운다.
+	// 화면 밖으로 나가지 않게 위치선정을 스마~트하게.
+	Derelict == NewDist
 
 
 

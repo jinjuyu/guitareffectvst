@@ -48,6 +48,14 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	:mGUI(gui), mWhereis(whereis), mPlug(plug)
 {
 	cbWetDry = new WetDryCallback(this);
+	cbLRCR = new LRCRCallback(this);
+	cbDrive = new DriveCallback(this);
+	cbLevel = new LevelCallback(this);
+	cbPan = new PanCallback(this);
+	cbHPF = new HPFCallback(this);
+	cbLPF = new LPFCallback(this);
+	cbSubOctv = new SubOctvCallback(this);
+	cbPrefilter = new DistorsionPrefilterCallback(this);
 	myCB1 = new DistorsionTypeCallback(this);
 	myCB2 = new DistorsionNegCallback(this);
 	mBypass = true;
@@ -68,6 +76,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	}
 	int i=0;
 	//mGUI->Print(TextOption(x+45,y-20,60, 20, 0,0,0,255), "Preset:");
+	
 	mButtons.push_back(mGUI->NewButton(x+105,y-35+13,70, 20, "Default", myCB1)); // Preset
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
@@ -78,37 +87,55 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	
 	i=2;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // L/R.Cr
+	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLRCR);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 	i=3;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Drive
+	mGUI->SetSliderCallback(*(mButtons.end()-1), cbDrive);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 	i=4;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Level
+	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLevel);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 		
-	mButtons.push_back(mGUI->NewButton(x+5+40,y,60, 20, "ATan", myCB1));
+	mButtons.push_back(mGUI->NewButton(x+5+40,y,60, 20, "ATan", myCB1)); // Type
 		
-	mButtons.push_back(mGUI->NewOnOffButton(x+180-55,y,50, 20, "Neg.", myCB2));
+	mButtons.push_back(mGUI->NewOnOffButton(x+180-55,y,50, 20, "Neg.", myCB2)); // Neg.
 	y += 23;
 
-	mButtons.push_back(mGUI->NewOnOffButton(x+5,y,75, 20, "Prefilter", myCB2));
-	mButtons.push_back(mGUI->NewOnOffButton(x+5+80,y,70, 20, "Stereo", myCB2));
+	mButtons.push_back(mGUI->NewOnOffButton(x+5,y,75, 20, "Prefilter", cbPrefilter)); // Prefilter
+	//mButtons.push_back(mGUI->NewOnOffButton(x+5+80,y,70, 20, "Stereo", myCB2)); // Stereo
 	y += 23;
 
 	i=1;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Pan
+	mGUI->SetSliderCallback(*(mButtons.end()-1), cbPan);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=12;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Sub Octv
+	mGUI->SetSliderCallback(*(mButtons.end()-1), cbSubOctv);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=7;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1], true)); // LPF
+	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLPF);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15; 
 
 	i=8;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1], true)); // HPF
+	mGUI->SetSliderCallback(*(mButtons.end()-1), cbHPF);
+	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
+	
+	
+	mPlug->mEffDistorsion->changepar(6, 0); // neg
+	mPlug->mEffDistorsion->changepar(10, 0); // prefilter
 	y += 15;
 	/*
 	char temp[123];
@@ -127,8 +154,26 @@ DistorsionNegCallback::	DistorsionNegCallback(DistorsionPanel *a)
 	:mPanel(a), OnOffButtonCallback()
 {
 }
-void DistorsionNegCallback::OnClick()
+void DistorsionNegCallback::OnOn()
 {
+	mPanel->mPlug->mEffDistorsion->changepar(6, 1);
+}
+void DistorsionNegCallback::OnOff()
+{
+	mPanel->mPlug->mEffDistorsion->changepar(6, 0);
+}
+
+DistorsionPrefilterCallback::	DistorsionPrefilterCallback(DistorsionPanel *a)
+	:mPanel(a), OnOffButtonCallback()
+{
+}
+void DistorsionPrefilterCallback::OnOn()
+{
+	mPanel->mPlug->mEffDistorsion->changepar(10, 1);
+}
+void DistorsionPrefilterCallback::OnOff()
+{
+	mPanel->mPlug->mEffDistorsion->changepar(10, 0);
 }
 
 
@@ -139,9 +184,6 @@ void LPFCallBack::SetVal(int val)
 {
 }
 
-WetDryCallback::WetDryCallback(DistorsionPanel *a): mPanel(a)
-{
-}
 int DistortionReal[] = {
 	0, 127,
 	0, 127,
@@ -172,10 +214,104 @@ int DistortionPrint[] = {
 	0,0, // ¾øÀ½
 	0,127, // Sub Octv
 };
+WetDryCallback::WetDryCallback(DistorsionPanel *a): mPanel(a)
+{
+}
 void WetDryCallback::SetVal(int val)
 {
 	int newval = mPanel->PrintToReal(0, val);
 	mPanel->mPlug->mEffDistorsion->changepar(0, newval);
+	/*
+	char temp[123];
+	sprintf(temp, "%d", newval);
+	MessageBox(NULL, temp, temp, MB_OK);*/
+}
+LRCRCallback::LRCRCallback(DistorsionPanel *a): mPanel(a)
+{
+}
+void LRCRCallback::SetVal(int val)
+{
+	int newval = mPanel->PrintToReal(2, val);
+	mPanel->mPlug->mEffDistorsion->changepar(2, newval);
+	/*
+	char temp[123];
+	sprintf(temp, "%d", newval);
+	MessageBox(NULL, temp, temp, MB_OK);*/
+}
+
+DriveCallback::DriveCallback(DistorsionPanel *a): mPanel(a)
+{
+}
+void DriveCallback::SetVal(int val)
+{
+	int newval = mPanel->PrintToReal(3, val);
+	mPanel->mPlug->mEffDistorsion->changepar(3, newval);
+	/*
+	char temp[123];
+	sprintf(temp, "%d", newval);
+	MessageBox(NULL, temp, temp, MB_OK);*/
+}
+
+LevelCallback::LevelCallback(DistorsionPanel *a): mPanel(a)
+{
+}
+void LevelCallback::SetVal(int val)
+{
+	int newval = mPanel->PrintToReal(4, val);
+	mPanel->mPlug->mEffDistorsion->changepar(4, newval);
+	/*
+	char temp[123];
+	sprintf(temp, "%d", newval);
+	MessageBox(NULL, temp, temp, MB_OK);*/
+}
+
+
+PanCallback::PanCallback(DistorsionPanel *a): mPanel(a)
+{
+}
+void PanCallback::SetVal(int val)
+{
+	int newval = mPanel->PrintToReal(1, val);
+	mPanel->mPlug->mEffDistorsion->changepar(1, newval);
+	/*
+	char temp[123];
+	sprintf(temp, "%d", newval);
+	MessageBox(NULL, temp, temp, MB_OK);*/
+}
+
+HPFCallback::HPFCallback(DistorsionPanel *a): mPanel(a)
+{
+}
+void HPFCallback::SetVal(int val)
+{
+	int newval = mPanel->PrintToReal(8, val);
+	mPanel->mPlug->mEffDistorsion->changepar(8, newval);
+	/*
+	char temp[123];
+	sprintf(temp, "%d", newval);
+	MessageBox(NULL, temp, temp, MB_OK);*/
+}
+
+LPFCallback::LPFCallback(DistorsionPanel *a): mPanel(a)
+{
+}
+void LPFCallback::SetVal(int val)
+{
+	int newval = mPanel->PrintToReal(7, val);
+	mPanel->mPlug->mEffDistorsion->changepar(7, newval);
+	/*
+	char temp[123];
+	sprintf(temp, "%d", newval);
+	MessageBox(NULL, temp, temp, MB_OK);*/
+}
+
+SubOctvCallback::SubOctvCallback(DistorsionPanel *a): mPanel(a)
+{
+}
+void SubOctvCallback::SetVal(int val)
+{
+	int newval = mPanel->PrintToReal(12, val);
+	mPanel->mPlug->mEffDistorsion->changepar(12, newval);
 	/*
 	char temp[123];
 	sprintf(temp, "%d", newval);

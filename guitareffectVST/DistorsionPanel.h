@@ -19,8 +19,18 @@ class DistorsionNegCallback : public OnOffButtonCallback
 public:
 	DistorsionPanel *mPanel;
 	DistorsionNegCallback(DistorsionPanel *a);
-	void OnClick();
+	void OnOn();
+	void OnOff();
 };
+class DistorsionPrefilterCallback : public OnOffButtonCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	DistorsionPrefilterCallback(DistorsionPanel *a);
+	void OnOn();
+	void OnOff();
+};
+
 class LPFCallBack : public SliderCallback
 {
 public:
@@ -35,6 +45,55 @@ public:
 	WetDryCallback(DistorsionPanel *a);
 	void SetVal(int val);
 };
+class LRCRCallback : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	LRCRCallback(DistorsionPanel *a);
+	void SetVal(int val);
+};
+class DriveCallback : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	DriveCallback(DistorsionPanel *a);
+	void SetVal(int val);
+};
+class LevelCallback : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	LevelCallback(DistorsionPanel *a);
+	void SetVal(int val);
+};
+class PanCallback : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	PanCallback(DistorsionPanel *a);
+	void SetVal(int val);
+};
+class LPFCallback : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	LPFCallback(DistorsionPanel *a);
+	void SetVal(int val);
+};
+class HPFCallback : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	HPFCallback(DistorsionPanel *a);
+	void SetVal(int val);
+};
+class SubOctvCallback : public SliderCallback
+{
+public:
+	DistorsionPanel *mPanel;
+	SubOctvCallback(DistorsionPanel *a);
+	void SetVal(int val);
+};
 extern int DistortionReal[];
 extern int DistortionPrint[];
 class DistorsionPanel
@@ -43,8 +102,16 @@ public:
 	int *real;
 	int *print;
 	WetDryCallback *cbWetDry;
+	LRCRCallback *cbLRCR;
+	DriveCallback *cbDrive;
+	LevelCallback *cbLevel;
+	PanCallback *cbPan;
+	HPFCallback *cbHPF;
+	LPFCallback *cbLPF;
+	SubOctvCallback *cbSubOctv;
 	DistorsionTypeCallback *myCB1;
 	DistorsionNegCallback *myCB2;
+	DistorsionPrefilterCallback *cbPrefilter;
 	VstPlugin *mPlug;
 	~DistorsionPanel()
 	{
