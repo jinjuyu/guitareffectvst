@@ -117,3 +117,17 @@ libsndfile-1.dll같은걸 호스트의 디렉토리에 카피하고 싶지 않다면
 
 대충 16개의 mVolume들과 16개의 슬라이더 4개의 온오프 4개의 프리셋이나 팝업버튼을 두고
 프로그래머블 쉐이더처럼 한다. 즉 하나의 클래스를 만들어서 옵션만 넣어주고 다 한다.
+
+파라메터는
+
+Real
+Print
+PresetNumber(changepar나 CompressorChangeParam등에서 첫번째 파라메터로쓰이는것)
+RealPrint idx(RealToPrint에서 첫번째 파라메터로 쓰이는것)
+Type(Slider, OnOff, Popup), Popup의 경우 TypeStrs도 필요
+PresetStrs
+Name(DrawText)
+
+여기서 const num_Presets가 정확해야 할 듯.
+
+그냥 노가다로 해도 이정도 제네럴하게 만드는 힘이 들 듯?
