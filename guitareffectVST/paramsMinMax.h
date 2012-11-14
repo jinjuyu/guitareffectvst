@@ -18,7 +18,7 @@ public:
 		int EQ1Print[] = {
 			-64, 63, // All of them
 		};
-		int CompressorReal[] = {
+		int CompressorReal[] = { // Print는 따로 없다.
 			-60,-3, // Threshold
 			2,42, // Ratio
 			-40,0, // Output

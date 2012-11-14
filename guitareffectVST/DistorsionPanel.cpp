@@ -97,7 +97,7 @@ void DistorsionPanel::DrawText()
 		x = 180*(mWhereis-5);
 		y = 150+250+35;
 	}
-	TextOption op2(0,y-35+3,180,10, 0,0,0,255);
+	TextOption op2(x,y-35+3,180,10, 0,0,0,255);
 	mGUI->Print2(op2, "Distortion");
 	mGUI->Print(TextOption(x+45,y-35+13,60, 20, 0,0,0,255), "Preset:");
 	mGUI->Print(TextOption(x,y,60, 13, 0,0,0,255), "Wet/Dry");
@@ -382,12 +382,6 @@ void DistorsionPrefilterCallback::OnOff()
 }
 
 
-LPFCallBack::LPFCallBack(DistorsionPanel *a):SliderCallback() ,mPanel(a)
-{
-}
-void LPFCallBack::SetVal(int val)
-{
-}
 
 int DistortionReal[] = {
 	0, 127,
@@ -499,7 +493,7 @@ void HPFCallback::SetVal(int val)
 	MessageBox(NULL, temp, temp, MB_OK);*/
 }
 
-LPFCallback::LPFCallback(DistorsionPanel *a): mPanel(a)
+LPFCallback::LPFCallback(DistorsionPanel *a): mPanel(a), SliderCallback()
 {
 }
 void LPFCallback::SetVal(int val)

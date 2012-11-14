@@ -24,6 +24,7 @@
 #include "ExampleEditor.h"
 #include "../guitareffectVST/paramsMinMax.h"
 #include "../guitareffectVST/DistorsionPanel.h"
+#include "../guitareffectVST/LinealEQ.h"
 #include <string>
 using namespace std;
 
@@ -305,6 +306,7 @@ thing(0.0f)
 	}
 
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, 0);
+	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, 1);
 	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
@@ -423,6 +425,7 @@ void ExampleEditor::draw()
 
 	mGUI->DrawElements();
 	mDistPanel->DrawText();
+	mEQ1Panel->DrawText();
 	/*glBegin(GL_QUADS);
 	glColor4ub(0,0,255,255);
 	glTexCoord2f(0.0f, 0.0f); glVertex2i(0,   0);

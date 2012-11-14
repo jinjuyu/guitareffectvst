@@ -203,13 +203,14 @@ vendorName("Jinju")
 
 	for(int i=0; i<10; ++i)
 	{
-		mEffEQ1->changepar (i*5+12, 90); // gain
-		mEffEQ1->changepar (i*5+13, 127); // q(resonance)
+		mEffEQ1->changepar (i*5+12, 64); // gain
+		mEffEQ1->changepar (i*5+13, 64); // q(resonance)
 	}
 	
     for (int i = 0; i <= 10; i += 5) {
+		mEffEQ2->changepar (i + 12, 64); // gain
         mEffEQ2->changepar (i + 10, 7);
-        mEffEQ2->changepar (i + 13, 64);
+        mEffEQ2->changepar (i + 13, 64); // q
         mEffEQ2->changepar (i + 14, 0);
 
     }
@@ -447,12 +448,23 @@ void VstPlugin::processReplacing(float **inputs,
 	*/
 
 	outVolume = mEffDistorsion->outvolume;
+	if(outVolume > 1.0f) outVolume = 1.0f;
 	mEffDistorsion->processReplacing(outputs, tempOutputs, sampleFrames);
 	for(int i=0; i<sampleFrames; ++i)
 	{
 		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}
+
+	outVolume = mEffEQ1->outvolume;
+	if(outVolume > 1.0f) outVolume = 1.0f;
+	mEffEQ1->processReplacing(outputs, tempOutputs, sampleFrames);
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}
+
 
 	delete tempOutputs[0];
 	delete tempOutputs[1];

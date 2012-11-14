@@ -154,6 +154,7 @@
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLTimer.cpp" />
     <ClCompile Include="..\VSTGL\VstPlugin.cpp" />
     <ClCompile Include="DistorsionPanel.cpp" />
+    <ClCompile Include="LinealEQ.cpp" />
     <ClCompile Include="paramsMinMax.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -239,6 +240,7 @@
     <ClInclude Include="..\VSTGL\VstPlugin.h" />
     <ClInclude Include="aaa.h" />
     <ClInclude Include="DistorsionPanel.h" />
+    <ClInclude Include="LinealEQ.h" />
     <ClInclude Include="paramsMinMax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

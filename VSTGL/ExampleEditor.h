@@ -752,7 +752,11 @@ public:
 namespace DistorsionPanelNS
 {
 	class DistorsionPanel;
-}
+};
+namespace LinealEQNS
+{
+	class LinealEQ;
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -768,6 +772,7 @@ class ExampleEditor : public VSTGLEditor,
 	MyTLButtonCallback myTLCB;
 	
 	DistorsionPanelNS::DistorsionPanel *mDistPanel;
+	LinealEQNS::LinealEQ *mEQ1Panel;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.
