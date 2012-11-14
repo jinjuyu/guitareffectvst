@@ -23,6 +23,9 @@ void DistorsionPanel::SetPreset(int preset)
 {
     //for (int n = 0; n < PRESET_SIZE; n++)
         //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
+	Button *but = (Button *)mGUI->GetElement(mPresetButton);
+	but->mLabel = mPresetStrs[preset];
+
 	mPlug->mEffDistorsion->changepar (12, 0);
 
 	Slider *slider;
@@ -208,6 +211,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	
 	mButtons.push_back(mGUI->NewButton(x+100,y-35+13,80, 20, "Default", cbPresetSelect)); // Preset
 	mPresetButton = *(mButtons.end()-1);
+
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 	mVolume = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbWetDry);
@@ -349,8 +353,6 @@ void PresetListCallback::OnSelect(int idx)
 		mPanel->mGUI->mPopupList->hidden = true;
 		mPanel->mGUI->mPopupList->Clear();
 		mPanel->SetPreset(idx);
-		Button *but = (Button *)mPanel->mGUI->GetElement(mPanel->mPresetButton);
-		but->mLabel = mPanel->mPresetStrs[idx];
 	}
 
 }

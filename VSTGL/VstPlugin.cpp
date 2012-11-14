@@ -457,14 +457,19 @@ void VstPlugin::processReplacing(float **inputs,
 	}
 
 	outVolume = mEffEQ1->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
 	mEffEQ1->processReplacing(outputs, tempOutputs, sampleFrames);
 	for(int i=0; i<sampleFrames; ++i)
 	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+		outputs[0][i] = tempOutputs[0][i]*outVolume;
+		outputs[1][i] = tempOutputs[1][i]*outVolume;
 	}
 
+	mEffCompressor->processReplacing(outputs, tempOutputs, sampleFrames);
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = tempOutputs[0][i];
+		outputs[1][i] = tempOutputs[1][i];
+	}
 
 	delete tempOutputs[0];
 	delete tempOutputs[1];

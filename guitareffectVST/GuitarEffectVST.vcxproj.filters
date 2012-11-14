@@ -255,6 +255,9 @@
     <ClCompile Include="LinealEQ.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CompressorPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\vst\audioeffect.h">
@@ -507,6 +510,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="LinealEQ.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CompressorPanel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -757,6 +757,10 @@ namespace LinealEQNS
 {
 	class LinealEQ;
 };
+namespace CompressorNS
+{
+	class CompressorPanel;
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -773,6 +777,7 @@ class ExampleEditor : public VSTGLEditor,
 	
 	DistorsionPanelNS::DistorsionPanel *mDistPanel;
 	LinealEQNS::LinealEQ *mEQ1Panel;
+	CompressorNS::CompressorPanel *mCompressorPanel;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
 	///	Called when the Gui's window is closed.
