@@ -12,323 +12,80 @@ class Params
 public:
 	Params()
 	{
-		int EQ1Real[] = {
-			0, 127, // All of them
-		};
-		int EQ1Print[] = {
-			-64, 63, // All of them
-		};
-		int CompressorReal[] = { // Print는 따로 없다.
-			-60,-3, // Threshold
-			2,42, // Ratio
-			-40,0, // Output
-			10,250, // A. Time
-			10,500, // R. Time
-			0,1, // Auto Output:Bool
-			0,100, // Knee
-			0,1, // Stereo:Bool
-			0,1, // Peak:Bool
-		};
 
+		int ChorusReal[] = { // Chorus/Flange! 두개를 하나로 합쳐쓴다.? 아니다. 코러스랑 플랜지를 중복해야한다.
+   //case 0:
+        //setvolume (value); Wet Dry
+			0, 127,
+    //case 1:
+        //setpanning (value); Pan
+			0, 127,
+    //case 2:
+        //lfo.Pfreq = value; Tempo
+		    1, 600,
+    //case 3:
+        //lfo.Prandomness = value; Rnd
+			0, 127,
+    //case 4:
+        //lfo.PLFOtype = value; LFOType
+			0, 9,  // type value
+			/*
+            Sine
+            Tri
+            RampUp
+            RampDown
+            ZigZag
+            M.Sqare
+            M.Saw
+			L. Fractal
+            L. Fractal XY
+            S/H Random*/
+    //case 5:
+        //lfo.Pstereo = value; St.df
+			0, 127,
+	//case 6:
+        //setdepth (value); // Depth
+			0, 127,
+    //case 7:
+        //setdelay (value); // Delay
+			0, 127,
+    //case 8:
+        //setfb (value); // Fb.
+			0, 127,
+    //case 9:
+        //setlrcross (value); // L/R.Cr
+			0, 127,
+    //case 10:
+			//Pflangemode = value;
+			0, 1, // Boolean: Chorus/Flange
+    //case 11:
+        //Poutsub = value; // Subtract
+			0, 1, // Boolean
+    //case 12:
+        //awesome_mode = value; // Intense
+			0, 1,
+
+		};
+		int ChorusPrint[] = {
+			-64, 63, // 0
+			-64, 63, // 1
+			1, 600, // 2
+			0, 127, // 3
+			0, 9, // 4
+			0, 127, // 5
+			0, 127, // 6
+			0, 127, // 7
+			0, 127, // 8
+			-64, 63, // 9
+			0, 1, // 10
+			0, 1, // 11
+			0, 1, // 12
+		};
 	}
 };
 
 /*
-      Fl_Group OVRD {
-        user_data 1
-        xywh {480 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112
-      } {
-        Fl_Light_Button ovrd_activar {
-          label On
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(116);
- o->value(rkr->Overdrive_Bypass);
- return;
-}
-rkr->Overdrive_Bypass=(int)o->value();
-if((int) o->value()==0)
-rkr->efx_Overdrive->cleanup();
-findpos(3,(int)o->value(),o);}
-          xywh {485 216 34 18} shortcut 0x34 color 62 selection_color 1 labelsize 10 align 84 when 1
-        }
-        Fl_Choice ovrd_preset {
-          label Preset
-          user_data 12003
-          callback {long long ud= (long long) v;
-if((ud==0)||(ud==12003))rkr->efx_Overdrive->setpreset(1,(int) o->value());
-ovrd_WD->value(rkr->efx_Overdrive->getpar(0)-64);
-ovrd_pan->value(rkr->efx_Overdrive->getpar(1)-64);
-ovrd_LRc->value(rkr->efx_Overdrive->getpar(2)-64);
-ovrd_drive->value(rkr->efx_Overdrive->getpar(3));
-ovrd_level->value(rkr->efx_Overdrive->getpar(4));
-ovrd_tipo->value(rkr->efx_Overdrive->getpar(5));
-ovrd_neg->value(rkr->efx_Overdrive->getpar(6));
-ovrd_lpf->value(rkr->efx_Overdrive->getpar(7));
-ovrd_hpf->value(rkr->efx_Overdrive->getpar(8));
-ovrd_st->value(rkr->efx_Overdrive->getpar(9));
-ovrd_pf->value(rkr->efx_Overdrive->getpar(10));}
-          xywh {557 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label {Overdrive 1}
-            xywh {42 42 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Overdrive 2}
-            xywh {42 42 36 21} labelsize 10
-          }
-        }
-        Fl_Value_Slider ovrd_WD {
-          label {Wet/Dry}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(29);
- return;
-} 
-rkr->efx_Overdrive->changepar(0,(int)(o->value()+64));}
-          xywh {531 247 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider ovrd_LRc {
-          label {L/R Cr.}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(94);
- return;
-} 
-rkr->efx_Overdrive->changepar(2,(int)(o->value()+64));}
-          xywh {531 260 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider ovrd_drive {
-          label Drive
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(68);
- return;
-} 
-rkr->efx_Overdrive->changepar(3,(int)o->value());}
-          xywh {531 273 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider ovrd_level {
-          label Level
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(70);
- return;
-} 
-rkr->efx_Overdrive->changepar(4,(int)o->value());}
-          xywh {531 287 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Choice ovrd_tipo {
-          label Type
-          callback {rkr->efx_Overdrive->changepar(5,(int)o->value());} open
-          xywh {513 303 72 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
-          code0 {o->menu(menu_dist_tipo);}
-        } {}
-        Fl_Check_Button ovrd_neg {
-          label {Neg.}
-          user_data 2
-          callback {rkr->efx_Overdrive->changepar(6,(int)o->value());}
-          xywh {589 304 42 15} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Check_Button ovrd_st {
-          label Stereo
-          user_data 2
-          callback {rkr->efx_Overdrive->changepar(9,(int)o->value());}
-          xywh {521 322 54 15} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Value_Slider ovrd_pan {
-          label Pan
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(47);
- return;
-} 
-rkr->efx_Overdrive->changepar(1,(int)(o->value()+64));}
-          xywh {531 337 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Check_Button ovrd_pf {
-          label {Pre Filter}
-          user_data 2
-          callback {rkr->efx_Overdrive->changepar(10,(int)o->value());}
-          xywh {521 350 68 15} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Value_Slider ovrd_lpf {
-          label LPF
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(85);
- return;
-} 
-rkr->efx_Overdrive->changepar(7,(int)o->value());}
-          xywh {531 369 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 26000 step 1 value 20000 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider ovrd_hpf {
-          label HPF
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(88);
- return;
-} 
-rkr->efx_Overdrive->changepar(8,(int)o->value());}
-          xywh {531 381 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 20000 step 1 value 20 textcolor 7
-          class SliderW
-        }
-      }
-      Fl_Group ECHO {
-        user_data 1
-        xywh {639 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112
-      } {
-        Fl_Light_Button echo_activar {
-          label On
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(116);
- o->value(rkr->Echo_Bypass);
- return;
-}
-rkr->Echo_Bypass=(int)o->value();
-if((int) o->value()==0)
-rkr->efx_Echo->cleanup();
-findpos(4,(int)o->value(),o);}
-          xywh {644 216 34 18} shortcut 0x35 color 62 selection_color 1 labelsize 10 align 84 when 1
-        }
-        Fl_Choice echo_preset {
-          label Preset
-          user_data 12004
-          callback {long long ud= (long long) v;
-if((ud==0)||(ud==12004))rkr->efx_Echo->setpreset((int) o->value());
-echo_WD->value(rkr->efx_Echo->getpar(0)-64);
-echo_pan->value(rkr->efx_Echo->getpar(1)-64);
-echo_delay->value(rkr->efx_Echo->getpar(2));
-echo_LRdl->value(rkr->efx_Echo->getpar(3));
-echo_LRc->value(rkr->efx_Echo->getpar(4)-64);
-echo_fb->value(rkr->efx_Echo->getpar(5));
-echo_damp->value(rkr->efx_Echo->getpar(6));
-echo_RV->value(rkr->efx_Echo->getpar(7));
-echo_direct->value(rkr->efx_Echo->getpar(8));}
-          xywh {716 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label {Echo 1}
-            xywh {57 57 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Echo 2}
-            xywh {57 57 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Echo 3}
-            xywh {57 57 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Simple Echo}
-            xywh {67 67 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label Canyon
-            xywh {77 77 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Panning Echo 1}
-            xywh {97 97 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Panning Echo 2}
-            xywh {107 107 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Panning Echo 3}
-            xywh {117 117 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Feedback Echo}
-            xywh {127 127 36 21} labelsize 10
-          }
-        }
-        Fl_Value_Slider echo_WD {
-          label {Wet/Dry}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(59);
- return;
-} 
-rkr->efx_Echo->changepar(0,(int)(o->value()+64));}
-          xywh {690 247 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider echo_RV {
-          label Reverse
-          callback {rkr->efx_Echo->changepar(7,(int)o->value());}
-          xywh {690 270 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider echo_pan {
-          label Pan
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(46);
- return;
-} 
-rkr->efx_Echo->changepar(1,(int)(o->value()+64));}
-          xywh {690 285 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider echo_delay {
-          label Delay
-          callback {rkr->efx_Echo->changepar(2,(int)o->value());}
-          xywh {690 300 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 minimum 20 maximum 2000 step 1 value 20 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider echo_LRdl {
-          label {LRdl.}
-          callback {rkr->efx_Echo->changepar(3,(int)o->value());}
-          xywh {690 315 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider echo_LRc {
-          label {L/R.Cr}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(97);
- return;
-} 
-rkr->efx_Echo->changepar(4,(int)(o->value()+64));}
-          xywh {690 330 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider echo_fb {
-          label {Fb.}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(78);
- return;
-} 
-rkr->efx_Echo->changepar(5,(int)o->value());}
-          xywh {690 345 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Check_Button echo_direct {
-          label Direct
-          user_data 2
-          callback {rkr->efx_Echo->changepar(8,(int)o->value());}
-          xywh {690 360 53 15} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Value_Slider echo_damp {
-          label Damp
-          callback {rkr->efx_Echo->changepar(6,(int)o->value());}
-          xywh {690 379 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-      }
+
       Fl_Group CHORUS {
         user_data 1
         xywh {2 413 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112

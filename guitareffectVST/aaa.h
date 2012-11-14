@@ -638,5 +638,152 @@ rkr->efx_Distorsion->changepar(8,(int)o->value());}
           class SliderW
         }
       }
+      Fl_Group ECHO {
+        user_data 1
+        xywh {639 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112
+      } {
+        Fl_Light_Button echo_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Echo_Bypass);
+ return;
+}
+rkr->Echo_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_Echo->cleanup();
+findpos(4,(int)o->value(),o);}
+          xywh {644 216 34 18} shortcut 0x35 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice echo_preset {
+          label Preset
+          user_data 12004
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12004))rkr->efx_Echo->setpreset((int) o->value());
+echo_WD->value(rkr->efx_Echo->getpar(0)-64);
+echo_pan->value(rkr->efx_Echo->getpar(1)-64);
+echo_delay->value(rkr->efx_Echo->getpar(2));
+echo_LRdl->value(rkr->efx_Echo->getpar(3));
+echo_LRc->value(rkr->efx_Echo->getpar(4)-64);
+echo_fb->value(rkr->efx_Echo->getpar(5));
+echo_damp->value(rkr->efx_Echo->getpar(6));
+echo_RV->value(rkr->efx_Echo->getpar(7));
+echo_direct->value(rkr->efx_Echo->getpar(8));}
+          xywh {716 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label {Echo 1}
+            xywh {57 57 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Echo 2}
+            xywh {57 57 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Echo 3}
+            xywh {57 57 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Simple Echo}
+            xywh {67 67 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Canyon
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Panning Echo 1}
+            xywh {97 97 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Panning Echo 2}
+            xywh {107 107 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Panning Echo 3}
+            xywh {117 117 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Feedback Echo}
+            xywh {127 127 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider echo_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(59);
+ return;
+} 
+rkr->efx_Echo->changepar(0,(int)(o->value()+64));}
+          xywh {690 247 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider echo_RV {
+          label Reverse
+          callback {rkr->efx_Echo->changepar(7,(int)o->value());}
+          xywh {690 270 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider echo_pan {
+          label Pan
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(46);
+ return;
+} 
+rkr->efx_Echo->changepar(1,(int)(o->value()+64));}
+          xywh {690 285 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider echo_delay {
+          label Delay
+          callback {rkr->efx_Echo->changepar(2,(int)o->value());}
+          xywh {690 300 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 minimum 20 maximum 2000 step 1 value 20 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider echo_LRdl {
+          label {LRdl.}
+          callback {rkr->efx_Echo->changepar(3,(int)o->value());}
+          xywh {690 315 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider echo_LRc {
+          label {L/R.Cr}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(97);
+ return;
+} 
+rkr->efx_Echo->changepar(4,(int)(o->value()+64));}
+          xywh {690 330 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider echo_fb {
+          label {Fb.}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(78);
+ return;
+} 
+rkr->efx_Echo->changepar(5,(int)o->value());}
+          xywh {690 345 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button echo_direct {
+          label Direct
+          user_data 2
+          callback {rkr->efx_Echo->changepar(8,(int)o->value());}
+          xywh {690 360 53 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+        Fl_Value_Slider echo_damp {
+          label Damp
+          callback {rkr->efx_Echo->changepar(6,(int)o->value());}
+          xywh {690 379 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+      }
 
-*/
+	  */

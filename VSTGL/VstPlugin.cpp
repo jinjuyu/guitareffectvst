@@ -97,6 +97,7 @@ vendorName("Jinju")
 	mEffAPhaser = new Analog_Phaser(mParam, nullptr, nullptr);
 	mEffArpie = new Arpie(mParam, nullptr, nullptr);
 	mEffChorus = new Chorus(mParam, nullptr, nullptr);
+	mEffFlange = new Chorus(mParam, nullptr, nullptr);
 	mEffCoil = new CoilCrafter(mParam, nullptr, nullptr);
 	mEffCompBand = new CompBand(mParam, nullptr, nullptr);
 	mEffCompressor = new Compressor(mParam, nullptr, nullptr);
@@ -162,7 +163,10 @@ vendorName("Jinju")
 			
 	int preset7[12] = {64, 64, 1, 0, 0, 42, 115, 18, 90, 127, 0, 0};
 	for (int n = 0; n < 12; n++)
+	{
 		mEffChorus->changepar (n, preset7[n]);
+		mEffFlange->changepar (n, preset7[n]);
+	}
 
 	int preset8[9] = {32, 6, 1, 3300, 16,  4400, 42, 20, 0};
 	for (int n = 0; n < 9; n++)
@@ -470,6 +474,18 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = tempOutputs[0][i];
 		outputs[1][i] = tempOutputs[1][i];
 	}
+
+	outVolume = mEffEcho->outvolume;
+	if(outVolume > 1.0f) outVolume = 1.0f;
+	mEffEcho->processReplacing(outputs, tempOutputs, sampleFrames);
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}
+
+	
+
 
 	delete tempOutputs[0];
 	delete tempOutputs[1];

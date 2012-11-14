@@ -96,6 +96,7 @@ public:
 	Analog_Phaser *mEffAPhaser;
 	Arpie *mEffArpie;
 	Chorus *mEffChorus;
+	Chorus *mEffFlange;
 	CoilCrafter *mEffCoil;
 	CompBand *mEffCompBand;
 	Compressor *mEffCompressor;

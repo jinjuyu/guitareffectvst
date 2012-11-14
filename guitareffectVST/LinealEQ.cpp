@@ -279,9 +279,6 @@ void F16KCallback::SetVal(int val)
 {
 	int newval = mPanel->PrintToReal(val);
 	mPanel->mPlug->mEffEQ1->changepar(9*5+12, newval); // Gain
-	char temp[123];
-	sprintf(temp, "%d", newval);
-	MessageBox(NULL, temp, temp, MB_OK);
 }
 
 

@@ -153,8 +153,11 @@
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLEditor.cpp" />
     <ClCompile Include="..\VSTGL\VSTGL\VSTGLTimer.cpp" />
     <ClCompile Include="..\VSTGL\VstPlugin.cpp" />
+    <ClCompile Include="ChorusPanel.cpp" />
     <ClCompile Include="CompressorPanel.cpp" />
     <ClCompile Include="DistorsionPanel.cpp" />
+    <ClCompile Include="EchoPanel.cpp" />
+    <ClCompile Include="FlangePanel.cpp" />
     <ClCompile Include="LinealEQ.cpp" />
     <ClCompile Include="paramsMinMax.cpp" />
   </ItemGroup>
@@ -240,8 +243,11 @@
     <ClInclude Include="..\VSTGL\VSTGL\VSTGLTimer.h" />
     <ClInclude Include="..\VSTGL\VstPlugin.h" />
     <ClInclude Include="aaa.h" />
+    <ClInclude Include="ChorusPanel.h" />
     <ClInclude Include="CompressorPanel.h" />
     <ClInclude Include="DistorsionPanel.h" />
+    <ClInclude Include="EchoPanel.h" />
+    <ClInclude Include="FlangePanel.h" />
     <ClInclude Include="LinealEQ.h" />
     <ClInclude Include="paramsMinMax.h" />
   </ItemGroup>

@@ -26,6 +26,7 @@
 #include "../guitareffectVST/DistorsionPanel.h"
 #include "../guitareffectVST/LinealEQ.h"
 #include "../guitareffectVST/CompressorPanel.h"
+#include "../guitareffectVST/EchoPanel.h"
 #include <string>
 using namespace std;
 
@@ -309,6 +310,9 @@ thing(0.0f)
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, 0);
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, 1);
 	mCompressorPanel = new CompressorNS::CompressorPanel(mGUI,(VstPlugin*)effect, 2);
+	mEchoPanel = new EchoNS::EchoPanel(mGUI,(VstPlugin*)effect, 3);
+	//for(int i=3;i<20;++i)
+//		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
 	/*
 	mSlider = mGUI->NewSlider(0, 300, 120, 0, 100);
 	mGUI->SetSliderVal(mSlider, 50);
@@ -428,6 +432,11 @@ void ExampleEditor::draw()
 	mGUI->DrawElements();
 	mDistPanel->DrawText();
 	mEQ1Panel->DrawText();
+	mEchoPanel->DrawText();
+	for(int i=0;i<17;++i)
+	{
+		//mEQ1Panels[i]->DrawText();
+	}
 	mCompressorPanel->DrawText();
 	/*glBegin(GL_QUADS);
 	glColor4ub(0,0,255,255);

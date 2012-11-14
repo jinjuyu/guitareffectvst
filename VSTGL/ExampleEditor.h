@@ -761,6 +761,10 @@ namespace CompressorNS
 {
 	class CompressorPanel;
 };
+namespace EchoNS
+{
+	class EchoPanel;
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -777,6 +781,9 @@ class ExampleEditor : public VSTGLEditor,
 	
 	DistorsionPanelNS::DistorsionPanel *mDistPanel;
 	LinealEQNS::LinealEQ *mEQ1Panel;
+	EchoNS::EchoPanel *mEchoPanel;
+	vector<LinealEQNS::LinealEQ*> mEQ1Panels;
+	
 	CompressorNS::CompressorPanel *mCompressorPanel;
 	///	Called when the Gui's window is opened.
 	void guiOpen();
