@@ -261,10 +261,7 @@
     <ClCompile Include="EchoPanel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ChorusPanel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FlangePanel.cpp">
+    <ClCompile Include="Panel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -527,10 +524,7 @@
     <ClInclude Include="EchoPanel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ChorusPanel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlangePanel.h">
+    <ClInclude Include="Panel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

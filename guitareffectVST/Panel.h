@@ -1,4 +1,8 @@
-#include "ChorusPanel.h"
+#pragma once
+#include "../VSTGL/ExampleEditor.h"
+#include "../VSTGL/VstPlugin.h"
+
+/*
 const int PRESET_SIZE = 12;
 const int NUM_PRESETS = 10;
 int presets[NUM_PRESETS][PRESET_SIZE] = {
@@ -93,3 +97,4 @@ int ChorusPrint[] = {
 	0, 1, // 11
 	0, 1, // 12
 };
+*/
