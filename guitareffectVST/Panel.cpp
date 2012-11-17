@@ -100,6 +100,10 @@ int ChorusPrint[] = {
 
 void Panel::SetPreset(int preset)
 {
+	// WahWah는 setpreset에 약간 매직이 있다.
+	// EQ2는 다른 이펙트랑 별로 다르지 않을 것 같은데?
+	// Limiter는 Compressor
+	// Flange는 Chorus
 }
 void Panel::DrawText()
 {

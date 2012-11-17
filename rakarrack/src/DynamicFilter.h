@@ -28,7 +28,7 @@
 #include "EffectLFO.h"
 #include "Filter.h"
 
-class DynamicFilter
+class DynamicFilter : public Effect
 {
 public:
     DynamicFilter (Parameters *param, float * efxoutl_, float * efxoutr_);

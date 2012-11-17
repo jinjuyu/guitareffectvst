@@ -13,6 +13,7 @@ public:
 	{
 	}
 	EffType mType;
+	virtual void setpreset (int npreset){}
 	virtual void changepar(int npar, int val) = 0;
 	virtual void processReplacing(float **inputs,
 								float **outputs,

@@ -39,7 +39,7 @@ public:
     Compressor (Parameters *param, float * efxoutl_, float * efxoutr_);
     ~Compressor ();
 	Parameters *param;
-
+	void setpreset (int npreset){}
     void out (float * smps_l, float * smps_r);
 
     void Compressor_Change (int np, int value);

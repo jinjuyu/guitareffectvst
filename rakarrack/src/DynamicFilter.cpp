@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 DynamicFilter::DynamicFilter (Parameters *param, float * efxoutl_, float * efxoutr_)
-:lfo(param){
+:lfo(param), Effect(WetDry){
 	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
