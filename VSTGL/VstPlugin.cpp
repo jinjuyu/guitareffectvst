@@ -450,7 +450,7 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}
 	*/
-
+	/*
 	outVolume = mEffDistorsion->outvolume;
 	if(outVolume > 1.0f) outVolume = 1.0f;
 	mEffDistorsion->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
@@ -483,8 +483,17 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}
-
+	*/
 	
+	outVolume = mEffChorus->outvolume;
+	if(outVolume > 1.0f) outVolume = 1.0f;
+	mEffChorus->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}
+
 
 
 	delete tempOutputs[0];

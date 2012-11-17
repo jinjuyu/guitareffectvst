@@ -765,6 +765,10 @@ namespace EchoNS
 {
 	class EchoPanel;
 };
+namespace PanelNS
+{
+	class Panel;
+};
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
@@ -782,6 +786,7 @@ class ExampleEditor : public VSTGLEditor,
 	DistorsionPanelNS::DistorsionPanel *mDistPanel;
 	LinealEQNS::LinealEQ *mEQ1Panel;
 	EchoNS::EchoPanel *mEchoPanel;
+	PanelNS::Panel *mTestPanel;
 	vector<LinealEQNS::LinealEQ*> mEQ1Panels;
 	
 	CompressorNS::CompressorPanel *mCompressorPanel;

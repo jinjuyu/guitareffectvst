@@ -46,8 +46,18 @@ enum DataType
 	OnOff,
 	Selection
 };
-struct Data
+class Data
 {
+public:
+	Data(int idx, int realMin, int realMax, int pMin, int pMax, string txt, DataType type, bool isFreq = false, bool useSameY = false, vector<string> typeStrs = vector<string>())
+		:parIdx(idx), valRealMin(realMin), valRealMax(realMax), valPrintMin(pMin), valPrintMax(pMax), isFreq(isFreq), text(txt), mTypeStrs(typeStrs), type(type), useSameYAsPrev(useSameY)
+	{
+		cbIdx = -1;
+		cbListIdx = -1;
+		typeStrsIdx = -1;
+		handle = -1;
+	}
+	//input
 	int parIdx;
 	int valRealMin;
 	int valRealMax;
@@ -57,27 +67,55 @@ struct Data
 	string text;
 	vector<string> mTypeStrs;
 	DataType type;
+	bool useSameYAsPrev;
+	
+
+	//used internally
 	int cbIdx;
 	int cbListIdx;
+	int typeStrsIdx;
+	int handle;
+};
+class PresetCallback : public ButtonCallback
+{
+public:
+	Panel *mPanel;
+	PresetCallback(Panel *a);
+	void OnClick();
+};
+class PresetListCallback : public TabbedListBoxCallback
+{
+public:
+	Panel *mPanel;
+	PresetListCallback(Panel *a);
+	void OnSelect(int idx);
+	void OnPageSelect(int idx);
 };
 class Panel
 {
 public:
+	PresetCallback *cbPresetSelect;
+	PresetListCallback *cbPresetSelected;
 	vector<int> mButtons;
+	int mPresetButton;
 	vector<PanelSliderCallback*> mCBSliders;
 	vector<PanelButtonCallback*> mCBButtons;
 	vector<PanelOnOffCallback*> mCBOnOffs;
 	vector<PanelListCallback*> mCBLists;
 	vector<Data> mData;
-	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, int whereis, int *presets, int sizePreset, int numPresets);
+	int mSizePreset;
+	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts);
 	~Panel();
 	Effect *mEffect;
 	vector<vector<string>> mTypeStrs;
+	vector<string> mPresetStrs;
 	vector<vector<int>> mPresets;
 	void SetPreset(int preset);
 	GLGUI *mGUI;
 	int mWhereis;
 	VstPlugin *mPlug;
+	string mEffName;
+	int mY;
 	void AddParamData(Data &data);
 	int PrintToReal(int idx, int val) // idx ดย dataIdx
 	{
