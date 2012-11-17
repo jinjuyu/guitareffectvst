@@ -447,7 +447,7 @@ thing(0.0f)
 	mTestPanel->AddParamData(PanelNS::Data(9, 0, 127, -63, 64, "L/R.Cr", PanelNS::Slider));
 
 	mTestPanel->SetPreset(0);
-
+	// 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
 	//for(int i=3;i<20;++i)
 //		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
 
