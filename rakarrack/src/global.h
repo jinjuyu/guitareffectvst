@@ -1,3 +1,23 @@
+#pragma once
+enum EffType
+{
+	Gain,
+	WetDry,
+	None
+};
+class Effect
+{
+public:	
+	Effect(EffType type)
+		:mType(type)
+	{
+	}
+	EffType mType;
+	virtual void changepar(int npar, int val) = 0;
+	virtual void processReplacing(float **inputs,
+								float **outputs,
+								int sampleFrames) = 0;
+};
 /*
   rakarrack - a guitar efects software
 
@@ -850,6 +870,9 @@ struct list_element {
     struct list_element *backward;
     char *name;
 };
+
+
+
 
 #endif
 

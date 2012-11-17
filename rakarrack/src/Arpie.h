@@ -27,7 +27,7 @@
 
 #include "global.h"
 
-class Arpie
+class Arpie : public Effect
 {
 public:
     Arpie (Parameters *param, float * efxoutl_, float * efxoutr_);

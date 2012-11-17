@@ -34,7 +34,7 @@
 #include "Compressor.h"
 
 
-class CompBand
+class CompBand : public Effect
 {
 public:
     CompBand (Parameters *param, float * efxoutl_, float * efxoutr_);

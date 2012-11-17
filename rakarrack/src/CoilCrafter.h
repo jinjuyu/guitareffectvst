@@ -27,7 +27,7 @@
 #include "HarmonicEnhancer.h"
 #include "AnalogFilter.h"
 
-class CoilCrafter
+class CoilCrafter: public Effect
 {
 public:
     CoilCrafter (Parameters *param, float * efxoutl_, float * efxoutr_);

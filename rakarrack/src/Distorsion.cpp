@@ -28,6 +28,7 @@
 #include "Distorsion.h"
 #include "Resample.h"
 Distorsion::Distorsion (Parameters *param, float * efxoutl_, float * efxoutr_)
+	: Effect(WetDry)
 {
 	this->param = param;
     //octoutl = (float *) malloc (sizeof (float) * param->PERIOD);

@@ -420,6 +420,11 @@ WetDryCallback::WetDryCallback(DistorsionPanel *a): mPanel(a)
 }
 void WetDryCallback::SetVal(int val)
 {
+	// 이펙트를 상위 추상클래스 Effect에서 옮겨오고
+	// changepar랑 processReplacing을 한가지로 고정시키면
+	// 여기서도 쉬워진다. 하지만 코드만 봤을 때 그런 얘기고 이걸 하려면 이펙트 코드를 다 뒤져서
+	// 수정해줘야 한다.
+	// Gate, Expander, Compressor만 빼고 모두 changepar를 유지한다.
 	int newval = mPanel->PrintToReal(0, val);
 	mPanel->mPlug->mEffDistorsion->changepar(0, newval);
 	/*

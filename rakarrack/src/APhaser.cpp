@@ -41,7 +41,7 @@
 #define ZERO_ 0.00001f        // Same idea as above.
 
 Analog_Phaser::Analog_Phaser (Parameters *param, float * efxoutl_, float * efxoutr_)
-	:lfo(param)
+	:lfo(param), Effect(WetDry)
 {
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;

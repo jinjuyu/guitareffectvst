@@ -30,7 +30,7 @@
 #include "EffectLFO.h"
 
 
-class Analog_Phaser
+class Analog_Phaser : public Effect
 {
 public:
     Analog_Phaser (Parameters *param, float * efxoutl_, float * efxoutr_);

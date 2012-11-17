@@ -29,7 +29,7 @@
 #include "Resample.h"
 #include "mayer_fft.h"
 
-class Convolotron
+class Convolotron: public Effect
 {
 public:
     Convolotron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq);

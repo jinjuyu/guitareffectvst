@@ -453,7 +453,7 @@ void VstPlugin::processReplacing(float **inputs,
 
 	outVolume = mEffDistorsion->outvolume;
 	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffDistorsion->processReplacing(outputs, tempOutputs, sampleFrames);
+	mEffDistorsion->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
 	for(int i=0; i<sampleFrames; ++i)
 	{
 		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
@@ -461,14 +461,14 @@ void VstPlugin::processReplacing(float **inputs,
 	}
 
 	outVolume = mEffEQ1->outvolume;
-	mEffEQ1->processReplacing(outputs, tempOutputs, sampleFrames);
+	mEffEQ1->processReplacing(outputs, tempOutputs, sampleFrames); // Type: Gain
 	for(int i=0; i<sampleFrames; ++i)
 	{
 		outputs[0][i] = tempOutputs[0][i]*outVolume;
 		outputs[1][i] = tempOutputs[1][i]*outVolume;
 	}
 
-	mEffCompressor->processReplacing(outputs, tempOutputs, sampleFrames);
+	mEffCompressor->processReplacing(outputs, tempOutputs, sampleFrames); // Type: None
 	for(int i=0; i<sampleFrames; ++i)
 	{
 		outputs[0][i] = tempOutputs[0][i];

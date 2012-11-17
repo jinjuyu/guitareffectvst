@@ -46,7 +46,9 @@ public:
 			void processReplacing (float **inputs,
 								float **outputs,
 								int sampleFrames);
-    void Gate_Change (int np, int value);
+    
+	void Gate_Change (int np, int value);
+	void changepar(int np, int value) { Gate_Change(np, value); }
     void Gate_Change_Preset (int npreset);
     void cleanup ();
     int getpar (int npar);

@@ -28,7 +28,7 @@
 #include "EffectLFO.h"
 #include "delayline.h"
 
-class Chorus
+class Chorus : public Effect
 {
 
 public:

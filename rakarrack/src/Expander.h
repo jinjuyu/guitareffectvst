@@ -45,6 +45,7 @@ public:
     void out (float * smps_l, float * smps_r);
 
     void Expander_Change (int np, int value);
+	void changepar(int np, int value){Expander_Change(np, value);}
     void Expander_Change_Preset (int npreset);
     void cleanup ();
     int getpar (int npar);

@@ -27,6 +27,7 @@
 #include "Convolotron.h"
 
 Convolotron::Convolotron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq)
+	:Effect(WetDry)
 {
 	this->param = param;
     efxoutl = efxoutl_;

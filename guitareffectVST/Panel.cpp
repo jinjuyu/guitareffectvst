@@ -1,5 +1,7 @@
 #include "Panel.h"
 
+namespace PanelNS
+{
 
 const int CHORUS_PRESET_SIZE = 12;
 const int CHORUS_NUM_PRESETS = 10;
@@ -94,4 +96,91 @@ int ChorusPrint[] = {
 	0, 1, // 10
 	0, 1, // 11
 	0, 1, // 12
+};
+
+void Panel::SetPreset(int preset)
+{
+}
+void Panel::DrawText()
+{
+}
+Panel::Panel(GLGUI *gui, VstPlugin *plug, int whereis, int *presets, int sizePreset, int numPresets)
+	:mGUI(gui), mWhereis(whereis), mPlug(plug)
+{
+	for(int y=0; y<numPresets; ++y)
+	{
+		vector<int> newPreset;
+		
+		for(int x=0; x<sizePreset; ++x)
+		{
+			newPreset.push_back(presets[y*numPresets + x]);
+		}
+		mPresets.push_back(newPreset);
+	}
+	
+}
+Panel::~Panel()
+{
+}
+void Panel::AddParamData(Data &data)
+{
+	mData.push_back(data);
+	if(data.type == Slider)
+	{
+		mCBSliders.push_back(new PanelSliderCallback(this, mData.size()-1));
+		mData[mData.size()-1].cbIdx = mCBSliders.size()-1;
+	}
+	else if(data.type == OnOff)
+	{
+		mCBOnOffs.push_back(new PanelOnOffCallback(this, mData.size()-1));
+		mData[mData.size()-1].cbIdx = mCBOnOffs.size()-1;
+	}
+	else if(data.type == Selection)
+	{
+		mCBLists.push_back(new PanelListCallback(this, mData.size()-1));
+		mCBButtons.push_back(new PanelButtonCallback(this, mData.size()-1, mCBLists[mCBLists.size()-1]));
+		mData[mData.size()-1].cbIdx = mCBButtons.size()-1;
+		mData[mData.size()-1].cbListIdx = mCBLists.size()-1;
+		mTypeStrs.push_back(mData[mData.size()-1].mTypeStrs);
+	}
+}
+
+
+PanelSliderCallback::PanelSliderCallback(Panel *a, int dataIdx)
+	: mPanel(a), mDataIdx(dataIdx)
+{
+}
+void PanelSliderCallback::SetVal(int val)
+{
+}
+PanelListCallback::PanelListCallback(Panel *a, int dataIdx)
+	: mPanel(a), mDataIdx(dataIdx)
+{
+}
+void PanelListCallback::OnSelect(int idx)
+{
+}
+void PanelListCallback::OnPageSelect(int idx)
+{
+}
+PanelOnOffCallback::PanelOnOffCallback(Panel *a, int dataIdx)
+	: mPanel(a), mDataIdx(dataIdx)
+{
+}
+void PanelOnOffCallback::OnOn()
+{
+}
+void PanelOnOffCallback::OnOff()
+{
+}
+PanelButtonCallback::PanelButtonCallback(Panel *a, int dataIdx, PanelListCallback *cbList) // dataIdx만 있으면 parIdx등을 다 얻어올 수 있다.
+	: mPanel(a), mDataIdx(dataIdx), mCBList(cbList)
+{
+}
+void PanelButtonCallback::OnClick()
+{
+}
+
+
+
 };

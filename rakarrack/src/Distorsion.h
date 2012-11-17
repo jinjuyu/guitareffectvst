@@ -29,7 +29,7 @@
 #include "AnalogFilter.h"
 #include "Waveshaper.h"
 
-class Distorsion
+class Distorsion : public Effect
 {
 public:
     Distorsion (Parameters *param, float * efxoutl_, float * efxoutr_);

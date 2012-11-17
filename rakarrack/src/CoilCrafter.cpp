@@ -28,6 +28,7 @@
 
 
 CoilCrafter::CoilCrafter (Parameters *param, float * efxoutl_, float * efxoutr_)
+	: Effect(Gain)
 {
 	this->param = param;
     efxoutl = efxoutl_;
@@ -155,31 +156,34 @@ CoilCrafter::processReplacing (float **inputs,
 
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = param->PERIOD;
-    if(Ppo>0) {
-        RB1l->filterout(inputs[0]);
-        RB1r->filterout(inputs[1]);
+	for(i=0; i<param->PERIOD; i++)
+	{
+		outputs[0][i] = inputs[0][i];
+		outputs[1][i] = inputs[1][i];
+	}
+
+	if(Ppo>0) {
+        RB1l->filterout(outputs[0]);
+        RB1r->filterout(outputs[1]);
 
         for (i=0; i<param->PERIOD; i++) {
-            inputs[0][i]*=att;
-            inputs[1][i]*=att;
+            outputs[0][i]*=att;
+            outputs[1][i]*=att;
         }
 
     }
     if(Ppd>0) {
-        RB2l->filterout(inputs[0]);
-        RB2r->filterout(inputs[1]);
+        RB2l->filterout(outputs[0]);
+        RB2r->filterout(outputs[1]);
     }
 
-    if(Pmode) harm->harm_out(inputs[0],inputs[1]);
+    if(Pmode) harm->harm_out(outputs[0],outputs[1]);
 
 
     for (i=0; i<param->PERIOD; i++) {
-        inputs[0][i]*=outvolume;
-        inputs[1][i]*=outvolume;
-
         if(Pmode) {
-            inputs[0][i]*=.5f;
-            inputs[1][i]*=.5f;
+            outputs[0][i]*=.5f;
+            outputs[1][i]*=.5f;
         }
     }
 

@@ -27,6 +27,7 @@
 #include "Arpie.h"
 
 Arpie::Arpie (Parameters *param, float * efxoutl_, float * efxoutr_)
+	:Effect(WetDry)
 {
 	this->param = param;
     efxoutl = efxoutl_;

@@ -33,7 +33,7 @@
 #include "Dual_Flange.h"
 
 Dflange::Dflange (Parameters *param, float * efxoutl_, float * efxoutr_)
-:lfo(param){
+:lfo(param), Effect(None){
 	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;

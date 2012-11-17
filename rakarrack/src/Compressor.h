@@ -31,7 +31,7 @@
 #include "global.h"
 #include "FPreset.h"
 
-class Compressor
+class Compressor: public Effect
 {
 
 public:
@@ -43,6 +43,7 @@ public:
     void out (float * smps_l, float * smps_r);
 
     void Compressor_Change (int np, int value);
+	void changepar(int np, int value);
     void Compressor_Change_Preset (int dgui,int npreset);
     int getpar (int npar);
     void cleanup ();

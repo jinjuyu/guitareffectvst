@@ -34,7 +34,7 @@ struct COMPLEXTYPE {
     float a, b;
 };
 
-class Alienwah
+class Alienwah : public Effect
 {
 public:
     Alienwah (Parameters *param, float * efxoutl_, float * efxoutr_);

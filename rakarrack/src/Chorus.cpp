@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 Chorus::Chorus (Parameters *param, float * efxoutl_, float * efxoutr_)
-	:lfo(param)
+	:lfo(param), Effect(WetDry)
 {
 	this->param = param;
     efxoutl = efxoutl_;
@@ -328,6 +328,9 @@ Chorus::setvolume (int Pvolume)
         ldelay->set_mix( ((float)Pvolume / 128.0f) );
         rdelay->set_mix( ((float)Pvolume / 128.0f) );
     } else   outvolume = (float)Pvolume / 127.0f;
+	
+	
+	outvolume = (float)Pvolume / 127.0f;
 
 };
 

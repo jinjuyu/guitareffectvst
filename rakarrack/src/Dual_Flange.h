@@ -34,7 +34,7 @@
 #include "EffectLFO.h"
 #include "delayline.h"
 
-class Dflange
+class Dflange : public Effect
 {
 public:
     Dflange (Parameters *param, float * efxoutl_, float * efxoutr_);

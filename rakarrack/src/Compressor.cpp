@@ -37,6 +37,7 @@
 #define  MIN_GAIN  0.00001f        // -100dB  This will help prevent evaluation of denormal numbers
 
 Compressor::Compressor (Parameters *param, float * efxoutl_, float * efxoutr_)
+	: Effect(None)
 {
 	this->param = param;
     efxoutl = efxoutl_;
@@ -93,6 +94,10 @@ Compressor::cleanup ()
 }
 
 
+void Compressor::changepar(int np, int value)
+{
+	Compressor_Change(np, value);
+}
 void
 Compressor::Compressor_Change (int np, int value)
 {
@@ -405,7 +410,11 @@ Compressor::processReplacing (float **inputs, float **outputs, int sampleFrames)
     int i;
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = sampleFrames;
-
+	for(i=0; i<param->PERIOD; i++)
+	{
+		outputs[0][i] = inputs[0][i];
+		outputs[1][i] = inputs[1][i];
+	}
     for (i = 0; i < param->PERIOD; i++) {
         float rdelta = 0.0f;
         float ldelta = 0.0f;
