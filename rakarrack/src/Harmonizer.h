@@ -31,7 +31,7 @@
 #include "smbPitchShift.h"
 
 
-class Harmonizer
+class Harmonizer : public Effect
 {
 
 public:

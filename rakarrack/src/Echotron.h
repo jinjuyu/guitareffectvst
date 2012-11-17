@@ -33,7 +33,7 @@
 #define  ECHOTRON_MAXFILTERS  32      //filters available
 
 
-class Echotron
+class Echotron : public Effect
 {
 public:
     Echotron (Parameters *param, float * efxoutl_, float * efxoutr_);

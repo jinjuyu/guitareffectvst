@@ -27,7 +27,7 @@
 #include "global.h"
 
 
-class Ring
+class Ring : public Effect
 {
 public:
     Ring (Parameters *param, float * efxoutl_, float * efxoutr_);

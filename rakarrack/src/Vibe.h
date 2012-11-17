@@ -29,7 +29,7 @@
 #include "global.h"
 #include "EffectLFO.h"
 
-class Vibe
+class Vibe : public Effect
 {
 
 public:

@@ -26,7 +26,7 @@
 #include "AnalogFilter.h"
 #include "Waveshaper.h"
 
-class StompBox
+class StompBox : public Effect
 {
 public:
     StompBox (Parameters *param,float * efxoutl_, float * efxoutr_);

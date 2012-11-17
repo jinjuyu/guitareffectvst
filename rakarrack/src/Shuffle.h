@@ -30,7 +30,7 @@
 #include "AnalogFilter.h"
 
 
-class Shuffle
+class Shuffle : public Effect
 {
 public:
     Shuffle (Parameters *param,float * efxoutl_, float * efxoutr_);

@@ -33,7 +33,7 @@
 #include "EffectLFO.h"
 
 
-class Synthfilter
+class Synthfilter : public Effect
 {
 public:
     Synthfilter (Parameters *param,float * efxoutl_, float * efxoutr_);

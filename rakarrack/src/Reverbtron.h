@@ -28,7 +28,7 @@
 #include "AnalogFilter.h"
 
 
-class Reverbtron
+class Reverbtron : public Effect
 {
 public:
     Reverbtron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq);

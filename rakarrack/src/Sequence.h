@@ -29,7 +29,7 @@
 #include "beattracker.h"
 #include "delayline.h"
 
-class Sequence
+class Sequence : public Effect
 {
 public:
     Sequence (Parameters *param, float * efxoutl_, float * efxoutr_, long int Quality, int DS, int uq, int dq);

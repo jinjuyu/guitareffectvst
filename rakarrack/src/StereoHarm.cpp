@@ -29,6 +29,7 @@
 
 
 StereoHarm::StereoHarm (Parameters *param,float *efxoutl_, float *efxoutr_, long int Quality, int DS, int uq, int dq)
+:Effect(WetDry)
 {
 	this->param = param;
 

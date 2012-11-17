@@ -27,6 +27,7 @@
 
 
 Exciter::Exciter (Parameters *param, float * efxoutl_, float * efxoutr_)
+:Effect(Gain)
 {
 	this->param = param;
     efxoutl = efxoutl_;

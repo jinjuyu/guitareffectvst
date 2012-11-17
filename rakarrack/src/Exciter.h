@@ -26,7 +26,7 @@
 #include "HarmonicEnhancer.h"
 
 
-class Exciter
+class Exciter : public Effect
 {
 public:
     Exciter (Parameters *param, float * efxoutl_, float * efxoutr_);

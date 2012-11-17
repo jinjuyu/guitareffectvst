@@ -27,7 +27,7 @@
 
 
 Pan::Pan (Parameters *param, float *efxoutl_, float *efxoutr_)
-:lfo(param){
+:lfo(param), Effect(WetDry){
 	this->param = param;
 
     efxoutl = efxoutl_;
@@ -138,22 +138,25 @@ Pan::processReplacing (float **inputs,
 	lfo.update();
 
 
+	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
+	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
+
     if (PextraON) {
 
         for (i = 0; i < param->PERIOD; i++)
 
         {
 
-            avg = (inputs[0][i] + inputs[1][i]) * .5f;
+            avg = (outputs[0][i] + outputs[1][i]) * .5f;
 
-            ldiff = inputs[0][i] - avg;
-            rdiff = inputs[1][i] - avg;
+            ldiff = outputs[0][i] - avg;
+            rdiff = outputs[1][i] - avg;
 
             tmp = avg + ldiff * mul;
-            inputs[0][i] = tmp*cdvalue;
+            outputs[0][i] = tmp*cdvalue;
 
             tmp = avg + rdiff * mul;
-            inputs[1][i] = tmp*sdvalue;
+            outputs[1][i] = tmp*sdvalue;
 
 
         }
@@ -171,19 +174,16 @@ Pan::processReplacing (float **inputs,
 
             pp = (ll * P_i + lfol * fi) * coeff_PERIOD;
 
-            inputs[0][i] *= pp * panning;
+            outputs[0][i] *= pp * panning;
 
             pp =  (lr * P_i + lfor * fi) * coeff_PERIOD;
 
-            inputs[1][i] *= pp * (1.0f - panning);
+            outputs[1][i] *= pp * (1.0f - panning);
 
         }
 
     }
 
-
-	memcpy(outputs[0], inputs[0], sampleFrames*sizeof(float));
-	memcpy(outputs[1], inputs[1], sampleFrames*sizeof(float));
 
 
 

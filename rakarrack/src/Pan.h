@@ -27,7 +27,7 @@
 #include "global.h"
 #include "EffectLFO.h"
 
-class Pan
+class Pan : public Effect
 {
 
 public:

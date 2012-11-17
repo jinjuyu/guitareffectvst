@@ -1,4 +1,5 @@
 #pragma once
+#include "global.h"
 #include "../VSTGL/ExampleEditor.h"
 #include "../VSTGL/VstPlugin.h"
 namespace PanelNS
@@ -68,8 +69,9 @@ public:
 	vector<PanelOnOffCallback*> mCBOnOffs;
 	vector<PanelListCallback*> mCBLists;
 	vector<Data> mData;
-	Panel(GLGUI *gui, VstPlugin *plug, int whereis, int *presets, int sizePreset, int numPresets);
+	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, int whereis, int *presets, int sizePreset, int numPresets);
 	~Panel();
+	Effect *mEffect;
 	vector<vector<string>> mTypeStrs;
 	vector<vector<int>> mPresets;
 	void SetPreset(int preset);

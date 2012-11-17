@@ -27,7 +27,7 @@
 #include "global.h"
 #include "EffectLFO.h"
 
-class Phaser
+class Phaser : public Effect
 {
 public:
     Phaser (Parameters *param, float * efxoutl_, float * efxoutr_);

@@ -104,8 +104,8 @@ void Panel::SetPreset(int preset)
 void Panel::DrawText()
 {
 }
-Panel::Panel(GLGUI *gui, VstPlugin *plug, int whereis, int *presets, int sizePreset, int numPresets)
-	:mGUI(gui), mWhereis(whereis), mPlug(plug)
+Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, int whereis, int *presets, int sizePreset, int numPresets)
+	:mGUI(gui), mWhereis(whereis), mPlug(plug), mEffect(effect)
 {
 	for(int y=0; y<numPresets; ++y)
 	{
@@ -152,6 +152,16 @@ PanelSliderCallback::PanelSliderCallback(Panel *a, int dataIdx)
 }
 void PanelSliderCallback::SetVal(int val)
 {
+	int newval = mPanel->PrintToReal(mDataIdx, val);
+	if(mPanel->mData[mDataIdx].isFreq)
+	{
+		mPanel->mEffect->changepar(mPanel->mData[mDataIdx].parIdx, GetFreqByRealMinMax(newval));
+	}
+	else
+	{
+		mPanel->mEffect->changepar(mPanel->mData[mDataIdx].parIdx, newval);
+	}
+	
 }
 PanelListCallback::PanelListCallback(Panel *a, int dataIdx)
 	: mPanel(a), mDataIdx(dataIdx)

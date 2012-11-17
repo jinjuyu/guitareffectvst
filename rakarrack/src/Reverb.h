@@ -29,7 +29,7 @@
 #include "global.h"
 #include "AnalogFilter.h"
 
-class Reverb
+class Reverb : public Effect
 {
 public:
     Reverb (Parameters *param, float * efxoutl_, float * efxoutr_);

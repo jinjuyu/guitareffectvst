@@ -99,6 +99,59 @@ DynamicFilter::out (float * smpsl, float * smpsr)
 
 };
 
+void DynamicFilter::processReplacing (float **inputs,
+						float **outputs,
+						int sampleFrames)
+{
+    int i;
+    float lfol, lfor;
+	param->PERIOD = sampleFrames;
+	param->fPERIOD = sampleFrames;
+
+    if (filterpars->changed) {
+        filterpars->changed = false;
+        cleanup ();
+    };
+	lfo.update();
+
+    lfo.effectlfoout (&lfol, &lfor);
+    lfol *= depth * 5.0f;
+    lfor *= depth * 5.0f;
+    float freq = filterpars->getfreq ();
+    float q = filterpars->getq ();
+
+    for (i = 0; i < param->PERIOD; i++) {
+        outputs[0][i] = inputs[0][i];
+        outputs[1][i] = inputs[1][i];
+
+        float x = (fabsf (inputs[0][i]) + fabsf (inputs[1][i])) * 0.5f;
+        ms1 = ms1 * (1.0f - ampsmooth) + x * ampsmooth + 1e-10f;
+    };
+
+
+    float ampsmooth2 = powf (ampsmooth, 0.2f) * 0.3f;
+    ms2 = ms2 * (1.0f - ampsmooth2) + ms1 * ampsmooth2;
+    ms3 = ms3 * (1.0f - ampsmooth2) + ms2 * ampsmooth2;
+    ms4 = ms4 * (1.0f - ampsmooth2) + ms3 * ampsmooth2;
+    float rms = (sqrtf (ms4)) * ampsns;
+
+    float frl = filterl->getrealfreq (freq + lfol + rms);
+    float frr = filterr->getrealfreq (freq + lfor + rms);
+
+    filterl->setfreq_and_q (frl, q);
+    filterr->setfreq_and_q (frr, q);
+
+
+    filterl->filterout (outputs[0]);
+    filterr->filterout (outputs[1]);
+
+    //panning
+    for (i = 0; i < param->PERIOD; i++) {
+        outputs[0][i] *= panning;
+        outputs[1][i] *= (1.0f - panning);
+    };
+
+}
 /*
  * Cleanup the effect
  */

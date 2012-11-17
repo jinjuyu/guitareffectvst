@@ -27,6 +27,7 @@
 #include "Reverbtron.h"
 //const char *DATADIR = "./data";
 Reverbtron::Reverbtron (Parameters *param, float * efxoutl_, float * efxoutr_,int DS, int uq, int dq)
+	:Effect(WetDry)
 {
 	this->param = param;
     efxoutl = efxoutl_;

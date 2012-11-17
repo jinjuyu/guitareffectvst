@@ -41,7 +41,7 @@
 #define ZERO_ 0.00001f        // Same idea as above.
 
 Synthfilter::Synthfilter (Parameters *param,float * efxoutl_, float * efxoutr_)
-:lfo(param){
+:lfo(param), Effect(WetDry){
 	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;

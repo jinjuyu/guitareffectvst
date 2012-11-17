@@ -28,7 +28,7 @@
 #include "global.h"
 
 
-class MusicDelay
+class MusicDelay : public Effect
 {
 public:
     MusicDelay (Parameters *param, float * efxoutl_, float * efxoutr_);

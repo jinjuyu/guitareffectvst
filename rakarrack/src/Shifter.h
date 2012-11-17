@@ -35,7 +35,7 @@
 
 
 
-class Shifter
+class Shifter : public Effect
 {
 
 public:

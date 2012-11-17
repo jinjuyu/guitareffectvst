@@ -28,7 +28,7 @@
 #include "AnalogFilter.h"
 #include "HarmonicEnhancer.h"
 
-class Valve
+class Valve : public Effect
 {
 public:
     Valve (Parameters *param,float * efxoutl_, float * efxoutr_);

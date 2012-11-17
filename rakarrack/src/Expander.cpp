@@ -29,6 +29,7 @@
 
 
 Expander::Expander (Parameters *param, float * efxoutl_, float * efxoutr_)
+	:Effect(None)
 {
 	this->param = param;
     efxoutl = efxoutl_;

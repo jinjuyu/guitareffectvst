@@ -33,7 +33,7 @@
 // void waveshapesmps (int n, float * smps, int type,
 // 		    int drive);
 
-class NewDist
+class NewDist : public Effect
 {
 public:
     NewDist (Parameters *param, float * efxoutl_, float * efxoutr_);

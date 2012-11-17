@@ -28,7 +28,7 @@
 #define PHASER_LFO_SHAPE 2
 
 Phaser::Phaser (Parameters *param, float * efxoutl_, float * efxoutr_)
-:lfo(param){
+:lfo(param), Effect(WetDry){
 	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;

@@ -32,6 +32,7 @@
  */
 
 NewDist::NewDist (Parameters *param, float * efxoutl_, float * efxoutr_)
+	:Effect(WetDry)
 {
 	this->param = param;
     efxoutl = efxoutl_;
@@ -253,21 +254,21 @@ NewDist::processReplacing (float **inputs,
     if (Pnegate != 0)
         inputvol *= -1.0f;
 
+    memcpy(outputs[0],inputs[0],param->PERIOD * sizeof(float));
+    memcpy(outputs[1],inputs[1],param->PERIOD * sizeof(float));
 
     if (Pprefiltering != 0)
-        applyfilters (inputs[0], inputs[1]);
+        applyfilters (outputs[0], outputs[1]);
 
     //no optimised, yet (no look table)
 
 
-    wshapel->waveshapesmps (param->PERIOD, inputs[0], Ptype, Pdrive, 2);
-    wshaper->waveshapesmps (param->PERIOD, inputs[1], Ptype, Pdrive, 2);
+    wshapel->waveshapesmps (param->PERIOD, outputs[0], Ptype, Pdrive, 2);
+    wshaper->waveshapesmps (param->PERIOD, outputs[1], Ptype, Pdrive, 2);
 
 
 
 
-    memcpy(outputs[0],inputs[0],param->PERIOD * sizeof(float));
-    memcpy(outputs[1],inputs[1],param->PERIOD * sizeof(float));
 
 
 
@@ -296,8 +297,8 @@ NewDist::processReplacing (float **inputs,
 
 
 
-    filterl->filterout(inputs[0]);
-    filterr->filterout(inputs[1]);
+    filterl->filterout(outputs[0]);
+    filterr->filterout(outputs[1]);
 
 
 

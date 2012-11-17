@@ -30,7 +30,7 @@
 #include "global.h"
 #include "delayline.h"
 
-class RBEcho
+class RBEcho : public Effect
 {
 public:
     RBEcho (Parameters *param, float * efxoutl_, float * efxoutr_);

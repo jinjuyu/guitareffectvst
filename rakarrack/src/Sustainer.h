@@ -25,7 +25,7 @@
 
 #include "global.h"
 
-class Sustainer
+class Sustainer : public Effect
 {
 public:
     Sustainer (Parameters *param,float * efxoutl_, float * efxoutr_);

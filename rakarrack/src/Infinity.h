@@ -27,7 +27,7 @@
 
 #define NUM_INF_BANDS 8
 
-class Infinity
+class Infinity : public Effect
 {
 public:
     Infinity (Parameters *param, float * efxoutl_, float * efxoutr_);

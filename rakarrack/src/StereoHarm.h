@@ -30,7 +30,7 @@
 #include "smbPitchShift.h"
 
 
-class StereoHarm
+class StereoHarm : public Effect
 {
 
 public:

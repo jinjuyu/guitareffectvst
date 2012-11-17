@@ -28,7 +28,7 @@
 #include "EffectLFO.h"
 #include "RBFilter.h"
 
-class RyanWah
+class RyanWah : public Effect
 {
 public:
     RyanWah (Parameters *param, float * efxoutl_, float * efxoutr_);

@@ -31,6 +31,7 @@
 #include "Echo.h"
 
 Echo::Echo (Parameters *param, float * efxoutl_, float * efxoutr_)
+	:Effect(WetDry)
 {
 	this->param = param;
 	param->PERIOD = 32768;

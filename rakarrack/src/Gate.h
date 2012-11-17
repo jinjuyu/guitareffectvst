@@ -33,7 +33,7 @@
 #include "global.h"
 #include "AnalogFilter.h"
 
-class Gate
+class Gate : public Effect
 {
 
 public:

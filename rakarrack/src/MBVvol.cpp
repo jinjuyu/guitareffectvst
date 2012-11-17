@@ -33,7 +33,7 @@
 
 
 MBVvol::MBVvol (Parameters *param, float * efxoutl_, float * efxoutr_)
-:lfo1(param),lfo2(param){
+:lfo1(param),lfo2(param),Effect(WetDry){
 	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;

@@ -30,7 +30,7 @@
 #include "AnalogFilter.h"
 #include "Waveshaper.h"
 
-class MBDist
+class MBDist : public Effect
 {
 public:
     MBDist (Parameters *param, float * efxoutl_, float * efxoutr_);

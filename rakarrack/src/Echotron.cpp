@@ -28,7 +28,7 @@
 #include "Echotron.h"
 //const char *DATADIR = "./data";
 Echotron::Echotron (Parameters *param, float * efxoutl_, float * efxoutr_)
-:lfo(param),dlfo(param){
+:lfo(param),dlfo(param),Effect(WetDry) {
 	this->param = param;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;

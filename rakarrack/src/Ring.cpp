@@ -30,6 +30,7 @@
 
 
 Ring::Ring (Parameters *param, float * efxoutl_, float * efxoutr_)
+	: Effect(WetDry)
 {
 	this->param = param;
 

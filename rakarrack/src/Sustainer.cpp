@@ -26,6 +26,7 @@
 #include "Sustainer.h"
 
 Sustainer::Sustainer (Parameters *param,float * efxoutl_, float * efxoutr_)
+:Effect(None)
 {
 	this->param = param;
     efxoutl = efxoutl_;
@@ -124,9 +125,11 @@ Sustainer::processReplacing (float **inputs,
     float auxcombi = 0.0f;
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = param->PERIOD;
+	memcpy(outputs[0], inputs[0], sizeof(float)*param->PERIOD);
+	memcpy(outputs[1], inputs[1], sizeof(float)*param->PERIOD);
     for (i = 0; i<param->PERIOD; i++) {  //apply compression to auxresampled
-        auxtempl = input * inputs[0][i];
-        auxtempr = input * inputs[1][i];
+        auxtempl = input * outputs[0][i];
+        auxtempr = input * outputs[1][i];
         auxcombi = 0.5f * (auxtempl + auxtempr);
         if(fabs(auxcombi) > compeak) {
             compeak = fabs(auxcombi);   //First do peak detection on the signal
@@ -151,11 +154,9 @@ Sustainer::processReplacing (float **inputs,
         if(compenv < cpthresh) cpthresh = compenv;
         if(cpthresh < cthresh) cpthresh = cthresh;
 
-        inputs[0][i] = auxtempl * tmpgain * level;
-        inputs[1][i] = auxtempr * tmpgain * level;
+        outputs[0][i] = auxtempl * tmpgain * level;
+        outputs[1][i] = auxtempr * tmpgain * level;
     };
-	memcpy(outputs[0], inputs[0], sizeof(float)*param->PERIOD);
-	memcpy(outputs[1], inputs[1], sizeof(float)*param->PERIOD);
     //End compression
 };
 /*

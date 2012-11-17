@@ -26,6 +26,7 @@
 
 
 ShelfBoost::ShelfBoost (Parameters *param, float * efxoutl_, float * efxoutr_)
+	:Effect(None)
 {
 	this->param = param;
     efxoutl = efxoutl_;
@@ -95,19 +96,19 @@ void ShelfBoost::processReplacing (float **inputs,
     int i;
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = param->PERIOD;
+	memcpy(outputs[0],inputs[0],sizeof(float)*param->PERIOD);
+	memcpy(outputs[1],inputs[1],sizeof(float)*param->PERIOD);
 
-    RB1l->filterout(inputs[0]);
-    if(Pstereo) RB1r->filterout(inputs[1]);
+    RB1l->filterout(outputs[0]);
+    if(Pstereo) RB1r->filterout(outputs[1]);
 
 
     for(i=0; i<param->PERIOD; i++) {
-        inputs[0][i]*=outvolume*u_gain;
-        if(Pstereo) inputs[1][i]*=outvolume*u_gain;
+        outputs[0][i]*=outvolume*u_gain;
+        if(Pstereo) outputs[1][i]*=outvolume*u_gain;
     }
 
-    if(!Pstereo) memcpy(inputs[1],inputs[0],sizeof(float)*param->PERIOD);
-	memcpy(outputs[0],inputs[0],sizeof(float)*param->PERIOD);
-	memcpy(outputs[1],inputs[1],sizeof(float)*param->PERIOD);
+    if(!Pstereo) memcpy(outputs[1],outputs[0],sizeof(float)*param->PERIOD);
 
 
 

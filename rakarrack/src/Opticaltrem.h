@@ -29,7 +29,7 @@
 #include "global.h"
 #include "EffectLFO.h"
 
-class Opticaltrem
+class Opticaltrem : public Effect
 {
 
 public:

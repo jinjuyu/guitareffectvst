@@ -34,7 +34,7 @@
 #include "global.h"
 #include "AnalogFilter.h"
 
-class Expander
+class Expander : public Effect
 {
 
 public:

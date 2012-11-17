@@ -30,7 +30,7 @@
 #include "EffectLFO.h"
 
 
-class MBVvol
+class MBVvol : public Effect
 {
 public:
     MBVvol (Parameters *param, float * efxoutl_, float * efxoutr_);

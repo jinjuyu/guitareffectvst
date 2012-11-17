@@ -31,6 +31,7 @@
 /*TODO: EarlyReflections,Prdelay,Perbalance */
 
 Reverb::Reverb (Parameters *param, float * efxoutl_, float * efxoutr_)
+:Effect(WetDry)
 {
 	this->param = param;
     efxoutl = efxoutl_;
@@ -209,8 +210,10 @@ Reverb::processReplacing (float **inputs,
 
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = sampleFrames;
+	memcpy(outputs[0], inputs[0], sizeof(float)*sampleFrames);
+	memcpy(outputs[1], inputs[1], sizeof(float)*sampleFrames);
     for (i = 0; i < param->PERIOD; i++) {
-        inputbuf[i] = (inputs[0][i] + inputs[1][i]) * .5f;
+        inputbuf[i] = (outputs[0][i] + outputs[1][i]) * .5f;
         //Initial delay r
         if (idelay != NULL) {
             float tmp = inputbuf[i] + idelay[idelayk] * idelayfb;
@@ -226,8 +229,8 @@ Reverb::processReplacing (float **inputs,
     lpf->filterout (inputbuf);
     hpf->filterout (inputbuf);
 
-    processmono (0, inputs[0]);	//left
-    processmono (1, inputs[1]);	//right
+    processmono (0, outputs[0]);	//left
+    processmono (1, outputs[1]);	//right
 
 
 
@@ -235,8 +238,8 @@ Reverb::processReplacing (float **inputs,
     float rvol = rs_coeff * (1.0f - pan) * 2.0f;
 
     for (int i = 0; i < param->PERIOD; i++) {
-        outputs[0][i] = inputs[0][i]*lvol;
-        outputs[1][i] = inputs[1][i]*rvol;
+        outputs[0][i] = outputs[0][i]*lvol;
+        outputs[1][i] = outputs[1][i]*rvol;
     };
 };
 /*

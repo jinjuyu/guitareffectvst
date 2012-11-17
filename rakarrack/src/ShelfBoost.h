@@ -24,7 +24,7 @@
 #include "global.h"
 #include "AnalogFilter.h"
 
-class ShelfBoost
+class ShelfBoost : public Effect
 {
 public:
     ShelfBoost (Parameters *param, float * efxoutl_, float * efxoutr_);
