@@ -125,7 +125,7 @@ void GLGUI::init()
 		glTexCoord2f(cx, 1 - cy - 0.0625f);  // Texture Coord (Bottom Left)
 		glVertex2i(0, 16);      // Vertex Coord (Top Left)
 		glEnd();          // Done Building Our Quad (Character)
-		glTranslated(8, 0, 0);      // Move To The Right Of The Character
+		glTranslated(7, 0, 0);      // Move To The Right Of The Character
 		glEndList();        // Done Building The Display List
 	}            // Loop Until All 256 Are Built
 }
@@ -182,7 +182,7 @@ GLvoid GLGUI::Print2(TextOption &op, const char *fmt, ...) // Bigger Font
 
 
 	glColor4ub(op.r,op.g,op.b,op.a);
-	int width = strlen(text)*8;
+	int width = strlen(text)*7;
 	int height = 8;
 	float newX;
 	if(op.centerX)
@@ -201,7 +201,7 @@ GLvoid GLGUI::Print2(TextOption &op, const char *fmt, ...) // Bigger Font
 	glCallLists(strlen(text), GL_UNSIGNED_BYTE, text);  // Draws The Display List Text  ( NEW )
 	glPopAttrib();                      // Pops The Display List Bits   ( NEW )
 	glDisable(GL_TEXTURE_2D);
-	glTranslatef(-8.0f*strlen(text), 0.0f, 0.0f);
+	glTranslatef(-7.0f*strlen(text), 0.0f, 0.0f);
 	glTranslatef(-newX+5, -newY+4, 0.0f);
 
 }

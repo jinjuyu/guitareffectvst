@@ -495,6 +495,12 @@ void VstPlugin::processReplacing(float **inputs,
 	}
 
 
+	mEffLimiter->processReplacing(outputs, tempOutputs, sampleFrames); // Hidden Final Limiter Chain
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = tempOutputs[0][i];
+		outputs[1][i] = tempOutputs[1][i];
+	}
 
 	delete tempOutputs[0];
 	delete tempOutputs[1];
