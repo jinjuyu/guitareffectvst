@@ -545,7 +545,11 @@ thing(0.0f)
 		0,1, // 10
 		0,127, // 11
 	};
+	int *real;
+	int *print;
 
+	real = PhaserReal;
+	print = PhaserPrint;
 	presetTexts.clear();
     presetTexts.push_back("Phaser1");
     presetTexts.push_back("Phaser2");
@@ -556,10 +560,13 @@ thing(0.0f)
 	mPhaserPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffChorus, "Phaser", 5, phaser_presets, PHASER_PRESET_SIZE, PHASER_NUM_PRESETS, presetTexts);
 
 	iii=0;
-	mPhaserPanel->AddParamData(PanelNS::Data(iii, PhaserReal[iii*2], PhaserReal[iii*2+1], -64, 63, "Wet/Dry", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(1, 0, 127, -64, 63, "Pan", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(2, 1, 600, 1, 600, "Tempo", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(3, 0, 127, 0, 127, "RND", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+	iii = 1;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+	iii = 2;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+	iii = 3;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "RND", PanelNS::Slider));
 	lfoTypeStrs.clear();
 	lfoTypeStrs.push_back("Sine");
 	lfoTypeStrs.push_back("Tri");
