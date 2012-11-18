@@ -578,20 +578,229 @@ thing(0.0f)
 	lfoTypeStrs.push_back("L.Fract");
 	lfoTypeStrs.push_back("L.FractXY");
 	lfoTypeStrs.push_back("S/H Rnd");
-	mPhaserPanel->AddParamData(PanelNS::Data(4, 0, 9, 0, 9, "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
-
-	mPhaserPanel->AddParamData(PanelNS::Data(10, 0, 1, 0, 1, "Subtract", PanelNS::OnOff));
-	mPhaserPanel->AddParamData(PanelNS::Data(11, 0, 127, 0, 127, "Phase", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(5, 0, 127, 0, 127, "St.df", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(6, 0, 127, 0, 127, "Depth", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(7, 0, 127, 0, 127, "Fb", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(8, 1, 12, 1, 12, "Stages", PanelNS::Slider));
-	mPhaserPanel->AddParamData(PanelNS::Data(9, 0, 127, -63, 64, "L/R.Cr", PanelNS::Slider));
+	iii=4;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+	iii=10;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Subtract", PanelNS::OnOff));
+	iii=11;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Phase", PanelNS::Slider));
+	iii=5;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+	iii=6;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+	iii=7;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+	iii=8;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Stages", PanelNS::Slider));
+	iii=9;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
 
 	mPhaserPanel->SetPreset(0);
 
 
 
+	int ReverbReal[] = {
+//case 0:
+		0,127,
+			
+    //setvolume (value);
+    //break;
+//case 1:
+		0,127,
+    //setpan (value);
+    //break;
+//case 2:
+		0,127,
+    //settime (value);
+    //break;
+//case 3:
+		0,127,
+    //setidelay (value);
+    //break;
+//case 4:
+		0,127,
+    //setidelayfb (value);
+    //break;
+//      case 5: setrdelay(value); deleted
+//              break;
+		0,0,
+//      case 6: seterbalance(value); deleted
+//              break;
+		0,0,
+//case 7:
+		47,171, // 20~26000, 이 값을 GetFreqByRealMinMax로 변환하면 주파수가 나온다.
+    //setlpf (value);
+    //break;
+//case 8:
+		47,166, // 20~20000
+    //sethpf (value);
+    //break;
+//case 9:
+		0,127,
+    //setlohidamp (value);
+    //break;
+//case 10:
+		0, 1, // : Selection:
+	        //Freeverb
+			//Random
+    //settype (value);
+    //break;
+//case 11:
+		0,127,
+    //setroomsize (value);
+    //break;
+			
+	};
+	int ReverbPrint[] = {
+		-64,63, // 0
+		-64,63, // 1
+		0,127, // 2
+		0,127, // 3
+		0,127, // 4
+		0,0, // 5
+		0,0, // 6
+		0,100, // 7
+		0,100, // 8
+		0,127, // 9
+		0,1, // 10 
+		0,127, // 11
+	};
+    const int REVERB_PRESET_SIZE = 12;
+    const int REVERB_NUM_PRESETS = 13;
+    int reverb_presets[] = {
+        //Cathedral1
+        80, 64, 63, 24, 0, 0, 0, 4002, 27, 83, 1, 64,
+        //Cathedral2
+        80, 64, 69, 35, 0, 0, 0, 25040, 21, 71, 0, 64,
+        //Cathedral3
+        80, 64, 69, 24, 0, 0, 0, 25040, 2417, 78, 1, 85,
+        //Hall1
+        90, 64, 51, 10, 0, 0, 0, 25040, 81, 78, 1, 64,
+        //Hall2
+        90, 64, 53, 20, 0, 0, 0, 25040, 2417, 71, 1, 64,
+        //Room1
+        100, 64, 33, 0, 0, 0, 0, 25040, 21, 106, 0, 30,
+        //Room2
+        100, 64, 21, 26, 0, 0, 0, 1223, 21, 77, 1, 45,
+        //Basement
+        110, 64, 14, 0, 0, 0, 0, 25040, 27, 71, 0, 25,
+        //Tunnel
+        85, 80, 84, 20, 42, 0, 0, 652, 21, 78, 1, 105,
+        //Echoed1
+        95, 64, 26, 60, 71, 0, 0, 14722, 21, 64, 1, 64,
+        //Echoed2
+        90, 64, 40, 88, 71, 0, 0, 14722, 21, 88, 1, 64,
+        //VeryLong1
+        90, 64, 93, 15, 0, 0, 0, 14722, 21, 77, 0, 95,
+        //VeryLong2
+        90, 64, 111, 30, 0, 0, 0, 14722, 5058, 74, 1, 80
+    };
+	real = ReverbReal;
+	print = ReverbPrint;
+	presetTexts.clear();
+    presetTexts.push_back("Cathedral1");
+    presetTexts.push_back("Cathedral2");
+    presetTexts.push_back("Cathedral3");
+    presetTexts.push_back("Hall1");
+    presetTexts.push_back("Hall2");
+    presetTexts.push_back("Room1");
+    presetTexts.push_back("Room2");
+    presetTexts.push_back("Basement");
+    presetTexts.push_back("Tunnel");
+    presetTexts.push_back("Echoed1");
+    presetTexts.push_back("Echoed2");
+    presetTexts.push_back("VeryLong1");
+    presetTexts.push_back("VeryLong2");
+	mReverbPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffReverb, "Reverb", 6, reverb_presets, REVERB_PRESET_SIZE, REVERB_NUM_PRESETS, presetTexts);
+	iii=0;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+	iii=1;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+	iii=2;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Time", PanelNS::Slider));
+	iii=3;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "I.Del", PanelNS::Slider));
+	iii=4;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Del.E/R", PanelNS::Slider));
+	vector<string> reverbType;
+	reverbType.push_back("Freeverb");
+	reverbType.push_back("Random");
+	iii=10;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Type", PanelNS::Selection, false, false, reverbType));
+	iii=11;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Size", PanelNS::Slider));
+	iii=7;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true ));
+	iii=8;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true));
+	iii=9;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Damp", PanelNS::Slider));
+	/*iii=5;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Unused", PanelNS::Slider), true);
+	iii=6;
+	mReverbPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Unused", PanelNS::Slider), true);
+	*/
+	mReverbPanel->SetPreset(0);
+
+
+	int PEQPreset[] = {
+		127, 30,64,64, 900,64,64, 7000,64,64
+	};
+	int ParametricEQReal[] = {
+		0,127, // 0 Gain
+		47, 115, // 20-1000Hz Low F.
+		0,127, // Low G.
+		0,127, // Low Q
+		111,151, // 800~8000 Mid F.
+		0,127, // Mid G.
+		0,127, // Mid Q
+		145,171, // 6000~26000 High F.
+		0,127, // High G.
+		0,127, // High Q
+	};
+	int ParametricEQPrint[] = {
+		0,127, // 0
+		0,100, // 1
+		-64,63, // 2
+		-64,63, // 3
+		0,100, // 4
+		-64,63, // 5
+		-64,63, // 6
+		0,100, // 7
+		-64,63, // 8
+		-64,63, // 9
+	};
+
+	real = ParametricEQReal;
+	print = ParametricEQPrint;
+	presetTexts.clear();
+	presetTexts.push_back("Default");
+	mPEQPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffEQ2, "Parametric EQ", 7, PEQPreset, 10, 1, presetTexts, true);
+
+	iii = 0;
+	mPEQPanel->AddParamData(PanelNS::Data(0, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider, false, false, vector<string>(), 0));
+
+	iii = 1;
+	mPEQPanel->AddParamData(PanelNS::Data(11, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Low F.", PanelNS::Slider, true, false, vector<string>(), 1));
+	iii = 2;
+	mPEQPanel->AddParamData(PanelNS::Data(12, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Low G.", PanelNS::Slider, false, false, vector<string>(), 2));
+	iii = 3;
+	mPEQPanel->AddParamData(PanelNS::Data(13, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider, false, false, vector<string>(), 3));
+
+	iii = 4;
+	mPEQPanel->AddParamData(PanelNS::Data(11+5, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Mid F.", PanelNS::Slider, true, false, vector<string>(), 4));
+	iii = 5;
+	mPEQPanel->AddParamData(PanelNS::Data(12+5, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Mid G.", PanelNS::Slider, false, false, vector<string>(), 5));
+	iii = 6;
+	mPEQPanel->AddParamData(PanelNS::Data(13+5, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider, false, false, vector<string>(), 6));
+
+	iii = 7;
+	mPEQPanel->AddParamData(PanelNS::Data(11+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "High F.", PanelNS::Slider, true, false, vector<string>(), 7));
+	iii = 8;
+	mPEQPanel->AddParamData(PanelNS::Data(12+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "High G.", PanelNS::Slider, false, false, vector<string>(), 8));
+	iii = 9;
+	mPEQPanel->AddParamData(PanelNS::Data(13+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider, false, false, vector<string>(), 9));
+	mPEQPanel->SetPreset(0);
 // 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
 	//for(int i=3;i<20;++i)
 //		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
@@ -693,6 +902,8 @@ void ExampleEditor::draw()
 
 	mGUI->DrawElements();
 	mDistPanel->DrawText();
+	mPEQPanel->DrawText();
+	mReverbPanel->DrawText();
 	mEQ1Panel->DrawText();
 	mEchoPanel->DrawText();
 	mTestPanel->DrawText();

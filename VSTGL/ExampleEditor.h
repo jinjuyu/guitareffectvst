@@ -196,7 +196,14 @@ public:
 	}
 	void Show(int handle, bool show)
 	{
-		mGUIElements[handle]->hidden = show;
+		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
+		{
+			if((*i)->mHandle == handle)
+			{
+				(*i)->hidden = show;
+				break;
+			}
+		}
 	}
 	int NewSlider(int x, int y, int w, int min_, int max_, bool isFreq=false);
 	void SetSliderVal(int handle, int val);
@@ -213,9 +220,12 @@ public:
 	{
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
-			delete (*i);
-			mGUIElements.erase(i);
-			break;
+			if((*i)->mHandle == handle)
+			{
+				delete (*i);
+				mGUIElements.erase(i);
+				break;
+			}
 		}
 	}
 	int handleCounter;
@@ -788,6 +798,8 @@ class ExampleEditor : public VSTGLEditor,
 	EchoNS::EchoPanel *mEchoPanel;
 	PanelNS::Panel *mTestPanel;
 	PanelNS::Panel *mPhaserPanel;
+	PanelNS::Panel *mReverbPanel;
+	PanelNS::Panel *mPEQPanel;
 	vector<LinealEQNS::LinealEQ*> mEQ1Panels;
 	
 	CompressorNS::CompressorPanel *mCompressorPanel;
