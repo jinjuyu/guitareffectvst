@@ -557,7 +557,7 @@ thing(0.0f)
     presetTexts.push_back("Phaser4");
     presetTexts.push_back("Phaser5");
     presetTexts.push_back("Phaser6");
-	mPhaserPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffChorus, "Phaser", 5, phaser_presets, PHASER_PRESET_SIZE, PHASER_NUM_PRESETS, presetTexts);
+	mPhaserPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffPhaser, "Phaser", 5, phaser_presets, PHASER_PRESET_SIZE, PHASER_NUM_PRESETS, presetTexts);
 
 	iii=0;
 	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
