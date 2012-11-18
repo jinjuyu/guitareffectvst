@@ -787,6 +787,7 @@ class ExampleEditor : public VSTGLEditor,
 	LinealEQNS::LinealEQ *mEQ1Panel;
 	EchoNS::EchoPanel *mEchoPanel;
 	PanelNS::Panel *mTestPanel;
+	PanelNS::Panel *mPhaserPanel;
 	vector<LinealEQNS::LinealEQ*> mEQ1Panels;
 	
 	CompressorNS::CompressorPanel *mCompressorPanel;

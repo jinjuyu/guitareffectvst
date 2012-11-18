@@ -7,9 +7,9 @@ namespace PanelNS
 void Panel::SetPreset(int preset)
 {
 	// WahWah는 setpreset에 약간 매직이 있다. 그러므로 WahWah인 경우엔 따로함.
-	// EQ2는 다른 이펙트랑 별로 다르지 않을 것 같은데?
-	// Limiter는 Compressor
-	// Flange는 Chorus
+	// EQ2는 다른 이펙트랑 별로 다르지 않을 것 같은데? EQ도 이걸로 할 수 있다. parIdx를 잘 해주면 됨
+	// Flange는 Chorus랑 똑같으니 그냥 같은걸 쓰자
+	// 다른 예외상황을 가면서 찾아보자.
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
 	but->mLabel = mPresetStrs[preset];
 	::Slider *slider;

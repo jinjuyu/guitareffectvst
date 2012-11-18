@@ -314,6 +314,8 @@ thing(0.0f)
 	mCompressorPanel = new CompressorNS::CompressorPanel(mGUI,(VstPlugin*)effect, 2);
 	mEchoPanel = new EchoNS::EchoPanel(mGUI,(VstPlugin*)effect, 3);
 
+	int iii;
+	
 	const int CHORUS_PRESET_SIZE = 12;
 	const int CHORUS_NUM_PRESETS = 10;
 	int chorus_presets[] = {
@@ -447,7 +449,143 @@ thing(0.0f)
 	mTestPanel->AddParamData(PanelNS::Data(9, 0, 127, -63, 64, "L/R.Cr", PanelNS::Slider));
 
 	mTestPanel->SetPreset(0);
-	// 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
+
+
+    const int PHASER_PRESET_SIZE = 12;
+    const int PHASER_NUM_PRESETS = 6;
+    int phaser_presets[] = {
+        //Phaser1
+        64, 64, 11, 0, 0, 64, 110, 64, 1, 0, 0, 20,
+        //Phaser2
+        64, 64, 10, 0, 0, 88, 40, 64, 3, 0, 0, 20,
+        //Phaser3
+        64, 64, 8, 0, 0, 66, 68, 107, 2, 0, 0, 20,
+        //Phaser4
+        39, 64, 1, 0, 0, 66, 67, 10, 5, 0, 1, 20,
+        //Phaser5
+        64, 64, 1, 0, 1, 110, 67, 78, 10, 0, 0, 20,
+        //Phaser6
+        64, 64, 31, 100, 0, 58, 37, 78, 3, 0, 0, 20
+    };
+	int PhaserReal[] = {
+//   case 0:
+		0,127,
+//      setvolume (value);
+    //case 1:
+		0,127,
+//      setpanning (value);
+//    break;
+	//case 2:
+		1,600,
+		//lfo.Pfreq = value;
+		//lfo.updateparams ();
+		//break;
+		//case 3:
+		0,127,
+			//lfo.Prandomness = value;
+			//lfo.updateparams ();
+			//break;
+		//case 4:
+//lfo.PLFOtype = value; LFOType
+		0, 9,  // type value
+		/*
+		Sine
+		Tri
+		RampUp
+		RampDown
+		ZigZag
+		M.Sqare
+		M.Saw
+		L. Fractal
+		L. Fractal XY
+		S/H Random*/
+		//case 5:
+		0,127,
+			//lfo.Pstereo = value;
+			//lfo.updateparams ();
+			//break;
+		//case 6:
+		0,127,
+			//setdepth (value);
+			//break;
+		//case 7:
+		0,127,
+			//setfb (value);
+			//break;
+		//case 8:
+		1,12,
+			//setstages (value);
+			//break;
+		//case 9:
+		0,127,
+			//setlrcross (value);
+			//break;
+		//case 10:
+		0,1, // Boolean
+			//if (value > 1)
+				//value = 1;
+			//Poutsub = value;
+			//break;
+		//case 11:
+		0,127,
+			//setphase (value);
+			//break;
+	};
+	int PhaserPrint[] = {
+		-64,63, // 0
+		-64,63, // 1
+		1,600, // 2
+		0,127, // 3
+		0,9, // 4
+		0,127, // 5
+		0,127, //6
+		0,127, //7
+		1,12, // 8
+		-64,63, //9
+		0,1, // 10
+		0,127, // 11
+	};
+
+	presetTexts.clear();
+    presetTexts.push_back("Phaser1");
+    presetTexts.push_back("Phaser2");
+    presetTexts.push_back("Phaser3");
+    presetTexts.push_back("Phaser4");
+    presetTexts.push_back("Phaser5");
+    presetTexts.push_back("Phaser6");
+	mPhaserPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffChorus, "Phaser", 5, phaser_presets, PHASER_PRESET_SIZE, PHASER_NUM_PRESETS, presetTexts);
+
+	iii=0;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, PhaserReal[iii*2], PhaserReal[iii*2+1], -64, 63, "Wet/Dry", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(1, 0, 127, -64, 63, "Pan", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(2, 1, 600, 1, 600, "Tempo", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(3, 0, 127, 0, 127, "RND", PanelNS::Slider));
+	lfoTypeStrs.clear();
+	lfoTypeStrs.push_back("Sine");
+	lfoTypeStrs.push_back("Tri");
+	lfoTypeStrs.push_back("RampUp");
+	lfoTypeStrs.push_back("RampDn");
+	lfoTypeStrs.push_back("ZigZag");
+	lfoTypeStrs.push_back("M.Sqare");
+	lfoTypeStrs.push_back("M.Saw");
+	lfoTypeStrs.push_back("L.Fract");
+	lfoTypeStrs.push_back("L.FractXY");
+	lfoTypeStrs.push_back("S/H Rnd");
+	mPhaserPanel->AddParamData(PanelNS::Data(4, 0, 9, 0, 9, "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+
+	mPhaserPanel->AddParamData(PanelNS::Data(10, 0, 1, 0, 1, "Subtract", PanelNS::OnOff));
+	mPhaserPanel->AddParamData(PanelNS::Data(11, 0, 127, 0, 127, "Phase", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(5, 0, 127, 0, 127, "St.df", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(6, 0, 127, 0, 127, "Depth", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(7, 0, 127, 0, 127, "Fb", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(8, 1, 12, 1, 12, "Stages", PanelNS::Slider));
+	mPhaserPanel->AddParamData(PanelNS::Data(9, 0, 127, -63, 64, "L/R.Cr", PanelNS::Slider));
+
+	mPhaserPanel->SetPreset(0);
+
+
+
+// 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
 	//for(int i=3;i<20;++i)
 //		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
 
@@ -551,6 +689,7 @@ void ExampleEditor::draw()
 	mEQ1Panel->DrawText();
 	mEchoPanel->DrawText();
 	mTestPanel->DrawText();
+	mPhaserPanel->DrawText();
 	for(int i=0;i<17;++i)
 	{
 		//mEQ1Panels[i]->DrawText();
