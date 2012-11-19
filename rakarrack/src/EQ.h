@@ -28,7 +28,7 @@
 #include "global.h"
 #include "AnalogFilter.h"
 
-class EQ
+class EQ : public Effect
 {
 public:
     EQ (Parameters *param, float * efxoutl_, float * efxoutr_);

@@ -16,10 +16,21 @@ void Panel::SetPreset(int preset)
 	OnOffButton *onoff;
 	for(int i=0; i<mData.size();++i)
 	{
-		if(mData[i].type == Slider && mData[i].parIdx < mSizePreset)
+		if(mData[i].type == Slider && mUsePresetIdx)
 		{
 			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
-			slider->SetVal(RealToPrint(i, mPresets[preset][mData[i].parIdx]));
+			if(mData[i].isFreq)
+				slider->SetVal(RealToPrint(i, GetRealMinMaxByFreq(mPresets[preset][mData[i].preIdx])));
+			else
+				slider->SetVal(RealToPrint(i, mPresets[preset][mData[i].preIdx]));
+		}
+		else if(mData[i].type == Slider && mData[i].parIdx < mSizePreset)
+		{
+			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
+			if(mData[i].isFreq)
+				slider->SetVal(RealToPrint(i, GetRealMinMaxByFreq(mPresets[preset][mData[i].parIdx])));
+			else
+				slider->SetVal(RealToPrint(i, mPresets[preset][mData[i].parIdx]));
 		}
 		else if(mData[i].type == OnOff && mData[i].parIdx < mSizePreset)
 		{
@@ -81,8 +92,8 @@ void Panel::DrawText()
 	}
 
 }
-Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts)
-	:mGUI(gui), mWhereis(whereis), mPlug(plug), mEffect(effect), mEffName(effName), mPresetStrs(presetTexts), mSizePreset(sizePreset)
+Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx)
+	:mGUI(gui), mWhereis(whereis), mPlug(plug), mEffect(effect), mEffName(effName), mPresetStrs(presetTexts), mSizePreset(sizePreset), mUsePresetIdx(usePresetIdx)
 {
 	for(int y=0; y<numPresets; ++y)
 	{
@@ -140,9 +151,10 @@ Panel::~Panel()
 	delete cbPresetSelect;
 	delete cbPresetSelected;
 }
-void Panel::AddParamData(Data &data)
+void Panel::AddParamData(Data &data, bool unused)
 {
 	mData.push_back(data);
+	if(unused) return;
 
 	int x,y,w=180,h=250;
 	if(mWhereis < 5)

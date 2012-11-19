@@ -49,8 +49,8 @@ enum DataType
 class Data
 {
 public:
-	Data(int idx, int realMin, int realMax, int pMin, int pMax, string txt, DataType type, bool isFreq = false, bool useSameY = false, vector<string> typeStrs = vector<string>())
-		:parIdx(idx), valRealMin(realMin), valRealMax(realMax), valPrintMin(pMin), valPrintMax(pMax), isFreq(isFreq), text(txt), mTypeStrs(typeStrs), type(type), useSameYAsPrev(useSameY)
+	Data(int idx, int realMin, int realMax, int pMin, int pMax, string txt, DataType type, bool isFreq = false, bool useSameY = false, vector<string> typeStrs = vector<string>(), int preIdx = -1)
+		:parIdx(idx), valRealMin(realMin), valRealMax(realMax), valPrintMin(pMin), valPrintMax(pMax), isFreq(isFreq), text(txt), mTypeStrs(typeStrs), type(type), useSameYAsPrev(useSameY), preIdx(preIdx)
 	{
 		cbIdx = -1;
 		cbListIdx = -1;
@@ -69,6 +69,7 @@ public:
 	DataType type;
 	bool useSameYAsPrev;
 	
+	int preIdx; // preset Idx used in parametric eq and others
 
 	//used internally
 	int cbIdx;
@@ -104,8 +105,9 @@ public:
 	vector<PanelListCallback*> mCBLists;
 	vector<Data> mData;
 	int mSizePreset;
-	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts);
+	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx=false);
 	~Panel();
+	bool mUsePresetIdx;
 	Effect *mEffect;
 	vector<vector<string>> mTypeStrs;
 	vector<string> mPresetStrs;
@@ -116,7 +118,7 @@ public:
 	VstPlugin *mPlug;
 	string mEffName;
 	int mY;
-	void AddParamData(Data &data);
+	void AddParamData(Data &data, bool unused=false);
 	int PrintToReal(int idx, int val) // idx ดย dataIdx
 	{
 		int printMin = mData[idx].valPrintMin;
