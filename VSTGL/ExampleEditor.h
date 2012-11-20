@@ -801,6 +801,7 @@ class ExampleEditor : public VSTGLEditor,
 	PanelNS::Panel *mReverbPanel;
 	PanelNS::Panel *mPEQPanel;
 	PanelNS::Panel *mWahPanel;
+	PanelNS::Panel *mAWahPanel;
 	vector<LinealEQNS::LinealEQ*> mEQ1Panels;
 	
 	CompressorNS::CompressorPanel *mCompressorPanel;

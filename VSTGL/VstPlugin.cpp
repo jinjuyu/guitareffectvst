@@ -524,14 +524,23 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[1][i] = tempOutputs[1][i];
 	}*/
 
-	outVolume = mEffWahWah->outvolume;
+	/*outVolume = mEffWahWah->outvolume;
 	if(outVolume > 1.0f) outVolume = 1.0f;
 	mEffWahWah->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
 	for(int i=0; i<sampleFrames; ++i)
 	{
 		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}*/
+	outVolume = mEffAlienwah->outvolume;
+	if(outVolume > 1.0f) outVolume = 1.0f;
+	mEffAlienwah->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}
+
 
 	mEffLimiter->processReplacing(outputs, tempOutputs, sampleFrames); // Hidden Final Limiter Chain
 	for(int i=0; i<sampleFrames; ++i)

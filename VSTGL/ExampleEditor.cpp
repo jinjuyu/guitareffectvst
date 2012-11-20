@@ -931,6 +931,120 @@ thing(0.0f)
 	mWahPanel->SetPreset(0);
 
 
+    const int AWAH_PRESET_SIZE = 11;
+    const int AWAH_NUM_PRESETS = 4;
+    int awah_presets[] = {
+        //AlienWah1
+        64, 64, 80, 0, 0, 62, 60, 105, 25, 0, 64,
+        //AlienWah2
+        64, 64, 95, 106, 0, 101, 60, 105, 17, 0, 64,
+        //AlienWah3
+        64, 64, 55, 0, 1, 100, 112, 105, 31, 0, 42,
+        //AlienWah4
+        64, 64, 1, 0, 1, 66, 101, 11, 47, 0, 86
+    };
+
+	int AlienWahReal[] = {
+		//case 0:
+		0,127,
+			//setvolume (value);
+		//case 1:
+		0,127,
+			//setpanning (value);
+		//case 2:
+		1,600,
+			//lfo.Pfreq = value;
+		//case 3:
+		0,127,
+			//lfo.Prandomness = value;
+		//case 4:
+		0,9,
+		/*
+        Sine
+        Tri
+        RampUp
+        RampDown
+        ZigZag
+        M.Sqare
+        M.Saw
+		L. Fractal
+        L. Fractal XY
+        S/H Random*/
+		//case 5:
+		0,127,
+			//lfo.Pstereo = value;
+		//case 6:
+		0,127,
+			//setdepth (value);
+		//case 7:
+		0,127,
+			//setfb (value);
+		//case 8:
+		0,127,
+			//setdelay (value);
+		//case 9:
+		0,127,
+			//setlrcross (value);
+		//case 10:
+		0,127,
+			//setphase (value);
+	};
+	int AlienWahPrint[] = {
+		-64,63, // 0
+		-64,63, // 1
+		1,600, // 2
+		0,127, // 3
+		0,9, // 4
+		0,127, // 5
+		0,127, // 6
+		0,127, // 7
+		0,127, // 8
+		-64,63, // 9
+		0,127,
+	};
+	real = AlienWahReal;
+	print = AlienWahPrint;
+	presetTexts.clear();
+	presetTexts.push_back("AlienWah1");
+	presetTexts.push_back("AlienWah2");
+	presetTexts.push_back("AlienWah3");
+	presetTexts.push_back("AlienWah4");
+	mAWahPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffAlienwah, "Alien Wah", 9, awah_presets, AWAH_PRESET_SIZE, AWAH_NUM_PRESETS, presetTexts);
+	iii=0;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+	iii=1;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+	iii=2;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+	iii=3;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rnd", PanelNS::Slider));
+	lfoTypeStrs.clear();
+	lfoTypeStrs.push_back("Sine");
+	lfoTypeStrs.push_back("Tri");
+	lfoTypeStrs.push_back("RampUp");
+	lfoTypeStrs.push_back("RampDn");
+	lfoTypeStrs.push_back("ZigZag");
+	lfoTypeStrs.push_back("M.Sqare");
+	lfoTypeStrs.push_back("M.Saw");
+	lfoTypeStrs.push_back("L.Fract");
+	lfoTypeStrs.push_back("L.FractXY");
+	lfoTypeStrs.push_back("S/H Rnd");
+	iii=4;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+	iii=10;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Phase", PanelNS::Slider));
+	iii=5;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+	iii=6;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+	iii=8;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Delay", PanelNS::Slider));
+	iii=7;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+	iii=9;
+	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+	mAWahPanel->SetPreset(0);
+
 // 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
 	//for(int i=3;i<20;++i)
 //		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
@@ -1039,6 +1153,7 @@ void ExampleEditor::draw()
 	mEchoPanel->DrawText();
 	mTestPanel->DrawText();
 	mPhaserPanel->DrawText();
+	mAWahPanel->DrawText();
 	for(int i=0;i<17;++i)
 	{
 		//mEQ1Panels[i]->DrawText();

@@ -114,7 +114,7 @@ void Alienwah::processReplacing (float **inputs,
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = param->PERIOD;
 
-	lfo.update();// lfo는 어찌할지 막막...
+	lfo.update();
 
     COMPLEXTYPE clfol, clfor, out, tmp;
 
