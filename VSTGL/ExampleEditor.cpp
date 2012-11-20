@@ -309,7 +309,7 @@ thing(0.0f)
 		mOnOffButtons[i] = b;
 	}
 
-	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, 0);
+	//mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, 0);
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, 1);
 	mCompressorPanel = new CompressorNS::CompressorPanel(mGUI,(VstPlugin*)effect, 2);
 	mEchoPanel = new EchoNS::EchoPanel(mGUI,(VstPlugin*)effect, 3);
@@ -1045,6 +1045,105 @@ thing(0.0f)
 	mAWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
 	mAWahPanel->SetPreset(0);
 
+
+	const int PAN_PRESET_SIZE = 9;
+    const int PAN_NUM_PRESETS = 2;
+    int pan_presets[] = {
+        //AutoPan
+        64, 64, 26, 0, 0, 0, 0, 1, 0,
+        //Extra Stereo
+        64, 64, 80, 0, 0, 0, 10, 0, 1
+    };
+	int PanReal[] = {
+		//case 0:
+		0,127,
+			//setvolume (value);
+			//break;
+		//case 1:
+		0,127,
+			//setpanning (value);
+			//break;
+		//case 2:
+		1,600,
+			//lfo.Pfreq = value;
+			//lfo.updateparams ();
+			//break;
+		//case 3:
+		0,127,
+			//lfo.Prandomness = value;
+			//lfo.updateparams ();
+			//break;
+		//case 4:
+		0,9,
+			//lfo.PLFOtype = value;
+			//lfo.updateparams ();
+			//break;
+		//case 5:
+		0,127,
+			//lfo.Pstereo = value;
+			//lfo.updateparams ();
+			//break;
+		//case 6:
+		0,127,
+			//setextra (value);
+			//break;
+		//case 7:
+		0,1,
+			//PAutoPan = value;
+			//break;
+		//case 8:
+		0,1,
+			//PextraON = value;
+			//break;
+
+	};
+	int PanPrint[] = {
+		-64,63, // 0
+		-64,63, // 1
+		1,600, // 2
+		0,127, // 3
+		0,9, // 4
+		0,127, // 5
+		0,127, // 6
+		0,1, // 7
+		0.1, // 8
+	};
+	real = PanReal;
+	print = PanPrint;
+	presetTexts.clear();
+	presetTexts.push_back("AutoPan");
+	presetTexts.push_back("Extra Stereo");
+	mPanPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffPan, "Pan", 0, pan_presets, PAN_PRESET_SIZE, PAN_NUM_PRESETS, presetTexts);
+	iii=0;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+	iii=7;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Autopan", PanelNS::OnOff));
+	iii=8;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "ExtraSt", PanelNS::OnOff, false, true));
+	iii=1;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+	iii=6;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "ExtraSt.", PanelNS::Slider));
+	iii=2;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Freq", PanelNS::Slider));
+	iii=3;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rnd", PanelNS::Slider));
+	lfoTypeStrs.clear();
+	lfoTypeStrs.push_back("Sine");
+	lfoTypeStrs.push_back("Tri");
+	lfoTypeStrs.push_back("RampUp");
+	lfoTypeStrs.push_back("RampDn");
+	lfoTypeStrs.push_back("ZigZag");
+	lfoTypeStrs.push_back("M.Sqare");
+	lfoTypeStrs.push_back("M.Saw");
+	lfoTypeStrs.push_back("L.Fract");
+	lfoTypeStrs.push_back("L.FractXY");
+	lfoTypeStrs.push_back("S/H Rnd");
+	iii=4;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+	iii=5;
+	mPanPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+
 // 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
 	//for(int i=3;i<20;++i)
 //		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
@@ -1145,7 +1244,8 @@ void ExampleEditor::draw()
 	}
 
 	mGUI->DrawElements();
-	mDistPanel->DrawText();
+	
+	//mDistPanel->DrawText();
 	mWahPanel->DrawText();
 	mPEQPanel->DrawText();
 	mReverbPanel->DrawText();
@@ -1154,6 +1254,7 @@ void ExampleEditor::draw()
 	mTestPanel->DrawText();
 	mPhaserPanel->DrawText();
 	mAWahPanel->DrawText();
+	mPanPanel->DrawText();
 	for(int i=0;i<17;++i)
 	{
 		//mEQ1Panels[i]->DrawText();

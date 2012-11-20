@@ -531,10 +531,19 @@ void VstPlugin::processReplacing(float **inputs,
 	{
 		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}*/
+	}
 	outVolume = mEffAlienwah->outvolume;
 	if(outVolume > 1.0f) outVolume = 1.0f;
 	mEffAlienwah->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}*/
+
+	outVolume = mEffPan->outvolume;
+	if(outVolume > 1.0f) outVolume = 1.0f;
+	mEffPan->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
 	for(int i=0; i<sampleFrames; ++i)
 	{
 		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
