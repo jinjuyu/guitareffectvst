@@ -52,6 +52,7 @@ void Panel::SetPreset(int preset)
 		}
 	}
 	
+	if(mDoICallSetPreset) mEffect->setpreset(preset);
 }
 void Panel::DrawText()
 {
@@ -92,8 +93,8 @@ void Panel::DrawText()
 	}
 
 }
-Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx)
-	:mGUI(gui), mWhereis(whereis), mPlug(plug), mEffect(effect), mEffName(effName), mPresetStrs(presetTexts), mSizePreset(sizePreset), mUsePresetIdx(usePresetIdx)
+Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx, bool doICallSetPreset)
+	:mGUI(gui), mWhereis(whereis), mPlug(plug), mEffect(effect), mEffName(effName), mPresetStrs(presetTexts), mSizePreset(sizePreset), mUsePresetIdx(usePresetIdx), mDoICallSetPreset(doICallSetPreset)
 {
 	for(int y=0; y<numPresets; ++y)
 	{

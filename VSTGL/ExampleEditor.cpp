@@ -801,6 +801,136 @@ thing(0.0f)
 	iii = 9;
 	mPEQPanel->AddParamData(PanelNS::Data(13+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider, false, false, vector<string>(), 9));
 	mPEQPanel->SetPreset(0);
+
+	const int WAH_PRESET_SIZE = 10;
+	const int WAH_NUM_PRESETS = 5;
+	int wah_presets[] = {
+		//WahWah
+		64, 64, 80, 0, 0, 64, 70, 90, 0, 60,
+		//AutoWah
+		64, 64, 70, 0, 0, 80, 70, 0, 0, 60,
+		//Sweep
+		64, 64, 30, 0, 0, 50, 80, 0, 0, 60,
+		//VocalMorph1
+		64, 64, 80, 0, 0, 64, 70, 64, 0, 60,
+		//VocalMorph1
+		64, 64, 50, 0, 0, 96, 64, 0, 0, 60
+	};
+		
+	int WahWahReal[] = {
+		//case 0:
+		0,127,
+			//setvolume (value);
+			//break;
+		//case 1:
+		0,127,
+			//setpanning (value);
+			//break;
+		//case 2:
+		1,600,
+			//lfo.Pfreq = value;
+			//lfo.updateparams ();
+			//break;
+		//case 3:
+		0,127,
+			//lfo.Prandomness = value;
+			//lfo.updateparams ();
+			//break;
+		//case 4:
+		0, 9,  // type value
+		/*
+        Sine
+        Tri
+        RampUp
+        RampDown
+        ZigZag
+        M.Sqare
+        M.Saw
+		L. Fractal
+        L. Fractal XY
+        S/H Random*/
+			//lfo.PLFOtype = value;
+			//lfo.updateparams ();
+			//break;
+		//case 5:
+		0,127,
+			//lfo.Pstereo = value;
+			//lfo.updateparams ();
+			//break;
+		//case 6:
+		0,127,
+			//setdepth (value);
+			//break;
+		//case 7:
+		0,127,
+			//setampsns (value);
+			//break;
+		//case 8:
+		0,1, // Boolean
+			//Pampsnsinv = value;
+			//setampsns (Pampsns);
+			//break;
+		//case 9:
+		0,127,
+			//Pampsmooth = value;
+			//setampsns (Pampsns);
+			//break;
+	};
+	int WahWahPrint[] = {
+		-64,63, // 0
+		-64,63, // 1
+		1,600, // 2
+		0,127, // 3
+		0,9, // 4
+		0,127, // 5
+		0,127, // 6
+		0,127, // 7
+		0,1,
+		0,127,
+	};
+	real = WahWahReal;
+	print = WahWahPrint;
+	presetTexts.clear();
+	presetTexts.push_back("WahWah");
+	presetTexts.push_back("AutoWah");
+	presetTexts.push_back("Sweep");
+	presetTexts.push_back("VocalMorph1");
+	presetTexts.push_back("VocalMorph1");
+	mWahPanel = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffWahWah, "WahWah", 8, wah_presets, WAH_PRESET_SIZE, WAH_NUM_PRESETS, presetTexts, false, true);
+	iii=0;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+	iii=1;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+	iii=2;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+	iii=3;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rnd", PanelNS::Slider));
+	lfoTypeStrs.clear();
+	lfoTypeStrs.push_back("Sine");
+	lfoTypeStrs.push_back("Tri");
+	lfoTypeStrs.push_back("RampUp");
+	lfoTypeStrs.push_back("RampDn");
+	lfoTypeStrs.push_back("ZigZag");
+	lfoTypeStrs.push_back("M.Sqare");
+	lfoTypeStrs.push_back("M.Saw");
+	lfoTypeStrs.push_back("L.Fract");
+	lfoTypeStrs.push_back("L.FractXY");
+	lfoTypeStrs.push_back("S/H Rnd");
+	iii=4;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+	iii=5;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+	iii=6;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+	iii=7;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Amp.S.", PanelNS::Slider));
+	iii=8;
+	mPhaserPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Amp.S Inv", PanelNS::OnOff));
+	iii=9;
+	mWahPanel->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Smooth", PanelNS::Slider));
+	mWahPanel->SetPreset(0);
+
+
 // 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
 	//for(int i=3;i<20;++i)
 //		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
@@ -902,6 +1032,7 @@ void ExampleEditor::draw()
 
 	mGUI->DrawElements();
 	mDistPanel->DrawText();
+	mWahPanel->DrawText();
 	mPEQPanel->DrawText();
 	mReverbPanel->DrawText();
 	mEQ1Panel->DrawText();

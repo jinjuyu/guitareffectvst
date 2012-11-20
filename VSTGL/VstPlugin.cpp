@@ -108,7 +108,7 @@ vendorName("Jinju")
 	mEffExciter = new Exciter(mParam, nullptr, nullptr);
 	mEffExpander = new Expander(mParam, nullptr, nullptr);
 	mEffGate = new Gate(mParam, nullptr, nullptr);
-	mEffHarmonizer = new Harmonizer(mParam, nullptr, nullptr, 32, 1, 4, 2); // keep quality at 4 or 32, DS == 1 means 96000 and so on, leave uq dq at 4,2 for now
+	mEffHarmonizer = new Harmonizer(mParam, nullptr, nullptr, 4, 1, 4, 2); // keep quality at 4 or 32, DS == 1 means 96000 and so on, leave uq dq at 4,2 for now
 	mEffInfinity = new Infinity(mParam, nullptr, nullptr);
 	mEffMBDist = new MBDist(mParam, nullptr, nullptr);
 	mEffMBVvol = new MBVvol(mParam, nullptr, nullptr);
@@ -134,6 +134,8 @@ vendorName("Jinju")
 	mEffVibe = new Vibe(mParam, nullptr, nullptr);
 	mEffLimiter = new Compressor(mParam, nullptr, nullptr);
 	mEffLimiter->Compressor_Change_Preset(0,3);
+	mEffWahWah = new DynamicFilter(mParam, nullptr, nullptr);
+	mEffWahWah->setpreset(0);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -333,6 +335,7 @@ VstPlugin::~VstPlugin()
 	delete mEffSynthfilter;
 	delete mEffValve;
 	delete mEffVibe;
+	delete mEffWahWah;
 	delete mParam;
 	int i;
 
@@ -436,6 +439,7 @@ void VstPlugin::processReplacing(float **inputs,
 	//mEffSustainer->processReplacing(outputs, outputs, sampleFrames);
 	//mEffSynthfilter->processReplacing(outputs, outputs, sampleFrames);
 	//mEffValve->processReplacing(outputs, outputs, sampleFrames);
+	//mEffWahWah->processReplacing(outputs, outputs, sampleFrames);
 	float *tempOutputs[2];
 	tempOutputs[0] = new float[sampleFrames];
 	tempOutputs[1] = new float[sampleFrames];
@@ -484,6 +488,7 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}
 	*/
+	/*
 	outVolume = mEffChorus->outvolume;
 	if(outVolume > 1.0f) outVolume = 1.0f;
 	mEffChorus->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
@@ -517,8 +522,16 @@ void VstPlugin::processReplacing(float **inputs,
 	{
 		outputs[0][i] = tempOutputs[0][i];
 		outputs[1][i] = tempOutputs[1][i];
-	}
+	}*/
 
+	outVolume = mEffWahWah->outvolume;
+	if(outVolume > 1.0f) outVolume = 1.0f;
+	mEffWahWah->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
+	for(int i=0; i<sampleFrames; ++i)
+	{
+		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+	}
 
 	mEffLimiter->processReplacing(outputs, tempOutputs, sampleFrames); // Hidden Final Limiter Chain
 	for(int i=0; i<sampleFrames; ++i)

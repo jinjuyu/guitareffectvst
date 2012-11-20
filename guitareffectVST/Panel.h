@@ -105,7 +105,7 @@ public:
 	vector<PanelListCallback*> mCBLists;
 	vector<Data> mData;
 	int mSizePreset;
-	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx=false);
+	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx=false, bool doICallSetPreset=false);
 	~Panel();
 	bool mUsePresetIdx;
 	Effect *mEffect;
@@ -118,6 +118,7 @@ public:
 	VstPlugin *mPlug;
 	string mEffName;
 	int mY;
+	bool mDoICallSetPreset;
 	void AddParamData(Data &data, bool unused=false);
 	int PrintToReal(int idx, int val) // idx ดย dataIdx
 	{
