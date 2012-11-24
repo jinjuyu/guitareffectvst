@@ -129,6 +129,73 @@ void CompressorPanel::SetPreset(int preset)
 		onoff->mOn = false;
 		cbPeak->OnOff();
 	}
+	mPrevPreset = preset;
+}
+void CompressorPanel::LoadPreset(int preset)
+{
+    //for (int n = 0; n < PRESET_SIZE; n++)
+        //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
+	Button *but = (Button *)mGUI->GetElement(mPresetButton);
+	but->mLabel = mPresetStrs[preset];
+	mPrevPreset = preset;
+	Slider *slider;
+	OnOffButton *onoff;
+	/*
+	-60,-3, // Threshold
+	2,42, // Ratio
+	-40,0, // Output
+	10,250, // A. Time
+	10,500, // R. Time
+	0,1, // Auto Output:Bool
+	0,100, // Knee
+	0,1, // Stereo:Bool
+	0,1, // Peak:Bool
+	*/
+	slider = (Slider*)(mGUI->GetElement(mThreshold));
+	slider->SetVal(mPlug->mEffCompressor->getpar(1)); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mRatio));
+	slider->SetVal(mPlug->mEffCompressor->getpar(2)); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mOutput));
+	slider->SetVal(mPlug->mEffCompressor->getpar(3)); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mATime));
+	slider->SetVal(mPlug->mEffCompressor->getpar(4)); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mRTime));
+	slider->SetVal(mPlug->mEffCompressor->getpar(5)); // callback automatically calls changepar
+	onoff = (OnOffButton*)mGUI->GetElement(mAuto);
+	if(mPlug->mEffCompressor->getpar(6))
+	{
+		onoff->mOn = true;
+		cbAuto->OnOn();
+	}
+	else
+	{
+		onoff->mOn = false;
+		cbAuto->OnOff();
+	}
+	slider = (Slider*)(mGUI->GetElement(mKnee));
+	slider->SetVal(mPlug->mEffCompressor->getpar(7)); // callback automatically calls changepar
+	onoff = (OnOffButton*)mGUI->GetElement(mStereo);
+	if(mPlug->mEffCompressor->getpar(8))
+	{
+		onoff->mOn = true;
+		cbStereo->OnOn();
+	}
+	else
+	{
+		onoff->mOn = false;
+		cbStereo->OnOff();
+	}
+	onoff = (OnOffButton*)mGUI->GetElement(mPeak);
+	if(mPlug->mEffCompressor->getpar(9))
+	{
+		onoff->mOn = true;
+		cbPeak->OnOn();
+	}
+	else
+	{
+		onoff->mOn = false;
+		cbPeak->OnOff();
+	}
 }
 
 CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis)
@@ -171,42 +238,36 @@ CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, real[i*2], real[i*2+1])); // A. Time
 	mATime = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbATime);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=4;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, real[i*2], real[i*2+1])); // R. Time
 	mRTime = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbRTime);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=1;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, real[i*2], real[i*2+1])); // Ratio
 	mRatio = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbRatio);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=6;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, real[i*2], real[i*2+1])); // Knee
 	mKnee = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbKnee);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=0;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, real[i*2], real[i*2+1])); // Threshold
 	mThreshold = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbThreshold);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=2;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, real[i*2], real[i*2+1])); // Output
 	mOutput = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbOutput);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewOnOffButton(x+5,y,90, 20, "Peak", cbPeak)); // Peak
@@ -221,7 +282,7 @@ CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mStereo = *(mButtons.end()-1);
 
 
-	SetPreset(0);
+	//SetPreset(0);
 }
 
 

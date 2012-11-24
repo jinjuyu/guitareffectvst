@@ -21,6 +21,7 @@ int presets[] = {
 
 void DistorsionPanel::SetPreset(int preset)
 {
+	mPrevPreset = preset;
     //for (int n = 0; n < PRESET_SIZE; n++)
         //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
@@ -86,6 +87,73 @@ void DistorsionPanel::SetPreset(int preset)
 	}
 	slider = (Slider*)(mGUI->GetElement(mSubOctv));
 	slider->SetVal(0); // callback automatically calls changepar
+}
+void DistorsionPanel::LoadPreset(int preset)
+{
+	mPrevPreset = preset;
+    //for (int n = 0; n < PRESET_SIZE; n++)
+        //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
+	Button *but = (Button *)mGUI->GetElement(mPresetButton);
+	but->mLabel = mPresetStrs[preset];
+
+	Slider *slider;
+	/*
+	-64,63, // Volume
+	-64,63, // Panning
+	-64,63, // L/R.Cr
+	0,127, // Drive
+	0,127, // Level
+	0,29, // Type, Label로 타입을 가져옴 음 그러면 이 버튼을 누르면 위에 빈 공간에 탭드리스트 옵션창이 생성되어 고를수있게 한다.
+	0,1, // Neg.:Boolean
+	0,100, // LPF
+	0,100, // HPF
+	0,1, // Stereo:Boolean
+	0,1, // Pre Filter:Boolean
+	0,0, // 없음
+	0,127, // Sub Octv
+	*/
+	slider = (Slider*)(mGUI->GetElement(mVolume));
+	slider->SetVal(RealToPrint(0, mPlug->mEffDistorsion->getpar(0))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mPanning));
+	slider->SetVal(RealToPrint(1, mPlug->mEffDistorsion->getpar(1))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mLRCr));
+	slider->SetVal(RealToPrint(2, mPlug->mEffDistorsion->getpar(2))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mDrive));
+	slider->SetVal(RealToPrint(3, mPlug->mEffDistorsion->getpar(3))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mLevel));
+	slider->SetVal(RealToPrint(4, mPlug->mEffDistorsion->getpar(4))); // callback automatically calls changepar
+	cbType->OnSelect(mPlug->mEffDistorsion->getpar(5));
+	OnOffButton *onoff;
+	onoff = (OnOffButton*)mGUI->GetElement(mNeg);
+	if(mPlug->mEffDistorsion->getpar(6))
+	{
+		onoff->mOn = true;
+		myCB2->OnOn(); // neg
+	}
+	else
+	{
+		onoff->mOn = false;
+		myCB2->OnOff();
+	}
+	slider = (Slider*)(mGUI->GetElement(mLPF));
+	slider->SetVal(RealToPrint(7, GetRealMinMaxByFreq((float)mPlug->mEffDistorsion->getpar(7)))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mHPF));
+	slider->SetVal(RealToPrint(8, GetRealMinMaxByFreq((float)mPlug->mEffDistorsion->getpar(8)))); // callback automatically calls changepar
+	//stereo in distorsion isn't being used in my plug mPlug->mEffDistorsion->getpar(9)
+	
+	onoff = (OnOffButton*)mGUI->GetElement(mPreFilter);
+	if(mPlug->mEffDistorsion->getpar(10)) // prefilter
+	{
+		onoff->mOn = true;
+		cbPrefilter->OnOn();
+	}
+	else
+	{
+		onoff->mOn = false;
+		cbPrefilter->OnOff();
+	}
+	slider = (Slider*)(mGUI->GetElement(mSubOctv));
+	slider->SetVal(mPlug->mEffDistorsion->getpar(12)); // callback automatically calls changepar
 }
 void DistorsionPanel::DrawText()
 {
@@ -215,7 +283,6 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 	mVolume = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbWetDry);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	
@@ -223,19 +290,16 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // L/R.Cr
 	mLRCr = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLRCR);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 	i=3;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Drive
 	mDrive = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbDrive);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 	i=4;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Level
 	mLevel = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLevel);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 		
 	mButtons.push_back(mGUI->NewButton(x+5+40,y,60, 20, "ATan", myCB1)); // Type
@@ -253,35 +317,29 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Pan
 	mPanning = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbPan);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=12;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Sub Octv
 	mSubOctv = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbSubOctv);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=7;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1], true)); // LPF
 	mLPF = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLPF);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15; 
 
 	i=8;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1], true)); // HPF
 	mHPF = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbHPF);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	
 	
-	mPlug->mEffDistorsion->changepar(6, 0); // neg
-	mPlug->mEffDistorsion->changepar(10, 0); // prefilter
 	y += 15;
 
-	SetPreset(0);
+	//SetPreset(0);
 	/*
 	char temp[123];
 	sprintf(temp, "%.4f %d", RealToVst(7, 47), VstToReal(7, 1.0));

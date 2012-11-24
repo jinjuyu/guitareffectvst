@@ -159,7 +159,9 @@ public:
 		int realLength = realMax-realMin;
 		return realMin + (int)(val*realLength+0.5f);
 	}
+	void LoadPreset(int presetIdx);
 	void DrawText();
+	int mPrevPreset;
 };
 
 

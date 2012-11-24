@@ -3,7 +3,58 @@
 namespace PanelNS
 {
 
+void Panel::LoadPreset(int prevPresetIdx)
+{
+	// 그냥 이펙트의 속성을 얻어서 파라메터로 저장한다.
 
+	Button *but = (Button *)mGUI->GetElement(mPresetButton);
+	but->mLabel = mPresetStrs[prevPresetIdx];
+	::Slider *slider;
+	OnOffButton *onoff;
+	for(int i=0; i<mData.size();++i)
+	{
+		int par = 0;
+		if(mUsePresetIdx)
+			par = mEffect->getpar(mData[i].preIdx);
+		else
+			par = mEffect->getpar(i);
+		if(mData[i].type == Slider && mUsePresetIdx)
+		{
+			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
+			
+			if(mData[i].isFreq)
+				slider->SetVal(RealToPrint(i, GetRealMinMaxByFreq(par)));
+			else
+				slider->SetVal(RealToPrint(i, par));
+		}
+		else if(mData[i].type == Slider && mData[i].parIdx < mSizePreset)
+		{
+			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
+			if(mData[i].isFreq)
+				slider->SetVal(RealToPrint(i, GetRealMinMaxByFreq(par)));
+			else
+				slider->SetVal(RealToPrint(i, par));
+		}
+		else if(mData[i].type == OnOff && mData[i].parIdx < mSizePreset)
+		{
+			onoff = (OnOffButton*)mGUI->GetElement(mData[i].handle);
+			if(par)
+			{
+				onoff->mOn = true;
+				mCBOnOffs[mData[i].cbIdx]->OnOn();
+			}
+			else
+			{
+				onoff->mOn = false;
+				mCBOnOffs[mData[i].cbIdx]->OnOff();
+			}
+		}
+		else if(mData[i].type == Selection && mData[i].parIdx < mSizePreset)
+		{
+			mCBLists[mData[i].cbListIdx]->OnSelect(par);
+		}
+	}
+}
 void Panel::SetPreset(int preset)
 {
 	// WahWah는 setpreset에 약간 매직이 있다. 그러므로 WahWah인 경우엔 따로함.
@@ -11,6 +62,7 @@ void Panel::SetPreset(int preset)
 	// Flange는 Chorus랑 똑같으니 그냥 같은걸 쓰자
 	// 다른 예외상황을 가면서 찾아보자.
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
+	mPrevPreset = preset;
 	but->mLabel = mPresetStrs[preset];
 	::Slider *slider;
 	OnOffButton *onoff;
@@ -96,6 +148,7 @@ void Panel::DrawText()
 Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx, bool doICallSetPreset)
 	:mGUI(gui), mWhereis(whereis), mPlug(plug), mEffect(effect), mEffName(effName), mPresetStrs(presetTexts), mSizePreset(sizePreset), mUsePresetIdx(usePresetIdx), mDoICallSetPreset(doICallSetPreset)
 {
+	mPrevPreset = 0;
 	for(int y=0; y<numPresets; ++y)
 	{
 		vector<int> newPreset;

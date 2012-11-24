@@ -103,12 +103,14 @@ public:
 		delete cbType;
 		*/
 	}
+	void LoadPreset(int prevPreset);
 	EchoPanel(GLGUI *gui, VstPlugin *plug, int whereis);
 	int *real;
 	int *print;
 	void SetPreset(int preset);
 	vector<string> mPresetStrs;
 	int *mPresets;
+	int mPrevPreset;
 	int PrintToReal(int idx, int val)
 	{
 		int printMin = print[idx*2];

@@ -8,7 +8,21 @@ int EQ1Real[] = {
 int EQ1Print[] = {
 	-64, 63, // All of them
 };
-
+void LinealEQ::LoadPreset(int aaa)
+{
+	mGUI->SetSliderVal(mGain, RealToPrint(mPlug->mEffEQ1->getpar(0)));
+	mGUI->SetSliderVal(mQ, RealToPrint(mPlug->mEffEQ1->getpar(13)));
+	mGUI->SetSliderVal(m31, RealToPrint(mPlug->mEffEQ1->getpar(0*5+12)));
+	mGUI->SetSliderVal(m63, RealToPrint(mPlug->mEffEQ1->getpar(1*5+12)));
+	mGUI->SetSliderVal(m125, RealToPrint(mPlug->mEffEQ1->getpar(2*5+12)));
+	mGUI->SetSliderVal(m250, RealToPrint(mPlug->mEffEQ1->getpar(3*5+12)));
+	mGUI->SetSliderVal(m500, RealToPrint(mPlug->mEffEQ1->getpar(4*5+12)));
+	mGUI->SetSliderVal(m1K, RealToPrint(mPlug->mEffEQ1->getpar(5*5+12)));
+	mGUI->SetSliderVal(m2K, RealToPrint(mPlug->mEffEQ1->getpar(6*5+12)));
+	mGUI->SetSliderVal(m4K, RealToPrint(mPlug->mEffEQ1->getpar(7*5+12)));
+	mGUI->SetSliderVal(m8K, RealToPrint(mPlug->mEffEQ1->getpar(8*5+12)));
+	mGUI->SetSliderVal(m16K, RealToPrint(mPlug->mEffEQ1->getpar(9*5+12)));
+}
 void LinealEQ::DrawText()
 {
 	int x,y,w=180,h=250;

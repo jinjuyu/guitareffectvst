@@ -127,6 +127,7 @@ public:
 	int m4K;
 	int m8K;
 	int m16K;
+	int mPrevPreset;
 	GainCallback *cbGain;
 	QCallback *cbQ;
 	F31Callback *cb31;
@@ -161,6 +162,7 @@ public:
 		delete cb8K;
 		delete cb16K;
 	}
+	void LoadPreset(int aaa);
 	int PrintToReal(int val)
 	{
 		int printMin = print[0];

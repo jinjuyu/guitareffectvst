@@ -675,10 +675,12 @@ void MoveUpCallback::OnClick()
 	{
 		EffNameType prevType = mEditor->mBuiltPanels[prevIdx];
 		EffNameType newType = mEditor->mBuiltPanels[newIdx];
+		int prevPresetIdx = mEditor->GetEffectPreset(prevIdx);
+		int newPresetIdx = mEditor->GetEffectPreset(newIdx);
 		mEditor->DeleteEffectPanel(prevIdx);
 		mEditor->DeleteEffectPanel(newIdx);
-		mEditor->CreateEffectPanel(newType, prevIdx);
-		mEditor->CreateEffectPanel(prevType, newIdx);
+		mEditor->CreateEffectPanel(newType, prevIdx, true, newPresetIdx);
+		mEditor->CreateEffectPanel(prevType, newIdx, true, prevPresetIdx);
 		
 		bool backup = mEditor->mEffectOn[prevIdx];
 		mEditor->mEffectOn[prevIdx] = mEditor->mEffectOn[newIdx];
@@ -703,10 +705,12 @@ void MoveDnCallback::OnClick()
 	{
 		EffNameType prevType = mEditor->mBuiltPanels[prevIdx];
 		EffNameType newType = mEditor->mBuiltPanels[newIdx];
+		int prevPresetIdx = mEditor->GetEffectPreset(prevIdx);
+		int newPresetIdx = mEditor->GetEffectPreset(newIdx);
 		mEditor->DeleteEffectPanel(prevIdx);
 		mEditor->DeleteEffectPanel(newIdx);
-		mEditor->CreateEffectPanel(newType, prevIdx);
-		mEditor->CreateEffectPanel(prevType, newIdx);
+		mEditor->CreateEffectPanel(newType, prevIdx, true, newPresetIdx);
+		mEditor->CreateEffectPanel(prevType, newIdx, true, prevPresetIdx);
 		bool backup = mEditor->mEffectOn[prevIdx];
 		mEditor->mEffectOn[prevIdx] = mEditor->mEffectOn[newIdx];
 		((OnOffButton*)(mEditor->mGUI->GetElement(mEditor->mOnOffButtons[prevIdx])))->mOn = mEditor->mEffectOn[newIdx];
@@ -780,7 +784,7 @@ void ExchangeCallback::OnClick()
 
 
 
-void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
+void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPrev, int prevIdx)
 {
 
 	int iii;
@@ -798,15 +802,30 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 	{
 	case EffLinealEQ:
 		mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, whereis);
+		if(loadPrev)
+			mEQ1Panel->LoadPreset(prevIdx);
+
 		break;
 	case EffDistortion:
 		mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, whereis);
+		if(loadPrev)
+			mDistPanel->LoadPreset(prevIdx);
+		else
+			mDistPanel->SetPreset(0);
 		break;
 	case EffCompressor:
 		mCompressorPanel = new CompressorNS::CompressorPanel(mGUI,(VstPlugin*)effect, whereis);
+		if(loadPrev)
+			mCompressorPanel->LoadPreset(prevIdx);
+		else
+			mCompressorPanel->SetPreset(0);
 		break;
 	case EffEcho:
 		mEchoPanel = new EchoNS::EchoPanel(mGUI,(VstPlugin*)effect, whereis);
+		if(loadPrev)
+			mEchoPanel->LoadPreset(prevIdx);
+		else
+			mEchoPanel->SetPreset(0);
 		break;
 	case EffChorus:
 	{
@@ -943,7 +962,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 		mPanels[whereis]->AddParamData(PanelNS::Data(8, 0, 127, 0, 127, "Fb", PanelNS::Slider));
 		mPanels[whereis]->AddParamData(PanelNS::Data(9, 0, 127, -63, 64, "L/R.Cr", PanelNS::Slider));
 
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	case EffPhaser:
@@ -1089,7 +1111,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 		iii=9;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
 
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	case EffReverb:
@@ -1235,7 +1260,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 		iii=6;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Unused", PanelNS::Slider), true);
 		*/
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	case EffParametricEQ:
@@ -1428,7 +1456,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Amp.S Inv", PanelNS::OnOff));
 		iii=9;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Smooth", PanelNS::Slider));
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	case EffAlienWah:
@@ -1545,7 +1576,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
 		iii=9;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 	break;
 	case EffPan:
@@ -1647,7 +1681,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
 		iii=5;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	default:
@@ -1665,7 +1702,30 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis)
 	mUsingEffectList.push_back(EffectName(type, effName));
 	mBuiltPanels[whereis] = type;
 }
-
+int ExampleEditor::GetEffectPreset(int whereis)
+{
+	switch(mBuiltPanels[whereis])
+	{
+	case EffNone:
+		break;
+	case EffLinealEQ:
+		return mEQ1Panel->mPrevPreset;
+		break;
+	case EffDistortion:
+		return mDistPanel->mPrevPreset;
+		break;
+	case EffCompressor:
+		return mCompressorPanel->mPrevPreset;
+		break;
+	case EffEcho:
+		return mEchoPanel->mPrevPreset;
+		break;
+	default:
+		return mPanels[whereis]->mPrevPreset;
+		break;
+	}
+	return -1;
+}
 void ExampleEditor::DeleteEffectPanel(int whereis)
 {
 	EffNameType type = mBuiltPanels[whereis];
@@ -1726,3 +1786,7 @@ void MyEffectOnOff::OnOff()
 {
 	mEditor->mEffectOn[mWhereis] = false;
 }
+
+// 이제 이펙트를 움직여도(삭제->재생성) 파라메터가 변경되지 않도록 해야한다.
+// 이펙트 익스체인지시에는 관계 없음
+// SetPreset말고 LoadPreset을 부르게 하면 된다. presetIdx만 저장하면 됨

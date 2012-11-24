@@ -126,6 +126,7 @@ public:
 	int *print;
 	int mTypeButton;
 	int mPresetButton;
+	void LoadPreset(int prevPreset);
 	vector<string> mTypeStrs;
 	WetDryCallback *cbWetDry;
 	LRCRCallback *cbLRCR;
@@ -142,6 +143,7 @@ public:
 	PresetCallback *cbPresetSelect;
 	PresetListCallback *cbPresetSelected;
 	VstPlugin *mPlug;
+	int mPrevPreset;
 	int mVolume;
 	int mPanning;
 	int mLRCr;

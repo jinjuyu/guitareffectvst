@@ -53,8 +53,8 @@ void EchoPanel::SetPreset(int preset)
         //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
 	but->mLabel = mPresetStrs[preset];
-	mPlug->mEffDistorsion->changepar (8, 0); // Direct
-
+	mPlug->mEffEcho->changepar (8, 0); // Direct
+	mPrevPreset = preset;
 	Slider *slider;
 	slider = (Slider*)(mGUI->GetElement(mVolume));
 	slider->SetVal(RealToPrint(0, mPresets[preset*PRESET_SIZE+0])); // callback automatically calls changepar
@@ -72,6 +72,33 @@ void EchoPanel::SetPreset(int preset)
 	slider->SetVal(RealToPrint(6, mPresets[preset*PRESET_SIZE+6])); // callback automatically calls changepar
 	slider = (Slider*)(mGUI->GetElement(mReverse));
 	slider->SetVal(RealToPrint(7, mPresets[preset*PRESET_SIZE+7])); // callback automatically calls changepar
+
+}
+void EchoPanel::LoadPreset(int preset)
+{
+    //for (int n = 0; n < PRESET_SIZE; n++)
+        //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
+	Button *but = (Button *)mGUI->GetElement(mPresetButton);
+	but->mLabel = mPresetStrs[preset];
+	mPlug->mEffEcho->changepar (8, 0); // Direct
+	mPrevPreset = preset;
+	Slider *slider;
+	slider = (Slider*)(mGUI->GetElement(mVolume));
+	slider->SetVal(RealToPrint(0, mPlug->mEffEcho->getpar (0))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mPan));
+	slider->SetVal(RealToPrint(1, mPlug->mEffEcho->getpar (1))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mDelay));
+	slider->SetVal(RealToPrint(2, mPlug->mEffEcho->getpar (2))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mLRdl));
+	slider->SetVal(RealToPrint(3, mPlug->mEffEcho->getpar (3))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mLRCr));
+	slider->SetVal(RealToPrint(4, mPlug->mEffEcho->getpar (4))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mFb));
+	slider->SetVal(RealToPrint(5, mPlug->mEffEcho->getpar (5))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mDamp));
+	slider->SetVal(RealToPrint(6, mPlug->mEffEcho->getpar (6))); // callback automatically calls changepar
+	slider = (Slider*)(mGUI->GetElement(mReverse));
+	slider->SetVal(RealToPrint(7, mPlug->mEffEcho->getpar (7))); // callback automatically calls changepar
 
 }
 void EchoPanel::DrawText()
@@ -165,60 +192,52 @@ EchoPanel::EchoPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Wet/Dry
 	mVolume = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbWetDry);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=7;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Reverse
 	mReverse = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbReverse);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=1;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Pan
 	mPan = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbPan);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 
 	i=2;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Delay
 	mDelay = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbDelay);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 		
 	i=3;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // LRdl.
 	mLRdl = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLRdl);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 		
 	i=4;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // LRCr
 	mLRCr = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbLRCr);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 		
 	i=5;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Fb
 	mFb = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbFb);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 		
 	i=6;
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[i*2], print[i*2+1])); // Damp
 	mDamp = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbDamp);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 32);
 	y += 15;
 		
 
-	SetPreset(0);
+	//SetPreset(0);
 	/*
 	char temp[123];
 	sprintf(temp, "%.4f %d", RealToVst(7, 47), VstToReal(7, 1.0));

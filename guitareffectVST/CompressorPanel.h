@@ -122,6 +122,7 @@ public:
 		delete cbStereo;
 
 	}
+	void LoadPreset(int prevPreset);
 	int *real;
 	int mWhereis;
 	CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis);
@@ -132,7 +133,7 @@ public:
 	VstPlugin *mPlug;
 	GLGUI *mGUI;
 	vector<int> mButtons;
-
+	int mPrevPreset;
 	PresetCallback *cbPresetSelect;
 	PresetListCallback *cbPresetSelected;
 	ATimeCallback *cbATime;

@@ -15,6 +15,7 @@ public:
 	float outvolume;
 	EffType mType;
 	virtual void setpreset (int npreset){}
+	virtual int getpar(int npar) = 0;
 	virtual void changepar(int npar, int val) = 0;
 	virtual void processReplacing(float **inputs,
 								float **outputs,

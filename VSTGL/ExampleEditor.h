@@ -890,8 +890,9 @@ class ExampleEditor : public VSTGLEditor,
 	vector<MyEffectOnOff*> mCBOnOffs;
 	MyTotalEffectOnOff *cbOnOff;
 	bool mTotalEffectOn;
-	void CreateEffectPanel(EffNameType type, int whereis);
+	void CreateEffectPanel(EffNameType type, int whereis, bool loadPrev = false, int prevIdx = -1);
 	void DeleteEffectPanel(int whereis);
+	int GetEffectPreset(int whereis);
 	
 	
 	DistorsionPanelNS::DistorsionPanel *mDistPanel;
