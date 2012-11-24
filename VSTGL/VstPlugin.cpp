@@ -702,6 +702,13 @@ void VstPlugin::processReplacing(float **inputs,
                 break;
 
 			}
+			if(!eff)
+			{
+				char temp[123];
+				sprintf(temp, "%d", mEditor->mBuiltPanels[i]);
+				//MessageBox(NULL, temp, temp, MB_OK);
+				continue; // XXX: Because of threading, it could get here
+			}
 			if(eff->mType == WetDry)
 			{
 				outVolume = eff->outvolume;

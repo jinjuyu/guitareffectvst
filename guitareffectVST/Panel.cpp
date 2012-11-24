@@ -8,7 +8,8 @@ void Panel::LoadPreset(int prevPresetIdx)
 	// 그냥 이펙트의 속성을 얻어서 파라메터로 저장한다.
 
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
-	but->mLabel = mPresetStrs[prevPresetIdx];
+		if(preset < mPresetStrs.size())
+			but->mLabel = mPresetStrs[prevPresetIdx];
 	::Slider *slider;
 	OnOffButton *onoff;
 	for(int i=0; i<mData.size();++i)

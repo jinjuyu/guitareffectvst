@@ -308,6 +308,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffPan, "Pan"));
 	mEffectNames.push_back(EffectName(EffDistortion, "Distortion"));
 	mEffectNames.push_back(EffectName(EffHarmonizer, "Harmonizer"));
+	mEffectNames.push_back(EffectName(EffMusicDelay, "Musical Delay"));
 	
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
@@ -1933,6 +1934,167 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		iii=7;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Chord", PanelNS::Slider));
 
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+	}
+	break;
+	case EffMusicDelay:
+	{
+		const int PRESET_SIZE = 13;
+		const int NUM_PRESETS = 2;
+		int presets[] = {
+        //Echo 1
+        64, 0, 2-1, 7-1, 0, 59, 0, 127, 4-1, 59, 106, 75, 75,
+        //Echo 2
+        67, 0, 3-1, 7-1, 0, 59, 0, 127, 6-1, 69, 60, 127, 127
+
+		};
+		int MusicDelayReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (1, value);
+				//break;
+			//case 2:
+			0,5,
+				/*
+				1
+				1/2
+				1/3
+				1/4
+				1/5
+				1/6
+				*/
+				//setdelay (1, value);
+				//break;
+			//case 3:
+			0,6,
+				/*
+				1
+				1/2
+				1/3
+				1/4
+				1/5
+				1/6
+				0
+				*/
+				//setdelay (3, value);
+				//break;
+			//case 4:
+			0,127,
+				//setlrcross (value);
+				//break;
+			//case 5:
+			0,127,
+				//setfb (1, value);
+				//break;
+			//case 6:
+			0,127,
+				//sethidamp (value);
+				//break;
+			//case 7:
+			0,127,
+				//setpanning (2, value);
+				//break;
+			//case 8:
+			0,5,
+				/*
+				1
+				1/2
+				1/3
+				1/4
+				1/5
+				1/6
+				*/
+				//setdelay (2, value);
+				//break;
+			//case 9:
+			0,127,
+				//setfb (2, value);
+				//break;
+			//case 10:
+			10,480, // 10
+				//settempo (value);
+				//break;
+			//case 11:
+			0,127,
+				//setgain (1, value);
+				//break;
+			//case 12:
+			0,127,
+				//setgain (2, value);
+				//break;
+
+
+		};
+		int MusicDelayPrint[] = {
+			-64,63, // 0
+			-64,63, // 1
+			0,5, // 2
+			0,6, // 3
+			-64,63, // 4
+			0,127, // 5
+			0,127, // 6
+			-64,63, // 7
+			0,5, // 8
+			0,127, // 9
+			10,480 // 10
+			-64,63,
+			-64,63,
+		};
+		real = MusicDelayReal;
+		print = MusicDelayPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Echo 1");
+		presetTexts.push_back("Echo 2");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffMusicDelay, "Musical Delay", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan1", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan2", PanelNS::Slider));
+		vector<string> notes1;
+		notes1.push_back("1");
+		notes1.push_back("1/2");
+		notes1.push_back("1/3");
+		notes1.push_back("1/4");
+		notes1.push_back("1/5");
+		notes1.push_back("1/6");
+		vector<string> notes2;
+		notes2.push_back("1");
+		notes2.push_back("1/2");
+		notes2.push_back("1/3");
+		notes2.push_back("1/4");
+		notes2.push_back("1/5");
+		notes2.push_back("1/6");
+		notes2.push_back("0");
+		iii = 2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LDelay", PanelNS::Selection, false, false, notes1));
+		iii = 3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LRDelay", PanelNS::Selection, false, false, notes2));
+		iii = 8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "RDelay", PanelNS::Selection, false, false, notes1));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain1", PanelNS::Slider));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain2", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb1", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb2", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Damp", PanelNS::Slider));
 		if(loadPrev)
 			mPanels[whereis]->LoadPreset(prevIdx);
 		else

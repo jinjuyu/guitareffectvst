@@ -2075,5 +2075,157 @@ rkr->efx_Pan->changepar(5,(int)o->value());}
         }
       }
 
+      Fl_Group HAR {
+        user_data 1
+        xywh {162 413 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button har_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Harmonizer_Bypass);
+ return;
+}
+rkr->Harmonizer_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_Har->cleanup();
+rkr->efx_Har->changepar(3,rkr->efx_Har->getpar(3));
+Chord(0);
+findpos(14,(int)o->value(),o);}
+          xywh {167 417 34 18} shortcut 0x30 color 62 selection_color 1 labelsize 10 when 1
+        }
+        Fl_Choice har_preset {
+          label Preset
+          user_data 12014
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12014))rkr->efx_Har->setpreset((int)o->value());
+har_WD->value(rkr->efx_Har->getpar(0)-64);
+har_pan->value(rkr->efx_Har->getpar(1)-64);
+har_gan->value(rkr->efx_Har->getpar(2)-64);
+har_int->value(rkr->efx_Har->getpar(3)-12);
+har_SELECT->value(rkr->efx_Har->getpar(5));
+har_note->value(rkr->efx_Har->getpar(6));
+har_type->value(rkr->efx_Har->getpar(7));
+har_freq1->value(rkr->efx_Har->getpar(4));
+har_gan1->value(rkr->efx_Har->getpar(8)-64);
+har_q1->value(rkr->efx_Har->getpar(9)-64);
+har_MIDI->value(rkr->efx_Har->getpar(10));
+if ((rkr->efx_Har->PMIDI) || (rkr->efx_Har->PSELECT)) Chord(0);}
+          xywh {239 417 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label Plain
+            xywh {0 0 45 26} labelsize 10
+          }
+          MenuItem {} {
+            label Octavator
+            xywh {32 32 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {3m Down}
+            xywh {32 32 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider har_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(31);
+ return;
+} 
+rkr->efx_Har->changepar(0,(int)(o->value()+64));}
+          xywh {212 443 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider har_int {
+          label {Int.}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(27);
+ return;
+} 
+rkr->Harmonizer_Bypass=0;
+rkr->efx_Har->changepar(3,(int)(o->value()+12));
+if((int)har_activar->value())rkr->Harmonizer_Bypass=1;}
+          xywh {212 456 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -12 maximum 12 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider har_gan {
+          label Gain
+          callback {rkr->efx_Har->changepar(2,(int)(o->value()+64));}
+          xywh {212 471 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider har_pan {
+          label Pan
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(49);
+ return;
+} 
+rkr->efx_Har->changepar(1,(int)(o->value()+64));}
+          xywh {212 484 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider har_freq1 {
+          label Freq
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(26);
+ return;
+} 
+rkr->efx_Har->changepar(4,(int)o->value());}
+          xywh {213 501 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 26000 step 1 value 2000 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider har_gan1 {
+          label Gain
+          callback {rkr->efx_Har->changepar(8,(int)(o->value()+64));}
+          xywh {212 513 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider har_q1 {
+          label Q
+          callback {rkr->efx_Har->changepar(9,(int)(o->value()+64));}
+          xywh {212 525 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button har_MIDI {
+          label MIDI
+          user_data 2
+          callback {rkr->efx_Har->changepar(10,(int)o->value());
+rkr->RC->cleanup();
+if(!(int)o->value())rkr->efx_Har->changepar(3,rkr->efx_Har->getpar(3));}
+          xywh {171 537 15 15} down_box BORDER_BOX labelsize 10 labelcolor 7 align 8
+        }
+        Fl_Check_Button har_SELECT {
+          label SEL
+          user_data 2
+          callback {rkr->efx_Har->changepar(5,(int)o->value());
+rkr->RC->cleanup();
+if(!(int)o->value())rkr->efx_Har->changepar(3,rkr->efx_Har->getpar(3));
+Chord(0);}
+          xywh {171 555 15 15} down_box BORDER_BOX labelsize 10 labelcolor 7 align 8
+        }
+        Fl_Box har_chordname {
+          xywh {218 539 98 27} labelsize 12 labelcolor 7
+        }
+        Fl_Value_Slider har_note {
+          label Note
+          callback {rkr->efx_Har->changepar(6,(unsigned char)o->value());
+Chord(0);}
+          xywh {212 571 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 23 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider har_type {
+          label Chord
+          callback {rkr->efx_Har->changepar(7,(unsigned char)o->value());
+Chord(0);}
+          xywh {212 583 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 33 step 1 textcolor 7
+          class SliderW
+        }
+      }
 
 	  */

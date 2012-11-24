@@ -94,7 +94,8 @@ void DistorsionPanel::LoadPreset(int preset)
     //for (int n = 0; n < PRESET_SIZE; n++)
         //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
-	but->mLabel = mPresetStrs[preset];
+	if(preset < mPresetStrs.size())
+		but->mLabel = mPresetStrs[preset];
 
 	Slider *slider;
 	/*

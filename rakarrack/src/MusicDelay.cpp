@@ -291,7 +291,7 @@ MusicDelay::setpanning (int num, int Ppanning)
 void
 MusicDelay::setdelay (int num, int Pdelay)
 {
-
+	Pdelay += 1;
     float ntem = 60.0f / (float) Ptempo;
     float coef;
     switch (num) {
@@ -307,9 +307,9 @@ MusicDelay::setdelay (int num, int Pdelay)
 
     delay1 = lrintf ((ntem / (float)Pdelay1) * fSAMPLE_RATE);
 
-    if (Plrdelay != 0)
+    if (Plrdelay < 7)
         coef = ntem / (float)Plrdelay;
-    else
+    else if(Plrdelay == 7)
         coef = 0;
 
     delay2 = lrintf ((coef + (ntem / (float)Pdelay2)) * fSAMPLE_RATE);
@@ -395,9 +395,9 @@ MusicDelay::setpreset (int npreset)
     const int NUM_PRESETS = 3;
     int presets[NUM_PRESETS][PRESET_SIZE] = {
         //Echo 1
-        {64, 0, 2, 7, 0, 59, 0, 127, 4, 59, 106, 75, 75},
+        {64, 0, 2-1, 7-1, 0, 59, 0, 127, 4-1, 59, 106, 75, 75},
         //Echo 2
-        {67, 0, 3, 7, 0, 59, 0, 127, 6, 69, 60, 127, 127}
+        {67, 0, 3-1, 7-1, 0, 59, 0, 127, 6-1, 69, 60, 127, 127}
     };
 
     if(npreset>NUM_PRESETS-1) {
