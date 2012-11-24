@@ -85,8 +85,6 @@ public:
 		communicate with the host.  Subclasses of AudioEffect/AudioEffectX
 		should not ever need to make use of it directly.
 	 */
-	VstInt32 getChunk (void** data, bool isPreset = false);
-	VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset = false);
 
 	void update_freqs(float val);
 	VstPlugin(audioMasterCallback audioMaster);
@@ -173,6 +171,8 @@ public:
 	/*!
 		\param program Index of the program to make current.
 	 */
+	VstInt32 getChunk (void** data, bool isPreset = false);
+	VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset = false);
 	void setProgram(VstInt32 program);
 	///	Called to set the name of the current program.
 	void setProgramName(char *name);

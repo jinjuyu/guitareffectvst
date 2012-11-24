@@ -356,7 +356,7 @@ thing(0.0f)
 
 	vector<MyEffectOnOff*> mCBOnOffs;
 	cbOnOff = new MyTotalEffectOnOff(this);
-	int b2 = mGUI->NewOnOffButton(x+240+180+15, 150/2-25/2+40, 50, 25, "On", cbOnOff);
+	mTotalOnOffButton = mGUI->NewOnOffButton(x+240+180+15, 150/2-25/2+40, 50, 25, "On", cbOnOff);
 	for(int i=0;i<5;++i)
 	{
 		mCBOnOffs.push_back(new MyEffectOnOff(this, i));

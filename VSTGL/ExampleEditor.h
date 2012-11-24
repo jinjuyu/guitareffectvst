@@ -903,10 +903,13 @@ struct SaveParams
 {
 	int presetIdx;
 	int params[20];
+
 };
 struct SaveState{
 	EffNameType type[10];
 	SaveParams params[10];
+	int totalOn;
+	int effOn[10];
 };
 bool CompEff(EffectName a, EffectName b);
 class ExampleEditor : public VSTGLEditor,
@@ -972,6 +975,7 @@ class ExampleEditor : public VSTGLEditor,
 	int unusedEffectsList;
 	int beingUsedEffectsList;
 	int mOnOffButtons[10];
+	int mTotalOnOffButton;
   private:
 	int mSlider;
 	

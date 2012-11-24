@@ -293,6 +293,7 @@ vendorName("Jinju")
     canProcessReplacing(true);
     isSynth(false);
     setUniqueID('JinJ');
+	programsAreChunks(true);
 
 	//Construct editor here.
 	
@@ -1081,7 +1082,7 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	// ¿ÏÀü ¾ÚÇÃ¸®Æ©ºê...
 	//if(isPreset)
 		//return 0;
-	
+	//MessageBox(NULL, "2", "asd2", MB_OK);
 	SaveState save;
 	for(int i=0; i< 10; ++i)
 	{
@@ -1178,7 +1179,11 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 			break;
 		}
 	}
-	
+	save.totalOn = mEditor->mTotalEffectOn;
+	for(int i=0;i<10;++i)
+	{
+		save.effOn[i] = mEditor->mEffectOn[i];
+	}
 	int size = sizeof(SaveState);
 	(*data) = malloc(size);
 	memcpy(*data, &save, size);
@@ -1187,7 +1192,7 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	
 VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	MessageBox(NULL, "", "asd", MB_OK);
+	//MessageBox(NULL, "", "asd", MB_OK);
 	//if(isPreset)
 		//return 0;
 	if(byteSize < sizeof(SaveState))
@@ -1602,6 +1607,17 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 		sprintf(temp, "%s", unusedEffectList[i].name.c_str());
 		leftList->Add(temp);
 	}
+
+	mEditor->mTotalEffectOn = save.totalOn;
+	((OnOffButton*)(mEditor->mGUI->GetElement(mEditor->mTotalOnOffButton)))->mOn = mEditor->mTotalEffectOn;
+	
+	for(int i=0;i<10;++i)
+	{
+		mEditor->mEffectOn[i] = save.effOn[i];
+		((OnOffButton*)(mEditor->mGUI->GetElement(mEditor->mOnOffButtons[i])))->mOn = mEditor->mEffectOn[i];
+
+	}
+
 
 	return size;
 }	///< Host restores plug-in state
