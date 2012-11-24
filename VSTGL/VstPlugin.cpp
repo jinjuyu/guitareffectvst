@@ -24,7 +24,16 @@
 #include "VstPlugin.h"
 #include "ExampleEditor.h"
 #include "../guitareffectVST/paramsMinMax.h"
+#include "../guitareffectVST/DistorsionPanel.h"
+#include "../guitareffectVST/LinealEQ.h"
+#include "../guitareffectVST/CompressorPanel.h"
+#include "../guitareffectVST/EchoPanel.h"
+#include "../guitareffectVST/Panel.h"
+
+#include "../guitareffectVST/paramsMinMax.h"
 #include <string>
+#include <algorithm>
+#include <vector>
 using namespace std;
 
 //----------------------------------------------------------------------------
@@ -1070,8 +1079,8 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	// 여기에 플러그인의 상태를 저장한다.
 	// 그런 후에 마우스 우측버튼으로 파라메터 오토메이션이 가능하도록 16개의 파라메터를 매핑 가능하게 하면
 	// 완전 앰플리튜브...
-	if(isPreset)
-		return 0;
+	//if(isPreset)
+		//return 0;
 	
 	SaveState save;
 	for(int i=0; i< 10; ++i)
@@ -1081,17 +1090,90 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 		{
 		case EffLinealEQ:
 			{
+				save.params[i].presetIdx = 0;
 				save.params[i].params[0] = mEffEQ1->getpar(0);
+				save.params[i].params[1] = mEffEQ1->getpar(13);
+				save.params[i].params[2] = mEffEQ1->getpar(0*5+12);
+				save.params[i].params[3] = mEffEQ1->getpar(1*5+12);
+				save.params[i].params[4] = mEffEQ1->getpar(2*5+12);
+				save.params[i].params[5] = mEffEQ1->getpar(3*5+12);
+				save.params[i].params[6] = mEffEQ1->getpar(4*5+12);
+				save.params[i].params[7] = mEffEQ1->getpar(5*5+12);
+				save.params[i].params[8] = mEffEQ1->getpar(6*5+12);
+				save.params[i].params[9] = mEffEQ1->getpar(7*5+12);
+				save.params[i].params[10] = mEffEQ1->getpar(8*5+12);
+				save.params[i].params[11] = mEffEQ1->getpar(9*5+12);
+			}
+			break;
+		case EffParametricEQ:
+			{
+				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
+				save.params[i].params[0] = mEffEQ2->getpar(0);
+				
+				save.params[i].params[1] = mEffEQ2->getpar(11);
+				save.params[i].params[2] = mEffEQ2->getpar(12);
+				save.params[i].params[3] = mEffEQ2->getpar(13);
+
+				save.params[i].params[4] = mEffEQ2->getpar(5+11);
+				save.params[i].params[5] = mEffEQ2->getpar(5+12);
+				save.params[i].params[6] = mEffEQ2->getpar(5+13);
+
+				save.params[i].params[7] = mEffEQ2->getpar(10+11);
+				save.params[i].params[8] = mEffEQ2->getpar(10+12);
+				save.params[i].params[9] = mEffEQ2->getpar(10+13);
+			}
+			break;
+		case EffEcho:
+			{
+				save.params[i].presetIdx = mEditor->mEchoPanel->mPrevPreset;
+				for(int j=0; j< 20; ++j)
+				{
+					save.params[i].params[j] = mEffEcho->getpar(j);
+				}
+			}
+			break;
+		case EffDistortion:
+			{
+				save.params[i].presetIdx = mEditor->mDistPanel->mPrevPreset;
+				for(int j=0; j< 20; ++j)
+				{
+					save.params[i].params[j] = mEffDistorsion->getpar(j);
+				}
 			}
 			break;
 		case EffCompressor:
+			{
+				save.params[i].presetIdx = mEditor->mCompressorPanel->mPrevPreset;
+				for(int j=0; j< 20; ++j)
+				{
+					save.params[i].params[j] = mEffCompressor->getpar(j+1);
+				}
+			}
+			break;
 		case EffExpander:
 		case EffGate:
 			{
+				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
+				for(int j=0; j< 20; ++j)
+				{
+					save.params[i].params[j] = mEditor->mPanels[i]->mEffect->getpar(j+1);
+				}
 			}
 			break;
+
+		case EffWahWah:
+		case EffAlienWah:
+		case EffPan:
+		case EffChorus:
+		case EffPhaser:
+		case EffReverb:
 		default:
 			{
+				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
+				for(int j=0; j< 20; ++j)
+				{
+					save.params[i].params[j] = mEditor->mPanels[i]->mEffect->getpar(j);
+				}
 			}
 			break;
 		}
@@ -1105,10 +1187,421 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	
 VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	if(isPreset)
+	MessageBox(NULL, "", "asd", MB_OK);
+	//if(isPreset)
+		//return 0;
+	if(byteSize < sizeof(SaveState))
 		return 0;
 	SaveState save;
 	int size = sizeof(SaveState);
 	memcpy(&save, data, size);
+	for(int i=0; i< 10; ++i)
+		mEditor->DeleteEffectPanel(i);
+	mEditor->mUsingEffectList.clear();
+	
+	for(int i=0; i< 10; ++i)
+	{
+		int presetIdx = save.params[i].presetIdx;
+		//save.type[i] = mEditor->mBuiltPanels[i];
+		switch(save.type[i])
+		{
+		case EffLinealEQ:
+			{
+				mEffEQ1->changepar(0, save.params[i].params[0]);
+				mEffEQ1->changepar(13, save.params[i].params[1]);
+				mEffEQ1->changepar(0*5+12, save.params[i].params[2]);
+				mEffEQ1->changepar(1*5+12, save.params[i].params[3]);
+				mEffEQ1->changepar(2*5+12, save.params[i].params[4]);
+				mEffEQ1->changepar(3*5+12, save.params[i].params[5]);
+				mEffEQ1->changepar(4*5+12, save.params[i].params[6]);
+				mEffEQ1->changepar(5*5+12, save.params[i].params[7]);
+				mEffEQ1->changepar(6*5+12, save.params[i].params[8]);
+				mEffEQ1->changepar(7*5+12, save.params[i].params[9]);
+				mEffEQ1->changepar(8*5+12, save.params[i].params[10]);
+				mEffEQ1->changepar(9*5+12, save.params[i].params[11]);
+			}
+			break;
+		case EffParametricEQ:
+			{
+				mEffEQ2->changepar(0, save.params[i].params[0]);
+				
+				mEffEQ2->changepar(11, save.params[i].params[1]);
+				mEffEQ2->changepar(12, save.params[i].params[2]);
+				mEffEQ2->changepar(13, save.params[i].params[3]);
+
+				mEffEQ2->changepar(5+11, save.params[i].params[4]);
+				mEffEQ2->changepar(5+12, save.params[i].params[5]);
+				mEffEQ2->changepar(5+13, save.params[i].params[6]);
+
+				mEffEQ2->changepar(10+11, save.params[i].params[7]);
+				mEffEQ2->changepar(10+12, save.params[i].params[8]);
+				mEffEQ2->changepar(10+13, save.params[i].params[9]);
+			}
+			break;
+		case EffEcho:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffEcho->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffDistortion:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffDistorsion->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffCompressor:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffCompressor->changepar(j+1, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffExpander:
+				for(int j=0; j< 20; ++j)
+				{
+					mEffExpander->changepar(j+1, save.params[i].params[j]);
+				}
+		case EffGate:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffGate->changepar(j+1, save.params[i].params[j]);
+				}
+			}
+			break;
+
+		case EffWahWah:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffWahWah->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffAlienWah:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffAlienwah->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffPan:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffPan->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffChorus:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffChorus->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffPhaser:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffPhaser->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffReverb:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffReverb->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffConvolotron:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffConvolotron->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffAnalogPhaser:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffAPhaser->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffArpie:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffArpie->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffFlange:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffFlange->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EFfCoilCrafter:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffCoil->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EFfCompBand:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffCompBand->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffDualFlange:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffDualFlange->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffEchotron:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffEchotron->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffExciter:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffExciter->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffHarmonizer:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffHarmonizer->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffInfinity:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffInfinity->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffMBDist:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffMBDist->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffMBVvol:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffMBVvol->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffMusicDelay:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffMusicDelay->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffNewDist:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffNewDist->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffOpticaltrem:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffOpticalTrem->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffRBEcho:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffRBEcho->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffReverbtron:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffReverbtron->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffRing:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffRing->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffRyanWah:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffRyanWah->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffSequence:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffSequence->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffShelfBoost:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffShelfBoost->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffShifter:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffShifter->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffShuffle:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffShuffle->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffStereoHarm:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffStereoHarm->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffStompBox:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffStompBox->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffSustainer:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffSustainer->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffSynthfilter:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffSynthfilter->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffValve:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffValve->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		case EffVibe:
+			{
+				for(int j=0; j< 20; ++j)
+				{
+					mEffVibe->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
+		}
+		mEditor->CreateEffectPanel(save.type[i], i, true, presetIdx);
+	}
+	ListBox *rightList = (ListBox*)(mEditor->mGUI->GetElement(mEditor->beingUsedEffectsList));
+	TabbedListBox *leftList = (TabbedListBox*)(mEditor->mGUI->GetElement(mEditor->unusedEffectsList));
+
+	char temp[123];
+	for(int i=0;i<mEditor->mUsingEffectList.size();++i)
+	{
+		sprintf(temp, "%s", mEditor->mUsingEffectList[i].name.c_str());
+		rightList->Add(temp);
+	}
+
+
+	vector<EffectName> unusedEffectList;
+	for(int i=0; i< mEditor->mEffectNames.size(); ++i)
+	{
+		bool found = false;
+		for(int j=0; j < mEditor->mUsingEffectList.size(); ++j)
+		{
+			if(mEditor->mUsingEffectList[j].type == mEditor->mEffectNames[i].type)
+			{
+				found = true;
+				break;
+			}
+		}
+		if(!found)
+		{
+			unusedEffectList.push_back(mEditor->mEffectNames[i]);
+		}
+	}
+	sort(unusedEffectList.begin(), unusedEffectList.end(), CompEff);
+
+	for(int i=0;i<unusedEffectList.size();++i)
+	{
+		sprintf(temp, "%s", unusedEffectList[i].name.c_str());
+		leftList->Add(temp);
+	}
+
 	return size;
 }	///< Host restores plug-in state

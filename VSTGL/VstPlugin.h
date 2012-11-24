@@ -239,8 +239,7 @@ public:
 	enum
 	{
 		param1,
-
-		numParameters=160+10,
+		numParameters,
 	};
   private:
 	///	Called for every sample, to dispatch MIDI events appropriately.
