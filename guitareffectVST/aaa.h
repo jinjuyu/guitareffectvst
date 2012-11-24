@@ -3,7 +3,7 @@ compressor, gate, expander는 changepar나 getpar가 n+1 즉 1부터 시작한다.
 
 파라메터 위에서 오른쪽 버튼을 누르면 왼쪽위에 탭드리스트가 떠서 Map To... 탭드리스트에 파라메터를 클릭하면
 매핑이 되도록 나중에 한다.
-
+지금한다.
 
 SetPAramater에서 값을 읽어서 슬라이더등에 SetVal을 한다.
 // 팝업을 띄우는데, 리스트이므로 리스트를 띄운다.
