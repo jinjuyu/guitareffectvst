@@ -856,6 +856,8 @@ enum EffNameType
 	EffAlienWah,
 	EffPan,
 	EffDistortion,
+	EffGate,
+	EffExpander,
 };
 
 class EffectName
@@ -864,6 +866,16 @@ public:
 	EffectName(EffNameType type, string name):type(type), name(name){};
 	EffNameType type;
 	string name;
+};
+
+struct SaveParams
+{
+	int presetIdx;
+	int params[20];
+};
+struct SaveState{
+	EffNameType type[10];
+	SaveParams params[10];
 };
 bool CompEff(EffectName a, EffectName b);
 class ExampleEditor : public VSTGLEditor,

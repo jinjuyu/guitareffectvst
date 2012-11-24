@@ -285,7 +285,7 @@ thing(0.0f)
 	mGUI->init();
 	
 	//mSlider = mGUI->NewSlider(60, 185, 120, 0, 100);
-	int x = 400;
+	int x = 250;
 	exchangeCB = new ExchangeCallback(this);
 	moveUpCB = new MoveUpCallback(this);
 	moveDnCB = new MoveDnCallback(this);

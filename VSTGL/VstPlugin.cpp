@@ -1065,3 +1065,50 @@ void VstPlugin::MIDI_PitchBend(int ch, int x1, int x2, int delta)
 	midiEvent[0]->deltaFrames = delta;
 	sendVstEventsToHost(tempEvents);
 }
+VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
+{///< Host stores plug-in state. Returns the size in bytes of the chunk (plug-in allocates the data array)
+	// 여기에 플러그인의 상태를 저장한다.
+	// 그런 후에 마우스 우측버튼으로 파라메터 오토메이션이 가능하도록 16개의 파라메터를 매핑 가능하게 하면
+	// 완전 앰플리튜브...
+	if(isPreset)
+		return 0;
+	
+	SaveState save;
+	for(int i=0; i< 10; ++i)
+	{
+		save.type[i] = mEditor->mBuiltPanels[i];
+		switch(mEditor->mBuiltPanels[i])
+		{
+		case EffLinealEQ:
+			{
+				save.params[i].params[0] = mEffEQ1->getpar(0);
+			}
+			break;
+		case EffCompressor:
+		case EffExpander:
+		case EffGate:
+			{
+			}
+			break;
+		default:
+			{
+			}
+			break;
+		}
+	}
+	
+	int size = sizeof(SaveState);
+	(*data) = malloc(size);
+	memcpy(*data, &save, size);
+	return size;
+}
+	
+VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
+{
+	if(isPreset)
+		return 0;
+	SaveState save;
+	int size = sizeof(SaveState);
+	memcpy(&save, data, size);
+	return size;
+}	///< Host restores plug-in state

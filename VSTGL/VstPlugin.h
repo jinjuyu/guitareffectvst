@@ -73,6 +73,7 @@ struct PluginProgram;
 //Trick to ensure inline functions get inlined properly.
 #define strictinline __forceinline
 class ExampleEditor;
+
 //----------------------------------------------------------------------------
 ///	VST plugin class.
 class VstPlugin : public AudioEffectX
@@ -84,6 +85,8 @@ public:
 		communicate with the host.  Subclasses of AudioEffect/AudioEffectX
 		should not ever need to make use of it directly.
 	 */
+	VstInt32 getChunk (void** data, bool isPreset = false);
+	VstInt32 setChunk (void* data, VstInt32 byteSize, bool isPreset = false);
 
 	void update_freqs(float val);
 	VstPlugin(audioMasterCallback audioMaster);
