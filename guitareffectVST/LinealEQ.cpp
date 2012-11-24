@@ -25,18 +25,18 @@ void LinealEQ::LoadPreset(int aaa)
 }
 void LinealEQ::LoadDefault()
 {
-	mGUI->SetSliderVal(mGain, RealToPrint(0));
-	mGUI->SetSliderVal(mQ, RealToPrint(0));
-	mGUI->SetSliderVal(m31, RealToPrint(0));
-	mGUI->SetSliderVal(m63, RealToPrint(0));
-	mGUI->SetSliderVal(m125, RealToPrint(0));
-	mGUI->SetSliderVal(m250, RealToPrint(0));
-	mGUI->SetSliderVal(m500, RealToPrint(0));
-	mGUI->SetSliderVal(m1K, RealToPrint(0));
-	mGUI->SetSliderVal(m2K, RealToPrint(0));
-	mGUI->SetSliderVal(m4K, RealToPrint(0));
-	mGUI->SetSliderVal(m8K, RealToPrint(0));
-	mGUI->SetSliderVal(m16K, RealToPrint(0));
+	mGUI->SetSliderVal(mGain, RealToPrint(64));
+	mGUI->SetSliderVal(mQ, RealToPrint(64));
+	mGUI->SetSliderVal(m31, RealToPrint(64));
+	mGUI->SetSliderVal(m63, RealToPrint(64));
+	mGUI->SetSliderVal(m125, RealToPrint(64));
+	mGUI->SetSliderVal(m250, RealToPrint(64));
+	mGUI->SetSliderVal(m500, RealToPrint(64));
+	mGUI->SetSliderVal(m1K, RealToPrint(64));
+	mGUI->SetSliderVal(m2K, RealToPrint(64));
+	mGUI->SetSliderVal(m4K, RealToPrint(64));
+	mGUI->SetSliderVal(m8K, RealToPrint(64));
+	mGUI->SetSliderVal(m16K, RealToPrint(64));
 }
 void LinealEQ::DrawText()
 {
