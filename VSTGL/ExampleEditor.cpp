@@ -679,9 +679,13 @@ void MoveUpCallback::OnClick()
 		mEditor->DeleteEffectPanel(newIdx);
 		mEditor->CreateEffectPanel(newType, prevIdx);
 		mEditor->CreateEffectPanel(prevType, newIdx);
+		
 		bool backup = mEditor->mEffectOn[prevIdx];
 		mEditor->mEffectOn[prevIdx] = mEditor->mEffectOn[newIdx];
-		mEditor->mEffectOn[newIdx] = backup;		list->MoveUpSelection();
+		((OnOffButton*)(mEditor->mGUI->GetElement(mEditor->mOnOffButtons[prevIdx])))->mOn = mEditor->mEffectOn[newIdx];
+		mEditor->mEffectOn[newIdx] = backup;
+		((OnOffButton*)(mEditor->mGUI->GetElement(mEditor->mOnOffButtons[newIdx])))->mOn = backup;
+		list->MoveUpSelection();
 	}
 	
 }
@@ -705,7 +709,9 @@ void MoveDnCallback::OnClick()
 		mEditor->CreateEffectPanel(prevType, newIdx);
 		bool backup = mEditor->mEffectOn[prevIdx];
 		mEditor->mEffectOn[prevIdx] = mEditor->mEffectOn[newIdx];
+		((OnOffButton*)(mEditor->mGUI->GetElement(mEditor->mOnOffButtons[prevIdx])))->mOn = mEditor->mEffectOn[newIdx];
 		mEditor->mEffectOn[newIdx] = backup;
+		((OnOffButton*)(mEditor->mGUI->GetElement(mEditor->mOnOffButtons[newIdx])))->mOn = backup;
 		list->MoveDnSelection();
 	}
 

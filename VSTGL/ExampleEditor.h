@@ -927,9 +927,10 @@ class ExampleEditor : public VSTGLEditor,
 	int exchangeButton;
 	int unusedEffectsList;
 	int beingUsedEffectsList;
+	int mOnOffButtons[10];
   private:
 	int mSlider;
-	int mOnOffButtons[10];
+	
 	///	Variable used to rotate the pyramid.
 	float thing;
 };
