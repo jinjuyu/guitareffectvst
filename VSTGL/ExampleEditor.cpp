@@ -307,6 +307,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffAlienWah, "AlienWah"));
 	mEffectNames.push_back(EffectName(EffPan, "Pan"));
 	mEffectNames.push_back(EffectName(EffDistortion, "Distortion"));
+	mEffectNames.push_back(EffectName(EffHarmonizer, "Harmonizer"));
 	
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
@@ -1830,7 +1831,114 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			mPanels[whereis]->SetPreset(0);
 	}
 		break;
-		
+	case EffHarmonizer:
+	{
+		const int PRESET_SIZE = 11;
+		const int NUM_PRESETS = 3;
+		int presets[] = {
+			//Plain
+			64, 64, 64, 12, 6000, 0, 0, 0, 64, 64, 0,
+			//Octavador
+			64, 64, 64, 0, 6000, 0, 0, 0, 64, 64, 0,
+			//3mdown
+			64, 64, 64, 9, 6000, 0, 0, 0, 64, 64, 0
+		};
+		int HarmonizerReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			0,127,
+				//setgain (value);
+				//break;
+			//case 3:
+			0,24,
+				//setinterval (value);
+				//break;
+			//case 4:
+			47,171, // 20~26000, 이 값을 GetFreqByRealMinMax로 변환하면 주파수가 나온다.
+				//fsetfreq (value);
+				//break;
+			//case 5:
+			0,1,
+				//PSELECT = value;;
+				//break;
+			//case 6:
+			0,23,
+				//Pnote = value;
+				//break;
+			//case 7:
+			0,33,
+				//Ptype = value;
+				//break;
+			//case 8:
+			0,127,
+				//fsetgain (value);
+				//break;
+			//case 9:
+			0,127,
+				//fsetq (value);
+				//break;
+			//case 10:
+			0,1,
+				//setMIDI (value);
+				//break;
+		};
+		int HarmonizerPrint[] = {
+			-64,63, // 0
+			-64,63, // 1
+			-64,63, // 2
+			-12,12, // 3
+			0,100, // 4
+			0,1, // 5
+			0,23, // 6
+			0,33, // 7
+			-64,63, // 8
+			-64,63, // 9
+			0,1,
+		};
+
+		real = HarmonizerReal;
+		print = HarmonizerPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Plain");
+		presetTexts.push_back("Octavador");
+		presetTexts.push_back("3mdown");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffHarmonizer, "Harmonizer", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Int.", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Freq", PanelNS::Slider, true));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MIDI", PanelNS::OnOff));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "SEL", PanelNS::OnOff, false, true));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Note", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Chord", PanelNS::Slider));
+
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+	}
+	break;
 	default:
 		break;
 	}
