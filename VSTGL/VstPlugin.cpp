@@ -1574,7 +1574,11 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	}
 	ListBox *rightList = (ListBox*)(mEditor->mGUI->GetElement(mEditor->beingUsedEffectsList));
 	TabbedListBox *leftList = (TabbedListBox*)(mEditor->mGUI->GetElement(mEditor->unusedEffectsList));
-
+	rightList->selected = -1;
+	rightList->mStrs.clear();
+	leftList->selected = -1;
+	leftList->mStrs.clear();
+	leftList->curPage = 0;
 	char temp[123];
 	for(int i=0;i<mEditor->mUsingEffectList.size();++i)
 	{

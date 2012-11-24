@@ -804,7 +804,8 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, whereis);
 		if(loadPrev)
 			mEQ1Panel->LoadPreset(prevIdx);
-
+		else
+			mEQ1Panel->LoadDefault();
 		break;
 	case EffDistortion:
 		mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect, whereis);

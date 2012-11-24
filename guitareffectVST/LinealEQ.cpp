@@ -23,6 +23,21 @@ void LinealEQ::LoadPreset(int aaa)
 	mGUI->SetSliderVal(m8K, RealToPrint(mPlug->mEffEQ1->getpar(8*5+12)));
 	mGUI->SetSliderVal(m16K, RealToPrint(mPlug->mEffEQ1->getpar(9*5+12)));
 }
+void LinealEQ::LoadDefault()
+{
+	mGUI->SetSliderVal(mGain, RealToPrint(0));
+	mGUI->SetSliderVal(mQ, RealToPrint(0));
+	mGUI->SetSliderVal(m31, RealToPrint(0));
+	mGUI->SetSliderVal(m63, RealToPrint(0));
+	mGUI->SetSliderVal(m125, RealToPrint(0));
+	mGUI->SetSliderVal(m250, RealToPrint(0));
+	mGUI->SetSliderVal(m500, RealToPrint(0));
+	mGUI->SetSliderVal(m1K, RealToPrint(0));
+	mGUI->SetSliderVal(m2K, RealToPrint(0));
+	mGUI->SetSliderVal(m4K, RealToPrint(0));
+	mGUI->SetSliderVal(m8K, RealToPrint(0));
+	mGUI->SetSliderVal(m16K, RealToPrint(0));
+}
 void LinealEQ::DrawText()
 {
 	int x,y,w=180,h=250;
@@ -111,74 +126,62 @@ LinealEQ::LinealEQ(GLGUI *gui, VstPlugin *plug, int whereis)
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Gain
 	mGain = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbGain);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Q
 	mQ = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cbQ);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m31 = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb31);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m63 = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb63);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m125 = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb125);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m250 = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb250);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m500 = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb500);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m1K = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb1K);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m2K = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb2K);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m4K = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb4K);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m8K = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb8K);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 	mButtons.push_back(mGUI->NewSlider(x+60,y,120, print[0], print[1])); // Freqs
 	m16K = *(mButtons.end()-1);
 	mGUI->SetSliderCallback(*(mButtons.end()-1), cb16K);
-	mGUI->SetSliderVal(*(mButtons.end()-1), 0);
 	y += 15;
 
 }

@@ -128,6 +128,7 @@ public:
 	int m8K;
 	int m16K;
 	int mPrevPreset;
+	void LoadDefault();
 	GainCallback *cbGain;
 	QCallback *cbQ;
 	F31Callback *cb31;
