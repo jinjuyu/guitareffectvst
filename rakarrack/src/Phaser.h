@@ -39,7 +39,6 @@ public:
     int getpar (int npar);
     void cleanup ();
     int Ppreset;
-    float outvolume;
 			void processReplacing (float **inputs,
 								float **outputs,
 								int sampleFrames);

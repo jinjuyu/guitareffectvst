@@ -53,7 +53,6 @@ public:
     float *efxoutl;
     float *efxoutr;
 
-    float outvolume;
 
     void Tempo2Delay(int delay);
 

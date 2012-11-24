@@ -54,7 +54,6 @@ public:
 								int sampleFrames);
     int Ppreset;
     long int hq;
-    float outvolume;
 
     float *efxoutl;
     float *efxoutr;

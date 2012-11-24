@@ -426,6 +426,26 @@ public:
 		listH = 15;
 	}
 	ListBoxCallback *mCB;
+	void MoveUpSelection()
+	{
+		if(selected >= 1 && selected < mStrs.size())
+		{
+			string backup = mStrs[selected-1];
+			mStrs[selected-1] = mStrs[selected];
+			mStrs[selected] = backup;
+			selected -= 1;
+		}
+	}
+	void MoveDnSelection()
+	{
+		if(selected >= 0 && selected < mStrs.size()-1)
+		{
+			string backup = mStrs[selected+1];
+			mStrs[selected+1] = mStrs[selected];
+			mStrs[selected] = backup;
+			selected += 1;
+		}
+	}
 	void SetCallback(ListBoxCallback *cb)
 	{
 		mCB = cb;
@@ -721,6 +741,49 @@ public:
 		//MessageBox(NULL, "", "", MB_OK);
 	}
 };
+class ExampleEditor;
+class MoveUpCallback : public ButtonCallback
+{
+public:
+	MoveUpCallback(ExampleEditor *editor);
+	ExampleEditor *mEditor;
+	void OnClick();
+};
+class MoveDnCallback : public ButtonCallback
+{
+public:
+	MoveDnCallback(ExampleEditor *editor);
+	ExampleEditor *mEditor;
+	void OnClick();
+};
+class ExchangeCallback : public ButtonCallback
+{
+public:
+	ExchangeCallback(ExampleEditor *editor);
+	ExampleEditor *mEditor;
+	void OnClick();
+};
+
+class MyTotalEffectOnOff : public OnOffButtonCallback
+{
+public:
+	ExampleEditor *mEditor;
+	MyTotalEffectOnOff(ExampleEditor *editor);
+	void OnOn();
+	void OnOff();
+};
+class MyEffectOnOff : public OnOffButtonCallback
+{
+public:
+	ExampleEditor *mEditor;
+	int mWhereis;
+	MyEffectOnOff(ExampleEditor *editor, int whereis);
+	void OnOn();
+	void OnOff();
+};
+
+
+
 class MyButtonCallback2 : public OnOffButtonCallback
 {
 public:
@@ -779,10 +842,36 @@ namespace PanelNS
 {
 	class Panel;
 };
+enum EffNameType
+{
+	EffNone,
+	EffLinealEQ,
+	EffCompressor,
+	EffEcho,
+	EffChorus,
+	EffPhaser,
+	EffReverb,
+	EffParametricEQ,
+	EffWahWah,
+	EffAlienWah,
+	EffPan,
+	EffDistortion,
+};
+
+class EffectName
+{
+public:
+	EffectName(EffNameType type, string name):type(type), name(name){};
+	EffNameType type;
+	string name;
+};
+bool CompEff(EffectName a, EffectName b);
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
 {
   public:
+	  vector<EffectName> mEffectNames;
+	  vector<EffectName> mUsingEffectList;
 	///	Constructor.
 	ExampleEditor(AudioEffect *effect);
 	///	Destructor.
@@ -792,18 +881,22 @@ class ExampleEditor : public VSTGLEditor,
 	MyButtonCallback2 myButton2CB;
 	MyListCallback myListCB;
 	MyTLButtonCallback myTLCB;
+	MoveUpCallback *moveUpCB;
+	MoveDnCallback *moveDnCB;
+	ExchangeCallback *exchangeCB;
+	vector<EffNameType> mBuiltPanels;
+	vector<PanelNS::Panel*> mPanels;
+	vector<bool> mEffectOn;
+	vector<MyEffectOnOff*> mCBOnOffs;
+	MyTotalEffectOnOff *cbOnOff;
+	bool mTotalEffectOn;
+	void CreateEffectPanel(EffNameType type, int whereis);
+	void DeleteEffectPanel(int whereis);
+	
 	
 	DistorsionPanelNS::DistorsionPanel *mDistPanel;
 	LinealEQNS::LinealEQ *mEQ1Panel;
 	EchoNS::EchoPanel *mEchoPanel;
-	PanelNS::Panel *mTestPanel;
-	PanelNS::Panel *mPhaserPanel;
-	PanelNS::Panel *mReverbPanel;
-	PanelNS::Panel *mPEQPanel;
-	PanelNS::Panel *mWahPanel;
-	PanelNS::Panel *mAWahPanel;
-	PanelNS::Panel *mPanPanel;
-	vector<LinealEQNS::LinealEQ*> mEQ1Panels;
 	
 	CompressorNS::CompressorPanel *mCompressorPanel;
 	///	Called when the Gui's window is opened.
@@ -828,8 +921,13 @@ class ExampleEditor : public VSTGLEditor,
 		mGUI->onMouseMove(x,y);
 	}
 	void timerCallback();
-  private:
 	GLGUI *mGUI;
+	int moveUpButton;
+	int moveDnButton;
+	int exchangeButton;
+	int unusedEffectsList;
+	int beingUsedEffectsList;
+  private:
 	int mSlider;
 	int mOnOffButtons[10];
 	///	Variable used to rotate the pyramid.

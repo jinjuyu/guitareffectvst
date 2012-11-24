@@ -48,7 +48,6 @@ public:
 				void processReplacing (float **inputs,
 								float **outputs,
 								int sampleFrames);
-    float outvolume;
     float *efxoutl;
     float *efxoutr;
 

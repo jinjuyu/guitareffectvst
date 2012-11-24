@@ -46,7 +46,6 @@ public:
     int Ppreset;
     float *octoutl;
     float *octoutr;
-    float outvolume;
 
 private:
     //Parametrii

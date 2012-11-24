@@ -45,7 +45,6 @@ public:
     int Ppreset;
     float *efxoutl;
     float *efxoutr;
-    float outvolume;
 
 private:
     //Parametrii

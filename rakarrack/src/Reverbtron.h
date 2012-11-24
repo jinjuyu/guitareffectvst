@@ -48,7 +48,6 @@ public:
 
     float *efxoutl;
     float *efxoutr;
-    float outvolume;
 
     char Filename[128];
 

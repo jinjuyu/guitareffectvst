@@ -27,7 +27,7 @@
 #include "FilterParams.h"
 
 
-class Effect
+/*class Effect
 {
 public:
 
@@ -53,10 +53,9 @@ public:
     float *efxoutl;
     float *efxoutr;
 
-    float outvolume;		//this is the volume of effect and is public because need it in system effect. The out volume of such effects are always 1.0, so this setting tells me how is the volume to the Master Output only.
 
 
     FilterParams *filterpars;
 };
-
+*/
 #endif

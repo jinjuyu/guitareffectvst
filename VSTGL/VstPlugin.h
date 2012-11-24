@@ -72,7 +72,7 @@ struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
 #define strictinline __forceinline
-
+class ExampleEditor;
 //----------------------------------------------------------------------------
 ///	VST plugin class.
 class VstPlugin : public AudioEffectX
@@ -89,6 +89,7 @@ public:
 	VstPlugin(audioMasterCallback audioMaster);
 	///	Destructor.
 	~VstPlugin();
+	ExampleEditor *mEditor;
 	Parameters *mParam;
 	Echo *mEffEcho;
 	Distorsion *mEffDistorsion;

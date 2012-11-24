@@ -286,9 +286,9 @@ vendorName("Jinju")
     setUniqueID('JinJ');
 
 	//Construct editor here.
-	editor = new ExampleEditor(this);
-
-
+	
+	mEditor = new ExampleEditor(this);
+	editor = mEditor;
 	//SetCurrentDirectory() 이건 호스트에서나 쓸 수 있다.
 }
 
@@ -541,6 +541,7 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}*/
 
+	/*
 	outVolume = mEffPan->outvolume;
 	if(outVolume > 1.0f) outVolume = 1.0f;
 	mEffPan->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
@@ -549,15 +550,92 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}
-
-
-	mEffLimiter->processReplacing(outputs, tempOutputs, sampleFrames); // Hidden Final Limiter Chain
-	for(int i=0; i<sampleFrames; ++i)
+	*/
+	if(mEditor->mTotalEffectOn)
 	{
-		outputs[0][i] = tempOutputs[0][i];
-		outputs[1][i] = tempOutputs[1][i];
-	}
+		Effect *eff = nullptr;
+		for(int i=0; i<10; ++i)
+		{
+			if(!mEditor->mEffectOn[i])
+			{
+				continue;
+			}
+			switch(mEditor->mBuiltPanels[i])
+			{
+			case EffEcho:
+				eff = mEffEcho;
+				break;
+			case EffCompressor:
+				eff = mEffCompressor;
+				break;
+			case EffLinealEQ:
+				eff = mEffEQ1;
+				break;
+			case EffChorus:
+				eff = mEffChorus;
+				break;
+			case EffPhaser:
+				eff = mEffPhaser;
+				break;
+			case EffReverb:
+				eff = mEffReverb;
+				break;
+			case EffParametricEQ:
+				eff = mEffEQ2;
+				break;
+			case EffWahWah:
+				eff = mEffWahWah;
+				break;
+			case EffAlienWah:
+				eff = mEffAlienwah;
+				break;
+			case EffPan:
+				eff = mEffPan;
+				break;
+			case EffDistortion:
+				eff = mEffDistorsion;
+				break;
+			}
+			if(eff->mType == WetDry)
+			{
+				outVolume = eff->outvolume;
+				if(outVolume > 1.0f) outVolume = 1.0f;
+				eff->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
+				for(int i=0; i<sampleFrames; ++i)
+				{
+					outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
+					outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
+				}
+			}
+			else if(eff->mType == Gain)
+			{
+				outVolume = eff->outvolume;
+				eff->processReplacing(outputs, tempOutputs, sampleFrames); // Type: Gain
+				for(int i=0; i<sampleFrames; ++i)
+				{
+					outputs[0][i] = tempOutputs[0][i]*outVolume;
+					outputs[1][i] = tempOutputs[1][i]*outVolume;
+				}
+			}
+			else if(eff->mType == None)
+			{
+				eff->processReplacing(outputs, tempOutputs, sampleFrames); // Type: None
+				for(int i=0; i<sampleFrames; ++i)
+				{
+					outputs[0][i] = tempOutputs[0][i];
+					outputs[1][i] = tempOutputs[1][i];
+				}
+			}
+		}
 
+
+		mEffLimiter->processReplacing(outputs, tempOutputs, sampleFrames); // Hidden Final Limiter Chain
+		for(int i=0; i<sampleFrames; ++i)
+		{
+			outputs[0][i] = tempOutputs[0][i];
+			outputs[1][i] = tempOutputs[1][i];
+		}
+	}
 	delete tempOutputs[0];
 	delete tempOutputs[1];
 

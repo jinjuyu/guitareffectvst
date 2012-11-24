@@ -43,7 +43,6 @@ public:
 								float **outputs,
 								int sampleFrames);
     int Ppreset;
-    float outvolume;
 
     float *efxoutl;
     float *efxoutr;

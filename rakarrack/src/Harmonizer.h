@@ -72,7 +72,6 @@ public:
     float *outo;
     float *templ, *tempr;
 
-    float outvolume;
 
 
 

@@ -12,6 +12,7 @@ public:
 		:mType(type)
 	{
 	}
+	float outvolume;
 	EffType mType;
 	virtual void setpreset (int npreset){}
 	virtual void changepar(int npar, int val) = 0;

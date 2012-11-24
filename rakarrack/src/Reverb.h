@@ -45,7 +45,6 @@ public:
     int getpar (int npar);
 
     int Ppreset;
-    float outvolume;		//this is the volume of effect and is public because need it in system effect. The out volume of su
 
     float *efxoutl;
     float *efxoutr;
