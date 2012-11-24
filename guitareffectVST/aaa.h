@@ -1950,4 +1950,130 @@ findpos(12,(int)o->value(),o);}
           class SliderW
         }
       }
+      Fl_Group PAN {
+        user_data 1
+        xywh {320 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button pan_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Pan_Bypass);
+ return;
+}
+rkr->Pan_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_Pan->cleanup();
+findpos(13,(int)o->value(),o);}
+          xywh {325 216 34 18} shortcut 0x36 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice pan_preset {
+          label Preset
+          user_data 12013
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12013))rkr->efx_Pan->setpreset((int) o->value());
+pan_WD->value(rkr->efx_Pan->getpar(0)-64);
+pan_pan->value(rkr->efx_Pan->getpar(1)-64);
+pan_freq->value(rkr->efx_Pan->getpar(2));
+pan_rnd->value(rkr->efx_Pan->getpar(3));
+pan_lfotype->value(rkr->efx_Pan->getpar(4));
+pan_stdf->value(rkr->efx_Pan->getpar(5));
+pan_extra->value(rkr->efx_Pan->getpar(6));
+pan_autopan->value(rkr->efx_Pan->getpar(7));
+pan_extraon->value(rkr->efx_Pan->getpar(8));}
+          xywh {397 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label AutoPan
+            xywh {62 62 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Extra Stereo}
+            xywh {62 62 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider pan_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(58);
+ return;
+} 
+rkr->efx_Pan->changepar(0,(int)(o->value()+64));}
+          xywh {369 241 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider pan_pan {
+          label Pan
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(67);
+ return;
+} 
+rkr->efx_Pan->changepar(1,(int)(o->value()+64));}
+          xywh {369 256 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button pan_autopan {
+          label AutoPan
+          user_data 2
+          callback {rkr->efx_Pan->changepar(7,(int)o->value())}
+          xywh {355 268 70 18} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+        Fl_Value_Slider pan_freq {
+          label Tempo
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(77);
+ return;
+} 
+rkr->efx_Pan->changepar(2,(int)o->value());}
+          xywh {369 285 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 600 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider pan_rnd {
+          label Rnd
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(110);
+ return;
+} 
+rkr->efx_Pan->changepar(3,(int)o->value());}
+          xywh {369 297 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Choice pan_lfotype {
+          label {LFO Type}
+          callback {rkr->efx_Pan->changepar(4,(int)o->value());} open
+          xywh {381 315 72 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
+          code0 {o->menu(menu_chorus_lfotype);}
+        } {}
+        Fl_Value_Slider pan_stdf {
+          label {St.df}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(104);
+ return;
+} 
+rkr->efx_Pan->changepar(5,(int)o->value());}
+          xywh {369 336 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button pan_extraon {
+          label {Extra Stereo}
+          user_data 2
+          callback {rkr->efx_Pan->changepar(8,(int)o->value())}
+          xywh {355 352 82 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+        Fl_Value_Slider pan_extra {
+          label {E.S.}
+          callback {rkr->efx_Pan->changepar(6,(int)o->value());}
+          xywh {369 373 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+      }
+
+
 	  */

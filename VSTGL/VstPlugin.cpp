@@ -35,7 +35,7 @@
 #include <algorithm>
 #include <vector>
 using namespace std;
-
+#pragma warning (disable:4800)
 //----------------------------------------------------------------------------
 AudioEffect* createEffectInstance (audioMasterCallback audioMaster)
 {
@@ -605,6 +605,102 @@ void VstPlugin::processReplacing(float **inputs,
 			case EffDistortion:
 				eff = mEffDistorsion;
 				break;
+			case EffFlange:
+				eff = mEffFlange;
+			case EffGate:
+                eff = mEffGate;
+                break;
+			case EffExpander:
+				eff = mEffExpander;
+                break;
+			case EffConvolotron:
+                eff = mEffConvolotron;
+                break;
+			case EffAnalogPhaser:
+                eff = mEffAPhaser;
+                break;
+			case EffArpie:
+				eff = mEffArpie;
+                break;
+			case EffCoilCrafter:
+                eff = mEffCoil;
+                break;
+			case EffCompBand:
+                eff = mEffCompBand;
+                break;
+			case EffDualFlange:
+				eff = mEffDualFlange;
+                break;
+			case EffEchotron:
+                eff = mEffEchotron;
+                break;
+			case EffExciter:
+                eff = mEffExciter;
+                break;
+			case EffHarmonizer:
+                eff = mEffHarmonizer;
+                break;
+			case EffInfinity:
+                eff = mEffInfinity;
+                break;
+			case EffMBDist:
+                eff = mEffMBDist;
+                break;
+			case EffMBVvol:
+                eff = mEffMBVvol;
+                break;
+			case EffMusicDelay:
+                eff = mEffMusicDelay;
+                break;
+			case EffNewDist:
+                eff = mEffNewDist;
+                break;
+			case EffOpticaltrem:
+                eff = mEffOpticalTrem;
+                break;
+			case EffRBEcho:
+                eff = mEffRBEcho;
+                break;
+			case EffReverbtron:
+                eff = mEffReverbtron;
+                break;
+			case EffRing:
+                eff = mEffRing;
+                break;
+			case EffRyanWah:
+                eff = mEffRyanWah;
+                break;
+			case EffSequence:
+                eff = mEffSequence;
+                break;
+			case EffShelfBoost:
+                eff = mEffShelfBoost;
+                break;
+			case EffShifter:
+                eff = mEffShifter;
+                break;
+			case EffShuffle:
+                eff = mEffShuffle;
+                break;
+			case EffStereoHarm:
+                eff = mEffStereoHarm;
+                break;
+			case EffStompBox:
+                eff = mEffStompBox;
+                break;
+			case EffSustainer:
+                eff = mEffSustainer;
+                break;
+			case EffSynthfilter:
+                eff = mEffSynthfilter;
+                break;
+			case EffValve:
+                eff = mEffValve;
+                break;
+			case EffVibe:
+                eff = mEffVibe;
+                break;
+
 			}
 			if(eff->mType == WetDry)
 			{
@@ -1361,7 +1457,7 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 				}
 			}
 			break;
-		case EFfCoilCrafter:
+		case EffCoilCrafter:
 			{
 				for(int j=0; j< 20; ++j)
 				{
@@ -1369,7 +1465,7 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 				}
 			}
 			break;
-		case EFfCompBand:
+		case EffCompBand:
 			{
 				for(int j=0; j< 20; ++j)
 				{

@@ -285,7 +285,7 @@ thing(0.0f)
 	mGUI->init();
 	
 	//mSlider = mGUI->NewSlider(60, 185, 120, 0, 100);
-	int x = 250;
+	int x = 400;
 	exchangeCB = new ExchangeCallback(this);
 	moveUpCB = new MoveUpCallback(this);
 	moveDnCB = new MoveDnCallback(this);
@@ -293,12 +293,13 @@ thing(0.0f)
 	moveUpButton = mGUI->NewButton(x+240+180+15, 75-25/2-40, 60, 25, "MoveUp", moveUpCB);
 	moveDnButton = mGUI->NewButton(x+240+180+15, 75-25/2, 60, 25, "MoveDown", moveDnCB);
 	beingUsedEffectsList = mGUI->NewList(x+240, 0, 180, 150, &myListCB);
-	unusedEffectsList = mGUI->NewTList(x+0, 0, 180, 150, &myTLCB);
+	unusedEffectsList = mGUI->NewTList(x-150, 0, 330, 150, &myTLCB);
 	char temp[123];
 	mEffectNames.push_back(EffectName(EffLinealEQ, "Lineal EQ"));
 	mEffectNames.push_back(EffectName(EffCompressor,"Compressor"));
 	mEffectNames.push_back(EffectName(EffEcho,"Echo"));
 	mEffectNames.push_back(EffectName(EffChorus, "Chorus"));
+	mEffectNames.push_back(EffectName(EffFlange, "Flange"));
 	mEffectNames.push_back(EffectName(EffPhaser, "Phaser"));
 	mEffectNames.push_back(EffectName(EffReverb, "Reverb"));
 	mEffectNames.push_back(EffectName(EffParametricEQ, "Parametric EQ"));
@@ -937,6 +938,147 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("Flange4");
 		presetTexts.push_back("Flange5");
 		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffChorus, "Chorus", whereis, chorus_presets, CHORUS_PRESET_SIZE, CHORUS_NUM_PRESETS, presetTexts);
+
+		mPanels[whereis]->AddParamData(PanelNS::Data(0, 0, 127, -64, 63, "Wet/Dry", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(1, 0, 127, -64, 63, "Pan", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(2, 1, 600, 1, 600, "Tempo", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(3, 0, 127, 0, 127, "RND", PanelNS::Slider));
+		lfoTypeStrs.clear();
+		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Tri");
+		lfoTypeStrs.push_back("RampUp");
+		lfoTypeStrs.push_back("RampDn");
+		lfoTypeStrs.push_back("ZigZag");
+		lfoTypeStrs.push_back("M.Sqare");
+		lfoTypeStrs.push_back("M.Saw");
+		lfoTypeStrs.push_back("L.Fract");
+		lfoTypeStrs.push_back("L.FractXY");
+		lfoTypeStrs.push_back("S/H Rnd");
+		mPanels[whereis]->AddParamData(PanelNS::Data(4, 0, 9, 0, 9, "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+		mPanels[whereis]->AddParamData(PanelNS::Data(11, 0, 1, 0, 1, "Subtract", PanelNS::OnOff));
+		mPanels[whereis]->AddParamData(PanelNS::Data(12, 0, 1, 0, 1, "Intense", PanelNS::OnOff, false, true));
+
+		mPanels[whereis]->AddParamData(PanelNS::Data(5, 0, 127, 0, 127, "St.df", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(6, 0, 127, 0, 127, "Depth", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(7, 0, 127, 0, 127, "Delay", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(8, 0, 127, 0, 127, "Fb", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(9, 0, 127, -63, 64, "L/R.Cr", PanelNS::Slider));
+
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+	}
+		break;
+	case EffFlange:
+	{
+		const int CHORUS_PRESET_SIZE = 12;
+		const int CHORUS_NUM_PRESETS = 10;
+		int chorus_presets[] = {
+			//Chorus1
+			64, 64, 33, 0, 0, 90, 40, 85, 64, 119, 0, 0,
+			//Chorus2
+			64, 64, 17, 0, 0, 98, 56, 90, 64, 16, 0, 0,
+			//Chorus3
+			64, 64, 7, 0, 1, 42, 97, 95, 90, 127, 0, 0,
+			//Celeste1
+			64, 64, 1, 0, 0, 42, 115, 18, 90, 127, 0, 0,
+			//Celeste2
+			64, 64, 7, 117, 0, 50, 115, 9, 31, 127, 0, 1,
+			//Flange1
+			64, 64, 39, 0, 0, 60, 23, 3, 62, 0, 0, 0,
+			//Flange2
+			64, 64, 9, 34, 1, 40, 35, 3, 109, 0, 0, 0,
+			//Flange3
+			64, 64, 31, 34, 1, 94, 35, 3, 54, 0, 0, 1,
+			//Flange4
+			64, 64, 14, 0, 1, 62, 12, 19, 97, 0, 0, 0,
+			//Flange5
+			64, 64, 34, 105, 0, 24, 39, 19, 17, 0, 0, 1
+		};
+	
+
+		int ChorusReal[] = { // Chorus/Flange! 두개를 하나로 합쳐쓴다.? 아니다. 코러스랑 플랜지를 중복해야한다.
+		//case 0:
+		//setvolume (value); Wet Dry
+			0, 127,
+		//case 1:
+		//setpanning (value); Pan
+			0, 127,
+		//case 2:
+		//lfo.Pfreq = value; Tempo
+			1, 600,
+		//case 3:
+		//lfo.Prandomness = value; Rnd
+			0, 127,
+		//case 4:
+		//lfo.PLFOtype = value; LFOType
+			0, 9,  // type value
+			/*
+			Sine
+			Tri
+			RampUp
+			RampDown
+			ZigZag
+			M.Sqare
+			M.Saw
+			L. Fractal
+			L. Fractal XY
+			S/H Random*/
+		//case 5:
+		//lfo.Pstereo = value; St.df
+			0, 127,
+		//case 6:
+		//setdepth (value); // Depth
+			0, 127,
+		//case 7:
+		//setdelay (value); // Delay
+			0, 127,
+		//case 8:
+		//setfb (value); // Fb.
+			0, 127,
+		//case 9:
+		//setlrcross (value); // L/R.Cr
+			0, 127,
+		//case 10:
+			//Pflangemode = value;
+			0, 1, // Boolean: Chorus/Flange
+		//case 11:
+		//Poutsub = value; // Subtract
+			0, 1, // Boolean
+		//case 12:
+		//awesome_mode = value; // Intense
+			0, 1,
+
+		};
+		int ChorusPrint[] = {
+			-64, 63, // 0
+			-64, 63, // 1
+			1, 600, // 2
+			0, 127, // 3
+			0, 9, // 4
+			0, 127, // 5
+			0, 127, // 6
+			0, 127, // 7
+			0, 127, // 8
+			-64, 63, // 9
+			0, 1, // 10
+			0, 1, // 11
+			0, 1, // 12
+		};
+
+		presetTexts.clear();
+		presetTexts.push_back("Chorus1");
+		presetTexts.push_back("Chorus2");
+		presetTexts.push_back("Chorus3");
+		presetTexts.push_back("Celeste1");
+		presetTexts.push_back("Celeste2");
+		presetTexts.push_back("Flange1");
+		presetTexts.push_back("Flange2");
+		presetTexts.push_back("Flange3");
+		presetTexts.push_back("Flange4");
+		presetTexts.push_back("Flange5");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffFlange, "Flange", whereis, chorus_presets, CHORUS_PRESET_SIZE, CHORUS_NUM_PRESETS, presetTexts);
 
 		mPanels[whereis]->AddParamData(PanelNS::Data(0, 0, 127, -64, 63, "Wet/Dry", PanelNS::Slider));
 		mPanels[whereis]->AddParamData(PanelNS::Data(1, 0, 127, -64, 63, "Pan", PanelNS::Slider));
@@ -1688,6 +1830,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			mPanels[whereis]->SetPreset(0);
 	}
 		break;
+		
 	default:
 		break;
 	}
