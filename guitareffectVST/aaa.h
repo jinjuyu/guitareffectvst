@@ -1,6 +1,9 @@
 /*
 compressor, gate, expander는 changepar나 getpar가 n+1 즉 1부터 시작한다.
 
+파라메터 위에서 오른쪽 버튼을 누르면 왼쪽위에 탭드리스트가 떠서 Map To... 탭드리스트에 파라메터를 클릭하면
+매핑이 되도록 나중에 한다.
+
 
 SetPAramater에서 값을 읽어서 슬라이더등에 SetVal을 한다.
 // 팝업을 띄우는데, 리스트이므로 리스트를 띄운다.
@@ -2457,4 +2460,91 @@ rkr->efx_MusDelay->changepar(9,(int)o->value());}
         }
       }
 
+	   Fl_Group GATE {
+        user_data 1
+        xywh {162 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button gate_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Gate_Bypass);
+ return;
+}
+rkr->Gate_Bypass=(int)o->value();
+findpos(16,(int)o->value(),o);}
+          xywh {167 215 34 18} shortcut 0x32 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice gate_preset {
+          label Preset
+          user_data 12016
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12016))rkr->efx_Gate->Gate_Change_Preset((int) o->value());
+gate_ATime->value(rkr->efx_Gate->getpar(3));
+gate_RTime->value(rkr->efx_Gate->getpar(4));
+gate_range->value(rkr->efx_Gate->getpar(2));
+gate_threshold->value(rkr->efx_Gate->getpar(1));
+gate_hold->value(rkr->efx_Gate->getpar(7));
+gate_HPF->value(rkr->efx_Gate->getpar(6));
+gate_LPF->value(rkr->efx_Gate->getpar(5));}
+          xywh {239 215 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label 0dB
+            xywh {42 42 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {-10dB}
+            xywh {42 42 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {-20dB}
+            xywh {42 42 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider gate_ATime {
+          label {A. Time}
+          callback {rkr->efx_Gate->Gate_Change(3,(int)o->value());}
+          xywh {213 250 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 250 step 1 value 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider gate_RTime {
+          label {R. Time}
+          callback {rkr->efx_Gate->Gate_Change(4, (int) o->value());}
+          xywh {212 272 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 2 maximum 250 step 1 value 120 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider gate_range {
+          label Range
+          callback {rkr->efx_Gate->Gate_Change(2, (int) o->value());}
+          xywh {212 294 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -90 maximum 0 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider gate_threshold {
+          label Thrhold
+          callback {rkr->efx_Gate->Gate_Change(1, (int)o->value());}
+          xywh {212 316 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -70 maximum 20 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider gate_hold {
+          label Hold
+          callback {rkr->efx_Gate->Gate_Change(7,(int)o->value());}
+          xywh {212 338 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 2 maximum 500 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider gate_LPF {
+          label LPF
+          callback {rkr->efx_Gate->Gate_Change(5, (int)o->value());}
+          xywh {212 357 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 26000 step 1 value 20000 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider gate_HPF {
+          label HPF
+          callback {rkr->efx_Gate->Gate_Change(6, (int)o->value());}
+          xywh {212 373 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 20000 step 1 value 20 textcolor 7
+          class SliderW
+        }
+      }
 	  */

@@ -109,7 +109,7 @@ void Panel::SetPreset(int preset)
 }
 void Panel::DrawText()
 {
-	int x,y,w=180,h=250;
+	int x,y,w=180,h=300;
 	if(mWhereis < 5)
 	{
 		x = 180*mWhereis;
@@ -118,7 +118,7 @@ void Panel::DrawText()
 	else
 	{
 		x = 180*(mWhereis-5);
-		y = 150+250+35;
+		y = 150+300+35;
 	}
 	TextOption op2(x,y-35+3,180,10, 0,0,0,255);
 	mGUI->Print2(op2, mEffName.c_str());
@@ -163,7 +163,7 @@ Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int wh
 	mY = 0;
 
 
-	int x,y,w=180,h=250;
+	int x,y,w=180,h=300;
 	if(mWhereis < 5)
 	{
 		x = 180*mWhereis;
@@ -172,7 +172,7 @@ Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int wh
 	else
 	{
 		x = 180*(mWhereis-5);
-		y = 150+250+35;
+		y = 150+300+35;
 	}
 
 	cbPresetSelect = new PresetCallback(this);
@@ -211,7 +211,7 @@ void Panel::AddParamData(Data &data, bool unused)
 	mData.push_back(data);
 	if(unused) return;
 
-	int x,y,w=180,h=250;
+	int x,y,w=180,h=300;
 	if(mWhereis < 5)
 	{
 		x = 180*mWhereis;
@@ -220,7 +220,7 @@ void Panel::AddParamData(Data &data, bool unused)
 	else
 	{
 		x = 180*(mWhereis-5);
-		y = 150+250+35;
+		y = 150+300+35;
 	}
 
 	if(data.type == Slider)

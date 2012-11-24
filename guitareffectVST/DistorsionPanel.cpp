@@ -158,7 +158,7 @@ void DistorsionPanel::LoadPreset(int preset)
 }
 void DistorsionPanel::DrawText()
 {
-	int x,y,w=180,h=250;
+	int x,y,w=180,h=300;
 	if(mWhereis < 5)
 	{
 		x = 180*mWhereis;
@@ -167,7 +167,7 @@ void DistorsionPanel::DrawText()
 	else
 	{
 		x = 180*(mWhereis-5);
-		y = 150+250+35;
+		y = 150+h+35;
 	}
 	TextOption op2(x,y-35+3,180,10, 0,0,0,255);
 	mGUI->Print2(op2, "Distortion");
@@ -264,7 +264,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	real = DistortionReal;
 
 	print = DistortionPrint;
-	int x,y,w=180,h=250;
+	int x,y,w=180,h=300;
 	if(whereis < 5)
 	{
 		x = 180*whereis;
@@ -273,7 +273,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	else
 	{
 		x = 180*(whereis-5);
-		y = 150+250+35;
+		y = 150+300+35;
 	}
 	int i=0;
 	//mGUI->Print(TextOption(x+45,y-20,60, 20, 0,0,0,255), "Preset:");

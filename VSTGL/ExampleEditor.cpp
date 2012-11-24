@@ -279,7 +279,7 @@ Timer(30), //30ms == ~30fps?
 thing(0.0f)
 {
 	//Set the opengl context's size - This must be called here!
-	setRect(0, 0, 900, 650);
+	setRect(0, 0, 900, 750);
 
 	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
@@ -372,7 +372,7 @@ thing(0.0f)
 	for(int i=5;i<10;++i)
 	{
 		mCBOnOffs.push_back(new MyEffectOnOff(this, i));
-		int b = mGUI->NewOnOffButton((i-5)*180, 13+150+250, 50, 20, "On", mCBOnOffs[i]);
+		int b = mGUI->NewOnOffButton((i-5)*180, 13+150+300, 50, 20, "On", mCBOnOffs[i]);
 		mOnOffButtons[i] = b;
 	}
 
@@ -468,12 +468,12 @@ void ExampleEditor::draw()
 	*/
 	for(int i=0;i<5;++i)
 	{
-		QuadOptionBorder opEff(i*180,650-250-250,180,250,  255, 128, 64,255, 128,64,32,255);
+		QuadOptionBorder opEff(i*180,750-300-300,180,300,  255, 128, 64,255, 128,64,32,255);
 		mGUI->DrawQuadBorder(opEff);
 	}
 	for(int i=0;i<5;++i)
 	{
-		QuadOptionBorder opEff(i*180,650-250,180,250,  255, 128, 64,255, 128,64,32,255);
+		QuadOptionBorder opEff(i*180,750-300,180,300,  255, 128, 64,255, 128,64,32,255);
 		mGUI->DrawQuadBorder(opEff);
 	}
 

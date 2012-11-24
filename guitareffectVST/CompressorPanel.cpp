@@ -28,7 +28,7 @@ int CompressorReal[] = { // Print는 따로 없다.
 
 void CompressorPanel::DrawText()
 {
-	int x,y,w=180,h=250;
+	int x,y,w=180,h=300;
 	if(mWhereis < 5)
 	{
 		x = 180*mWhereis;
@@ -37,7 +37,7 @@ void CompressorPanel::DrawText()
 	else
 	{
 		x = 180*(mWhereis-5);
-		y = 150+250+35;
+		y = 150+h+35;
 	}
 	TextOption op2(x,y-35+3,180,10, 0,0,0,255);
 	mGUI->Print2(op2, "Compressor");
@@ -208,7 +208,7 @@ CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis)
     mPresetStrs.push_back("8:1");
 	mPresets = presets;
 
-	int x,y,w=180,h=250;
+	int x,y,w=180,h=300;
 	if(whereis < 5)
 	{
 		x = 180*whereis;
@@ -217,7 +217,7 @@ CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	else
 	{
 		x = 180*(whereis-5);
-		y = 150+250+35;
+		y = 150+300+35;
 	}
 
 	cbPresetSelect = new PresetCallback(this);
