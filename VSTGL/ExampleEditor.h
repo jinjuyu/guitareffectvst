@@ -853,6 +853,8 @@ enum EffNameType
 	EffPhaser,
 	EffReverb,
 	EffParametricEQ,
+	EffParametricEQ2,
+	EffParametricEQ3,
 	EffWahWah,
 	EffAlienWah,
 	EffPan,

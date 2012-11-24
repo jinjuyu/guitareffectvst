@@ -114,6 +114,8 @@ vendorName("Jinju")
 	mEffEchotron = new Echotron(mParam, nullptr, nullptr);
 	mEffEQ1 = new EQ(mParam, nullptr, nullptr);
 	mEffEQ2 = new EQ(mParam, nullptr, nullptr);
+	mEffEQ3 = new EQ(mParam, nullptr, nullptr);
+	mEffEQ4 = new EQ(mParam, nullptr, nullptr);
 	mEffExciter = new Exciter(mParam, nullptr, nullptr);
 	mEffExpander = new Expander(mParam, nullptr, nullptr);
 	mEffGate = new Gate(mParam, nullptr, nullptr);
@@ -227,6 +229,20 @@ vendorName("Jinju")
         mEffEQ2->changepar (i + 10, 7);
         mEffEQ2->changepar (i + 13, 64); // q
         mEffEQ2->changepar (i + 14, 0);
+
+    }
+    for (int i = 0; i <= 10; i += 5) {
+		mEffEQ4->changepar (i + 12, 64); // gain
+        mEffEQ4->changepar (i + 10, 7);
+        mEffEQ4->changepar (i + 13, 64); // q
+        mEffEQ4->changepar (i + 14, 0);
+
+    }
+    for (int i = 0; i <= 10; i += 5) {
+		mEffEQ3->changepar (i + 12, 64); // gain
+        mEffEQ3->changepar (i + 10, 7);
+        mEffEQ3->changepar (i + 13, 64); // q
+        mEffEQ3->changepar (i + 14, 0);
 
     }
 
@@ -346,6 +362,8 @@ VstPlugin::~VstPlugin()
 	delete mEffValve;
 	delete mEffVibe;
 	delete mEffWahWah;
+	delete mEffEQ4;
+	delete mEffEQ3;
 	delete mParam;
 	int i;
 
@@ -592,6 +610,12 @@ void VstPlugin::processReplacing(float **inputs,
 				break;
 			case EffParametricEQ:
 				eff = mEffEQ2;
+				break;
+			case EffParametricEQ2:
+				eff = mEffEQ3;
+				break;
+			case EffParametricEQ3:
+				eff = mEffEQ4;
 				break;
 			case EffWahWah:
 				eff = mEffWahWah;
@@ -1227,6 +1251,42 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 				save.params[i].params[9] = mEffEQ2->getpar(10+13);
 			}
 			break;
+		case EffParametricEQ2:
+			{
+				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
+				save.params[i].params[0] = mEffEQ3->getpar(0);
+				
+				save.params[i].params[1] = mEffEQ3->getpar(11);
+				save.params[i].params[2] = mEffEQ3->getpar(12);
+				save.params[i].params[3] = mEffEQ3->getpar(13);
+
+				save.params[i].params[4] = mEffEQ3->getpar(5+11);
+				save.params[i].params[5] = mEffEQ3->getpar(5+12);
+				save.params[i].params[6] = mEffEQ3->getpar(5+13);
+
+				save.params[i].params[7] = mEffEQ3->getpar(10+11);
+				save.params[i].params[8] = mEffEQ3->getpar(10+12);
+				save.params[i].params[9] = mEffEQ3->getpar(10+13);
+			}
+			break;
+		case EffParametricEQ3:
+			{
+				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
+				save.params[i].params[0] = mEffEQ4->getpar(0);
+				
+				save.params[i].params[1] = mEffEQ4->getpar(11);
+				save.params[i].params[2] = mEffEQ4->getpar(12);
+				save.params[i].params[3] = mEffEQ4->getpar(13);
+
+				save.params[i].params[4] = mEffEQ4->getpar(5+11);
+				save.params[i].params[5] = mEffEQ4->getpar(5+12);
+				save.params[i].params[6] = mEffEQ4->getpar(5+13);
+
+				save.params[i].params[7] = mEffEQ4->getpar(10+11);
+				save.params[i].params[8] = mEffEQ4->getpar(10+12);
+				save.params[i].params[9] = mEffEQ4->getpar(10+13);
+			}
+			break;
 		case EffEcho:
 			{
 				save.params[i].presetIdx = mEditor->mEchoPanel->mPrevPreset;
@@ -1344,6 +1404,40 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 				mEffEQ2->changepar(10+11, save.params[i].params[7]);
 				mEffEQ2->changepar(10+12, save.params[i].params[8]);
 				mEffEQ2->changepar(10+13, save.params[i].params[9]);
+			}
+			break;
+		case EffParametricEQ2:
+			{
+				mEffEQ3->changepar(0, save.params[i].params[0]);
+				
+				mEffEQ3->changepar(11, save.params[i].params[1]);
+				mEffEQ3->changepar(12, save.params[i].params[2]);
+				mEffEQ3->changepar(13, save.params[i].params[3]);
+
+				mEffEQ3->changepar(5+11, save.params[i].params[4]);
+				mEffEQ3->changepar(5+12, save.params[i].params[5]);
+				mEffEQ3->changepar(5+13, save.params[i].params[6]);
+
+				mEffEQ3->changepar(10+11, save.params[i].params[7]);
+				mEffEQ3->changepar(10+12, save.params[i].params[8]);
+				mEffEQ3->changepar(10+13, save.params[i].params[9]);
+			}
+			break;
+		case EffParametricEQ3:
+			{
+				mEffEQ4->changepar(0, save.params[i].params[0]);
+				
+				mEffEQ4->changepar(11, save.params[i].params[1]);
+				mEffEQ4->changepar(12, save.params[i].params[2]);
+				mEffEQ4->changepar(13, save.params[i].params[3]);
+
+				mEffEQ4->changepar(5+11, save.params[i].params[4]);
+				mEffEQ4->changepar(5+12, save.params[i].params[5]);
+				mEffEQ4->changepar(5+13, save.params[i].params[6]);
+
+				mEffEQ4->changepar(10+11, save.params[i].params[7]);
+				mEffEQ4->changepar(10+12, save.params[i].params[8]);
+				mEffEQ4->changepar(10+13, save.params[i].params[9]);
 			}
 			break;
 		case EffEcho:

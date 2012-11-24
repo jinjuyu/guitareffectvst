@@ -107,6 +107,8 @@ public:
 	Echotron *mEffEchotron;
 	EQ *mEffEQ1;
 	EQ *mEffEQ2;
+	EQ *mEffEQ3;
+	EQ *mEffEQ4;
 	Exciter *mEffExciter;
 	Expander *mEffExpander;
 	Gate *mEffGate;

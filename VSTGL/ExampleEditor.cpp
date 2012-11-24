@@ -303,6 +303,8 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffPhaser, "Phaser"));
 	mEffectNames.push_back(EffectName(EffReverb, "Reverb"));
 	mEffectNames.push_back(EffectName(EffParametricEQ, "Parametric EQ"));
+	mEffectNames.push_back(EffectName(EffParametricEQ2, "Parametric EQ2"));
+	mEffectNames.push_back(EffectName(EffParametricEQ3, "Parametric EQ3"));
 	mEffectNames.push_back(EffectName(EffWahWah, "WahWah"));
 	mEffectNames.push_back(EffectName(EffAlienWah, "AlienWah"));
 	mEffectNames.push_back(EffectName(EffPan, "Pan"));
@@ -1413,6 +1415,8 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	}
 		break;
 	case EffParametricEQ:
+	case EffParametricEQ2:
+	case EffParametricEQ3:
 	{
 		int PEQPreset[] = {
 			127, 30,64,64, 900,64,64, 7000,64,64
