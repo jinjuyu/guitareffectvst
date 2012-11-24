@@ -169,11 +169,11 @@ Gate::Gate_Change_Preset (int npreset)
     const int PRESET_SIZE = 7;
     const int NUM_PRESETS = 3;
     int presets[NUM_PRESETS][PRESET_SIZE] = {
-        //0
+        //0dB
         {0, 0, 1, 2, 6703, 76, 2},
-        //-10
+        //-10dB
         {0, -10, 1, 2, 6703, 76, 2},
-        //-20
+        //-20dB
         {0, -20, 1, 2, 6703, 76, 2}
     };
 

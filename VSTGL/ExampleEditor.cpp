@@ -309,6 +309,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffDistortion, "Distortion"));
 	mEffectNames.push_back(EffectName(EffHarmonizer, "Harmonizer"));
 	mEffectNames.push_back(EffectName(EffMusicDelay, "Musical Delay"));
+	mEffectNames.push_back(EffectName(EffGate, "Noise Gate"));
 	
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
@@ -2095,6 +2096,94 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb2", PanelNS::Slider));
 		iii=6;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Damp", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+	}
+	break;
+	case EffGate:
+	{
+		const int PRESET_SIZE = 7;
+		const int NUM_PRESETS = 3;
+		int presets[] = {
+			//0dB
+			0, 0, 1, 2, 6703, 76, 2,
+			//-10dB
+			0, -10, 1, 2, 6703, 76, 2,
+			//-20dB
+			0, -20, 1, 2, 6703, 76, 2
+		};
+
+
+		int GateReal[] = {
+			//case 1:
+			-70,20,
+				//Pthreshold = value;
+				//t_level = dB2rap ((float)Pthreshold);
+				//break;
+			//case 2:
+			-90,0,
+				//Prange = value;
+				//cut = dB2rap ((float)Prange);
+				//break;
+			//case 3:
+			1,250,
+				//Pattack = value;
+				//a_rate = 1000.0f / ((float)Pattack * fs);
+				//break;
+			//case 4:
+			2,250,
+				//Pdecay = value;
+				//d_rate = 1000.0f / ((float)Pdecay * fs);
+				//break;
+			//case 5:
+			47,171,
+				//setlpf(value);
+				//break;
+			//case 6:
+			47,166,
+				//sethpf(value);
+				//break;
+			//case 7:
+			2,500,
+				//Phold = value;
+				//hold = (float)Phold;
+				//break;
+
+
+		};
+		int GatePrint[] = {
+			-70,20,
+			-90,0,
+			1,250,
+			2,250,
+			0,100,
+			0,100,
+			2,500,
+		};
+		real = GateReal;
+		print = GatePrint;
+		presetTexts.clear();
+		presetTexts.push_back("0dB");
+		presetTexts.push_back("-10dB");
+		presetTexts.push_back("-20dB");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Noise Gate", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Range", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Thrshld", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Hold", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
 		if(loadPrev)
 			mPanels[whereis]->LoadPreset(prevIdx);
 		else
