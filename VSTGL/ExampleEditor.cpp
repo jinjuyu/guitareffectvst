@@ -54,7 +54,7 @@ void GLGUI::init()
 	string a(buffer);
 	int pos = a.find_last_of('\\');
 	string filename = a.substr(0, pos);
-	filename += "\\images\\font.png";
+	filename += "\\guitareffectVST\\images\\font.png";
 
 	success = ilLoadImage((const ILstring)filename.c_str()); /* Loading of image "image.jpg" */
 	if (success) /* If no error occured: */
@@ -293,7 +293,7 @@ thing(0.0f)
 	moveUpButton = mGUI->NewButton(x+240+180+15, 75-25/2-40, 60, 25, "MoveUp", moveUpCB);
 	moveDnButton = mGUI->NewButton(x+240+180+15, 75-25/2, 60, 25, "MoveDown", moveDnCB);
 	beingUsedEffectsList = mGUI->NewList(x+240, 0, 180, 150, &myListCB);
-	unusedEffectsList = mGUI->NewTList(x-150, 0, 330, 150, &myTLCB);
+	unusedEffectsList = mGUI->NewTList(x-100, 0, 330-50, 150, &myTLCB);
 	char temp[123];
 	mEffectNames.push_back(EffectName(EffLinealEQ, "Lineal EQ"));
 	mEffectNames.push_back(EffectName(EffCompressor,"Compressor"));
@@ -655,7 +655,7 @@ int GLGUI::NewOnOffButton(int x, int y, int w, int h, string label, OnOffButtonC
 GLGUI::GLGUI(void *hInstance):m_hInstance(hInstance)
 {
 	handleCounter = 0;
-	mPopupList = new TabbedListBox(GetNewHandle(), this, 0, 0, 200, 150);
+	mPopupList = new TabbedListBox(GetNewHandle(), this, 0, 0, 300, 150);
 	mPopupList->hidden = true;
 }
 //------

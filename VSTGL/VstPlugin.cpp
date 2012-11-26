@@ -95,7 +95,7 @@ vendorName("Jinju")
 	string a(buffer);
 	int pos = a.find_last_of('\\');
 	string b = a.substr(0, pos);
-	b += "\\data";
+	b += "\\guitareffectVST\\data";
 	strcpy(DATADIR, b.c_str());
 
 	// RAKARRACK effects
@@ -1206,7 +1206,13 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 {///< Host stores plug-in state. Returns the size in bytes of the chunk (plug-in allocates the data array)
 	// 여기에 플러그인의 상태를 저장한다.
 	// 그런 후에 마우스 우측버튼으로 파라메터 오토메이션이 가능하도록 16개의 파라메터를 매핑 가능하게 하면
-	// 완전 앰플리튜브...
+	// 완전 앰플리튜브...ㅜㅜ
+	// 음. Convolotron의 컨벌루션wav파일을 Selection으로 해서 이름으로 선택하게 하고 전에 ndrive에 올린
+	// wav파일을 이름으로 해서 넣어둔다.
+	// 파일이 많으므로 Contolotron에서 메뉴를 3개 두고 나눠서 200여개의 IR파일을 모두 제공한다.
+	// 이 메뉴는 panel을 수정해서 따로 작은 1,2,3이라고 쓰인 버튼을 두고
+	// 아랫줄에 텍스트로 파일이름의 일부를 넘지않고 잘리게 표시한다.
+
 	//if(isPreset)
 		//return 0;
 	//MessageBox(NULL, "2", "asd2", MB_OK);
