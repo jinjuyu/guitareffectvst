@@ -1978,7 +1978,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 				//setdelay (1, value);
 				//break;
 			//case 3:
-			0,6,
+			0,7,
 				/*
 				1
 				1/2
@@ -2041,7 +2041,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			-64, 63, // 0
 			-64, 63, // 1
 			0, 5, // 2
-			0, 6, // 3
+			0, 7, // 3
 			-64, 63, // 4
 			0, 127, // 5
 			0, 127, // 6
