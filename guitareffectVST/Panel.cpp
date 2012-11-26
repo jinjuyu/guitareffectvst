@@ -285,13 +285,19 @@ PanelListCallback::PanelListCallback(Panel *a, int dataIdx)
 }
 void PanelListCallback::OnSelect(int idx)
 {
-	if(idx != -1)
+	if(idx != -1 && idx <= mPanel->mData[mDataIdx].valRealMax)
 	{
 		mPanel->mGUI->mPopupList->hidden = true;
 		mPanel->mGUI->mPopupList->Clear();
 		mPanel->mEffect->changepar(mPanel->mData[mDataIdx].parIdx, idx);
 		Button *but = (Button *)mPanel->mGUI->GetElement(mPanel->mData[mDataIdx].handle);
 		but->mLabel = mPanel->mTypeStrs[mPanel->mData[mDataIdx].typeStrsIdx][idx];
+	}
+	else
+	{
+		char temp[123];
+		sprintf(temp, "%d %d %d", idx, mDataIdx, mPanel->mData[mDataIdx].parIdx);
+		MessageBox(NULL, temp, temp, MB_OK);
 	}
 }
 void PanelListCallback::OnPageSelect(int idx)
