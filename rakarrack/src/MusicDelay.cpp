@@ -291,7 +291,6 @@ MusicDelay::setpanning (int num, int Ppanning)
 void
 MusicDelay::setdelay (int num, int Pdelay)
 {
-	Pdelay += 1;
     float ntem = 60.0f / (float) Ptempo;
     float coef;
     switch (num) {
@@ -304,6 +303,7 @@ MusicDelay::setdelay (int num, int Pdelay)
     case 3:
         this->Plrdelay = Pdelay;
     }
+	Pdelay += 1;
 
     delay1 = lrintf ((ntem / (float)Pdelay1) * fSAMPLE_RATE);
 
