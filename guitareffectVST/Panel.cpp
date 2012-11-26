@@ -12,13 +12,15 @@ void Panel::LoadPreset(int prevPresetIdx)
 			but->mLabel = mPresetStrs[prevPresetIdx];
 	::Slider *slider;
 	OnOffButton *onoff;
+	if(mDoICallSetPreset) mEffect->setpreset(preset);
+
 	for(int i=0; i<mData.size();++i)
 	{
 		int par = 0;
 		if(mUsePresetIdx)
 			par = mEffect->getpar(mData[i].preIdx);
 		else
-			par = mEffect->getpar(i);
+			par = mEffect->getpar(mData[i].parIdx);
 		if(mData[i].type == Slider && mUsePresetIdx)
 		{
 			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
@@ -55,6 +57,8 @@ void Panel::LoadPreset(int prevPresetIdx)
 			mCBLists[mData[i].cbListIdx]->OnSelect(par);
 		}
 	}
+
+
 }
 void Panel::SetPreset(int preset)
 {

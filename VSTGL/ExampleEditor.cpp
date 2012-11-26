@@ -1839,9 +1839,9 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		break;
 	case EffHarmonizer:
 	{
-		const int PRESET_SIZE = 11;
-		const int NUM_PRESETS = 3;
-		int presets[] = {
+		const int harm_PRESET_SIZE = 11;
+		const int harm_NUM_PRESETS = 3;
+		int harm_presets[] = {
 			//Plain
 			64, 64, 64, 12, 6000, 0, 0, 0, 64, 64, 0,
 			//Octavador
@@ -1915,7 +1915,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("Plain");
 		presetTexts.push_back("Octavador");
 		presetTexts.push_back("3mdown");
-		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffHarmonizer, "Harmonizer", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffHarmonizer, "Harmonizer", whereis, harm_presets, harm_PRESET_SIZE, harm_NUM_PRESETS, presetTexts);
 		iii=0;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
 		iii=3;
@@ -1947,13 +1947,13 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	break;
 	case EffMusicDelay:
 	{
-		const int PRESET_SIZE = 13;
-		const int NUM_PRESETS = 2;
-		int presets[] = {
+		const int mdel_PRESET_SIZE = 13;
+		const int mdel_NUM_PRESETS = 2;
+		int mdel_presets[] = {
         //Echo 1
         64, 0, 2-1, 7-1, 0, 59, 0, 127, 4-1, 59, 106, 75, 75,
         //Echo 2
-        67, 0, 3-1, 7-1, 0, 59, 0, 127, 6-1, 69, 60, 127, 127
+        67, 0, 3-1, 7-1, 0, 59, 0, 127, 6-1, 69, 60, 127, 127,
 
 		};
 		int MusicDelayReal[] = {
@@ -2057,7 +2057,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.clear();
 		presetTexts.push_back("Echo 1");
 		presetTexts.push_back("Echo 2");
-		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffMusicDelay, "Musical Delay", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffMusicDelay, "Musical Delay", whereis, mdel_presets, mdel_PRESET_SIZE, mdel_NUM_PRESETS, presetTexts);
 		iii=0;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
 		iii=4;
@@ -2108,9 +2108,9 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	break;
 	case EffGate:
 	{
-		const int PRESET_SIZE = 7;
-		const int NUM_PRESETS = 3;
-		int presets[] = {
+		const int gate_PRESET_SIZE = 7;
+		const int gate_NUM_PRESETS = 3;
+		int gate_presets[] = {
 			//0dB
 			0, 0, 1, 2, 6703, 76, 2,
 			//-10dB
@@ -2172,7 +2172,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("0dB");
 		presetTexts.push_back("-10dB");
 		presetTexts.push_back("-20dB");
-		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Noise Gate", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Noise Gate", whereis, gate_presets, gate_PRESET_SIZE, gate_NUM_PRESETS, presetTexts);
 		iii=2;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
 		iii=3;
