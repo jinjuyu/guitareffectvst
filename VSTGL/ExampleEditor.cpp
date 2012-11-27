@@ -2328,7 +2328,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("Derelict 1");
 		presetTexts.push_back("Derelict 2");
 		presetTexts.push_back("Derelict 3");
-		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Derelict", whereis, der_presets, der_PRESET_SIZE, der_NUM_PRESETS, presetTexts);
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffNewDist, "Derelict", whereis, der_presets, der_PRESET_SIZE, der_NUM_PRESETS, presetTexts);
 		iii=0;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
 		iii=2;
