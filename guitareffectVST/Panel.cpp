@@ -301,7 +301,7 @@ void PanelListCallback::OnSelect(int idx)
 	{
 		char temp[123];
 		sprintf(temp, "%d %d %d", idx, mDataIdx, mPanel->mData[mDataIdx].parIdx);
-		MessageBox(NULL, temp, temp, MB_OK);
+		//MessageBox(NULL, temp, temp, MB_OK);
 	}
 }
 void PanelListCallback::OnPageSelect(int idx)
