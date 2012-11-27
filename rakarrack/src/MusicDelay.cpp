@@ -375,12 +375,12 @@ MusicDelay::settempo (int Ptempo)
     float ntem = 60.0f / (float) Ptempo;
 
 
-    delay1 = lrintf ((ntem / (float)Pdelay1) * fSAMPLE_RATE);
-    if (Plrdelay != 0)
-        coef = ntem / (float)Plrdelay;
+    delay1 = lrintf ((ntem / (float)(Pdelay1+1)) * fSAMPLE_RATE);
+    if ((Plrdelay+1) != 7)
+        coef = ntem / (float)(Plrdelay+1);
     else
         coef = 0;
-    delay2 = lrintf ((coef + (ntem / (float)Pdelay2)) * fSAMPLE_RATE);
+    delay2 = lrintf ((coef + (ntem / (float)(Pdelay2+1))) * fSAMPLE_RATE);
 
     initdelays ();
 
