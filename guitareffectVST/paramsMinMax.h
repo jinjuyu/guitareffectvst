@@ -98,10 +98,10 @@ public:
 			//Phaser6
 			64, 20, 1, 10, 1, 64, 110, 40, 12, 10, 0, 70, 1
 		};
-		int APhaserReal[] = {
+		int APhaserReal[] = {1
 
 		};
-		int APhaserPrint[] = {
+		int APhaserPrint[] = {1
 		};
 
 	}
