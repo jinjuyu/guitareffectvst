@@ -312,7 +312,9 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffHarmonizer, "Harmonizer"));
 	mEffectNames.push_back(EffectName(EffMusicDelay, "Musical Delay"));
 	mEffectNames.push_back(EffectName(EffGate, "Noise Gate"));
-	
+	mEffectNames.push_back(EffectName(EffNewDist, "Derelict"));
+	// MBDist distband
+	// MVVvol VaryBand
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
 	mEffectOn.resize(10);
@@ -2192,6 +2194,200 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			mPanels[whereis]->LoadPreset(prevIdx);
 		else
 			mPanels[whereis]->SetPreset(0);
+	}
+	break;
+	case EffNewDist:
+	{
+		const int der_PRESET_SIZE = 11;
+		const int der_NUM_PRESETS = 3;
+		int der_presets[] = {
+			//NewDist 1
+			0, 64, 64, 83, 65, 15, 0, 2437, 169, 68, 0,
+			//NewDist 2
+			0, 64, 64, 95, 45, 6, 0, 3459, 209, 60, 1,
+			//NewDist 3
+			0, 64, 64, 43, 77, 16, 0, 2983, 118, 83, 0
+		};
+		int DerelictReal[] = {
+			//switch (npar) {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			0,127,
+				//setlrcross (value);
+				//break;
+			//case 3:
+			1,127,
+				//Pdrive = value;
+				//break;
+			//case 4:
+			0,127,
+				//Plevel = value;
+				//break;
+			//case 5:
+			0,29,
+			/*
+	mTypeStrs.push_back("Atan");
+	mTypeStrs.push_back("Asym");
+	mTypeStrs.push_back("Pow");
+	mTypeStrs.push_back("Sine");
+	mTypeStrs.push_back("Quant");
+	mTypeStrs.push_back("ZigZag");
+	mTypeStrs.push_back("Lim");
+	mTypeStrs.push_back("UpLim");
+	mTypeStrs.push_back("LoLim");
+	mTypeStrs.push_back("InvLim");
+
+	mTypeStrs.push_back("Clip");
+	mTypeStrs.push_back("Asym2");
+	mTypeStrs.push_back("Pow2");
+	mTypeStrs.push_back("Sigmoid");
+	mTypeStrs.push_back("Crunch");
+	mTypeStrs.push_back("HardCr");
+	mTypeStrs.push_back("OctvUp");
+	mTypeStrs.push_back("MSquare");
+	mTypeStrs.push_back("MSaw");
+	mTypeStrs.push_back("Compres");
+
+	mTypeStrs.push_back("Overdrv");
+	mTypeStrs.push_back("Soft");
+	mTypeStrs.push_back("SupSoft");
+	mTypeStrs.push_back("HardCmp");
+	mTypeStrs.push_back("LmtNoG");
+	mTypeStrs.push_back("FET");
+	mTypeStrs.push_back("DynoFET");
+	mTypeStrs.push_back("Valve1");
+	mTypeStrs.push_back("Valve2");
+	mTypeStrs.push_back("DiodeClp");
+
+			*/
+				//Ptype = value;
+				//break;
+			//case 6:
+			0,1,
+				//if (value > 1)
+					//value = 1;
+				//Pnegate = value;
+				//break;
+			//case 7:
+			47,171, // 20~26000, 이 값을 GetFreqByRealMinMax로 변환하면 주파수가 나온다.
+				//setlpf (value);
+				//break;
+			//case 8:
+			47,166, // 20~20000
+				//sethpf (value);
+				//break;
+			//case 9:
+			0,127,
+				//Prfreq = value;
+				//rfreq = expf (powf ((float)value / 127.0f, 0.5f) * logf (25000.0f)) + 40.0f;
+				//filterl->setfreq(rfreq);
+				//filterr->setfreq(rfreq);
+
+				//break;
+			//case 10:
+			0,1,
+				//Pprefiltering = value;
+				//break;
+			//case 11:
+			0,127,
+				//setoctave (value);
+				//break;
+
+
+
+		};
+		int DerelictPrint[] = {
+			-64,63,
+			-64,63,
+			-64,63,
+			1,127,
+			0,127,
+			0,29,
+			0,1,
+			0,100,
+			0,100,
+			0,127,
+			0,1,
+			0,127,
+
+		};
+
+		real = DerelictReal;
+		print = DerelictPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Derelict 1");
+		presetTexts.push_back("Derelict 2");
+		presetTexts.push_back("Derelict 3");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Derelict", whereis, der_presets, der_PRESET_SIZE, der_NUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Drive", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		vector<string> mTypeStrs;
+		mTypeStrs.push_back("Atan");
+		mTypeStrs.push_back("Asym");
+		mTypeStrs.push_back("Pow");
+		mTypeStrs.push_back("Sine");
+		mTypeStrs.push_back("Quant");
+		mTypeStrs.push_back("ZigZag");
+		mTypeStrs.push_back("Lim");
+		mTypeStrs.push_back("UpLim");
+		mTypeStrs.push_back("LoLim");
+		mTypeStrs.push_back("InvLim");
+
+		mTypeStrs.push_back("Clip");
+		mTypeStrs.push_back("Asym2");
+		mTypeStrs.push_back("Pow2");
+		mTypeStrs.push_back("Sigmoid");
+		mTypeStrs.push_back("Crunch");
+		mTypeStrs.push_back("HardCr");
+		mTypeStrs.push_back("OctvUp");
+		mTypeStrs.push_back("MSquare");
+		mTypeStrs.push_back("MSaw");
+		mTypeStrs.push_back("Compres");
+
+		mTypeStrs.push_back("Overdrv");
+		mTypeStrs.push_back("Soft");
+		mTypeStrs.push_back("SupSoft");
+		mTypeStrs.push_back("HardCmp");
+		mTypeStrs.push_back("LmtNoG");
+		mTypeStrs.push_back("FET");
+		mTypeStrs.push_back("DynoFET");
+		mTypeStrs.push_back("Valve1");
+		mTypeStrs.push_back("Valve2");
+		mTypeStrs.push_back("DiodeClp");
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Type", PanelNS::Selection, false, false, mTypeStrs));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Neg", PanelNS::OnOff));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Prefilter", PanelNS::OnOff, false, true));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Color", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Sub Octv", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
 	}
 	break;
 	default:
