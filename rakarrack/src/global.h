@@ -55,6 +55,10 @@ class Parameters
 public:
 	int PERIOD;
 	float fPERIOD;
+	float r__ratio[20];
+	int reconota;
+	int last;
+	float rtrig;
 };
 	
 __inline long int 
@@ -316,7 +320,7 @@ extern int exitwithhelp, nojack;
 extern int maxx_len;
 extern int error_num;
 //extern int param->PERIOD;
-extern int reconota;
+//extern int reconota;
 extern int needtoloadstate;
 extern int needtoloadbank;
 extern int stecla;
@@ -331,7 +335,7 @@ extern float val_sum;
 extern unsigned int SAMPLE_RATE;
 extern float fSAMPLE_RATE;
 extern float cSAMPLE_RATE;
-extern float r__ratio[12];
+//extern float r__ratio[12];
 extern char DATADIR[260];
 extern int Wave_res_amount;
 extern int Wave_up_q;
@@ -872,6 +876,7 @@ struct list_element {
     struct list_element *forward;
     struct list_element *backward;
     char *name;
+
 };
 
 

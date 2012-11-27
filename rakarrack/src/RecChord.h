@@ -30,7 +30,8 @@ class RecChord
 {
 
 public:
-    RecChord ();
+    RecChord (Parameters *param);
+	Parameters *mParam;
     ~RecChord ();
     void MiraChord ();
     void IniciaChords ();

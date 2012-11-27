@@ -54,7 +54,7 @@ int Wave_up_q = 4;
 int Wave_down_q = 2;
 int pdata[50];
 float val_sum;
-float r__ratio[12];
+//float r__ratio[12];
 float freqs[12];
 float lfreqs[12];
 float aFreq = 440.0;
@@ -71,6 +71,7 @@ char DATADIR[260];
 
 RKR::RKR (Parameters *param)
 {
+	
 	/*
     db6booster=0;
     jdis=0;
@@ -1506,7 +1507,7 @@ RKR::Alg (float *inl1, float *inr1, float *origl, float *origr, void *)
 /*        if (MIDIConverter_Bypass)
             efx_MIDIConverter->schmittFloat (param->PERIOD, efxoutl, efxoutr);
 			*/
-
+		/*
         if ((Harmonizer_Bypass) && (have_signal)) {
             if (efx_Har->mira) {
                 if ((efx_Har->PMIDI) || (efx_Har->PSELECT)) {
@@ -1553,7 +1554,7 @@ RKR::Alg (float *inl1, float *inr1, float *origl, float *origr, void *)
 
         if(ponlast) last=reconota;
 
-
+		*/
 
         for (i = 0; i < 10; i++) {
             switch (efx_order[i]) {

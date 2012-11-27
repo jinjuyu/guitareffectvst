@@ -24,7 +24,7 @@ public:
     ~Recognize ();
 	Parameters *param;
 
-    void schmittFloat (float *indatal, float *indatar);
+    void schmittFloat (float *inputl, float *inputr, float *outl, float *outr, int sampleFrames);
     void sethpf(int value);
     void setlpf(int value);
     int note;

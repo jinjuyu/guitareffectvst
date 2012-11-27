@@ -134,8 +134,8 @@ StereoHarm::out (float *smpsl, float *smpsr)
     }
 
     if ((PMIDI) || (PSELECT)) {
-        PSl->ratio = r__ratio[1];
-        PSr->ratio = r__ratio[2];
+        PSl->ratio = param->r__ratio[1];
+        PSr->ratio = param->r__ratio[2];
     }
 
     if (PSl->ratio != 1.0f) {
@@ -210,8 +210,8 @@ StereoHarm::processReplacing (float **inputs,
     }
 
     if ((PMIDI) || (PSELECT)) {
-        PSl->ratio = r__ratio[1];
-        PSr->ratio = r__ratio[2];
+        PSl->ratio = param->r__ratio[1];
+        PSr->ratio = param->r__ratio[2];
     }
 
     if (PSl->ratio != 1.0f) {

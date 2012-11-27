@@ -159,20 +159,24 @@ Recognize::sethpf (int value)
 
 
 void
-Recognize::schmittFloat (float *indatal, float *indatar)
+Recognize::schmittFloat (float *inputl, float *inputr, float *outl, float *outr, int sampleFrames)
 {
     int i;
     signed short int *buf= new signed short int [param->PERIOD];
+	for(int i=0;i<sampleFrames;++i)
+	{
+		outl[i] = inputl[i];
+		outr[i] = inputr[i];
+	}
+    lpfl->filterout (outl);
+    hpfl->filterout (outl);
+    lpfr->filterout (outr);
+    hpfr->filterout (outr);
 
-    lpfl->filterout (indatal);
-    hpfl->filterout (indatal);
-    lpfr->filterout (indatar);
-    hpfr->filterout (indatar);
-
-    Sus->out(indatal,indatar);
+    Sus->out(outl,outr);
 
     for (i = 0; i < param->PERIOD; i++) {
-        buf[i] = (short) ((indatal[i]+indatar[i]) * 32768);
+        buf[i] = (short) ((outl[i]+outr[i]) * 32768);
     }
     schmittS16LE (buf);
 	delete[] buf;
@@ -233,7 +237,7 @@ Recognize::displayFrequency (float freq)
         offset = lrintf(nfreq / 20.0);
         if (fabsf(lafreq-freq)>offset) {
             lafreq = nfreq;
-            reconota = 24 + (octave * 12) + note - 3;
+            param->reconota = 24 + (octave * 12) + note - 3;
 
 //    printf("%f\n",lafreq);
         }

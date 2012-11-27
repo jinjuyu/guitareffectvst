@@ -114,7 +114,7 @@ Harmonizer::out (float *smpsl, float *smpsr)
     }
 
     if ((PMIDI) || (PSELECT))
-        PS->ratio = r__ratio[0];
+        PS->ratio = param->r__ratio[0];
 
     if (Pinterval != 12) {
         PS->smbPitchShift (PS->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outi, outo);
@@ -148,6 +148,7 @@ Harmonizer::processReplacing (float **inputs,
 	param->fPERIOD = param->PERIOD;
 	adjust(DS_state);
 
+
 	float *tempinputsl = (float*)malloc(sizeof(float)*(nPERIOD+100));
 	float *tempinputsr = (float*)malloc(sizeof(float)*(nPERIOD+100)); // + 100 for possible memory leak
 
@@ -168,7 +169,7 @@ Harmonizer::processReplacing (float **inputs,
     }
 
     if ((PMIDI) || (PSELECT))
-        PS->ratio = r__ratio[0];
+        PS->ratio = param->r__ratio[0];
 
     if (Pinterval != 12) {
         PS->smbPitchShift (PS->ratio, nPERIOD, window, hq, nfSAMPLE_RATE, outi, outo);

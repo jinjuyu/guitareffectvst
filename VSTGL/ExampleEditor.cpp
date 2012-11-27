@@ -707,6 +707,7 @@ MoveDnCallback::MoveDnCallback(ExampleEditor *editor)
 void MoveDnCallback::OnClick()
 {
 	ListBox *list = (ListBox*)(mEditor->mGUI->GetElement(mEditor->beingUsedEffectsList));
+	if(list->selected == -1) return;
 	int prevIdx = list->selected;
 	int newIdx = list->selected+1;
 	if(newIdx < 10)
@@ -839,7 +840,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	case EffChorus:
 	{
 		const int CHORUS_PRESET_SIZE = 12;
-		const int CHORUS_NUM_PRESETS = 5;
+		const int CHORUS_NUM_PRESETS = 10;
 		int chorus_presets[] = {
 			//Chorus1
 			64, 64, 33, 0, 0, 90, 40, 85, 64, 119, 0, 0,
@@ -851,6 +852,17 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			64, 64, 1, 0, 0, 42, 115, 18, 90, 127, 0, 0,
 			//Celeste2
 			64, 64, 7, 117, 0, 50, 115, 9, 31, 127, 0, 1,
+			//Flange1
+			64, 64, 39, 0, 0, 60, 23, 3, 62, 0, 0, 0,
+			//Flange2
+			64, 64, 9, 34, 1, 40, 35, 3, 109, 0, 0, 0,
+			//Flange3
+			64, 64, 31, 34, 1, 94, 35, 3, 54, 0, 0, 1,
+			//Flange4
+			64, 64, 14, 0, 1, 62, 12, 19, 97, 0, 0, 0,
+			//Flange5
+			64, 64, 34, 105, 0, 24, 39, 19, 17, 0, 0, 1
+
 		};
 	
 
@@ -929,6 +941,11 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("Chorus3");
 		presetTexts.push_back("Celeste1");
 		presetTexts.push_back("Celeste2");
+		presetTexts.push_back("Flange1");
+		presetTexts.push_back("Flange2");
+		presetTexts.push_back("Flange3");
+		presetTexts.push_back("Flange4");
+		presetTexts.push_back("Flange5");
 		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffChorus, "Chorus", whereis, chorus_presets, CHORUS_PRESET_SIZE, CHORUS_NUM_PRESETS, presetTexts);
 
 		mPanels[whereis]->AddParamData(PanelNS::Data(0, 0, 127, -64, 63, "Wet/Dry", PanelNS::Slider));
@@ -964,9 +981,19 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		break;
 	case EffFlange:
 	{
-		const int CHORUS_PRESET_SIZE = 12;
-		const int CHORUS_NUM_PRESETS = 5;
-		int chorus_presets[] = {
+		const int FCHORUS_PRESET_SIZE = 12;
+		const int FCHORUS_NUM_PRESETS = 10;
+		int fchorus_presets[] = {
+			//Chorus1
+			64, 64, 33, 0, 0, 90, 40, 85, 64, 119, 1, 0,
+			//Chorus2
+			64, 64, 17, 0, 0, 98, 56, 90, 64, 16, 1, 0,
+			//Chorus3
+			64, 64, 7, 0, 1, 42, 97, 95, 90, 127, 1, 0,
+			//Celeste1
+			64, 64, 1, 0, 0, 42, 115, 18, 90, 127, 1, 0,
+			//Celeste2
+			64, 64, 7, 117, 0, 50, 115, 9, 31, 127, 1, 1,
 			//Flange1
 			64, 64, 39, 0, 0, 60, 23, 3, 62, 0, 1, 0,
 			//Flange2
@@ -977,10 +1004,11 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			64, 64, 14, 0, 1, 62, 12, 19, 97, 0, 1, 0,
 			//Flange5
 			64, 64, 34, 105, 0, 24, 39, 19, 17, 0, 1, 1
+
 		};
 	
 
-		int ChorusReal[] = { // Chorus/Flange! 두개를 하나로 합쳐쓴다.? 아니다. 코러스랑 플랜지를 중복해야한다.
+		int FChorusReal[] = { // Chorus/Flange! 두개를 하나로 합쳐쓴다.? 아니다. 코러스랑 플랜지를 중복해야한다.
 		//case 0:
 		//setvolume (value); Wet Dry
 			0, 127,
@@ -1033,7 +1061,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			0, 1,
 
 		};
-		int ChorusPrint[] = {
+		int FChorusPrint[] = {
 			-64, 63, // 0
 			-64, 63, // 1
 			1, 600, // 2
@@ -1050,12 +1078,17 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		};
 
 		presetTexts.clear();
+		presetTexts.push_back("Chorus1");
+		presetTexts.push_back("Chorus2");
+		presetTexts.push_back("Chorus3");
+		presetTexts.push_back("Celeste1");
+		presetTexts.push_back("Celeste2");
 		presetTexts.push_back("Flange1");
 		presetTexts.push_back("Flange2");
 		presetTexts.push_back("Flange3");
 		presetTexts.push_back("Flange4");
 		presetTexts.push_back("Flange5");
-		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffFlange, "Flange", whereis, chorus_presets, CHORUS_PRESET_SIZE, CHORUS_NUM_PRESETS, presetTexts);
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffFlange, "Flange", whereis, fchorus_presets, FCHORUS_PRESET_SIZE, FCHORUS_NUM_PRESETS, presetTexts);
 
 		mPanels[whereis]->AddParamData(PanelNS::Data(0, 0, 127, -64, 63, "Wet/Dry", PanelNS::Slider));
 		mPanels[whereis]->AddParamData(PanelNS::Data(1, 0, 127, -64, 63, "Pan", PanelNS::Slider));

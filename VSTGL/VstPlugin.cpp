@@ -84,7 +84,6 @@ vendorName("Jinju")
 	cSAMPLE_RATE = 1.0f / samplerate;
 	aFreq = 440.0;
 	update_freqs(aFreq);
-	reconota = -1;
 	error_num = 0;
 	Wave_res_amount = 2;
 	Wave_up_q = 4;
@@ -105,8 +104,8 @@ vendorName("Jinju")
 	mEffAlienwah = new Alienwah(mParam, nullptr, nullptr);
 	mEffAPhaser = new Analog_Phaser(mParam, nullptr, nullptr);
 	mEffArpie = new Arpie(mParam, nullptr, nullptr);
-	mEffChorus = new Chorus(mParam, nullptr, nullptr);
 	mEffFlange = new Chorus(mParam, nullptr, nullptr);
+	mEffChorus = new Chorus(mParam, nullptr, nullptr);
 	mEffCoil = new CoilCrafter(mParam, nullptr, nullptr);
 	mEffCompBand = new CompBand(mParam, nullptr, nullptr);
 	mEffCompressor = new Compressor(mParam, nullptr, nullptr);
@@ -147,6 +146,9 @@ vendorName("Jinju")
 	mEffLimiter->Compressor_Change_Preset(0,3);
 	mEffWahWah = new DynamicFilter(mParam, nullptr, nullptr);
 	mEffWahWah->setpreset(0);
+	mParam->rtrig = .6f;
+	RecNote = new Recognize(mParam, nullptr, nullptr, mParam->rtrig);
+	RC = new RecChord(mParam);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -328,6 +330,7 @@ VstPlugin::~VstPlugin()
 	delete mEffAPhaser;
 	delete mEffArpie;
 	delete mEffChorus;
+	delete mEffFlange;
 	delete mEffCoil;
 	delete mEffCompressor;
 	delete mEffDualFlange;
@@ -579,6 +582,16 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
 	}
 	*/
+
+    int reco=0;
+    int ponlast=0;
+
+
+
+
+
+
+
 	if(mEditor->mTotalEffectOn)
 	{
 		Effect *eff = nullptr;
@@ -631,6 +644,7 @@ void VstPlugin::processReplacing(float **inputs,
 				break;
 			case EffFlange:
 				eff = mEffFlange;
+				break;
 			case EffGate:
                 eff = mEffGate;
                 break;
@@ -663,6 +677,20 @@ void VstPlugin::processReplacing(float **inputs,
                 break;
 			case EffHarmonizer:
                 eff = mEffHarmonizer;
+
+				if (mEffHarmonizer->mira) {
+					if ((mEffHarmonizer->PMIDI) || (mEffHarmonizer->PSELECT)) {
+						RecNote->schmittFloat (inputs[0], inputs[1], outputs[0], outputs[1], sampleFrames);
+						reco=1;
+						if ((mParam->reconota != -1) && (mParam->reconota != mParam->last)) {
+							if(RecNote->afreq > 0.0) {
+								RC->Vamos (0,mEffHarmonizer->Pinterval - 12);
+								ponlast = 1;
+							}
+						}
+					}
+				}
+
                 break;
 			case EffInfinity:
                 eff = mEffInfinity;
@@ -690,6 +718,16 @@ void VstPlugin::processReplacing(float **inputs,
                 break;
 			case EffRing:
                 eff = mEffRing;
+				if((mEffRing->Pafreq)) {
+					if(!reco) RecNote->schmittFloat (inputs[0], inputs[1], outputs[0], outputs[1], sampleFrames);
+					reco=1;
+					if ((mParam->reconota != -1) && (mParam->reconota != mParam->last)) {
+						if(RecNote->afreq > 0.0) {
+							mEffRing->Pfreq=lrintf(RecNote->lafreq);
+							ponlast = 1;
+						}
+					}
+				}
                 break;
 			case EffRyanWah:
                 eff = mEffRyanWah;
@@ -708,6 +746,20 @@ void VstPlugin::processReplacing(float **inputs,
                 break;
 			case EffStereoHarm:
                 eff = mEffStereoHarm;
+				if (mEffStereoHarm->mira) {
+					if ((mEffStereoHarm->PMIDI) || (mEffStereoHarm->PSELECT)) {
+						if(!reco) RecNote->schmittFloat (inputs[0], inputs[1], outputs[0], outputs[1], sampleFrames);
+						reco=1;
+						if ((mParam->reconota != -1) && (mParam->reconota != mParam->last)) {
+							if(RecNote->afreq > 0.0) {
+								RC->Vamos (1,mEffStereoHarm->Pintervall - 12);
+								RC->Vamos (2,mEffStereoHarm->Pintervalr - 12);
+								ponlast = 1;
+							}
+						}
+					}
+				}
+
                 break;
 			case EffStompBox:
                 eff = mEffStompBox;
@@ -1330,6 +1382,7 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 		case EffAlienWah:
 		case EffPan:
 		case EffChorus:
+		case EffFlange:
 		case EffPhaser:
 		case EffReverb:
 		default:

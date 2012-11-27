@@ -25,7 +25,9 @@
 #include "RecChord.h"
 
 
-RecChord::RecChord ()
+RecChord::RecChord (Parameters *param)
+	:mParam(param)
+
 {
 
     memset (Ch, 0, sizeof (Ch));
@@ -689,7 +691,7 @@ RecChord::Vamos (int voz, int interval)
     int harmo;
     int typo;
 
-    nota = reconota % 12;
+    nota = mParam->reconota % 12;
 
     nota -= fundi;
     if (nota < 0)
@@ -790,7 +792,7 @@ RecChord::Vamos (int voz, int interval)
 
 
 
-    r__ratio[voz] = powf (2, ((float)ninterval / 12.0f));
+    mParam->r__ratio[voz] = powf (2, ((float)ninterval / 12.0f));
 
 }
 

@@ -68,6 +68,8 @@
 #include "Valve.h"
 #include "Vibe.h"
 #include "DynamicFilter.h"
+#include "RecChord.h"
+#include "RecognizeNote.h"
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -138,6 +140,9 @@ public:
 	Vibe *mEffVibe;
 	Compressor *mEffLimiter;
 	DynamicFilter *mEffWahWah;
+	Recognize *RecNote;
+	RecChord *RC;
+	
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples
