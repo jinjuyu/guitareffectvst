@@ -12,8 +12,6 @@ mEffContolotron->filename을 수정해 주면 되고
 현재 이펙트가 mEffect == mEffConvolotron일 경우 거기에 추가하고 뭐 이런식으로
 하면 된다.
 SaveData에다가 convolotronFileName, reverbtronFileName등을 추가해 준다.
-디폴트 폴더는 Convolotron일 경우 data/IR안에를 디폴트 폴더로 열어서 파일 브라우져가 나오게 한다.
-다른 tron시리즈는 data폴더를 디폴트로 열어준다.
 
 
 compressor, gate, expander는 changepar나 getpar가 n+1 즉 1부터 시작한다.

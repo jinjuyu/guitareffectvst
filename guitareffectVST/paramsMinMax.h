@@ -82,27 +82,7 @@ public:
 			0, 1, // 12
 		};
 		
-		const int aphaser_PRESET_SIZE = 13;
-		const int aphaser_NUM_PRESETS = 6;
-		int aphaser_presets[] = {
-			//Phaser1
-			64, 20, 14, 0, 1, 64, 110, 40, 4, 10, 0, 64, 1,
-			//Phaser2
-			64, 20, 14, 5, 1, 64, 110, 40, 6, 10, 0, 70, 1,
-			//Phaser3
-			64, 20, 9, 0, 0, 64, 40, 40, 8, 10, 0, 60, 0,
-			//Phaser4
-			64, 20, 14, 10, 0, 64, 110, 80, 7, 10, 1, 45, 1,
-			//Phaser5
-			25, 20, 240, 10, 0, 64, 25, 16, 8, 100, 0, 25, 0,
-			//Phaser6
-			64, 20, 1, 10, 1, 64, 110, 40, 12, 10, 0, 70, 1
-		};
-		int APhaserReal[] = {1
 
-		};
-		int APhaserPrint[] = {1
-		};
 
 	}
 };

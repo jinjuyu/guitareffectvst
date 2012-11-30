@@ -44,7 +44,8 @@ enum DataType
 {
 	Slider,
 	OnOff,
-	Selection
+	Selection,
+	Browser,
 };
 class Data
 {

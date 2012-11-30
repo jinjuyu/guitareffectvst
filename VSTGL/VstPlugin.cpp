@@ -82,7 +82,7 @@ vendorName("Jinju")
 	SAMPLE_RATE = samplerate;
 	fSAMPLE_RATE = samplerate;
 	cSAMPLE_RATE = 1.0f / samplerate;
-	aFreq = 440.0;
+	aFreq = 880.0;
 	update_freqs(aFreq);
 	error_num = 0;
 	Wave_res_amount = 2;
@@ -429,6 +429,8 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = inputs[0][i];
 		outputs[1][i] = inputs[1][i];
 	}
+	mParam->PERIOD = sampleFrames;
+	mParam->fPERIOD = sampleFrames;
 	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
 	//mEffConvolotron->processReplacing(outputs, outputs, sampleFrames);
 	//mEffAlienwah->processReplacing(outputs, outputs, sampleFrames);
