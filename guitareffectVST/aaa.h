@@ -2737,5 +2737,180 @@ rkr->efx_NewDist->changepar(8,(int)o->value());}
           class SliderW
         }
       }
+      Fl_Group APHASER {
+        user_data 1
+        xywh {480 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button aphaser_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->APhaser_Bypass);
+ return;
+}
+rkr->APhaser_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_APhaser->cleanup();
+findpos(18,(int)o->value(),o);}
+          xywh {485 215 34 18} shortcut 0x37 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice aphaser_preset {
+          label Preset
+          user_data 12018
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12018))rkr->efx_APhaser->setpreset((int) o->value());
+aphaser_WD->value(rkr->efx_APhaser->getpar(0)-64);
+aphaser_pan->value(rkr->efx_APhaser->getpar(1));
+aphaser_freq->value(rkr->efx_APhaser->getpar(2));
+aphaser_lfotype->value(rkr->efx_APhaser->getpar(4));
+aphaser_stdf->value(rkr->efx_APhaser->getpar(5));
+aphaser_dpth->value(rkr->efx_APhaser->getpar(6));
+aphaser_stages->value(rkr->efx_APhaser->getpar(8));
+aphaser_fb->value(rkr->efx_APhaser->getpar(7)-64);
+aphaser_LR->value(rkr->efx_APhaser->getpar(9));
+aphaser_subs->value(rkr->efx_APhaser->getpar(10));
+aphaser_phase->value(rkr->efx_APhaser->getpar(11));
+aphaser_hyper->value(rkr->efx_APhaser->getpar(12));}
+          xywh {557 215 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label {Phaser 1}
+            xywh {72 72 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Phaser 2}
+            xywh {72 72 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Phaser 3}
+            xywh {72 72 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Phaser 4}
+            xywh {82 82 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Phaser 5}
+            xywh {92 92 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Phaser 6}
+            xywh {102 102 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider aphaser_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(117);
+ return;
+} 
+rkr->efx_APhaser->changepar(0,(int)(o->value()+64));}
+          xywh {529 238 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Choice aphaser_lfotype {
+          label {LFO Type}
+          callback {rkr->efx_APhaser->changepar(4,(int)o->value());} open
+          xywh {555 252 72 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
+          code0 {o->menu(menu_chorus_lfotype);}
+        } {}
+        Fl_Value_Slider aphaser_freq {
+          label Tempo
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(119);
+ return;
+} 
+rkr->efx_APhaser->changepar(2,(int)o->value());}
+          xywh {528 273 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 600 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider aphaser_dpth {
+          label Width
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(121);
+ return;
+} 
+rkr->efx_APhaser->changepar(6,(int)o->value());}
+          xywh {528 297 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider aphaser_phase {
+          label Depth
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(120);
+ return;
+} 
+rkr->efx_APhaser->changepar(11,(int)o->value());}
+          xywh {529 285 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider aphaser_fb {
+          label Fb
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(122);
+ return;
+} 
+rkr->efx_APhaser->changepar(7,(int)(o->value()+64));}
+          xywh {528 309 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider aphaser_LR {
+          label Mismatch
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(123);
+ return;
+} 
+rkr->efx_APhaser->changepar(9,(int)o->value());}
+          xywh {528 322 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 7 labelcolor 7 align 4 maximum 100 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider aphaser_pan {
+          label Distort
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(118);
+ return;
+} 
+rkr->efx_APhaser->changepar(1,(int)o->value());}
+          xywh {528 333 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 100 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider aphaser_stdf {
+          label {St.df}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(124);
+ return;
+} 
+rkr->efx_APhaser->changepar(5,(int)o->value());}
+          xywh {529 345 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Counter aphaser_stages {
+          label Stages
+          callback {rkr->efx_APhaser->changepar(8,(int)o->value());}
+          xywh {560 362 52 12} type Simple box THIN_UP_BOX labelsize 10 labelcolor 7 align 4 minimum 1 maximum 12 step 1 value 1 textsize 9
+        }
+        Fl_Check_Button aphaser_subs {
+          label Subtract
+          user_data 2
+          callback {rkr->efx_APhaser->changepar(10,(int)o->value())}
+          xywh {490 376 64 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+        Fl_Check_Button aphaser_hyper {
+          label Hyper
+          user_data 2
+          callback {rkr->efx_APhaser->changepar(12,(int)o->value())}
+          xywh {555 376 53 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+      }
 
 	  */

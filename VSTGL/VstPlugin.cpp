@@ -780,6 +780,7 @@ void VstPlugin::processReplacing(float **inputs,
                 break;
 
 			}
+			if(ponlast) mParam->last=mParam->reconota;
 			if(!eff)
 			{
 				char temp[123];
