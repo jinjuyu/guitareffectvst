@@ -720,7 +720,7 @@ void VstPlugin::processReplacing(float **inputs,
                 break;
 			case EffRing:
                 eff = mEffRing;
-				if((mEffRing->Pafreq)) {
+				if((mEffRing->Pafreq)) { 
 					if(!reco) RecNote->schmittFloat (inputs[0], inputs[1], outputs[0], outputs[1], sampleFrames);
 					reco=1;
 					if ((mParam->reconota != -1) && (mParam->reconota != mParam->last)) {
