@@ -2926,7 +2926,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 				//idepth = 1.0f - depth;
 				//break;
 			//case 5:
-			0,166,
+			-6,166,
 				//if(value > 20000) {	//Make sure bad inputs can't cause buffer overflow
 					//Pfreq = 20000;
 				//} else if (value < 1) {
@@ -3035,6 +3035,117 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 
 	}
 	break;
+	case EffExciter:
+	{
+		const int exciPRESET_SIZE = 13;
+		const int exciNUM_PRESETS = 5;
+		int excipresets[] = {
+			//Plain
+			64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20000, 20,
+			//Loudness
+			64, 0, 0, 0, 0, 24, 0, -24, 0, 24, 0, 80, 20,
+			//Exciter 1
+			64, 64, 0, 0, 0, 64, 0, 0, 0, 64, 0, 20000, 20,
+			//Exciter 2
+			64, 0, 0, 0, -32, 0, -32, -64, 0, 48, 0, 14100, 5660,
+			//Exciter 3
+			64, 64, 0, -64, 0, 64, 0, -64, 0, 64, 0, 20000, 20
+
+		};
+		int ExciterReal[] = {
+			//switch (npar) {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			-64,64,
+				//sethar(0,value);
+				//break;
+			//case 2:
+			-64,64,
+				//sethar(1,value);
+				//break;
+			//case 3:
+			-64,64,
+				//sethar(2,value);
+				//break;
+			//case 4:
+			-64,64,
+				//sethar(3,value);
+				//break;
+			//case 5:
+			-64,64,
+				//sethar(4,value);
+				//break;
+			//case 6:
+			-64,64,
+				//sethar(5,value);
+				//break;
+			//case 7:
+			-64,64,
+				//sethar(6,value);
+				//break;
+			//case 8:
+			-64,64,
+				//sethar(7,value);
+				//break;
+			//case 9:
+			-64,64,
+				//sethar(8,value);
+				//break;
+			//case 10:
+			-64,64,
+				//sethar(9,value);
+				//break;
+			//case 11:
+			47,171, // 20~26000, 이 값을 GetFreqByRealMinMax로 변환하면 주파수가 나온다.
+				//setlpf(value);
+				//break;
+			//case 12:
+			47,166, // 20~20000
+				//sethpf(value);
+				//break;
+
+		//
+
+		};
+		int ExciterPrint[] = {
+			0,127,
+			-64,64,
+			-64,64, // 2
+			-64,64,
+			-64,64, // 4
+			-64,64,
+			-64,64, // 6
+			-64,64,
+			-64,64, // 8
+			-64,64,
+			-64,64, // 10
+			0,100,
+			0,100, // 12
+		};
+		real = ExciterReal;
+		print = ExciterPrint;
+		presetTexts.clear();
+			Plain
+			Loudness
+			Exciter 1
+			Exciter 2
+			Exciter 3
+		presetTexts.push_back("Saw-Sin");
+		presetTexts.push_back("E string");
+		presetTexts.push_back("A string");
+		presetTexts.push_back("dissonance");
+		presetTexts.push_back("Fast Beat");
+		presetTexts.push_back("Ring Amp");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffRing, "Ring", whereis, ringpresets, ringPRESET_SIZE, ringNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+
+	}
+	break;
+
 	default:
 		break;
 	}
