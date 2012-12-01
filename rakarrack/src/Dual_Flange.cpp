@@ -379,6 +379,7 @@ Dflange::processReplacing (float **inputs,
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = param->PERIOD;
 	period_const = 1.0/param->fPERIOD;
+	lfo.update();
 
     float lfol, lfor, lmod, rmod, lmodfreq, rmodfreq, rx0, rx1, lx0, lx1;
     float ldif0, ldif1, rdif0, rdif1;  //Difference between fractional delay and floor(fractional delay)

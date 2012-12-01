@@ -314,6 +314,8 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffGate, "Noise Gate"));
 	mEffectNames.push_back(EffectName(EffNewDist, "Derelict"));
 	mEffectNames.push_back(EffectName(EffAnalogPhaser, "Analog Phaser"));
+	mEffectNames.push_back(EffectName(EffValve, "Valve"));
+	mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange"));
 	// MBDist distband
 	// MVVvol VaryBand
 	mPanels.resize(10);
@@ -2542,6 +2544,336 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Subtract", PanelNS::OnOff));
 		iii=12;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Hyper", PanelNS::OnOff, false, true));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+	}
+	break;
+	case EffValve:
+	{
+		const int valvePRESET_SIZE = 13;
+		const int valveNUM_PRESETS = 3;
+		int valvepresets[] = {
+			//Valve 1
+			0, 64, 64, 127, 64, 0, 5841, 61, 1, 0, 69, 1, 84,
+			//Valve 2
+			0, 64, 64, 127, 64, 0, 5078, 61, 1, 0, 112, 0, 30,
+			//Valve 3
+			0, 64, 35, 80, 64, 1, 3134, 358, 1, 1, 100, 1, 30
+
+		};
+
+		int ValveReal[] = {
+		   //switch (npar) {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			0,127,
+				//setlrcross (value);
+				//break;
+			//case 3:
+			0,127,
+				//Pdrive = value;
+				//dist = (float) Pdrive / 127.0f * 40.0f + .5f;
+				//break;
+			//case 4:
+			0,127,
+				//Plevel = value;
+				//break;
+			//case 5:
+			0,1,
+				//if (value > 1)
+					//value = 1;
+				//Pnegate = value;
+				//break;
+			//case 6:
+			47,171,
+				//setlpf (value);
+				//break;
+			//case 7:
+			47,166,
+				//sethpf (value);
+				//break;
+			//case 8:
+			0,1,
+				//if (value > 1)
+					//value = 1;
+				//Pstereo = value;
+				//break;
+			//case 9:
+			0,1,
+				//Pprefiltering = value;
+				//break;
+			//case 10:
+			0,127,
+				//Q_q = value;
+				//q = (float)Q_q /127.0f - 1.0f;
+				//factor = 1.0f - ((float)Q_q / 128.0f);
+				//break;
+			//case 11:
+			0,1,
+				//Ped = value;
+				//break;
+			//case 12:
+			0,100,
+				//Presence=value;
+				//setpresence(value);
+				//break;
+
+				//init_coefs();
+
+
+		};
+		int ValvePrint[] = {
+			-64,63, // 0
+			-64,63,
+			-64,63, // 2
+			0,127,
+			0,127, // 4
+			0,1,
+			0,100, // 6
+			0,100,
+			0,1, // 8
+			0,1, 
+			0,127, // 10
+			0,1,
+			0,100,
+		};
+		real = ValveReal;
+		print = ValvePrint;
+		presetTexts.clear();
+		presetTexts.push_back("Valve 1");
+		presetTexts.push_back("Valve 2");
+		presetTexts.push_back("Valve 3");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffValve, "Valve", whereis, valvepresets, valvePRESET_SIZE, valveNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Panning", PanelNS::Slider));
+
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Drive", PanelNS::Slider));
+
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Dist.", PanelNS::Slider));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Presence", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true));
+
+
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "ExtraDist", PanelNS::OnOff));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Prefilter", PanelNS::OnOff, false, true));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Stereo", PanelNS::OnOff));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Neg", PanelNS::OnOff, false, true));
+
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+	}
+	break;
+	case EffDualFlange:
+	{
+		const int dflangePRESET_SIZE = 15;
+		const int dflangeNUM_PRESETS = 7;
+		int dflangepresets[] = {
+			//Preset 1
+			-32, 0, 0, 110, 800, 10, -27, 16000, 1, 0, 24, 64, 1, 10, 0,
+			//Flange-Wha
+			0, 0, 64, 500, 3000, 50, -40, 8000, 1, 0, 196, 96, 0, 0, 0,
+			//FbFlange
+			0, 0, 64, 68, 75, 50, -50, 8000, 0, 1, 23, 96, 5, 0, 0,
+			//SoftFlange
+			-32, 0, 64, 60, 10, 100, 20, 16000, 0, 0, 16, 90, 4, 0, 0,
+			//Flanger
+			-32, 0, 64, 170, 1200, 50, 0, 16000, 1, 0, 68, 127, 0, 0, 0,
+			//Chorus 1
+			-15, 0, 0, 42, 12, 50, -10, 1500, 0, 0, 120, 0, 0, 20, 0,
+			//Chorus 2
+			-40, 0, 0, 35, 9, 67, 12, 4700, 1, 1, 160, 75, 0, 60, 0,
+		};
+		int DFlangeReal[] = {
+			//switch (npar) {
+			//case 0:
+			-64,64,
+				//Pwetdry = value;
+				//break;
+			//case 1:
+			-64,64,
+				//Ppanning = value;
+			//case 2:
+			-64,64,
+				//Plrcross = value;
+			//case 3:
+			20,500,
+				//Pdepth = value;
+			//case 4:
+			0,3000,
+				//Pwidth = value;
+			//case 5:
+			0,100,
+				//Poffset = value;
+				//foffset = 0.5f + (float) Poffset/255.0;
+				//break;
+			//case 6:
+			-64,64,
+				//Pfb = value;
+				//ffb = (float) Pfb/64.5f;
+				//break;
+			//case 7:
+			47,166,
+				//Phidamp = value;
+				//fhidamp = f_exp(-D_PI * (float) Phidamp/fSAMPLE_RATE);
+				//break;
+			//case 8:
+			0,1,
+				//Psubtract = value;
+				//fsubtract = 0.5f;
+				//if(Psubtract) {
+					//fsubtract = -0.5f;  //In loop a mult by 0.5f is necessary, so this kills 2 birds with 1...
+					//ldelayline0->set_mix(-dry);
+					//rdelayline0->set_mix(-dry);
+					//ldelayline1->set_mix(-dry);
+					//rdelayline1->set_mix(-dry);
+				//}
+				//break;
+			//case 9:
+			0,1,
+				//Pzero = value;
+				//if (Pzero) fzero = 1.0f;
+				//break;
+			//case 10:
+		    1, 600,
+
+				//lfo.Pfreq = value;
+				//lfo.updateparams ();
+				//break;
+			//case 11:
+			0, 127,
+
+				//lfo.Pstereo = value;
+				//lfo.updateparams ();
+				//break;
+			//case 12:
+			0, 9,  // type value
+			/*
+            Sine
+            Tri
+            RampUp
+            RampDown
+            ZigZag
+            M.Sqare
+            M.Saw
+			L. Fractal
+            L. Fractal XY
+            S/H Random*/
+
+				//lfo.PLFOtype = value;
+				//lfo.updateparams ();
+				//break;
+			//case 13:
+			0, 127,
+
+				//lfo.Prandomness = value;
+				//lfo.updateparams ();
+				//break;
+			//case 14:
+			0,1,
+				//Pintense = value;
+				//break;
+
+
+		};
+		int DFlangePrint[] = {
+			-64,64,
+			-64,64,
+			-64,64,
+			20,500,
+			0,3000, // 4
+			0,100,
+			-64,64,
+			0,100, // 7
+			0,1, // 8
+			0,1, // 9
+			1,600, // 10
+			0,127, // 11
+			0,9, // 12
+			0,127, // 13
+			0,1, // 14
+		};
+		real = DFlangeReal;
+		print = DFlangePrint;
+		presetTexts.clear();
+		presetTexts.push_back("Preset 1");
+		presetTexts.push_back("Flange-Wha");
+		presetTexts.push_back("FbFlange");
+		presetTexts.push_back("SoftFlange");
+		presetTexts.push_back("Flanger");
+		presetTexts.push_back("Chorus 1");
+		presetTexts.push_back("Chorus 2");
+
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffDualFlange, "Dual Flange", whereis, dflangepresets, dflangePRESET_SIZE, dflangeNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Panning", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Width", PanelNS::Slider));
+
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Offset", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true));
+
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Subtract", PanelNS::OnOff));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Th.Zero", PanelNS::OnOff, false, true));
+
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+		lfoTypeStrs.clear();
+		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Tri");
+		lfoTypeStrs.push_back("RampUp");
+		lfoTypeStrs.push_back("RampDn");
+		lfoTypeStrs.push_back("ZigZag");
+		lfoTypeStrs.push_back("M.Sqare");
+		lfoTypeStrs.push_back("M.Saw");
+		lfoTypeStrs.push_back("L.Fract");
+		lfoTypeStrs.push_back("L.FractXY");
+		lfoTypeStrs.push_back("S/H Rnd");
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+		iii=13;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rnd", PanelNS::Slider));
 		if(loadPrev)
 			mPanels[whereis]->LoadPreset(prevIdx);
 		else
