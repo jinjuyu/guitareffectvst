@@ -316,6 +316,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffAnalogPhaser, "Analog Phaser"));
 	mEffectNames.push_back(EffectName(EffValve, "Valve"));
 	mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange"));
+	mEffectNames.push_back(EffectName(EffRing, "Ring"));
 	// MBDist distband
 	// MVVvol VaryBand
 	mPanels.resize(10);
@@ -2874,6 +2875,159 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
 		iii=13;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rnd", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+	}
+	break;
+	case EffRing:
+	{
+		const int ringPRESET_SIZE = 13;
+		const int ringNUM_PRESETS = 6;
+		int ringpresets[] = {
+			//Saw-Sin
+			-64, 0, -64, 64, 35, 1, 0, 20, 0, 40, 0, 64, 1,
+			//E string
+			0, 0, 0, 64, 100, 82, 0, 100, 0, 0, 0, 64, 0,
+			//A string
+			0, 0, 0, 64, 100, 110, 0, 0, 100, 50, 0, 64, 0,
+			//dissonance
+			0, 0, 0, 64, 100, 817, 0, 20, 0, 100, 0, 64, 1,
+			//Fast Beat
+			0, 0, 0, 64, 100, 15, 0, 20, 0, 100, 0, 64, 1,
+			//Ring Amp
+			0, 0, 0, 64, 100, 1, 0, 20, 0, 100, 0, 64, 0,
+		};
+		
+		int RingReal[] = {
+			//case 0:
+			-64,64,
+				//Pvolume = value;
+				//outvolume = (float)(64+value)/128.0f;
+				//break;
+			//case 1:
+			-64,64,
+				//setpanning (value);
+				//break;
+			//case 2:
+			-64,64,
+				//setlrcross (value);
+				//break;
+			//case 3:
+			0,127,
+				//Plevel = value;
+				//break;
+			//case 4:
+			0,100,
+				//Pdepthp = value;
+				//depth = (float) Pdepthp / 100.0;
+				//idepth = 1.0f - depth;
+				//break;
+			//case 5:
+			0,166,
+				//if(value > 20000) {	//Make sure bad inputs can't cause buffer overflow
+					//Pfreq = 20000;
+				//} else if (value < 1) {
+					//Pfreq = 1;
+				//} else {
+					//Pfreq = value;
+				//}
+				//break;
+			//case 6:
+			0,1,
+				//if (value > 1)
+					//value = 1;
+				//Pstereo = value;
+				//break;
+			//case 7:
+			0,100,
+				//Psin = value;
+				//sin = (float) Psin / 100.0;
+				//setscale();
+				//break;
+			//case 8:
+			0,100,
+				//Ptri = value;
+				//tri = (float) Ptri / 100.0;
+				//setscale();
+				//break;
+			//case 9:
+			0,100,
+				//Psaw = value;
+				//saw = (float) Psaw / 100.0;
+				//setscale();
+				//break;
+			//case 10:
+			0,100,
+				//Psqu = value;
+				//squ = (float) Psqu / 100.0;
+				//setscale();
+				//break;
+			//case 11:
+			1,127,
+				//Pinput = value;
+				//break;
+			//case 12:
+			0,1,
+				//Pafreq = value;
+				//break;
+
+		//
+
+		};
+		int RingPrint[] = {
+			-64,64,
+			-64,64,
+			-64,64, // 2
+			0,127,
+			0,100, // 4
+			0,100,
+			0,1, // 6
+			0,100,
+			0,100,
+			0,100,
+			0,100, // 10
+			1,127,
+			0,1,
+		}; 
+		real = RingReal;
+		print = RingPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Saw-Sin");
+		presetTexts.push_back("E string");
+		presetTexts.push_back("A string");
+		presetTexts.push_back("dissonance");
+		presetTexts.push_back("Fast Beat");
+		presetTexts.push_back("Ring Amp");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffRing, "Ring", whereis, ringpresets, ringPRESET_SIZE, ringNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Input", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Stereo", PanelNS::OnOff));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "AutoFreq", PanelNS::OnOff, false, true));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Freq", PanelNS::Slider, true));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Sin", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tri", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Saw", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Squ", PanelNS::Slider));
 		if(loadPrev)
 			mPanels[whereis]->LoadPreset(prevIdx);
 		else
