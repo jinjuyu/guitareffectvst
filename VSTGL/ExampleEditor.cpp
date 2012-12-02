@@ -317,6 +317,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffValve, "Valve"));
 	mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange"));
 	mEffectNames.push_back(EffectName(EffRing, "Ring"));
+	mEffectNames.push_back(EffectName(EffExciter, "Exciter"));
 	// MBDist distband
 	// MVVvol VaryBand
 	mPanels.resize(10);
@@ -3128,22 +3129,44 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		real = ExciterReal;
 		print = ExciterPrint;
 		presetTexts.clear();
-
-
-			Plain
-			Loudness
-			Exciter 1
-			Exciter 2
-			Exciter 3
-		presetTexts.push_back("Saw-Sin");
-		presetTexts.push_back("E string");
-		presetTexts.push_back("A string");
-		presetTexts.push_back("dissonance");
-		presetTexts.push_back("Fast Beat");
-		presetTexts.push_back("Ring Amp");
-		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffRing, "Ring", whereis, ringpresets, ringPRESET_SIZE, ringNUM_PRESETS, presetTexts);
+		presetTexts.push_back("Plain");
+		presetTexts.push_back("Loudness");
+		presetTexts.push_back("Exciter 1");
+		presetTexts.push_back("Exciter 2");
+		presetTexts.push_back("Exciter 3");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffExciter, "Exciter", whereis, excipresets, exciPRESET_SIZE, exciNUM_PRESETS, presetTexts);
 		iii=0;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true));
+
+
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 1", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 2", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 3", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 4", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 5", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 6", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 7", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 8", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 9", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Har 10", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 		
 	}
 	break;
