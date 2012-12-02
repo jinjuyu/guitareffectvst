@@ -1370,17 +1370,6 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 				}
 			}
 			break;
-		case EffExpander:
-		case EffGate:
-			{
-				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
-				for(int j=0; j< 20; ++j)
-				{
-					save.params[i].params[j] = mEditor->mPanels[i]->mEffect->getpar(j);
-				}
-			}
-			break;
-
 		case EffWahWah:
 		case EffAlienWah:
 		case EffPan:

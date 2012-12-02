@@ -2320,7 +2320,6 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>()));
 		iii=3;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider, false, false, vector<string>()));
-
 		iii=1;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Range", PanelNS::Slider, false, false, vector<string>()));
 		iii=0;
