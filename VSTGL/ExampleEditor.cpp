@@ -319,7 +319,8 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffRing, "Ring"));
 	mEffectNames.push_back(EffectName(EffExciter, "Exciter"));
 	mEffectNames.push_back(EffectName(EffMBDist, "DistBand"));
-	// MBDist distband
+	mEffectNames.push_back(EffectName(EffArpie, "Arpie"));
+	mEffectNames.push_back(EffectName(EffExpander, "Arpie"));
 	// MVVvol VaryBand
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
@@ -2183,7 +2184,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("0dB");
 		presetTexts.push_back("-10dB");
 		presetTexts.push_back("-20dB");
-		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Noise Gate", whereis, gate_presets, gate_PRESET_SIZE, gate_NUM_PRESETS, presetTexts);
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Noise Gate", whereis, gate_presets, gate_PRESET_SIZE, gate_NUM_PRESETS, presetTexts, true);
 		iii=2;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
 		iii=3;
@@ -3403,6 +3404,288 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			mPanels[whereis]->SetPreset(0);
 
 
+	}
+	break;
+	case EffArpie:
+	{
+		const int arpPRESET_SIZE = 9;
+		const int arpNUM_PRESETS = 9;
+		int arppresets[] = {
+			//Arpie 1
+			67, 64, 35, 64, 30, 59, 0, 127, 4,
+			//Arpie 2
+			67, 64, 21, 64, 30, 59, 0, 64, 4,
+			//Arpie 3
+			67, 75, 60, 64, 30, 59, 10, 0, 4,
+			//Simple Arpie
+			67, 60, 44, 64, 30, 0, 0, 0, 4,
+			//Canyon
+			67, 60, 102, 50, 30, 82, 48, 0, 4,
+			//Panning Arpie 1
+			67, 64, 44, 17, 0, 82, 24, 0, 4,
+			//Panning Arpie 2
+			81, 60, 46, 118, 100, 68, 18, 0, 4,
+			//Panning Arpie 3
+			81, 60, 26, 100, 127, 67, 36, 0, 4,
+			//Feedback Arpie
+			62, 64, 28, 64, 100, 90, 55, 0, 4
+		};
+
+		int ArpieReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			1,600,
+				//setdelay (value);
+				//break;
+			//case 3:
+			0,127,
+				//setlrdelay (value);
+				//break;
+			//case 4:
+			0,127,
+				//setlrcross (value);
+				//break;
+			//case 5:
+			0,127,
+				//setfb (value);
+				//break;
+			//case 6:
+			0,127,
+				//sethidamp (value);
+				//break;
+			//case 7:
+			0,127,
+				//setreverse (value);
+				//break;
+			//case 8:
+			1,8,
+				//Pharms = value;
+				//if ( (Pharms < 2) && (Pharms >= MAXHARMS)) {
+					//Pharms = 2;
+				//}
+				//break;
+			//case 9:
+			0,5,
+          /*MenuItem {} {
+            label Ascending
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Descending
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label UpDown
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Stutter
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Interrupted Descent}
+            xywh {97 97 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Double Descend }
+            xywh {117 117 36 21} labelsize 10
+          }*/
+				//setpattern(value);
+				//break;
+			//case 10:
+			0,5,
+			/*MenuItem {} {
+            label 1
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/2}
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/3}
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/4}
+            xywh {97 97 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/5}
+            xywh {107 107 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/6}
+            xywh {127 127 36 21} labelsize 10
+          }*/
+				//Psubdiv = value;
+				//subdiv = Psubdiv+1;
+				//setdelay (Pdelay);
+				//break;
+
+
+		};
+		int ArpiePrint[] = {
+			-64,63, // 0
+			-64,63, // 1
+			1,600, // 2
+			0,127, // 3
+			-64,63, // 4
+			0,127, // 5
+			0,127,
+			0,127,
+			1,8,
+			0,5,
+			0,5,
+		};
+		real = ArpieReal;
+		print = ArpiePrint;
+		presetTexts.clear();
+		presetTexts.push_back("Arpie 1");
+		presetTexts.push_back("Arpie 2");
+		presetTexts.push_back("Arpie 3");
+		presetTexts.push_back("Simple Arpie");
+		presetTexts.push_back("Canyon");
+		presetTexts.push_back("Panning Arpie 1");
+		presetTexts.push_back("Panning Arpie 2");
+		presetTexts.push_back("Panning Arpie 3");
+		presetTexts.push_back("Feedback Arpie");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffArpie, "Arpie", whereis, arppresets, arpPRESET_SIZE, arpNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Arpe's", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		vector<string> mTypeStrs;
+		mTypeStrs.push_back("1");
+		mTypeStrs.push_back("1/2");
+		mTypeStrs.push_back("1/3");
+		mTypeStrs.push_back("1/4");
+		mTypeStrs.push_back("1/5");
+		mTypeStrs.push_back("1/6");
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Subdivision", PanelNS::Selection, false, false, mTypeStrs));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LRdl.", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "H", PanelNS::Slider));
+		mTypeStrs.clear();
+		mTypeStrs.push_back("Ascending");
+        mTypeStrs.push_back("Descending");
+        mTypeStrs.push_back("UpDown");
+        mTypeStrs.push_back("Stutter");
+        mTypeStrs.push_back("Interrupted Descent");
+        mTypeStrs.push_back("Double Descend");
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Pattern", PanelNS::Selection, false, false, mTypeStrs));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Damp", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+	}
+	break;
+	case EffExpander:
+	{
+		const int expanderPRESET_SIZE = 7;
+		const int expanderNUM_PRESETS = 3;
+		int expanderpresets[] = {
+			//Noise Gate
+			-50, 20, 50, 50, 3134, 76, 0,
+			//Boost Gate
+			-55, 30, 50, 50, 1441, 157, 50,
+			//Treble swell
+			-30, 9, 950, 25, 6703, 526, 90
+		};
+		int ExpanderReal[] = {
+			//case 1:
+			-80,0,
+				//Pthreshold = value;
+				//tfactor = dB2rap (-((float) Pthreshold));
+				//tlevel = 1.0f/tfactor;
+				//break;
+			//case 2:
+			1,50,
+				//Pshape = value;
+				//sfactor = dB2rap ((float)Pshape/2);
+				//sgain = expf(-sfactor);
+				//break;
+			//case 3:
+			10,2000,
+				//Pattack = value;
+				//a_rate = 1000.0f/((float)Pattack * fs);
+				//break;
+			//case 4:
+			10,500,
+				//Pdecay = value;
+				//d_rate = 1000.0f/((float)Pdecay * fs);
+				//break;
+			//case 5:
+			47,171, // 20~26000, 이 값을 GetFreqByRealMinMax로 변환하면 주파수가 나온다.
+				//setlpf(value);
+				//break;
+			//case 6:
+			47,166, // 20~20000
+				//sethpf(value);
+				//break;
+			//case 7:
+			1,127,
+				//Plevel = value;
+				//level = dB2rap((float) value/6.0f);
+				//break;
+
+
+		};
+		int ExpanderPrint[] = {
+			-80,0,
+			1,50,
+			10,2000,
+			10,500,
+			0,100,
+			0,100,
+			1,127,
+		};
+
+		real = ExpanderReal;
+		print = ExpanderPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Noise Gate");
+		presetTexts.push_back("Boost Gate");
+		presetTexts.push_back("Treble swell");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffExpander, "Expander", whereis, expanderpresets, expanderPRESET_SIZE, expanderNUM_PRESETS, presetTexts, true);
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Shape", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Thrshld", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 	break;
 	default:

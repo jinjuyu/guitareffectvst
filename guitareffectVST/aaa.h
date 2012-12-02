@@ -3706,5 +3706,446 @@ rkr->efx_Exciter->changepar(10,(int)o->value());}
           class SliderW
         }
       }
+      Fl_Group MBDIST {
+        user_data 1
+        xywh {480 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button mbdist_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->MBDist_Bypass);
+ return;
+}
+rkr->MBDist_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_MBDist->cleanup();
+findpos(23,(int)o->value(),o);}
+          xywh {485 215 34 18} shortcut 0x33 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice mbdist_preset {
+          label Preset
+          user_data 12023
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12023))rkr->efx_MBDist->setpreset((int)o->value());
+mbdist_WD->value(rkr->efx_MBDist->getpar(0)-64);
+mbdist_LRc->value(rkr->efx_MBDist->getpar(2)-64);
+mbdist_drive->value(rkr->efx_MBDist->getpar(3));
+mbdist_level->value(rkr->efx_MBDist->getpar(4));
+mbdist_tipoL->value(rkr->efx_MBDist->getpar(5));
+mbdist_tipoM->value(rkr->efx_MBDist->getpar(6));
+mbdist_tipoH->value(rkr->efx_MBDist->getpar(7));
+mbdist_volL->value(rkr->efx_MBDist->getpar(8));
+mbdist_volM->value(rkr->efx_MBDist->getpar(9));
+mbdist_volH->value(rkr->efx_MBDist->getpar(10));
+mbdist_neg->value(rkr->efx_MBDist->getpar(11));
+mbdist_st->value(rkr->efx_MBDist->getpar(14));
+mbdist_pan->value(rkr->efx_MBDist->getpar(1)-64);
+mbdist_cross1->value(rkr->efx_MBDist->getpar(12));
+mbdist_cross2->value(rkr->efx_MBDist->getpar(13));}
+          xywh {557 215 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label Saturation
+            xywh {0 0 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Distorsion 1}
+            xywh {42 42 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Soft
+            xywh {42 42 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Modulated
+            xywh {52 52 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Crunch
+            xywh {42 42 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Distortion 2}
+            xywh {0 0 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Distortion 3}
+            xywh {0 0 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Distortion 4}
+            xywh {0 0 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider mbdist_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(202);
+ return;
+} 
+rkr->efx_MBDist->changepar(0,(int)(o->value()+64));}
+          xywh {532 237 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_LRc {
+          label {L/R.Cr}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(203);
+ return;
+} 
+rkr->efx_MBDist->changepar(2,(int)(o->value()+64));}
+          xywh {532 249 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_drive {
+          label Drive
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(204);
+ return;
+} 
+rkr->efx_MBDist->changepar(3,(int)o->value());}
+          xywh {532 261 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_level {
+          label Level
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(205);
+ return;
+} 
+rkr->efx_MBDist->changepar(4,(int)o->value());}
+          xywh {532 273 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_volL {
+          label {L.Gain}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(206);
+ return;
+} 
+rkr->efx_MBDist->changepar(8,(int)o->value());}
+          xywh {532 287 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 100 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_volM {
+          label {M.Gain}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(207);
+ return;
+} 
+rkr->efx_MBDist->changepar(9,(int)o->value());}
+          xywh {532 300 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 100 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_volH {
+          label {H. Gain}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(208);
+ return;
+} 
+rkr->efx_MBDist->changepar(10,(int)o->value());}
+          xywh {532 313 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 100 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_cross1 {
+          label Cross1
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(209);
+ return;
+} 
+rkr->efx_MBDist->changepar(12,(int)o->value());}
+          xywh {532 326 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 1000 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider mbdist_cross2 {
+          label Cross2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(210);
+ return;
+} 
+rkr->efx_MBDist->changepar(13,(int)o->value());}
+          xywh {532 338 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 800 maximum 12000 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Choice mbdist_tipoL {
+          callback {rkr->efx_MBDist->changepar(5,(int)o->value());} open
+          xywh {483 350 50 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
+          code0 {o->menu(menu_dist_tipo);}
+        } {}
+        Fl_Choice mbdist_tipoM {
+          callback {rkr->efx_MBDist->changepar(6,(int)o->value());} open
+          xywh {534 350 50 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
+          code0 {o->menu(menu_dist_tipo);}
+        } {}
+        Fl_Choice mbdist_tipoH {
+          callback {rkr->efx_MBDist->changepar(7,(int)o->value());} open
+          xywh {585 350 50 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
+          code0 {o->menu(menu_dist_tipo);}
+        } {}
+        Fl_Value_Slider mbdist_pan {
+          label Pan
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(211);
+ return;
+} 
+rkr->efx_MBDist->changepar(1,(int)(o->value()+64));}
+          xywh {532 369 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button mbdist_st {
+          label Stereo
+          user_data 2
+          callback {rkr->efx_MBDist->changepar(14,(int)o->value());}
+          xywh {512 379 54 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+        Fl_Check_Button mbdist_neg {
+          label {Neg.}
+          user_data 2
+          callback {rkr->efx_MBDist->changepar(11,(int)o->value());}
+          xywh {581 378 44 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+      }
+      Fl_Group ARPIE {
+        user_data 1
+        xywh {161 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button arpie_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Arpie_Bypass);
+ return;
+}
+rkr->Arpie_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_Arpie->cleanup();
+findpos(24,(int)o->value(),o);}
+          xywh {166 215 34 18} shortcut 0x35 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice arpie_preset {
+          label Preset
+          user_data 12024
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12024))rkr->efx_Arpie->setpreset((int) o->value());
+arpie_WD->value(rkr->efx_Arpie->getpar(0)-64);
+arpie_pan->value(rkr->efx_Arpie->getpar(1)-64);
+arpie_delay->value(rkr->efx_Arpie->getpar(2));
+arpie_LRdl->value(rkr->efx_Arpie->getpar(3));
+arpie_LRc->value(rkr->efx_Arpie->getpar(4)-64);
+arpie_fb->value(rkr->efx_Arpie->getpar(5));
+arpie_damp->value(rkr->efx_Arpie->getpar(6));
+arpie_arpe->value(rkr->efx_Arpie->getpar(7));
+arpie_harm->value(rkr->efx_Arpie->getpar(8));
+arpie_pattern->value(rkr->efx_Arpie->getpar(9));
+arpie_subdiv->value(rkr->efx_Arpie->getpar(10));}
+          xywh {238 215 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label {Arpie 1}
+            xywh {67 67 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Arpie 2}
+            xywh {67 67 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Arpie 3}
+            xywh {67 67 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Simple Arpie}
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Canyon
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Panning Arpie 1}
+            xywh {107 107 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Panning Arpie 2}
+            xywh {117 117 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Panning Arpie 3}
+            xywh {127 127 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Feedback Arpie}
+            xywh {137 137 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider arpie_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(212);
+ return;
+} 
+rkr->efx_Arpie->changepar(0,(int)(o->value()+64));}
+          xywh {212 239 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider arpie_arpe {
+          label {Arpe's}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(213);
+ return;
+} 
+rkr->efx_Arpie->changepar(7,(int)o->value());}
+          xywh {212 253 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider arpie_pan {
+          label Pan
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(214);
+ return;
+} 
+rkr->efx_Arpie->changepar(1,(int)(o->value()+64));}
+          xywh {212 267 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider arpie_delay {
+          label Tempo
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(215);
+ return;
+} 
+rkr->efx_Arpie->changepar(2,(int)o->value());}
+          xywh {212 281 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 minimum 1 maximum 600 step 1 value 1 textcolor 7
+          class SliderW
+        }
+        Fl_Choice arpie_subdiv {
+          label SubDivision
+          user_data 12
+          callback {rkr->efx_Arpie->changepar(10,(int)o->value());}
+          xywh {239 293 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label 1
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/2}
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/3}
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/4}
+            xywh {97 97 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/5}
+            xywh {107 107 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {1/6}
+            xywh {127 127 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider arpie_LRdl {
+          label {LRdl.}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(216);
+ return;
+} 
+rkr->efx_Arpie->changepar(3,(int)o->value());}
+          xywh {212 314 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider arpie_LRc {
+          label {L/R.Cr}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(217);
+ return;
+} 
+rkr->efx_Arpie->changepar(4,(int)(o->value()+64));}
+          xywh {212 329 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider arpie_fb {
+          label {Fb.}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(218);
+ return;
+} 
+rkr->efx_Arpie->changepar(5,(int)o->value());}
+          xywh {212 344 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider arpie_damp {
+          label Damp
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(219);
+ return;
+} 
+rkr->efx_Arpie->changepar(6,(int)o->value());}
+          xywh {212 378 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Counter arpie_harm {
+          label H
+          callback {rkr->efx_Arpie->changepar(8,(int)o->value());}
+          tooltip {Number of steps in the pattern} xywh {181 361 52 12} type Simple box THIN_UP_BOX labelsize 10 labelcolor 7 align 4 minimum 1 maximum 8 step 1 value 1 textsize 9
+        }
+        Fl_Choice arpie_pattern {
+          user_data 12
+          callback {rkr->efx_Arpie->changepar(9,(int)o->value());}
+          xywh {238 358 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label Ascending
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Descending
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label UpDown
+            xywh {77 77 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Stutter
+            xywh {87 87 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Interrupted Descent}
+            xywh {97 97 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Double Descend }
+            xywh {117 117 36 21} labelsize 10
+          }
+        }
+      }
 
 	  */
