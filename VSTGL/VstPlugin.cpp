@@ -1376,7 +1376,7 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
 				for(int j=0; j< 20; ++j)
 				{
-					save.params[i].params[j] = mEditor->mPanels[i]->mEffect->getpar(j+1);
+					save.params[i].params[j] = mEditor->mPanels[i]->mEffect->getpar(j);
 				}
 			}
 			break;
@@ -1524,13 +1524,13 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 		case EffExpander:
 				for(int j=0; j< 20; ++j)
 				{
-					mEffExpander->changepar(j+1, save.params[i].params[j]);
+					mEffExpander->changepar(j, save.params[i].params[j]);
 				}
 		case EffGate:
 			{
 				for(int j=0; j< 20; ++j)
 				{
-					mEffGate->changepar(j+1, save.params[i].params[j]);
+					mEffGate->changepar(j, save.params[i].params[j]);
 				}
 			}
 			break;

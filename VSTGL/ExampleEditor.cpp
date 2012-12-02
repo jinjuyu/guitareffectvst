@@ -1485,7 +1485,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(12+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "High G.", PanelNS::Slider, false, false, vector<string>(), 8));
 		iii = 9;
 		mPanels[whereis]->AddParamData(PanelNS::Data(13+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider, false, false, vector<string>(), 9));
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	case EffParametricEQ2:
@@ -1547,7 +1550,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(12+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "High G.", PanelNS::Slider, false, false, vector<string>(), 8));
 		iii = 9;
 		mPanels[whereis]->AddParamData(PanelNS::Data(13+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider, false, false, vector<string>(), 9));
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	case EffParametricEQ3:
@@ -1609,7 +1615,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(12+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "High G.", PanelNS::Slider, false, false, vector<string>(), 8));
 		iii = 9;
 		mPanels[whereis]->AddParamData(PanelNS::Data(13+10, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider, false, false, vector<string>(), 9));
-		mPanels[whereis]->SetPreset(0);
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 		break;
 	case EffWahWah:
