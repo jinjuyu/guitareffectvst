@@ -3985,7 +3985,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
 		
 		lfoTypeStrs.clear();
-		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Sine"); 
 		lfoTypeStrs.push_back("Tri");
 		lfoTypeStrs.push_back("RampUp");
 		lfoTypeStrs.push_back("RampDn");

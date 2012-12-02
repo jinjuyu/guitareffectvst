@@ -162,7 +162,7 @@ RKR::Get_Bogomips()
     }
 
     return(0);*/
-
+	return 0;
 }
 
 
@@ -200,7 +200,7 @@ RKR::TapTempo()
     if(Tap_Selection)Tap_Display=1;
     Update_tempo();
     return(Tap_TempoSet);*/
-
+	return 0;
 }
 
 void
