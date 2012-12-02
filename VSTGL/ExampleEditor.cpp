@@ -324,6 +324,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffShuffle, "Shuffle"));
 	mEffectNames.push_back(EffectName(EffSynthfilter, "Synthfilter"));
 	mEffectNames.push_back(EffectName(EffConvolotron, "Convolotron"));
+	mEffectNames.push_back(EffectName(EffReverbtron, "Reverbtron"));
 	// MVVvol VaryBand
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
@@ -4214,10 +4215,10 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		real = ConvolotronReal;
 		print = ConvolotronPrint;
 		presetTexts.clear();
-		presetTexts.push_back("Contolotron 1");
-		presetTexts.push_back("Contolotron 2");
-		presetTexts.push_back("Contolotron 3");
-		presetTexts.push_back("Contolotron 4");
+		presetTexts.push_back("Convolotron 1");
+		presetTexts.push_back("Convolotron 2");
+		presetTexts.push_back("Convolotron 3");
+		presetTexts.push_back("Convolotron 4");
 		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffConvolotron, "Convolotron", whereis, convpresets, convPRESET_SIZE, convNUM_PRESETS, presetTexts);
 		iii=0;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
@@ -4242,7 +4243,182 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 
 	}
 	break;
+	case EffReverbtron:
+	{
+		const int retronPRESET_SIZE = 16;
+		const int retronNUM_PRESETS = 9;
+		int retronpresets[] = {
+			//Spring
+			64, 0, 1, 500, 0, 0, 99, 70, 0, 0, 0, 64, 0, 0, 20000, 0,
+			//Concrete Stair
+			64, 0, 1, 500, 0, 0, 0, 40, 1, 0, 0, 64, 0, 0, 20000, 0,
+			//Nice Hall
+			64, 0, 1, 500, 0, 0, 60, 15, 2, 0, 0, 64, 0, 0, 20000, 0,
+			//Hall
+			64, 16, 1, 500, 0, 0, 0, 22, 3, -17, 0, 64, 0, 0, 20000, 0,
+			//Room
+			64, 0, 1, 1500, 0, 0, 48, 20, 4, 0, 0, 64, 0, 0, 20000, 0,
+			//Hall
+			88, 0, 1, 1500, 0, 0, 88, 14, 5, 0, 0, 64, 0, 0, 20000, 0,
+			//Guitar
+			64, 0, 1, 1500, 0, 0, 30, 34, 6, 0, 0, 64, 0, 0, 20000, 0,
+			//Studio
+			64, 0, 1, 1500, 0, 0, 30, 20, 7, 0, 0, 64, 0, 0, 20000, 0,
+			//Cathedral
+			64, 0, 1, 1500, 0, 30, 0, 40, 9, 0, 0, 64, 0, 0, 20000, 0
+		};
+		int ReverbtronReal[] = {
+			//case 0:
+			0,128,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//Pfade=value;
+				//ffade = ((float) value)/127.0f;
+				//convert_time();
+				//break;
+			//case 2:
+			0,1,
+				//Psafe=value;
+				//break;
+			//case 3:
+			20,1500,
+				//Plength = value;
+				//if((Psafe) && (Plength>400)) Plength = 400;
+				//convert_time();
+				//break;
+			//case 4:
+			0,1,
+				//Puser = value;
+				//break;
+			//case 5:
+			0,500,
+				//Pidelay = value;
+				//idelay = ((float) value)/1000.0f;
+				//convert_time();
+				//break;
+			//case 6:
+			0,127,
+				//sethidamp (value);
+				//break;
+			//case 7:
+			0,127,
+				//Plevel = value;
+				//level =  2.0f * dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
+				//levpanl=level*lpanning;
+				//levpanr=level*rpanning;
+				//break;
+			//case 8:
+			0,1,
+				////if(!setfile(value)) error_num=2;
+				//break;
+			//case 9:
+			-64,64,
+				//Pstretch = value;
+				//fstretch = ((float) value)/64.0f;
+				//convert_time();
+				//break;
+			//case 10:
+			-64,64,
+				//Pfb = value;
+				//setfb(value);
+				//break;
+			//case 11:
+			0,128,
+				//setpanning (value);
+				//break;
+			//case 12:
+			0,1,
+				//Pes = value;
+				//break;
+			//case 13:
+			0,1,
+				//Prv = value;
+				//break;
+			//case 14:
+			47,171, // 20~26000, 이 값을 GetFreqByRealMinMax로 변환하면 주파수가 나온다.
+				//setlpf (value);
+				//break;
+			//case 15:
+			0,127,
+				//Pdiff=value;
+				//diffusion = ((float) value)/127.0f;
+				//convert_time();
+				//break;
 
+
+		};
+		int ReverbtronPrint[] = {
+			-64,64, // 0
+			0,127,
+			0,1, // 2
+			20,1500, 
+			0,1, // 4
+			0,500,
+			0,127, // 6
+			0,127,
+			0,1, // 8
+			-64,64,
+			-64,64, // 10
+			-64,64,
+			0,1, // 12
+			0,1,
+			0,100, // 14
+			0,127,
+		};
+		real = ReverbtronReal;
+		print = ReverbtronPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Spring");
+		presetTexts.push_back("Concrete Stair");
+		presetTexts.push_back("Nice Hall");
+		presetTexts.push_back("Hall");
+		presetTexts.push_back("Room");
+		presetTexts.push_back("Hall");
+		presetTexts.push_back("Guitar");
+		presetTexts.push_back("Studio");
+		presetTexts.push_back("Cathedral");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffReverbtron, "Reverbtron", whereis, retronpresets, retronPRESET_SIZE, retronNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Damp", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Length", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Stretch", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "I.Del", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fade", PanelNS::Slider));
+		iii=15;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Diffusion", PanelNS::Slider));
+		iii=14;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true));
+
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Safe Mode", PanelNS::OnOff));
+		iii=13;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Sh", PanelNS::OnOff));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "ES", PanelNS::OnOff, false, true));
+
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Browse", PanelNS::Browser));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+	}
+	break;
 	default:
 		break;
 	}

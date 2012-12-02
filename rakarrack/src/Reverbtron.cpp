@@ -47,10 +47,10 @@ Reverbtron::Reverbtron (Parameters *param, float * efxoutl_, float * efxoutr_,in
     fb = 0.0f;
     feedback = 0.0f;
     maxtime = 0.0f;
-    templ = (float *) malloc (sizeof (float) * param->PERIOD);
-    tempr = (float *) malloc (sizeof (float) * param->PERIOD);
 	param->PERIOD = 44110;
 	adjust(DS);
+    templ = (float *) malloc (sizeof (float) * nPERIOD);
+    tempr = (float *) malloc (sizeof (float) * nPERIOD);
 
     hrtf_size = nSAMPLE_RATE/2;
     maxx_size = (int) (nfSAMPLE_RATE * convlength);  //just to get the max memory allocated
