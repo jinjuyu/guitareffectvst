@@ -298,7 +298,7 @@ Echotron::setfile(int value)
 
     FILE *fs;
 
-    char wbuf[260];
+    char wbuf[1024];
 	Puser = true;
     if(!Puser) {
         Filenum = value;
@@ -650,8 +650,8 @@ Echotron::getpar (int npar)
     case 3:
         return(Plength);
         break;
-    case 8:
-        return (Filenum);
+    case 4:
+        return(Puser);
         break;
     case 5:
         return (Ptempo);
@@ -662,8 +662,8 @@ Echotron::getpar (int npar)
     case 7:
         return(Plrcross);
         break;
-    case 4:
-        return(Puser);
+    case 8:
+        return (Filenum);
         break;
     case 9:
         return(lfo.Pstereo);

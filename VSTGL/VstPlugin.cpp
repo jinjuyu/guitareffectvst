@@ -89,7 +89,7 @@ vendorName("Jinju")
 	Wave_up_q = 4;
 	Wave_down_q = 1;
 
-	char buffer[260];
+	char buffer[1024];
 	GetModuleFileName((HMODULE)hInstance, buffer, sizeof(buffer));
 	mHInstance = hInstance;
 	string a(buffer);
@@ -97,9 +97,9 @@ vendorName("Jinju")
 	string b = a.substr(0, pos);
 	b += "\\guitareffectVST\\data";
 	strcpy(DATADIR, b.c_str());
-	char convF[260];
-	char echoF[260];
-	char reveF[260];
+	char convF[1024];
+	char echoF[1024];
+	char reveF[1024];
 	string c;
 	c = b + "\\1.dly";
 	strcpy(echoF, c.c_str());
@@ -286,11 +286,11 @@ vendorName("Jinju")
 	mEffValve->setpreset(0);
 	mEffVibe->setpreset(0);
 
-	strcpy(mEffConvolotron->Filename, convF);
+	strncpy(mEffConvolotron->Filename, convF, 1023);
 	mEffConvolotron->setfile(0);
-	strcpy(mEffEchotron->Filename, echoF);
+	strncpy(mEffEchotron->Filename, echoF, 1023);
 	mEffEchotron->setfile(0);
-	strcpy(mEffReverbtron->Filename, reveF);
+	strncpy(mEffReverbtron->Filename, reveF, 1023);
 	mEffReverbtron->setfile(0);
 
 
@@ -1289,12 +1289,16 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	for(int i=0; i< 10; ++i)
 	{
 		save.type[i] = mEditor->mBuiltPanels[i];
+		
+		
 		if(mEditor->mBuiltPanels[i] == EffConvolotron)
-			strcpy(save.ConFN, mEffConvolotron->Filename);
+			strncpy(save.ConFN, mEffConvolotron->Filename, 1023);
 		else if(mEditor->mBuiltPanels[i] == EffEchotron)
-			strcpy(save.EchoFN, mEffEchotron->Filename);
+			strncpy(save.EchoFN, mEffEchotron->Filename, 1023);
 		else if(mEditor->mBuiltPanels[i] == EffReverbtron)
-			strcpy(save.ReverbFN, mEffReverbtron->Filename);
+			strncpy(save.ReverbFN, mEffReverbtron->Filename, 1023);
+
+
 		switch(mEditor->mBuiltPanels[i])
 		{
 		case EffLinealEQ:
@@ -1395,13 +1399,6 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 				}
 			}
 			break;
-		case EffWahWah:
-		case EffAlienWah:
-		case EffPan:
-		case EffChorus:
-		case EffFlange:
-		case EffPhaser:
-		case EffReverb:
 		default:
 			{
 				save.params[i].presetIdx = mEditor->mPanels[i]->mPrevPreset;
@@ -1445,6 +1442,16 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 		//save.type[i] = mEditor->mBuiltPanels[i];
 		switch(save.type[i])
 		{
+		case EffEchotron:
+			{
+				strncpy(mEffEchotron->Filename, save.EchoFN, 1023);
+				mEffEchotron->setfile(0);
+				for(int j=0; j< 20; ++j)
+				{
+					mEffEchotron->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
 		case EffLinealEQ:
 			{
 				mEffEQ1->changepar(0, save.params[i].params[0]);
@@ -1528,6 +1535,16 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 				}
 			}
 			break;
+		case EffConvolotron:
+			{
+				strncpy(mEffConvolotron->Filename, save.ConFN, 1023);
+				mEffConvolotron->setfile(0);
+				for(int j=0; j< 20; ++j)
+				{
+					mEffConvolotron->changepar(j, save.params[i].params[j]);
+				}
+			}
+			break;
 		case EffCompressor:
 			{
 				for(int j=0; j< 20; ++j)
@@ -1537,10 +1554,13 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 			}
 			break;
 		case EffExpander:
+			{
 				for(int j=0; j< 20; ++j)
 				{
 					mEffExpander->changepar(j, save.params[i].params[j]);
 				}
+			}
+			break;
 		case EffGate:
 			{
 				for(int j=0; j< 20; ++j)
@@ -1598,16 +1618,6 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 				}
 			}
 			break;
-		case EffConvolotron:
-			{
-				for(int j=0; j< 20; ++j)
-				{
-					mEffConvolotron->changepar(j, save.params[i].params[j]);
-				}
-				strcpy(mEffConvolotron->Filename, save.ConFN);
-				mEffConvolotron->setfile(0);
-			}
-			break;
 		case EffAnalogPhaser:
 			{
 				for(int j=0; j< 20; ++j)
@@ -1654,16 +1664,6 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 				{
 					mEffDualFlange->changepar(j, save.params[i].params[j]);
 				}
-			}
-			break;
-		case EffEchotron:
-			{
-				for(int j=0; j< 20; ++j)
-				{
-					mEffEchotron->changepar(j, save.params[i].params[j]);
-				}
-				strcpy(mEffEchotron->Filename, save.EchoFN);
-				mEffEchotron->setfile(0);
 			}
 			break;
 		case EffExciter:
@@ -1740,12 +1740,12 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 			break;
 		case EffReverbtron:
 			{
+				strncpy(mEffReverbtron->Filename, save.ReverbFN, 1023);
+				mEffReverbtron->setfile(0);
 				for(int j=0; j< 20; ++j)
 				{
 					mEffReverbtron->changepar(j, save.params[i].params[j]);
 				}
-				strcpy(mEffReverbtron->Filename, save.ConFN);
-				mEffReverbtron->setfile(0);
 			}
 			break;
 		case EffRing:

@@ -64,7 +64,7 @@ char *filetoload;
 char *banktoload;
 
 
-char DATADIR[260];
+char DATADIR[1024];
 //Fl_Preferences rakarrack (Fl_Preferences::USER, WEBSITE, PACKAGE);
 //Pixmap p, mask;
 //XWMHints *hints;

@@ -336,7 +336,7 @@ extern unsigned int SAMPLE_RATE;
 extern float fSAMPLE_RATE;
 extern float cSAMPLE_RATE;
 //extern float r__ratio[12];
-extern char DATADIR[260];
+extern char DATADIR[1024];
 extern int Wave_res_amount;
 extern int Wave_up_q;
 extern int Wave_down_q;

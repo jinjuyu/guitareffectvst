@@ -911,9 +911,9 @@ struct SaveState{
 	SaveParams params[10];
 	int totalOn;
 	int effOn[10];
-	char ConFN[260];
-	char EchoFN[260];
-	char ReverbFN[260];
+	char ConFN[1024];
+	char EchoFN[1024];
+	char ReverbFN[1024];
 };
 bool CompEff(EffectName a, EffectName b);
 class ExampleEditor : public VSTGLEditor,

@@ -135,6 +135,7 @@ void CompressorPanel::LoadPreset(int preset)
 {
     //for (int n = 0; n < PRESET_SIZE; n++)
         //mPlug->mEffDistorsion->changepar (n, mPresets[preset][n]);
+	mPrevPreset = preset;
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
 	if(preset < mPresetStrs.size())
 		but->mLabel = mPresetStrs[preset];

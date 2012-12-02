@@ -7,7 +7,7 @@ namespace PanelNS
 void Panel::LoadPreset(int prevPresetIdx)
 {
 	// 그냥 이펙트의 속성을 얻어서 파라메터로 저장한다.
-
+	mPrevPreset = prevPresetIdx;
 	Button *but = (Button *)mGUI->GetElement(mPresetButton);
 		if(preset < mPresetStrs.size())
 			but->mLabel = mPresetStrs[prevPresetIdx];
@@ -17,6 +17,8 @@ void Panel::LoadPreset(int prevPresetIdx)
 
 	for(int i=0; i<mData.size();++i)
 	{
+		if(mData[i].type == Browser)
+			continue;
 		int par = 0;
 		par = mEffect->getpar(mData[i].parIdx);
 		if(mData[i].type == Slider)
@@ -62,8 +64,9 @@ void Panel::SetPreset(int preset)
 	OnOffButton *onoff;
 	for(int i=0; i<mData.size();++i)
 	{
-
-		if(mData[i].type == Slider && mUsePresetIdx)
+		if(mData[i].type == Browser)
+			continue;
+		else if(mData[i].type == Slider && mUsePresetIdx)
 		{
 			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
 			if(mData[i].isFreq)
@@ -161,6 +164,7 @@ void Panel::DrawText()
 Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx, bool doICallSetPreset)
 	:mGUI(gui), mWhereis(whereis), mPlug(plug), mEffect(effect), mEffName(effName), mPresetStrs(presetTexts), mSizePreset(sizePreset), mUsePresetIdx(usePresetIdx), mDoICallSetPreset(doICallSetPreset)
 {
+	mCBBrowser = nullptr;
 	mPrevPreset = 0;
 	for(int y=0; y<numPresets; ++y)
 	{
@@ -217,6 +221,8 @@ Panel::~Panel()
 	}
 	delete cbPresetSelect;
 	delete cbPresetSelected;
+	if(mCBBrowser) delete mCBBrowser;
+	
 }
 void Panel::AddParamData(Data &data, bool unused)
 {
@@ -272,8 +278,8 @@ void Panel::AddParamData(Data &data, bool unused)
 	else if(data.type == Browser)
 	{
 		mCBBrowser = new PanelBrowseCallback(this, mData.size()-1);
-		mY += 18;
 		mData[mData.size()-1].handle = mGUI->NewButton(x+60,y+mY,180-60, 18, "Browse", mCBBrowser);
+		mY += 18;
 	}
 	mButtons.push_back(mData[mData.size()-1].handle); // Preset
 	
@@ -390,7 +396,7 @@ void PanelBrowseCallback::OnClick()
 {
 	OPENFILENAME ofn ;
 // a another memory buffer to contain the file name
-	char szFile[260] ;
+	char szFile[1024] ;
 	
     // open a file name
 	ZeroMemory( &ofn , sizeof( ofn));
@@ -399,7 +405,7 @@ void PanelBrowseCallback::OnClick()
 	ofn.lpstrFile = szFile ;
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof( szFile );
-	char buffer[260];
+	char buffer[1024];
 	if((Echotron*)mPanel->mEffect == mPanel->mPlug->mEffEchotron)
 	{
 		ofn.lpstrFilter = "Echotron File\0*.dly\0";
@@ -408,7 +414,7 @@ void PanelBrowseCallback::OnClick()
 		int pos = a.find_last_of('\\');
 		string b = a.substr(0, pos);
 		b += "\\guitareffectVST\\data";
-		strcpy(buffer, b.c_str());
+		strncpy(buffer, b.c_str(), 1023);
 		ofn.lpstrInitialDir=buffer;
 	}
 	else if((Reverbtron*)mPanel->mEffect == mPanel->mPlug->mEffReverbtron)
@@ -419,7 +425,7 @@ void PanelBrowseCallback::OnClick()
 		int pos = a.find_last_of('\\');
 		string b = a.substr(0, pos);
 		b += "\\guitareffectVST\\data";
-		strcpy(buffer, b.c_str());
+		strncpy(buffer, b.c_str(),1023);
 		ofn.lpstrInitialDir=buffer;
 	}
 	else if((Convolotron*)mPanel->mEffect == mPanel->mPlug->mEffConvolotron)
@@ -430,7 +436,7 @@ void PanelBrowseCallback::OnClick()
 		int pos = a.find_last_of('\\');
 		string b = a.substr(0, pos);
 		b += "\\guitareffectVST\\data\\IR";
-		strcpy(buffer, b.c_str());
+		strncpy(buffer, b.c_str(), 1023);
 		ofn.lpstrInitialDir=buffer;
 	}
 	

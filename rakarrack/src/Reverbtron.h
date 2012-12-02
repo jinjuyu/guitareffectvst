@@ -49,7 +49,7 @@ public:
     float *efxoutl;
     float *efxoutr;
 
-    char Filename[128];
+    char Filename[1024];
 
 
 private:
