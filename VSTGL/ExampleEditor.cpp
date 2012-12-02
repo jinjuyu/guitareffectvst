@@ -2186,20 +2186,20 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("-20dB");
 		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffGate, "Noise Gate", whereis, gate_presets, gate_PRESET_SIZE, gate_NUM_PRESETS, presetTexts, true);
 		iii=2;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=3;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider, false, false, vector<string>(), iii));
 
 		iii=1;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Range", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Range", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=0;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Thrshld", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Thrshld", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=6;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Hold", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Hold", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=4;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true, false, vector<string>(), iii));
 		iii=5;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true, false, vector<string>(), iii));
 		if(loadPrev)
 			mPanels[whereis]->LoadPreset(prevIdx);
 		else
@@ -3669,19 +3669,19 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		presetTexts.push_back("Treble swell");
 		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffExpander, "Expander", whereis, expanderpresets, expanderPRESET_SIZE, expanderNUM_PRESETS, presetTexts, true);
 		iii=2;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=3;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=1;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Shape", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Shape", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=0;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Thrshld", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Thrshld", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=6;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider, false, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider, false, false, vector<string>(), iii));
 		iii=4;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF", PanelNS::Slider, true, false, vector<string>(), iii));
 		iii=5;
-		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true, false, vector<string>(), iii+1));
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii+1, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF", PanelNS::Slider, true, false, vector<string>(), iii));
 		if(loadPrev)
 			mPanels[whereis]->LoadPreset(prevIdx);
 		else

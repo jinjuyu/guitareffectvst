@@ -17,10 +17,7 @@ void Panel::LoadPreset(int prevPresetIdx)
 	for(int i=0; i<mData.size();++i)
 	{
 		int par = 0;
-		if(mUsePresetIdx)
-			par = mEffect->getpar(mData[i].preIdx);
-		else
-			par = mEffect->getpar(mData[i].parIdx);
+		par = mEffect->getpar(mData[i].parIdx);
 		if(mData[i].type == Slider && mUsePresetIdx)
 		{
 			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
@@ -37,7 +34,7 @@ void Panel::LoadPreset(int prevPresetIdx)
 				slider->SetVal(RealToPrint(i, GetRealMinMaxByFreq(par)));
 			else
 				slider->SetVal(RealToPrint(i, par));
-		}
+			}
 		else if(mData[i].type == OnOff && mData[i].parIdx < mSizePreset)
 		{
 			onoff = (OnOffButton*)mGUI->GetElement(mData[i].handle);
@@ -73,6 +70,7 @@ void Panel::SetPreset(int preset)
 	OnOffButton *onoff;
 	for(int i=0; i<mData.size();++i)
 	{
+
 		if(mData[i].type == Slider && mUsePresetIdx)
 		{
 			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
@@ -88,6 +86,24 @@ void Panel::SetPreset(int preset)
 				slider->SetVal(RealToPrint(i, GetRealMinMaxByFreq(mPresets[preset][mData[i].parIdx])));
 			else
 				slider->SetVal(RealToPrint(i, mPresets[preset][mData[i].parIdx]));
+		}
+		else if(mData[i].type == OnOff && mData[i].parIdx < mSizePreset && mUsePresetIdx)
+		{
+			onoff = (OnOffButton*)mGUI->GetElement(mData[i].handle);
+			if(mPresets[preset][mData[i].preIdx])
+			{
+				onoff->mOn = true;
+				mCBOnOffs[mData[i].cbIdx]->OnOn();
+			}
+			else
+			{
+				onoff->mOn = false;
+				mCBOnOffs[mData[i].cbIdx]->OnOff();
+			}
+		}
+		else if(mData[i].type == Selection && mData[i].parIdx < mSizePreset && mUsePresetIdx)
+		{
+			mCBLists[mData[i].cbListIdx]->OnSelect(mPresets[preset][mData[i].preIdx]);
 		}
 		else if(mData[i].type == OnOff && mData[i].parIdx < mSizePreset)
 		{
