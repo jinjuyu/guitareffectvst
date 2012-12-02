@@ -320,7 +320,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffExciter, "Exciter"));
 	mEffectNames.push_back(EffectName(EffMBDist, "DistBand"));
 	mEffectNames.push_back(EffectName(EffArpie, "Arpie"));
-	mEffectNames.push_back(EffectName(EffExpander, "Arpie"));
+	mEffectNames.push_back(EffectName(EffExpander, "Expander"));
 	// MVVvol VaryBand
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
