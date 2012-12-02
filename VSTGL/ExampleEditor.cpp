@@ -318,6 +318,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange"));
 	mEffectNames.push_back(EffectName(EffRing, "Ring"));
 	mEffectNames.push_back(EffectName(EffExciter, "Exciter"));
+	mEffectNames.push_back(EffectName(EffMBDist, "DistBand"));
 	// MBDist distband
 	// MVVvol VaryBand
 	mPanels.resize(10);
@@ -3170,7 +3171,240 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		
 	}
 	break;
+	case EffMBDist:
+	{
 
+		const int mbdistPRESET_SIZE = 15;
+		const int mbdistNUM_PRESETS = 8;
+		int mbdistpresets[] = {
+			//Saturation
+			0, 64, 0, 41, 64, 26, 19, 26, 41, 20, 35, 0, 400, 1200, 0,
+			//Dist 1
+			0, 64, 64, 20, 64, 0, 14, 13, 38, 49, 40, 0, 288, 1315, 0,
+			//Soft
+			0, 64, 0, 32, 64, 6, 13, 6, 50, 70, 50, 0, 400, 1800, 0,
+			//Modulated
+			0, 64, 0, 36, 64, 18, 17, 18, 40, 70, 30, 0, 500, 2200, 0,
+			//Crunch
+			0, 64, 0, 24, 64, 19, 14, 19, 30, 80, 30, 0, 800, 1800, 0,
+			//Dist 2
+			0, 64, 0, 64, 64, 22, 27, 22, 25, 50, 25, 0, 440, 1500, 0,
+			//Dist 3
+			0, 64, 0, 64, 64, 27, 22, 27, 50, 69, 50, 0, 800, 1200, 0,
+			//Dist 4
+			0, 64, 0, 30, 64, 19, 25, 26, 20, 51, 83, 0, 329, 800, 0
+
+		};
+		int MBDistReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			0,127,
+				//setlrcross (value);
+				//break;
+			//case 3:
+			0,127,
+				//Pdrive = value;
+				//PdriveL = (int)((float)Pdrive*volL);
+				//PdriveM = (int)((float)Pdrive*volM);
+				//PdriveH = (int)((float)Pdrive*volH);
+				//break;
+			//case 4:
+			0,127,
+				//Plevel = value;
+				//break;
+			//case 5:
+			0,29,
+			/*
+		vector<string> mTypeStrs;
+		mTypeStrs.push_back("Atan");
+		mTypeStrs.push_back("Asym");
+		mTypeStrs.push_back("Pow");
+		mTypeStrs.push_back("Sine");
+		mTypeStrs.push_back("Quant");
+		mTypeStrs.push_back("ZigZag");
+		mTypeStrs.push_back("Lim");
+		mTypeStrs.push_back("UpLim");
+		mTypeStrs.push_back("LoLim");
+		mTypeStrs.push_back("InvLim");
+
+		mTypeStrs.push_back("Clip");
+		mTypeStrs.push_back("Asym2");
+		mTypeStrs.push_back("Pow2");
+		mTypeStrs.push_back("Sigmoid");
+		mTypeStrs.push_back("Crunch");
+		mTypeStrs.push_back("HardCr");
+		mTypeStrs.push_back("OctvUp");
+		mTypeStrs.push_back("MSquare");
+		mTypeStrs.push_back("MSaw");
+		mTypeStrs.push_back("Compres");
+
+		mTypeStrs.push_back("Overdrv");
+		mTypeStrs.push_back("Soft");
+		mTypeStrs.push_back("SupSoft");
+		mTypeStrs.push_back("HardCmp");
+		mTypeStrs.push_back("LmtNoG");
+		mTypeStrs.push_back("FET");
+		mTypeStrs.push_back("DynoFET");
+		mTypeStrs.push_back("Valve1");
+		mTypeStrs.push_back("Valve2");
+		mTypeStrs.push_back("DiodeClp");
+
+			*/
+				//PtypeL = value;
+				//break;
+			//case 6:
+			0,29,
+				//PtypeM = value;
+				//break;
+			//case 7:
+			0,29,
+				//PtypeH = value;
+				//break;
+			//case 8:
+			0,100,
+				//PvolL = value;
+				//volL = (float) value /100.0;
+				//PdriveL = (int)((float)Pdrive*volL);
+				//break;
+			//case 9:
+			0,100,
+				//PvolM = value;
+				//volM = (float) value /100.0;
+				//PdriveM = (int)((float)Pdrive*volM);
+				//break;
+			//case 10:
+			0,100,
+				//PvolH = value;
+				//volH = (float) value /100.0;
+				//PdriveH = (int)((float)Pdrive*volH);
+				//break;
+			//case 11:
+			0,1,
+				//Pnegate = value;
+				//break;
+			//case 12:
+			47,115,
+				//setCross1 (value);
+				//break;
+			//case 13:
+			110,158,
+				//setCross2 (value);
+				//break;
+			//case 14:
+			0,1,
+				//Pstereo = value;
+				//break;
+
+
+		};
+		int MBDistPrint[] = {
+			-64,63,
+			-64,63,
+			-64,63, // 2
+			0,127,
+			0,127, // 4
+			0,29,
+			0,29, // 6
+			0,29,
+			0,100, // 8
+			0,100, // 9
+			0,100,// 10
+			0,1, // 11
+			0,100, // 12
+			0,100,
+			0,1,
+		};
+		real = MBDistReal;
+		print = MBDistPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Saturation");
+		presetTexts.push_back("Dist 1");
+		presetTexts.push_back("Soft");
+		presetTexts.push_back("Modulated");
+		presetTexts.push_back("Crunch");
+		presetTexts.push_back("Dist 2");
+		presetTexts.push_back("Dist 3");
+		presetTexts.push_back("Dist 4");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffMBDist, "DistBand", whereis, mbdistpresets, mbdistPRESET_SIZE, mbdistNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Drive", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L.Gain", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "M.Gain", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "H.Gain", PanelNS::Slider));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "H.Gain", PanelNS::Slider, true));
+		iii=13;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "H.Gain", PanelNS::Slider, true));
+
+		vector<string> mTypeStrs;
+		mTypeStrs.push_back("Atan");
+		mTypeStrs.push_back("Asym");
+		mTypeStrs.push_back("Pow");
+		mTypeStrs.push_back("Sine");
+		mTypeStrs.push_back("Quant");
+		mTypeStrs.push_back("ZigZag");
+		mTypeStrs.push_back("Lim");
+		mTypeStrs.push_back("UpLim");
+		mTypeStrs.push_back("LoLim");
+		mTypeStrs.push_back("InvLim");
+
+		mTypeStrs.push_back("Clip");
+		mTypeStrs.push_back("Asym2");
+		mTypeStrs.push_back("Pow2");
+		mTypeStrs.push_back("Sigmoid");
+		mTypeStrs.push_back("Crunch");
+		mTypeStrs.push_back("HardCr");
+		mTypeStrs.push_back("OctvUp");
+		mTypeStrs.push_back("MSquare");
+		mTypeStrs.push_back("MSaw");
+		mTypeStrs.push_back("Compres");
+
+		mTypeStrs.push_back("Overdrv");
+		mTypeStrs.push_back("Soft");
+		mTypeStrs.push_back("SupSoft");
+		mTypeStrs.push_back("HardCmp");
+		mTypeStrs.push_back("LmtNoG");
+		mTypeStrs.push_back("FET");
+		mTypeStrs.push_back("DynoFET");
+		mTypeStrs.push_back("Valve1");
+		mTypeStrs.push_back("Valve2");
+		mTypeStrs.push_back("DiodeClp");
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "TypeL", PanelNS::Selection, false, false, mTypeStrs));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "TypeM", PanelNS::Selection, false, false, mTypeStrs));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "TypeH", PanelNS::Selection, false, false, mTypeStrs));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=14;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Stereo", PanelNS::OnOff));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Neg.", PanelNS::OnOff, false, true));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+
+	}
+	break;
 	default:
 		break;
 	}
