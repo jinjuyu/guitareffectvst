@@ -2698,19 +2698,19 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		const int dflangeNUM_PRESETS = 7;
 		int dflangepresets[] = {
 			//Preset 1
-			-32, 0, 0, 110, 800, 10, -27, 16000, 1, 0, 24, 64, 1, 10, 0,
+			32, 0, 0, 110, 800, 10, -27, 16000, 1, 0, 24, 64, 1, 10, 0,
 			//Flange-Wha
 			0, 0, 64, 500, 3000, 50, -40, 8000, 1, 0, 196, 96, 0, 0, 0,
 			//FbFlange
 			0, 0, 64, 68, 75, 50, -50, 8000, 0, 1, 23, 96, 5, 0, 0,
 			//SoftFlange
-			-32, 0, 64, 60, 10, 100, 20, 16000, 0, 0, 16, 90, 4, 0, 0,
+			32, 0, 64, 60, 10, 100, 20, 16000, 0, 0, 16, 90, 4, 0, 0,
 			//Flanger
-			-32, 0, 64, 170, 1200, 50, 0, 16000, 1, 0, 68, 127, 0, 0, 0,
+			32, 0, 64, 170, 1200, 50, 0, 16000, 1, 0, 68, 127, 0, 0, 0,
 			//Chorus 1
-			-15, 0, 0, 42, 12, 50, -10, 1500, 0, 0, 120, 0, 0, 20, 0,
+			15, 0, 0, 42, 12, 50, -10, 1500, 0, 0, 120, 0, 0, 20, 0,
 			//Chorus 2
-			-40, 0, 0, 35, 9, 67, 12, 4700, 1, 1, 160, 75, 0, 60, 0,
+			40, 0, 0, 35, 9, 67, 12, 4700, 1, 1, 160, 75, 0, 60, 0,
 		};
 		int DFlangeReal[] = {
 			//switch (npar) {
@@ -3128,6 +3128,8 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		real = ExciterReal;
 		print = ExciterPrint;
 		presetTexts.clear();
+
+
 			Plain
 			Loudness
 			Exciter 1
@@ -3142,7 +3144,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffRing, "Ring", whereis, ringpresets, ringPRESET_SIZE, ringNUM_PRESETS, presetTexts);
 		iii=0;
 		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
-
+		
 	}
 	break;
 

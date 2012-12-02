@@ -632,6 +632,7 @@ Dflange::changepar (int npar, int value)
 {
     switch (npar) {
     case 0:
+		value = -value;
         Pwetdry = value;
         dry = (float) (Pwetdry+64) /128.0f;
         wet = 1.0f - dry;
