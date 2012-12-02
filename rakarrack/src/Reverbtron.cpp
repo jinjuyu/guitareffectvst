@@ -365,7 +365,7 @@ Reverbtron::setfile(int value)
     char wbuf[128];
 
     FILE *fs;
-
+	Puser = true;
     if(!Puser) {
         Filenum = value;
         memset(Filename,0, sizeof(Filename));
@@ -713,7 +713,7 @@ Reverbtron::changepar (int npar, int value)
         levpanr=level*rpanning;
         break;
     case 8:
-        if(!setfile(value)) error_num=2;
+        //if(!setfile(value)) error_num=2;
         break;
     case 9:
         Pstretch = value;

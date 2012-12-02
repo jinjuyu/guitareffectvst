@@ -4269,5 +4269,391 @@ rkr->efx_Expander->Expander_Change(6, (int)o->value());}
           class SliderW
         }
       }
+      Fl_Group SHUFFLE {
+        label {High Freq}
+        user_data 1
+        xywh {480 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button shuffle_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Shuffle_Bypass);
+ return;
+}
+rkr->Shuffle_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_Shuffle->cleanup();
+findpos(26,(int)o->value(),o);}
+          xywh {485 215 34 18} shortcut 0x33 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice shuffle_preset {
+          label Preset
+          user_data 12026
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12026))rkr->efx_Shuffle->setpreset((int)o->value());
+shuffle_volL->value(rkr->efx_Shuffle->getpar(1));
+shuffle_volML->value(rkr->efx_Shuffle->getpar(2));
+shuffle_volMH->value(rkr->efx_Shuffle->getpar(2));
+shuffle_volH->value(rkr->efx_Shuffle->getpar(4));
+shuffle_cross1->value(rkr->efx_Shuffle->getpar(5));
+shuffle_cross2->value(rkr->efx_Shuffle->getpar(6));
+shuffle_cross3->value(rkr->efx_Shuffle->getpar(7));
+shuffle_cross4->value(rkr->efx_Shuffle->getpar(8));
+shuffle_Q->value(rkr->efx_Shuffle->getpar(9));
+shuffle_WD->value(rkr->efx_Shuffle->getpar(0)-64);
+shuffle_E->value(rkr->efx_Shuffle->getpar(10));}
+          xywh {557 215 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label {Shuffle 1}
+            xywh {52 52 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Shuffle 2}
+            xywh {52 52 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Shuffle 3}
+            xywh {62 62 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Remover
+            xywh {72 72 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider shuffle_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(227);
+ return;
+} 
+rkr->efx_Shuffle->changepar(0,(int)o->value()+64);}
+          xywh {535 242 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_cross1 {
+          label {Low Freq}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(228);
+ return;
+} 
+rkr->efx_Shuffle->changepar(5,(int)o->value());}
+          xywh {535 260 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 1000 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_volL {
+          label {Low Gain}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(229);
+ return;
+} 
+rkr->efx_Shuffle->changepar(1,(int)o->value());}
+          xywh {535 275 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_cross2 {
+          label {M.L. Freq}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(230);
+ return;
+} 
+rkr->efx_Shuffle->changepar(6,(int)o->value());}
+          xywh {535 290 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 400 maximum 4000 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_volML {
+          label {M.L Gain}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(231);
+ return;
+}
+rkr->efx_Shuffle->changepar(2,(int)o->value());}
+          xywh {535 305 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_cross3 {
+          label {M.H. Freq}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(232);
+ return;
+}
+rkr->efx_Shuffle->changepar(7,(int)o->value());}
+          xywh {535 320 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1200 maximum 8000 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_volMH {
+          label {M.L Gain}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(233);
+ return;
+}
+rkr->efx_Shuffle->changepar(3,(int)o->value());}
+          xywh {535 335 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_cross4 {
+          label {High Freq}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(234);
+ return;
+}
+rkr->efx_Shuffle->changepar(8,(int)o->value());}
+          xywh {535 350 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 6000 maximum 26000 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_volH {
+          label {High Gain}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(235);
+ return;
+}
+rkr->efx_Shuffle->changepar(4,(int)o->value());}
+          xywh {535 365 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider shuffle_Q {
+          label Q
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(236);
+ return;
+}
+rkr->efx_Shuffle->changepar(9,(int)o->value());}
+          xywh {535 380 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button shuffle_E {
+          label Rev
+          user_data 2
+          callback {rkr->efx_Shuffle->changepar(10,(int)o->value());}
+          xywh {482 378 40 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+      }
+      Fl_Group SYNTHFILTER {
+        user_data 1
+        xywh {319 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button synthfilter_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Synthfilter_Bypass);
+ return;
+}
+rkr->Synthfilter_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_Synthfilter->cleanup();
+findpos(27,(int)o->value(),o);}
+          xywh {324 215 34 18} shortcut 0x37 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice synthfilter_preset {
+          label Preset
+          user_data 12027
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12027))rkr->efx_Synthfilter->setpreset((int) o->value());
+synthfilter_WD->value(rkr->efx_Synthfilter->getpar(0)-64);
+synthfilter_Distort->value(rkr->efx_Synthfilter->getpar(1));
+synthfilter_freq->value(rkr->efx_Synthfilter->getpar(2));
+synthfilter_lfotype->value(rkr->efx_Synthfilter->getpar(4));
+synthfilter_stdf->value(rkr->efx_Synthfilter->getpar(5));
+synthfilter_width->value(rkr->efx_Synthfilter->getpar(6));
+synthfilter_Lstages->value(rkr->efx_Synthfilter->getpar(8));
+synthfilter_Hstages->value(rkr->efx_Synthfilter->getpar(9));
+synthfilter_fb->value(rkr->efx_Synthfilter->getpar(7));
+synthfilter_Offset->value(rkr->efx_Synthfilter->getpar(15));
+synthfilter_subs->value(rkr->efx_Synthfilter->getpar(10));
+synthfilter_dpth->value(rkr->efx_Synthfilter->getpar(11));
+synthfilter_EnvSens->value(rkr->efx_Synthfilter->getpar(12));
+synthfilter_ATime->value(rkr->efx_Synthfilter->getpar(13));
+synthfilter_RTime->value(rkr->efx_Synthfilter->getpar(14));}
+          xywh {396 215 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label {Low Pass}
+            xywh {82 82 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {High Pass}
+            xywh {82 82 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Band Pass}
+            xywh {82 82 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Lead Synth}
+            xywh {92 92 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Water
+            xywh {0 0 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Pan Filter}
+            xywh {0 0 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Multi
+            xywh {0 0 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider synthfilter_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(237);
+ return;
+}
+rkr->efx_Synthfilter->changepar(0,(int)(o->value()+64));}
+          xywh {368 236 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_Distort {
+          label Distort
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(238);
+ return;
+}
+rkr->efx_Synthfilter->changepar(1,(int)o->value());}
+          xywh {368 248 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_freq {
+          label Tempo
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(239);
+ return;
+}
+rkr->efx_Synthfilter->changepar(2,(int)o->value());}
+          xywh {368 260 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 600 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Choice synthfilter_lfotype {
+          label {LFO Type}
+          callback {rkr->efx_Synthfilter->changepar(4,(int)o->value());}
+          xywh {373 271 52 13} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
+          code0 {o->menu(menu_chorus_lfotype);}
+        } {}
+        Fl_Check_Button synthfilter_subs {
+          label {Subtr.}
+          user_data 2
+          callback {rkr->efx_Synthfilter->changepar(10,(int)o->value())}
+          xywh {428 270 46 15} down_box BORDER_BOX labelsize 10 labelcolor 7
+        }
+        Fl_Value_Slider synthfilter_stdf {
+          label {St.df}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(240);
+ return;
+}
+rkr->efx_Synthfilter->changepar(5,(int)o->value());}
+          xywh {368 286 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_width {
+          label Width
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(241);
+ return;
+}
+rkr->efx_Synthfilter->changepar(6,(int)o->value());}
+          xywh {368 298 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_fb {
+          label Fb
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(242);
+ return;
+}
+rkr->efx_Synthfilter->changepar(7,(int)o->value());}
+          xywh {368 310 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Counter synthfilter_Lstages {
+          label {LPF Stg.}
+          callback {rkr->efx_Synthfilter->changepar(8,(int)o->value());}
+          xywh {367 322 28 11} type Simple box THIN_UP_BOX labelsize 10 labelcolor 7 align 4 minimum 0 maximum 12 step 1 value 1 textsize 9
+        }
+        Fl_Counter synthfilter_Hstages {
+          label {HPF Stg.}
+          callback {rkr->efx_Synthfilter->changepar(9,(int)o->value());}
+          xywh {444 322 28 11} type Simple box THIN_UP_BOX labelsize 10 labelcolor 7 align 4 minimum 0 maximum 12 step 1 value 1 textsize 9
+        }
+        Fl_Value_Slider synthfilter_dpth {
+          label Depth
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(243);
+ return;
+}
+rkr->efx_Synthfilter->changepar(11,(int)o->value());}
+          xywh {368 335 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_EnvSens {
+          label {E.Sens}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(244);
+ return;
+}
+rkr->efx_Synthfilter->changepar(12,(int)(o->value()));}
+          xywh {368 347 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_ATime {
+          label {A.Time}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(245);
+ return;
+}
+rkr->efx_Synthfilter->changepar(13,(int)o->value());}
+          xywh {368 359 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 5 maximum 1000 step 1 value 5 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_RTime {
+          label {R.Time}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(246);
+ return;
+}
+rkr->efx_Synthfilter->changepar(14,(int)o->value());}
+          xywh {368 371 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 5 maximum 500 step 1 value 5 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider synthfilter_Offset {
+          label Offset
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(247);
+ return;
+}
+rkr->efx_Synthfilter->changepar(15,(int)o->value());}
+          xywh {368 383 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+      }
 
 	  */

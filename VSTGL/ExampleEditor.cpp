@@ -321,6 +321,9 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffMBDist, "DistBand"));
 	mEffectNames.push_back(EffectName(EffArpie, "Arpie"));
 	mEffectNames.push_back(EffectName(EffExpander, "Expander"));
+	mEffectNames.push_back(EffectName(EffShuffle, "Shuffle"));
+	mEffectNames.push_back(EffectName(EffSynthfilter, "Synthfilter"));
+	mEffectNames.push_back(EffectName(EffConvolotron, "Convolotron"));
 	// MVVvol VaryBand
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
@@ -3818,6 +3821,428 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			mPanels[whereis]->SetPreset(0);
 	}
 	break;
+	case EffShuffle:
+	{
+		const int shufflPRESET_SIZE = 11;
+		const int shufflNUM_PRESETS = 4;
+		int shufflpresets[] = {
+			//Shuffle 1
+			64, 10, 0, 0, 0,600, 1200,2000, 6000,-14, 1,
+			//Shuffle 2
+			64, 0, 0, 0, 0, 120, 1000,2400, 8000,-7, 1,
+			//Shuffle 3
+			64, 0, 0, 0, 0, 60, 1800, 3700, 12000, 7, 0,
+			//Remover
+			0, 17, 0, 7, 5, 600, 1200, 2000, 13865, -45, 1
+		};
+
+		int ShuffleReal[] = {
+			//case 0:
+			0,128,
+				//setvolume (value);
+				//break;
+			//case 1:
+			-64,64,
+				//setGainL(value);
+				//break;
+			//case 2:
+			-64,64,
+				//setGainML(value);
+				//break;
+			//case 3:
+			-64,64,
+				//setGainMH(value);
+				//break;
+			//case 4:
+			-64,64,
+				//setGainH(value);
+				//break;
+			//case 5:
+			47,115,
+				//setCross1 (value);
+				//break;
+			//case 6:
+			98,139,
+				//setCross2 (value);
+				//break;
+			//case 7:
+			117,139,
+				//setCross3 (value);
+				//break;
+			//case 8:
+			145,171,
+				//setCross4 (value);
+				//break;
+			//case 9:
+			-64,64,
+				//PQ = value;
+				//value +=64;
+				//tmp = powf (30.0f, ((float)value - 64.0f) / 64.0f);
+				//lr->setq(tmp);
+				//mlr->setq(tmp);
+				//mhr->setq(tmp);
+				//hr->setq(tmp);
+				//break;
+			//case 10:
+			0,1,
+				//E=value;
+				//break;
+
+
+		};
+		int ShufflePrint[] = {
+			-64,64, // 0
+			-64,64,
+			-64,64, // 2
+			-64,64,
+			-64,64, // 4
+			0,100,
+			0,100, // 6
+			0,100,
+			0,100, // 8
+			-64,64,
+			0,1,
+		};
+		real = ShuffleReal;
+		print = ShufflePrint;
+		presetTexts.clear();
+		presetTexts.push_back("Shuffle 1");
+		presetTexts.push_back("Shuffle 2");
+		presetTexts.push_back("Shuffle 3");
+		presetTexts.push_back("Remover");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffShuffle, "Shuffle", whereis, shufflpresets, shufflPRESET_SIZE, shufflNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Low Freq", PanelNS::Slider, true));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Low Gain", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MLow Freq", PanelNS::Slider, true));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MLow Gain", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MHi Freq", PanelNS::Slider, true));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MHi Gain", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Hi Freq", PanelNS::Slider, true));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Hi Gain", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rev", PanelNS::OnOff));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+	}
+	break;
+	case EffSynthfilter:
+	{
+		const int sfilPRESET_SIZE = 16;
+		const int sfilNUM_PRESETS = 7;
+		int sfilpresets[] = {
+			//Low Pass
+			0, 20, 14, 0, 1, 64, 110, -40, 6, 0, 0, 32, -32, 500, 100, 0,
+			//High Pass
+			0, 20, 14, 0, 1, 64, 110, -40, 0, 6, 0, 32, -32, 500, 100, 0,
+			//Band Pass
+			0, 20, 14, 0, 1, 64, 110, -40, 4, 4, 0, 32, -32, 500, 100, 0,
+			//Lead Synth
+			0, 89, 31, 0, 1, 95, 38, -16, 1, 2, 1, 114, -32, 92, 215, 29,
+			//Water
+			20, 69, 88, 0, 6, 0, 76, -50, 6, 2, 1, 0, 19, 114, 221, 127,
+			//Pan Filter
+			0, 20, 100, 0, 5, 127, 127, -64, 2, 0, 0, 57, 0, 340, 288, 110,
+			//Multi
+			64, 45, 88, 0, 1, 127, 81, 0, 4, 2, 0, 67, 0, 394, 252, 61
+
+
+		};
+		int SynthFilterReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setdistortion (value);
+				//break;
+			//case 2:
+			1,600,
+				//lfo.Pfreq = value;
+				//lfo.updateparams ();
+				//break;
+			//case 3:
+			0, 127,
+				//lfo.Prandomness = value;
+				//lfo.updateparams ();
+				//break;
+			//case 4:
+			0,9,
+				//lfo.PLFOtype = value;
+				//lfo.updateparams ();
+				//break;
+			//case 5:
+			0,127,
+				//lfo.Pstereo = value;
+				//lfo.updateparams ();
+				//break;
+			//case 6:
+			0,127,
+				//setwidth (value);
+				//break;
+			//case 7:
+			-64,64,
+				//setfb (value);
+				//break;
+			//case 8:
+			0,12,
+				//Plpstages = value;
+				//if (Plpstages >= MAX_SFILTER_STAGES)
+					//Plpstages = MAX_SFILTER_STAGES ;
+				//if(Plpstages<=2) fb = (float) Pfb * 0.25/65.0f;  //keep filter stable when phase shift is small
+				//cleanup ();
+				//break;
+			//case 9:
+			0,12,
+				//Phpstages = value;
+				//if (Phpstages >= MAX_SFILTER_STAGES)
+					//Phpstages = MAX_SFILTER_STAGES ;
+				//cleanup ();
+				//break;
+			//case 10:
+			0,1,
+				//if (value > 1)
+					//value = 1;
+				//Poutsub = value;
+				//break;
+			//case 11:
+			0,127,
+				//setdepth (value);
+				//break;
+			//case 12:
+			-64,64,
+				//Penvelope = value;
+				//sns = (float) Penvelope/8.0f;
+				//break;
+			//case 13:
+			5,1000,
+				//Pattack = value;
+				//if(Pattack < 5) Pattack = 5;
+				//att = delta * 1000.0f/((float) Pattack);
+				//break;
+			//case 14:
+			5,500,
+				//Prelease = value;
+				//if(Prelease < 5) Prelease = 5;
+				//rls = delta * 1000.0f/((float) Prelease);
+				//break;
+			//case 15:
+			0,127,
+				//Pbandwidth = value;
+				//Chp = C * (1.0f + ((float) value)/64.0f);  // C*3
+				//Clp = C * (1.0f - ((float) value)/190.0f); // C/3
+				//break;
+
+
+		};
+		int SynthFilterPrint[] = {
+			-64,63, // 0
+			0,127,
+			1,600, // 2
+			0,127,
+			0,9, // 4
+			0,127,
+			0,127, // 6
+			-64,64,
+			0,12, // 8
+			0,12,
+			0,1, // 10
+			0,127,
+			-64,64, // 12
+			5,1000,
+			5,500, // 14
+			0,127,
+		};
+		real = SynthFilterReal;
+		print = SynthFilterPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Low Pass");
+		presetTexts.push_back("High Pass");
+		presetTexts.push_back("Band Pass");
+		presetTexts.push_back("Lead Synth");
+		presetTexts.push_back("Water");
+		presetTexts.push_back("Pan Filter");
+		presetTexts.push_back("Multi");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffSynthfilter, "Synthfilter", whereis, sfilpresets, sfilPRESET_SIZE, sfilNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Distort", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		lfoTypeStrs.clear();
+		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Tri");
+		lfoTypeStrs.push_back("RampUp");
+		lfoTypeStrs.push_back("RampDn");
+		lfoTypeStrs.push_back("ZigZag");
+		lfoTypeStrs.push_back("M.Sqare");
+		lfoTypeStrs.push_back("M.Saw");
+		lfoTypeStrs.push_back("L.Fract");
+		lfoTypeStrs.push_back("L.FractXY");
+		lfoTypeStrs.push_back("S/H Rnd");
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Subtract", PanelNS::OnOff));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Width", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LPF Stg.", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "HPF Stg.", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "E.Sens", PanelNS::Slider));
+		iii=13;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "A.Time", PanelNS::Slider));
+		iii=14;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "R.Time", PanelNS::Slider));
+		iii=15;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Offset", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+	}
+	break;
+	case EffConvolotron:
+	{
+		const int convPRESET_SIZE = 11;
+		const int convNUM_PRESETS = 4;
+		int convpresets[] = {
+			//Convolotron 1
+			67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0,
+			//Convolotron 2
+			67, 64, 1, 100, 0, 64, 30, 20, 1, 0, 0,
+			//Convolotron 3
+			67, 75, 1, 100, 0, 64, 30, 20, 2, 0, 0,
+			//Convolotron 4
+			67, 60, 1, 100, 0, 64, 30, 20, 3, 0, 0
+		};
+
+		int ConvolotronReal[] = {
+			//case 0:
+			0,128,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			0,1,
+				//Psafe = value;
+				//UpdateLength();
+				//break;
+			//case 3:
+			5,250,
+				//Plength = value;
+				//UpdateLength();
+				//break;
+			//case 4:
+			0,1,
+				//Puser = value;
+				//break;
+			//case 5:
+			0,1,
+				//break;
+			//case 6:
+			0,127,
+				//sethidamp (value);
+				//break;
+			//case 7:
+			0,127,
+				//Plevel = value;
+				//level =  dB2rap (60.0f * (float)Plevel / 127.0f - 40.0f);
+				//levpanl=lpanning*level*2.0f;
+				//levpanr=rpanning*level*2.0f;
+				//break;
+			//case 8:
+			0,1,
+				////if(!setfile(value)) error_num=1;
+				////UpdateLength();
+				//break;
+			//case 9:
+			0,1,
+				//break;
+			//case 10:
+			-64,64,
+				//Pfb = value;
+				//if(Pfb<0) {
+					//fb = (float) .1f*value/250.0f*.15f;
+				//} else {
+					//fb = (float) .1f*value/500.0f*.15f;
+				//}
+				//break;
+
+
+		};
+		int ConvolotronPrint[] = {
+			-64,64, // 0
+			-64,63,
+			0,1, // 2
+			5,250, 
+			0,1, // 4
+			0,1,
+			0,127, // 6
+			0,127,
+			0,1, // 8
+			0,1,
+			-64,64,
+		};
+		real = ConvolotronReal;
+		print = ConvolotronPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Contolotron 1");
+		presetTexts.push_back("Contolotron 2");
+		presetTexts.push_back("Contolotron 3");
+		presetTexts.push_back("Contolotron 4");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffConvolotron, "Convolotron", whereis, convpresets, convPRESET_SIZE, convNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Damp", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Length", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Safe Mode", PanelNS::OnOff));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Browse", PanelNS::Browser));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+	}
+	break;
+
 	default:
 		break;
 	}

@@ -327,7 +327,7 @@ Convolotron::setpanning (int Ppanning)
 int
 Convolotron::setfile(int value)
 {
-
+	Puser = true;
     double sr_ratio;
 
     offset = 0;
@@ -368,7 +368,7 @@ Convolotron::setfile(int value)
     else memcpy(rbuf,buf,real_len*sizeof(float));
 
     process_rbuf();
-
+	UpdateLength();
     return(1);
 };
 
@@ -511,8 +511,8 @@ Convolotron::changepar (int npar, int value)
         UpdateLength();
         break;
     case 8:
-        if(!setfile(value)) error_num=1;
-        UpdateLength();
+        //if(!setfile(value)) error_num=1;
+        //UpdateLength();
         break;
     case 5:
         break;

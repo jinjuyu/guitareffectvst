@@ -1,5 +1,6 @@
 #include "Panel.h"
-
+#include <Windows.h>
+#include <Commdlg.h>
 namespace PanelNS
 {
 
@@ -268,6 +269,12 @@ void Panel::AddParamData(Data &data, bool unused)
 		mData[mData.size()-1].handle = mGUI->NewButton(x+60,y+mY,180-60, 18, "None", mCBButtons[mCBButtons.size()-1]);
 		mY += 18;
 	}
+	else if(data.type == Browser)
+	{
+		mCBBrowser = new PanelBrowseCallback(this, mData.size()-1);
+		mY += 18;
+		mData[mData.size()-1].handle = mGUI->NewButton(x+60,y+mY,180-60, 18, "Browse", mCBBrowser);
+	}
 	mButtons.push_back(mData[mData.size()-1].handle); // Preset
 	
 }
@@ -374,6 +381,95 @@ void PresetListCallback::OnSelect(int idx)
 		mPanel->SetPreset(idx);
 	}
 
+}
+PanelBrowseCallback::PanelBrowseCallback(Panel *a, int dataIdx) // dataIdx만 있으면 parIdx등을 다 얻어올 수 있다.
+	: mPanel(a), mDataIdx(dataIdx)
+{
+}
+void PanelBrowseCallback::OnClick()
+{
+	OPENFILENAME ofn ;
+// a another memory buffer to contain the file name
+	char szFile[260] ;
+	
+    // open a file name
+	ZeroMemory( &ofn , sizeof( ofn));
+	ofn.lStructSize = sizeof ( ofn );
+	ofn.hwndOwner = NULL  ;
+	ofn.lpstrFile = szFile ;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof( szFile );
+	char buffer[260];
+	if((Echotron*)mPanel->mEffect == mPanel->mPlug->mEffEchotron)
+	{
+		ofn.lpstrFilter = "Echotron File\0*.dly\0";
+		GetModuleFileName((HMODULE)mPanel->mPlug->mHInstance, buffer, sizeof(buffer));
+		string a(buffer);
+		int pos = a.find_last_of('\\');
+		string b = a.substr(0, pos);
+		b += "\\guitareffectVST\\data";
+		strcpy(buffer, b.c_str());
+		ofn.lpstrInitialDir=buffer;
+	}
+	else if((Reverbtron*)mPanel->mEffect == mPanel->mPlug->mEffReverbtron)
+	{
+		ofn.lpstrFilter = "Reverbtron File\0*.rvb\0";
+		GetModuleFileName((HMODULE)mPanel->mPlug->mHInstance, buffer, sizeof(buffer));
+		string a(buffer);
+		int pos = a.find_last_of('\\');
+		string b = a.substr(0, pos);
+		b += "\\guitareffectVST\\data";
+		strcpy(buffer, b.c_str());
+		ofn.lpstrInitialDir=buffer;
+	}
+	else if((Convolotron*)mPanel->mEffect == mPanel->mPlug->mEffConvolotron)
+	{
+		ofn.lpstrFilter = "Convolotron File\0*.wav\0";
+		GetModuleFileName((HMODULE)mPanel->mPlug->mHInstance, buffer, sizeof(buffer));
+		string a(buffer);
+		int pos = a.find_last_of('\\');
+		string b = a.substr(0, pos);
+		b += "\\guitareffectVST\\data\\IR";
+		strcpy(buffer, b.c_str());
+		ofn.lpstrInitialDir=buffer;
+	}
+	
+	ofn.nFilterIndex =1;
+	ofn.lpstrFileTitle = NULL ;
+	ofn.nMaxFileTitle = 0 ;
+
+	ofn.Flags = OFN_PATHMUSTEXIST|OFN_FILEMUSTEXIST ;
+	GetOpenFileName( &ofn );
+	
+
+	if((Echotron*)mPanel->mEffect == mPanel->mPlug->mEffEchotron)
+	{
+		strcpy(mPanel->mPlug->mEffEchotron->Filename, ofn.lpstrFile);
+		mPanel->mPlug->mEffEchotron->setfile(0);
+	}
+	else if((Reverbtron*)mPanel->mEffect == mPanel->mPlug->mEffReverbtron)
+	{
+		strcpy(mPanel->mPlug->mEffReverbtron->Filename, ofn.lpstrFile);
+		mPanel->mPlug->mEffReverbtron->setfile(0);
+	}
+	else if((Convolotron*)mPanel->mEffect == mPanel->mPlug->mEffConvolotron)
+	{
+		strcpy(mPanel->mPlug->mEffConvolotron->Filename, ofn.lpstrFile);
+		mPanel->mPlug->mEffConvolotron->setfile(0);
+	}
+	// Now simpley display the file name 
+	//MessageBox ( NULL ,  , "Select file" , MB_OK);
+
+	/*
+	mPanel->mGUI->mPopupList->hidden = false;
+	mPanel->mGUI->mPopupList->Clear();
+
+	for(int i=0;i<mPanel->mTypeStrs[mPanel->mData[mDataIdx].typeStrsIdx].size();++i)
+	{
+		mPanel->mGUI->mPopupList->Add(mPanel->mTypeStrs[mPanel->mData[mDataIdx].typeStrsIdx][i]);
+	}
+	mPanel->mGUI->mPopupList->SetCallback(mCBList);
+	*/
 }
 
 /*

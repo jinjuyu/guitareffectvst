@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual C++ Express 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GuitarEffectVST", "..\GuitarEffectVST\GuitarEffectVST.vcxproj", "{F4642DE7-E6F4-48DA-B270-103B38A7D3CC}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "rakverb2", "rakverb2\rakverb2.vcxproj", "{1BAE9940-F7C0-47F9-9B25-13FFB46CE6BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{F4642DE7-E6F4-48DA-B270-103B38A7D3CC}.Debug|Win32.Build.0 = Debug|Win32
 		{F4642DE7-E6F4-48DA-B270-103B38A7D3CC}.Release|Win32.ActiveCfg = Release|Win32
 		{F4642DE7-E6F4-48DA-B270-103B38A7D3CC}.Release|Win32.Build.0 = Release|Win32
+		{1BAE9940-F7C0-47F9-9B25-13FFB46CE6BE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1BAE9940-F7C0-47F9-9B25-13FFB46CE6BE}.Debug|Win32.Build.0 = Debug|Win32
+		{1BAE9940-F7C0-47F9-9B25-13FFB46CE6BE}.Release|Win32.ActiveCfg = Release|Win32
+		{1BAE9940-F7C0-47F9-9B25-13FFB46CE6BE}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -299,7 +299,7 @@ Echotron::setfile(int value)
     FILE *fs;
 
     char wbuf[260];
-
+	Puser = true;
     if(!Puser) {
         Filenum = value;
         memset(Filename,0,sizeof(Filename));
@@ -596,10 +596,10 @@ Echotron::changepar (int npar, int value)
         ilrcross = 1.0f - abs(lrcross);
         break;
     case 8:
-        if(!setfile(value)) {
+        /*if(!setfile(value)) {
 			error_num=4;
 			MessageBox(NULL, "Could not find Echotron dly files.", "Error", MB_OK);
-		}
+		}*/
         break;
     case 9:
         lfo.Pstereo = value;

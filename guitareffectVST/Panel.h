@@ -40,6 +40,16 @@ public:
 	PanelButtonCallback(Panel *a, int dataIdx, PanelListCallback *cbList); // dataIdx만 있으면 parIdx등을 다 얻어올 수 있다.
 	void OnClick();
 };
+class PanelBrowseCallback : public ButtonCallback
+{
+public:
+	int mDataIdx;
+	Panel *mPanel;
+	PanelBrowseCallback(Panel *a, int dataIdx); // dataIdx만 있으면 parIdx등을 다 얻어올 수 있다.
+	void OnClick();
+};
+
+
 enum DataType
 {
 	Slider,
@@ -104,6 +114,7 @@ public:
 	vector<PanelButtonCallback*> mCBButtons;
 	vector<PanelOnOffCallback*> mCBOnOffs;
 	vector<PanelListCallback*> mCBLists;
+	PanelBrowseCallback *mCBBrowser;
 	vector<Data> mData;
 	int mSizePreset;
 	Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int whereis, int *presets, int sizePreset, int numPresets, vector<string> presetTexts, bool usePresetIdx=false, bool doICallSetPreset=false);
