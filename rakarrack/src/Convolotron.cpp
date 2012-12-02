@@ -238,8 +238,8 @@ Convolotron::processReplacing (float **inputs,
 	float *tempinputsr = (float*)malloc(sizeof(float)*(nPERIOD+100)); // + 100 for possible memory leak
 	float *tempoutputsl = (float*)malloc(sizeof(float)*(param->PERIOD+100));
 	float *tempoutputsr = (float*)malloc(sizeof(float)*(param->PERIOD+100)); // + 100 for possible memory leak
-    templ = (float *) malloc (sizeof (float) * (param->PERIOD+100));
-    tempr = (float *) malloc (sizeof (float) * (param->PERIOD+100));
+    templ = (float *) malloc (sizeof (float) * (nPERIOD+100));
+    tempr = (float *) malloc (sizeof (float) * (nPERIOD+100));
     if(DS_state != 0) {
         memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);
         memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
