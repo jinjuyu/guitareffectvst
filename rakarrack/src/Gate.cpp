@@ -94,29 +94,29 @@ Gate::Gate_Change (int np, int value)
 
     switch (np) {
 
-    case 1:
+    case 0:
         Pthreshold = value;
         t_level = dB2rap ((float)Pthreshold);
         break;
-    case 2:
+    case 1:
         Prange = value;
         cut = dB2rap ((float)Prange);
         break;
-    case 3:
+    case 2:
         Pattack = value;
         a_rate = 1000.0f / ((float)Pattack * fs);
         break;
-    case 4:
+    case 3:
         Pdecay = value;
         d_rate = 1000.0f / ((float)Pdecay * fs);
         break;
-    case 5:
+    case 4:
         setlpf(value);
         break;
-    case 6:
+    case 5:
         sethpf(value);
         break;
-    case 7:
+    case 6:
         Phold = value;
         hold = (float)Phold;
         break;
@@ -133,25 +133,25 @@ Gate::getpar (int np)
     switch (np)
 
     {
-    case 1:
+    case 0:
         return (Pthreshold);
         break;
-    case 2:
+    case 1:
         return (Prange);
         break;
-    case 3:
+    case 2:
         return (Pattack);
         break;
-    case 4:
+    case 3:
         return (Pdecay);
         break;
-    case 5:
+    case 4:
         return (Plpf);
         break;
-    case 6:
+    case 5:
         return (Phpf);
         break;
-    case 7:
+    case 6:
         return (Phold);
         break;
 
@@ -181,10 +181,10 @@ Gate::Gate_Change_Preset (int npreset)
 
         Fpre->ReadPreset(16,npreset-NUM_PRESETS+1);
         for (int n = 0; n < PRESET_SIZE; n++)
-            Gate_Change(n + 1, pdata[n]);
+            Gate_Change(n, pdata[n]);
     } else {
         for (int n = 0; n < PRESET_SIZE; n++)
-            Gate_Change (n + 1, presets[npreset][n]);
+            Gate_Change (n, presets[npreset][n]);
     }
 
 }

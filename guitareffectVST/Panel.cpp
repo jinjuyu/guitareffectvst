@@ -18,16 +18,7 @@ void Panel::LoadPreset(int prevPresetIdx)
 	{
 		int par = 0;
 		par = mEffect->getpar(mData[i].parIdx);
-		if(mData[i].type == Slider && mUsePresetIdx)
-		{
-			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
-			
-			if(mData[i].isFreq)
-				slider->SetVal(RealToPrint(i, GetRealMinMaxByFreq(par)));
-			else
-				slider->SetVal(RealToPrint(i, par));
-		}
-		else if(mData[i].type == Slider && mData[i].parIdx < mSizePreset)
+		if(mData[i].type == Slider && mData[i].parIdx < mSizePreset)
 		{
 			slider = (::Slider*)(mGUI->GetElement(mData[i].handle));
 			if(mData[i].isFreq)

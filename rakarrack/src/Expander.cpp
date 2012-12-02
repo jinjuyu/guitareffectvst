@@ -93,7 +93,7 @@ Expander::sethpf (int value)
 void
 Expander::Expander_Change (int np, int value)
 {
-
+	np += 1;
     switch (np) {
 
     case 1:
@@ -133,7 +133,7 @@ Expander::Expander_Change (int np, int value)
 int
 Expander::getpar (int np)
 {
-
+	np += 1;
     switch (np)
 
     {
@@ -184,10 +184,10 @@ Expander::Expander_Change_Preset (int npreset)
     if(npreset>NUM_PRESETS-1) {
         Fpre->ReadPreset(25,npreset-NUM_PRESETS+1);
         for (int n = 0; n < PRESET_SIZE; n++)
-            Expander_Change (n+1, pdata[n]);
+            Expander_Change (n, pdata[n]);
     } else {
         for (int n = 0; n < PRESET_SIZE; n++)
-            Expander_Change (n + 1, presets[npreset][n]);
+            Expander_Change (n, presets[npreset][n]);
     }
 
 }
