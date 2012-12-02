@@ -4147,5 +4147,127 @@ rkr->efx_Arpie->changepar(6,(int)o->value());}
           }
         }
       }
+      Fl_Group EXPANDER {
+        user_data 1
+        xywh {321 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button expander_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Expander_Bypass);
+ return;
+}
+rkr->Expander_Bypass=(int)o->value();
+findpos(25,(int)o->value(),o);}
+          xywh {326 215 34 18} shortcut 0x32 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice expander_preset {
+          label Preset
+          user_data 12025
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12025))rkr->efx_Expander->Expander_Change_Preset((int) o->value());
+expander_ATime->value(rkr->efx_Expander->getpar(3));
+expander_RTime->value(rkr->efx_Expander->getpar(4));
+expander_shape->value(rkr->efx_Expander->getpar(2));
+expander_threshold->value(rkr->efx_Expander->getpar(1));
+expander_HPF->value(rkr->efx_Expander->getpar(6));
+expander_LPF->value(rkr->efx_Expander->getpar(5));
+expander_level->value(rkr->efx_Expander->getpar(7));}
+          xywh {398 215 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label {Noise Gate}
+            xywh {52 52 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Boost Gate}
+            xywh {52 52 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Treble swell}
+            xywh {52 52 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider expander_ATime {
+          label {A. Time}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(220);
+ return;
+} 
+rkr->efx_Expander->Expander_Change(3,(int)o->value());}
+          xywh {372 250 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 10 maximum 2000 step 1 value 10 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider expander_RTime {
+          label {R. Time}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(221);
+ return;
+} 
+rkr->efx_Expander->Expander_Change(4,(int) o->value());}
+          xywh {371 272 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 10 maximum 500 step 1 value 500 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider expander_shape {
+          label Shape
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(222);
+ return;
+} 
+rkr->efx_Expander->Expander_Change(2, (int) o->value());}
+          xywh {371 294 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 50 step 1 value 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider expander_threshold {
+          label Thrhold
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(223);
+ return;
+} 
+rkr->efx_Expander->Expander_Change(1, (int)o->value());}
+          xywh {371 316 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -80 maximum 0 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider expander_level {
+          label Level
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(224);
+ return;
+} 
+rkr->efx_Expander->Expander_Change(7, (int) o->value());}
+          xywh {371 336 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 127 step 1 value 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider expander_LPF {
+          label LPF
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(225);
+ return;
+} 
+rkr->efx_Expander->Expander_Change(5, (int)o->value());}
+          xywh {371 357 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 26000 step 1 value 20000 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider expander_HPF {
+          label HPF
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(226);
+ return;
+} 
+rkr->efx_Expander->Expander_Change(6, (int)o->value());}
+          xywh {371 373 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 20000 step 1 value 20 textcolor 7
+          class SliderW
+        }
+      }
 
 	  */
