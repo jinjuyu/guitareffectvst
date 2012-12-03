@@ -326,6 +326,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffConvolotron, "Convolotron"));
 	mEffectNames.push_back(EffectName(EffReverbtron, "Reverbtron"));
 	mEffectNames.push_back(EffectName(EffEchotron, "Echotron"));
+	mEffectNames.push_back(EffectName(EffMBVvol, "VaryBand"));
 	// MVVvol VaryBand
 	mPanels.resize(10);
 	mBuiltPanels.resize(10);
@@ -4616,7 +4617,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 
 	}
 	break;
-	/*
+	
 	case EffMBVvol:
 	{
 		const int mbvPRESET_SIZE = 11;
@@ -4691,7 +4692,7 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
             1oo2
             1xx1 // 10
             1xx2 // 11
-			* /
+			*/
 				//Pcombi=value;
 				//break;
 
@@ -4710,10 +4711,77 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			0,100,
 			0,10,
 		};
+		real = MBVvolReal;
+		print = MBVvolPrint;
+		presetTexts.clear();
+		presetTexts.push_back("Vary Band 1");
+		presetTexts.push_back("Vary Band 2");
+		presetTexts.push_back("Vary Band 3");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffMBVvol, "VaryBand", whereis, mbvpresets, mbvPRESET_SIZE, mbvNUM_PRESETS, presetTexts);
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo1", PanelNS::Slider));
+		lfoTypeStrs.clear();
+		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Tri");
+		lfoTypeStrs.push_back("RampUp");
+		lfoTypeStrs.push_back("RampDn");
+		lfoTypeStrs.push_back("ZigZag");
+		lfoTypeStrs.push_back("M.Sqare");
+		lfoTypeStrs.push_back("M.Saw");
+		lfoTypeStrs.push_back("L.Fract");
+		lfoTypeStrs.push_back("L.FractXY");
+		lfoTypeStrs.push_back("S/H Rnd");
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFO1Type", PanelNS::Selection, false, false, lfoTypeStrs));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df1", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo2", PanelNS::Slider));
+		lfoTypeStrs.clear();
+		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Tri");
+		lfoTypeStrs.push_back("RampUp");
+		lfoTypeStrs.push_back("RampDn");
+		lfoTypeStrs.push_back("ZigZag");
+		lfoTypeStrs.push_back("M.Sqare");
+		lfoTypeStrs.push_back("M.Saw");
+		lfoTypeStrs.push_back("L.Fract");
+		lfoTypeStrs.push_back("L.FractXY");
+		lfoTypeStrs.push_back("S/H Rnd");
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFO2Type", PanelNS::Selection, false, false, lfoTypeStrs));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df2", PanelNS::Slider));
 
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Cross1", PanelNS::Slider, true));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Cross2", PanelNS::Slider, true));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Cross3", PanelNS::Slider, true));
+		vector<string> combiStrs;
+        combiStrs.push_back("1122");
+        combiStrs.push_back("1221");
+        combiStrs.push_back("1212");
+        combiStrs.push_back("o11o");
+        combiStrs.push_back("o12o");
+        combiStrs.push_back("x11x");
+        combiStrs.push_back("x12x");
+        combiStrs.push_back("1oo1");
+        combiStrs.push_back("1oo2");
+        combiStrs.push_back("1xx1");
+        combiStrs.push_back("1xx2");
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Combi", PanelNS::Selection, false, false, combiStrs));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
 	}
 	break;
-	*/
+	
 	default:
 		break;
 	}
