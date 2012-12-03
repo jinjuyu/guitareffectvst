@@ -82,506 +82,128 @@ public:
 			0, 1, // 12
 		};
 
+		const int ryanPRESET_SIZE = 19;
+		const int ryanNUM_PRESETS = 6;
+		int ryanpresets[] = {
+			//Wah Pedal
+			16, 10, 60, 0, 0, 64, 0, 0, 10, 7, -16, 40, -3, 1, 2000, 450, 1, 1, 0,
+			//Mutron
+			0, 15, 138, 0, 0, 64, 0, 50, 0, 30, 32, 0, 5, 1, 2000, 60, 0, 1, 1,
+			//Phase Wah
+			0, 50, 60, 0, 0, 64, 30, 10, 10, 30, 32, 0, 10, 2, 2000, 350, 1, 1, 2,
+			//Succulent Phaser
+			64, 8, 35, 10, 0, 64, 50, -10, 53, 35, 28, -16, 32, 4, 2600, 300, 1, 1, 3,
+			//Quacky
+			16, 10, 60, 0, 0, 64, 0, 40, 10, 32, -16, 40, -3, 1, 2000, 400, 1, 1, 4,
+			//Smoothtron
+			0, 15, 138, 0, 0, 64, 0, 15, 0, 20, 32, 0, 5, 1, 2000, 60, 0, 3, 5
+
+		};
+
+		int RyanReal[] = {
+			//case 0:
+				//setvolume (value);
+				//break;
+			//case 1:
+				//Pq = value;
+				//q = (float) Pq;
+				//break;
+			//case 2:
+				//lfo.Pfreq = value;
+				//lfo.updateparams ();
+				//break;
+			//case 3:
+				//lfo.Prandomness = 0;//value;
+				//lfo.updateparams ();
+				//break;
+			//case 4:
+				//lfo.PLFOtype = value;
+				//lfo.updateparams ();
+				//break;
+			//case 5:
+				//lfo.Pstereo = value;
+				//lfo.updateparams ();
+				//break;
+			//case 6:
+				//setwidth (value);
+				//break;
+			//case 7:
+				//setampsns (value);
+				//break;
+			//case 8:
+				//Pampsnsinv = value;
+				//setampsns (Pampsns);
+				//break;
+			//case 9:
+				//Pampsmooth = value;
+				//setampsns (Pampsns);
+				//break;
+			//case 10:
+				//Plp = value;
+				//lpmix = ((float) Plp)/32.0f;
+				//reinitfilter ();
+				//break;
+			//case 11:
+				//Pbp = value;
+				//bpmix = ((float) Pbp)/32.0f;
+				//reinitfilter ();
+				//break;
+			//case 12:
+				//Php = value;
+				//hpmix = ((float) Php)/32.0f;
+				//reinitfilter ();
+				//break;
+			//case 13:
+				//Pstages = (value - 1);
+				//filterl->setstages(Pstages);
+				//filterr->setstages(Pstages);
+				//cleanup();
+				//break;
+			//case 14:
+				//Prange = value;
+				//if(Pamode) maxfreq = ((float) Prange)/(fSAMPLE_RATE/6.0f);
+				//else maxfreq = ((float) Prange);
+				//break;
+			//case 15:
+				//Pminfreq = value;
+				//if (Pamode)  minfreq = ((float) Pminfreq)/(fSAMPLE_RATE/6.0f);
+				//else minfreq = (float) value;
+				//break;
+			//case 16:
+				//variq = value;
+				//break;
+			//case 17:
+				//Pmode=value;
+				//if((Pmode==1) || (Pmode==3)) Pqm = 1;
+				//else Pqm = 0;
+				//filterl->setmode(Pqm);
+				//filterr->setmode(Pqm);
+
+				//if((Pmode==2) || (Pmode==3)) Pamode = 1;
+				//else Pamode = 0;
+				//if(Pamode) {
+					//minfreq = ((float) Pminfreq)/(fSAMPLE_RATE/6.0f);
+					//maxfreq = ((float) Prange)/(fSAMPLE_RATE/6.0f);
+				//} else {
+					//minfreq = (float) Pminfreq;
+					//maxfreq = (float) Prange;
+				//}
+
+				//break;
+			//case 18:
+				//Ppreset = value;
+				//break;
+
+
+		};
+		int RyanPrint[] = {
+		};
+
+
 	}
 };
 
 /*
-	  Fl_Group MBVVOL {
-        user_data 1
-        xywh {321 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
-      } {
-        Fl_Light_Button mbvvol_activar {
-          label On
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(116);
- o->value(rkr->MBVvol_Bypass);
- return;
-}
-rkr->MBVvol_Bypass=(int)o->value();
-if((int) o->value()==0)
-rkr->efx_MBVvol->cleanup();
-findpos(28,(int)o->value(),o);}
-          xywh {326 216 34 18} shortcut 0x38 color 62 selection_color 1 labelsize 10 align 84 when 1
-        }
-        Fl_Choice mbvvol_preset {
-          label Preset
-          user_data 12028
-          callback {long long ud= (long long) v;
-if((ud==0)||(ud==12028))rkr->efx_MBVvol->setpreset((int)o->value());
-mbvvol_WD->value(rkr->efx_MBVvol->getpar(0)-64);
-mbvvol_freq1->value(rkr->efx_MBVvol->getpar(1));
-mbvvol_lfotype1->value(rkr->efx_MBVvol->getpar(2));
-mbvvol_stdf1->value(rkr->efx_MBVvol->getpar(3));
-mbvvol_freq2->value(rkr->efx_MBVvol->getpar(4));
-mbvvol_lfotype2->value(rkr->efx_MBVvol->getpar(5));
-mbvvol_stdf2->value(rkr->efx_MBVvol->getpar(6));
-mbvvol_cross1->value(rkr->efx_MBVvol->getpar(7));
-mbvvol_cross2->value(rkr->efx_MBVvol->getpar(8));
-mbvvol_cross3->value(rkr->efx_MBVvol->getpar(9));
-mbvvol_combi->value(rkr->efx_MBVvol->getpar(10));}
-          xywh {398 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label {VaryVol 1}
-            xywh {72 72 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {VaryVol 2}
-            xywh {72 72 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {VaryVol 3}
-            xywh {72 72 36 21} labelsize 10
-          }
-        }
-        Fl_Value_Slider mbvvol_WD {
-          label {Wet/Dry}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(248);
- return;
-}
-rkr->efx_MBVvol->changepar(0,(int)(o->value()+64));}
-          xywh {373 239 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider mbvvol_freq1 {
-          label {Tempo 1}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(249);
- return;
-}
-rkr->efx_MBVvol->changepar(1,(int)o->value());}
-          xywh {373 251 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 600 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Choice mbvvol_lfotype1 {
-          label {LFO 1 Type}
-          callback {rkr->efx_MBVvol->changepar(2,(int)o->value());}
-          xywh {384 264 72 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
-          code0 {o->menu(menu_chorus_lfotype);}
-        } {}
-        Fl_Value_Slider mbvvol_stdf1 {
-          label {St.df 1}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(250);
- return;
-}
-rkr->efx_MBVvol->changepar(3,(int)o->value());}
-          xywh {373 283 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider mbvvol_freq2 {
-          label {Tempo 2}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(251);
- return;
-}
-rkr->efx_MBVvol->changepar(4,(int)o->value());}
-          xywh {373 295 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 600 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Choice mbvvol_lfotype2 {
-          label {LFO 2 Type}
-          callback {rkr->efx_MBVvol->changepar(5,(int)o->value());}
-          xywh {384 308 72 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
-          code0 {o->menu(menu_chorus_lfotype);}
-        } {}
-        Fl_Value_Slider mbvvol_stdf2 {
-          label {St.df 2}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(252);
- return;
-}
-rkr->efx_MBVvol->changepar(6,(int)o->value());}
-          xywh {373 327 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider mbvvol_cross1 {
-          label Cross1
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(253);
- return;
-}
-rkr->efx_MBVvol->changepar(7,(int)o->value());}
-          xywh {373 339 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 20 maximum 1000 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider mbvvol_cross2 {
-          label Cross2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(254);
- return;
-}
-rkr->efx_MBVvol->changepar(8,(int)o->value());}
-          xywh {373 351 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1000 maximum 8000 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider mbvvol_cross3 {
-          label Cross3
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(255);
- return;
-}
-rkr->efx_MBVvol->changepar(9,(int)o->value());}
-          xywh {373 363 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 2000 maximum 26000 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Choice mbvvol_combi {
-          label Combi
-          user_data 12
-          callback {rkr->efx_MBVvol->changepar(10,(int)o->value());}
-          xywh {384 375 72 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label 1122
-            xywh {0 0 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label 1221
-            xywh {10 10 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label 1212
-            xywh {20 20 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label o11o
-            xywh {30 30 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label o12o
-            xywh {40 40 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label x11x
-            xywh {50 50 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label x12x
-            xywh {60 60 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label 1oo1
-            xywh {40 40 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label 1oo2
-            xywh {50 50 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label 1xx1
-            xywh {60 60 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label 1xx2
-            xywh {70 70 36 21} labelsize 10
-          }
-        }
-      }
-      Fl_Group LOOPER {
-        user_data 1
-        xywh {319 213 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
-      } {
-        Fl_Light_Button looper_activar {
-          label On
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(116);
- o->value(rkr->Looper_Bypass);
- return;
-}
-rkr->Looper_Bypass=(int)o->value();
-if((int) o->value()==0)
-rkr->efx_Looper->cleanup();
-findpos(30,(int)o->value(),o);}
-          xywh {324 217 34 18} shortcut 0x35 color 62 selection_color 1 labelsize 10 align 84 when 1
-        }
-        Fl_Choice looper_preset {
-          label Preset
-          user_data 12030
-          callback {long long ud= (long long) v;
-if((ud==0)||(ud==12030))rkr->efx_Looper->setpreset((int) o->value());
-looper_WD->value(rkr->efx_Looper->getpar(0)-64);
-looper_play->value(rkr->efx_Looper->getpar(1));
-looper_record->value(rkr->efx_Looper->getpar(3));
-looper_rv->value(rkr->efx_Looper->getpar(5));
-looper_ap->value(rkr->efx_Looper->getpar(9));
-looper_level1->value(rkr->efx_Looper->getpar(6));
-looper_level2->value(rkr->efx_Looper->getpar(10));
-
-looper_t1->value(rkr->efx_Looper->getpar(7));
-looper_t2->value(rkr->efx_Looper->getpar(8));
-looper_r1->value(rkr->efx_Looper->getpar(11));
-looper_r2->value(rkr->efx_Looper->getpar(12));
-looper_lnk->value(rkr->efx_Looper->getpar(13));
-looper_Tempo->value(rkr->efx_Looper->getpar(14));
-looper_bar->value(rkr->efx_Looper->getpar(15));
-looper_ms->value(rkr->efx_Looper->getpar(17));}
-          xywh {396 217 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label Looper
-            xywh {67 67 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label Reverse
-            xywh {0 0 36 21} labelsize 10
-          }
-        }
-        Fl_Value_Slider looper_WD {
-          label {Wet/Dry}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(267);
- return;
-}
-rkr->efx_Looper->changepar(0,(int)(o->value()+64));}
-          xywh {370 238 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider looper_level1 {
-          label {Level 1}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(268);
- return;
-}
-rkr->efx_Looper->changepar(6,(int)o->value());}
-          xywh {370 250 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider looper_level2 {
-          label {Level 2}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(269);
- return;
-}
-rkr->efx_Looper->changepar(10,(int)o->value());}
-          xywh {370 262 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider looper_Tempo {
-          label Tempo
-          callback {rkr->efx_Looper->changepar(14,(int)o->value());}
-          xywh {370 274 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 when 4 minimum 20 maximum 380 step 1 value 100 textcolor 7
-          class SliderW
-        }
-        Fl_Choice looper_bar {
-          label {Time Sig.}
-          callback {rkr->efx_Looper->changepar(15,(int)o->value());}
-          xywh {376 286 40 15} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label {2/4}
-            xywh {0 0 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {3/4}
-            xywh {10 10 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {4/4}
-            xywh {20 20 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {5/4}
-            xywh {30 30 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {6/8}
-            xywh {40 40 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {7/8}
-            xywh {50 50 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {9/8}
-            xywh {60 60 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {11/8}
-            xywh {70 70 36 21} labelsize 9
-          }
-        }
-        Fl_Choice looper_ms {
-          label MS
-          callback {rkr->efx_Looper->changepar(17,(int)o->value());}
-          xywh {440 286 29 15} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label N
-            xywh {10 10 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label H
-            xywh {20 20 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label L
-            xywh {20 20 36 21} labelsize 9
-          }
-        }
-        Fl_Check_Button looper_rv {
-          label Reverse
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(270);
- return;
-}
-rkr->efx_Looper->changepar(5,(int)o->value())}
-          xywh {327 302 61 15} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Check_Button looper_ap {
-          label {Auto Play}
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(271);
- return;
-}
-rkr->efx_Looper->changepar(9,(int)o->value())}
-          xywh {397 302 67 15} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Box Box_Play {
-          label {Play/Stop}
-          xywh {323 316 52 14} labelsize 10 labelcolor 7
-        }
-        Fl_Box Box_P {
-          label Pause
-          xywh {377 316 44 14} labelsize 10 labelcolor 7
-        }
-        Fl_Box {} {
-          label Record
-          xywh {428 316 44 14} labelsize 10 labelcolor 7
-        }
-        Fl_Button looper_play {
-          label {@|>}
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(272);
- return;
-}
-rkr->efx_Looper->changepar(1,(int)o->value());
-update_looper();}
-          xywh {327 330 44 22} type Toggle shortcut 0xffc2
-        }
-        Fl_Button looper_stop {
-          label {@||}
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(273);
- return;
-}
-rkr->efx_Looper->changepar(2,(int)o->value());
-update_looper();}
-          xywh {378 330 44 22} type Toggle shortcut 0xffc3
-        }
-        Fl_Button looper_record {
-          label {@circle}
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(274);
- return;
-}
-rkr->efx_Looper->changepar(3,(int)o->value());
-update_looper();}
-          xywh {428 330 44 22} type Toggle labelcolor 1
-        }
-        Fl_Box {} {
-          label Track
-          xywh {390 362 39 14} labelsize 10 labelcolor 7
-        }
-        Fl_Check_Button looper_r1 {
-          label R1
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(275);
- return;
-}
-rkr->efx_Looper->changepar(11,(int)o->value())}
-          xywh {327 366 15 15} down_box BORDER_BOX labelsize 10 labelcolor 7 align 1
-        }
-        Fl_Check_Button looper_r2 {
-          label R2
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(276);
- return;
-}
-rkr->efx_Looper->changepar(12,(int)o->value())}
-          xywh {346 366 15 15} down_box BORDER_BOX labelsize 10 labelcolor 7 align 1
-        }
-        Fl_Button looper_t1 {
-          label 1
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(277);
- return;
-}
-rkr->efx_Looper->changepar(7,(int)o->value());
-update_looper();}
-          xywh {430 360 18 18} type Toggle labelsize 10 align 16
-        }
-        Fl_Button looper_t2 {
-          label 2
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(278);
- return;
-}
-rkr->efx_Looper->changepar(8,(int)o->value());
-update_looper();}
-          xywh {453 360 18 18} type Toggle labelsize 10 align 16
-        }
-        Fl_Check_Button looper_lnk {
-          label Lnk
-          user_data 2
-          callback {rkr->efx_Looper->changepar(13,(int)o->value())}
-          xywh {346 380 15 15} down_box BORDER_BOX labelsize 10 labelcolor 7 align 4
-        }
-        Fl_Button looper_clear {
-          label Clear
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(279);
- return;
-}
-rkr->efx_Looper->changepar(4,(int)o->value());
-update_looper();}
-          xywh {365 378 43 14} labelsize 10
-        }
-        Fl_Check_Button looper_mt {
-          label M
-          user_data 2
-          callback {rkr->efx_Looper->changepar(16,(int)o->value())}
-          xywh {412 380 27 15} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Box L_TimePos {
-          xywh {440 379 35 14} box DOWN_BOX align 84
-        }
-      }
       Fl_Group RYANWAH {
         user_data 1
         xywh {479 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
