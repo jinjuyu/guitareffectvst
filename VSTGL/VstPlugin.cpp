@@ -76,6 +76,7 @@ effectName("guitareffectVST"),
 vendorName("Jinju")
 {
 	// Setup RAKARRACK global vars
+	//* XXX:
 	mParam = new Parameters();
 	mParam->fPERIOD = 32768.0f;
 	mParam->PERIOD = 32768;
@@ -112,6 +113,7 @@ vendorName("Jinju")
 	c = b + "\\IR\\GK09 -jazz chorus room_K.wav";
 	strncpy(convF, c.c_str(), 1023);
 	// RAKARRACK effects
+	/*
 	mEffEcho = new Echo(mParam, nullptr, nullptr);
 	mEffDistorsion = new Distorsion(mParam, nullptr, nullptr);
 	mEffConvolotron = new Convolotron(mParam, nullptr, nullptr, 1, 4, 2);
@@ -159,10 +161,12 @@ vendorName("Jinju")
 	mEffLimiter = new Compressor(mParam, nullptr, nullptr);
 	mEffLimiter->Compressor_Change_Preset(0,3);
 	mEffWahWah = new DynamicFilter(mParam, nullptr, nullptr);
-	mEffWahWah->setpreset(0);
 	mParam->rtrig = .6f;
 	RecNote = new Recognize(mParam, nullptr, nullptr, mParam->rtrig);
 	RC = new RecChord(mParam);
+	
+	
+	mEffWahWah->setpreset(0);
 	//presets
 	
 	int preset[9] =  {62, 64, 456, 64, 100, 90, 55, 0, 0};
@@ -296,7 +300,7 @@ vendorName("Jinju")
 	mEffEchotron->setfile(0);
 	strncpy(mEffReverbtron->Filename, reveF, 1023);
 	mEffReverbtron->setfile(0);
-
+	//*/
 
 
 	// originals
@@ -346,6 +350,7 @@ vendorName("Jinju")
 //----------------------------------------------------------------------------
 VstPlugin::~VstPlugin()
 {
+	/* XXX:
 	delete mEffEcho;
 	delete mEffDistorsion;
 	delete mEffConvolotron;
@@ -391,6 +396,8 @@ VstPlugin::~VstPlugin()
 	delete mEffEQ4;
 	delete mEffEQ3;
 	delete mParam;
+	*/
+
 	int i;
 
 	//Delete event queue.
@@ -452,6 +459,7 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = inputs[0][i];
 		outputs[1][i] = inputs[1][i];
 	}
+	/*
 	mParam->PERIOD = sampleFrames;
 	mParam->fPERIOD = sampleFrames;
 	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
@@ -500,113 +508,6 @@ void VstPlugin::processReplacing(float **inputs,
 	tempOutputs[0] = new float[sampleFrames];
 	tempOutputs[1] = new float[sampleFrames];
 	float outVolume;
-
-	/*
-	outVolume = mEffVibe->outvolume;
-	mEffVibe->processReplacing(outputs, tempOutputs, sampleFrames);
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-	*/
-	/*
-	outVolume = mEffDistorsion->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffDistorsion->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-
-	outVolume = mEffEQ1->outvolume;
-	mEffEQ1->processReplacing(outputs, tempOutputs, sampleFrames); // Type: Gain
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = tempOutputs[0][i]*outVolume;
-		outputs[1][i] = tempOutputs[1][i]*outVolume;
-	}
-
-	mEffCompressor->processReplacing(outputs, tempOutputs, sampleFrames); // Type: None
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = tempOutputs[0][i];
-		outputs[1][i] = tempOutputs[1][i];
-	}
-
-	outVolume = mEffEcho->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffEcho->processReplacing(outputs, tempOutputs, sampleFrames);
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-	*/
-	/*
-	outVolume = mEffChorus->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffChorus->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-
-	outVolume = mEffPhaser->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffPhaser->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-
-	outVolume = mEffReverb->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffReverb->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-
-
-	mEffEQ2->processReplacing(outputs, tempOutputs, sampleFrames); // Type: None
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = tempOutputs[0][i];
-		outputs[1][i] = tempOutputs[1][i];
-	}*/
-
-	/*outVolume = mEffWahWah->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffWahWah->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-	outVolume = mEffAlienwah->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffAlienwah->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}*/
-
-	/*
-	outVolume = mEffPan->outvolume;
-	if(outVolume > 1.0f) outVolume = 1.0f;
-	mEffPan->processReplacing(outputs, tempOutputs, sampleFrames); // Type: WetDry
-	for(int i=0; i<sampleFrames; ++i)
-	{
-		outputs[0][i] = outputs[0][i]*(1.0-outVolume) + tempOutputs[0][i]*outVolume;
-		outputs[1][i] = outputs[1][i]*(1.0-outVolume) + tempOutputs[1][i]*outVolume;
-	}
-	*/
 
     int reco=0;
     int ponlast=0;
@@ -853,7 +754,7 @@ void VstPlugin::processReplacing(float **inputs,
 	}
 	delete tempOutputs[0];
 	delete tempOutputs[1];
-
+	*/ // XXX:
 
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)
@@ -1285,7 +1186,7 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	// 여기에 플러그인의 상태를 저장한다.
 	// 그런 후에 마우스 우측버튼으로 파라메터 오토메이션이 가능하도록 16개의 파라메터를 매핑 가능하게 하면
 	// 완전 앰플리튜브...ㅜㅜ
-
+	return 0; // XXX:
 	//if(isPreset)
 		//return 0;
 	//MessageBox(NULL, "2", "asd2", MB_OK);
@@ -1428,6 +1329,7 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	
 VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
+	return 0; // XXX:
 	//MessageBox(NULL, "", "asd", MB_OK);
 	//if(isPreset)
 		//return 0;

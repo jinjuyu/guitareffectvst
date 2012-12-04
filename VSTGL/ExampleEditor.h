@@ -929,6 +929,7 @@ class ExampleEditor : public VSTGLEditor,
 	  vector<EffectName> mUsingEffectList;
 	///	Constructor.
 	  void idle();
+	  void* getDirectory (){return NULL;}
 	ExampleEditor(AudioEffect *effect);
 	///	Destructor.
 	~ExampleEditor();

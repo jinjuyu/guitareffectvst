@@ -280,11 +280,22 @@ thing(0.0f)
 {
 	//Set the opengl context's size - This must be called here!
 	setRect(0, 0, 900, 750);
-
+	
 	mGUI = new GLGUI(m_hInstance);
 	mGUI->init();
 	
+	mPanels.resize(10);
+	mBuiltPanels.resize(10);
+	mEffectOn.resize(10);
+	mTotalEffectOn = false;
+	for(int i=0; i<10; ++i)
+	{
+		mPanels[i] = nullptr;
+		mBuiltPanels[i] = EffNone;
+		mEffectOn[i] = false;
+	}
 	//mSlider = mGUI->NewSlider(60, 185, 120, 0, 100);
+	/*
 	int x = 400;
 	exchangeCB = new ExchangeCallback(this);
 	moveUpCB = new MoveUpCallback(this);
@@ -330,16 +341,6 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffRyanWah, "MutroMojo"));
 	// MVVvol VaryBand
 	// RyanWah MutroMojo
-	mPanels.resize(10);
-	mBuiltPanels.resize(10);
-	mEffectOn.resize(10);
-	mTotalEffectOn = false;
-	for(int i=0; i<10; ++i)
-	{
-		mPanels[i] = nullptr;
-		mBuiltPanels[i] = EffNone;
-		mEffectOn[i] = false;
-	}
 
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect);
@@ -398,7 +399,7 @@ thing(0.0f)
 		mOnOffButtons[i] = b;
 	}
 
-	
+	*/
 // 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
 	//for(int i=3;i<20;++i)
 //		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
