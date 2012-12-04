@@ -1,9 +1,8 @@
-Note for Zynewave Podium(and possibly other DAWs):
-
+INSTALL
+-------------------------------------------------------------------------------------------
 you need to put all the other dlls(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.dll, libsamplerate-0.dll, libsndfile-1.dll, DevIL.dll, ILU.dll)
 in where the Podium.exe(REAPER.exe, Cubase.exe, etc) is. System32 doesn't work.
 To make this more convenient, I need to make a bridge dll for that but it's a lot of work so until then..
-
 
 
 Currently, all the codes are converted and usable in VST code but no GUI interface whatsoever.(not even parameters are mapped)
@@ -11,8 +10,17 @@ I have implemented processReplacing in each effect so it can be used in VSTPlugi
 
 But, I have not converted Looper and Vocoder for apparent reasons.
 
-Code is for Visual C++ 2010(Express). Project file is placed under VSTGL directory.
+Working DAWs
+------------------------------------------------------------------------------------------------
+Tested on REAPER, Zynewave Podium, Minihost. 
+
+Known Issues
+------------------------------------------------------------------------------------------
+Does not work on FL Studio and VSTHost. Don't know how I can get it to work.
+
+About Source Code
 ----------------------------------------------------------------------------------------
+Code is for Visual C++ 2010(Express). Project file is placed under VSTGL directory.
 Code guideline:
 
 - it usually retains original code
