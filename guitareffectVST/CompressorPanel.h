@@ -2,7 +2,10 @@
 #include "../VSTGL/ExampleEditor.h"
 #include "../VSTGL/VstPlugin.h"
 
-
+namespace PanelNS
+{
+	class PanelParent;
+};
 namespace CompressorNS
 {
 class CompressorPanel;
@@ -102,12 +105,20 @@ public:
 class CompressorPanel
 {
 public:
+
 	~CompressorPanel()
+	{
+		Delete();
+
+	}
+	void Delete()
 	{
 		for(vector<int>::iterator it = mButtons.begin(); it != mButtons.end(); ++it)
 		{
 			mGUI->DeleteGUIElement(*it);
 		}
+		mButtons.clear();
+		mPresetStrs.clear();
 		// delete callbacks here
 		delete cbPresetSelect;
 		delete cbPresetSelected;
@@ -120,12 +131,12 @@ public:
 		delete cbPeak;
 		delete cbAuto;
 		delete cbStereo;
-
 	}
 	void LoadPreset(int prevPreset);
 	int *real;
 	int mWhereis;
-	CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis);
+	CompressorPanel(GLGUI *gui, VstPlugin *plug);
+	void Create(int whereis);
 	void DrawText();
 	void SetPreset(int preset);
 	vector<string> mPresetStrs;

@@ -92,10 +92,14 @@ void LinealEQ::DrawText()
 	y += 15;
 
 }
-LinealEQ::LinealEQ(GLGUI *gui, VstPlugin *plug, int whereis)
-	:mGUI(gui), mWhereis(whereis), mPlug(plug)
+LinealEQ::LinealEQ(GLGUI *gui, VstPlugin *plug)
+	:mGUI(gui), mPlug(plug)
 {
 
+
+}
+void LinealEQ::Create(int whereis)
+{
 	real = EQ1Real;
 	print = EQ1Print;
 	int x,y,w=180,h=300;
@@ -185,7 +189,6 @@ LinealEQ::LinealEQ(GLGUI *gui, VstPlugin *plug, int whereis)
 	y += 15;
 
 }
-
 
 GainCallback::GainCallback(LinealEQ *a): mPanel(a), SliderCallback()
 {

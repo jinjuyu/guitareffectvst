@@ -185,10 +185,10 @@ Echotron::processReplacing (float **inputs,
 								int sampleFrames)
 {
 
-    int i, j, k;
+    int i=0, j=0, k=0;
     int length = Plength;
-    float l,r,lyn, ryn;
-    float rxindex,lxindex;
+    float l=0,r=0,lyn=0, ryn=0;
+    float rxindex=0,lxindex=0;
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = sampleFrames;
 	lfo.update();

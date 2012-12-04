@@ -90,23 +90,27 @@ vendorName("Jinju")
 	Wave_down_q = 1;
 
 	char buffer[1024];
+	buffer[1023] = '\0';
 	GetModuleFileName((HMODULE)hInstance, buffer, sizeof(buffer));
 	mHInstance = hInstance;
 	string a(buffer);
 	int pos = a.find_last_of('\\');
 	string b = a.substr(0, pos);
 	b += "\\guitareffectVST\\data";
-	strcpy(DATADIR, b.c_str());
+	strncpy(DATADIR, b.c_str(), 1023);
 	char convF[1024];
+	convF[1023] = '\0';
 	char echoF[1024];
+	echoF[1023] = '\0';
 	char reveF[1024];
+	reveF[1023] = '\0';
 	string c;
 	c = b + "\\1.dly";
-	strcpy(echoF, c.c_str());
+	strncpy(echoF, c.c_str(), 1023);
 	c = b + "\\1.rvb";
-	strcpy(reveF, c.c_str());
+	strncpy(reveF, c.c_str(), 1023);
 	c = b + "\\IR\\GK09 -jazz chorus room_K.wav";
-	strcpy(convF, c.c_str());
+	strncpy(convF, c.c_str(), 1023);
 	// RAKARRACK effects
 	mEffEcho = new Echo(mParam, nullptr, nullptr);
 	mEffDistorsion = new Distorsion(mParam, nullptr, nullptr);
@@ -945,7 +949,7 @@ void VstPlugin::setProgramName(char *name)
 //----------------------------------------------------------------------------
 void VstPlugin::getProgramName(char *name)
 {
-	strcpy(name, programs[curProgram].name.c_str());
+	strncpy(name, programs[curProgram].name.c_str(), 64);
 }
 
 //----------------------------------------------------------------------------
@@ -955,7 +959,7 @@ bool VstPlugin::getProgramNameIndexed(VstInt32 category, VstInt32 index, char* t
 
     if(index < numPrograms)
     {
-		strcpy(text, programs[index].name.c_str());
+		strncpy(text, programs[index].name.c_str(), 64);
 		retval = true;
     }
 
@@ -997,7 +1001,7 @@ float VstPlugin::getParameter(VstInt32 index)
 //----------------------------------------------------------------------------
 void VstPlugin::getParameterLabel(VstInt32 index, char *label)
 {
-	strcpy(label, " ");
+	strncpy(label, " ", 64);
 }
 
 //----------------------------------------------------------------------------
@@ -1012,7 +1016,7 @@ void VstPlugin::getParameterName(VstInt32 index, char *label)
 	char tempch[8];
 
 	sprintf(tempch, "p%d", static_cast<int>(index));
-	strcpy(label, tempch);
+	strncpy(label, tempch, 7);
 }
 
 //----------------------------------------------------------------------------
@@ -1059,7 +1063,7 @@ float VstPlugin::getVu()
 //----------------------------------------------------------------------------
 bool VstPlugin::getEffectName(char* name)
 {
-    strcpy(name, effectName.c_str());
+    strncpy(name, effectName.c_str(), 64);
 
     return true;
 }
@@ -1067,7 +1071,7 @@ bool VstPlugin::getEffectName(char* name)
 //----------------------------------------------------------------------------
 bool VstPlugin::getVendorString(char* text)
 {
-    strcpy(text, vendorName.c_str());
+    strncpy(text, vendorName.c_str(), 64);
 
     return true;
 }
@@ -1075,7 +1079,7 @@ bool VstPlugin::getVendorString(char* text)
 //----------------------------------------------------------------------------
 bool VstPlugin::getProductString(char* text)
 {
-    strcpy(text, effectName.c_str());
+    strncpy(text, effectName.c_str(), 64);
 
     return true;
 }

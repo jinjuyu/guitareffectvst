@@ -144,9 +144,13 @@ void EchoPanel::DrawText()
 	y += 15;
 
 }
-EchoPanel::EchoPanel(GLGUI *gui, VstPlugin *plug, int whereis)
-	:mGUI(gui), mWhereis(whereis), mPlug(plug)
+EchoPanel::EchoPanel(GLGUI *gui, VstPlugin *plug)
+	:mGUI(gui), mPlug(plug)
 {
+}
+void EchoPanel::Create(int whereis)
+{
+	mWhereis = whereis;
     mPresetStrs.push_back("Echo 1");
     mPresetStrs.push_back("Echo 2");
     mPresetStrs.push_back("Echo 3");
@@ -175,7 +179,6 @@ EchoPanel::EchoPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	}
 	cbPresetSelect = new PresetCallback(this);
 	cbPresetSelected = new PresetListCallback(this);
-	cbWetDry = new WetDryCallback(this);
 	cbWetDry = new WetDryCallback (this);
 	cbReverse = new ReverseCallback (this);
 	cbPan = new PanCallback (this);
@@ -244,8 +247,8 @@ EchoPanel::EchoPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	char temp[123];
 	sprintf(temp, "%.4f %d", RealToVst(7, 47), VstToReal(7, 1.0));
 	MessageBox(NULL, temp, temp, MB_OK);*/
-}
 
+}
 
 PresetCallback::	PresetCallback(EchoPanel *a)
 	:mPanel(a), ButtonCallback()

@@ -157,6 +157,12 @@ public:
 
 	~DistorsionPanel()
 	{
+		Delete();
+	}
+	DistorsionPanel(GLGUI *gui, VstPlugin *plug);
+	void Create(int whereis);
+	void Delete()
+	{
 		for(vector<int>::iterator it = mButtons.begin(); it != mButtons.end(); ++it)
 		{
 			mGUI->DeleteGUIElement(*it);
@@ -175,9 +181,12 @@ public:
 		delete cbPresetSelect;
 		delete cbPresetSelected;
 		delete cbType;
+		mButtons.clear();
+		mPresetStrs.clear();
+		mTypeStrs.clear();
+
 
 	}
-	DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis);
 	void SetPreset(int preset);
 	vector<string> mPresetStrs;
 	int *mPresets;

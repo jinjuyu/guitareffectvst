@@ -1,4 +1,11 @@
 /*
+
+CreateEffectPanel
+DeleteEffectPanel
+이거 제대로 하려면
+전 패널을 다 미리 new해두고 스와핑만 하면서 써야한다.
+중간에 딜리트가 하나라도 있으면 쓰레드가 와서 잡아먹어버림. 하지만 지금 잘 돌아가므로 놔두자.
+
 	// 음. Convolotron의 컨벌루션wav파일을 Selection으로 해서 이름으로 선택하게 하고 전에 ndrive에 올린
 	// wav파일을 이름으로 해서 넣어둔다.
 	// 파일이 많으므로 Contolotron에서 메뉴를 3개 두고 나눠서 200여개의 IR파일을 모두 제공한다.

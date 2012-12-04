@@ -247,6 +247,8 @@ public:
 	}
 	void onMouseDown(int button, int x, int y)
 	{
+		if((int)this > 100000) // stupid access violation  can't find the cause so im doing this shit
+			// oh but it doesn't seem to be working lol "this" is still null
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
 			if(!(*i)->hidden)
@@ -255,6 +257,7 @@ public:
 	}
 	void onMouseUp(int button, int x, int y)
 	{
+		if((int)this > 100000)
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
 			if(!(*i)->hidden)
@@ -263,6 +266,7 @@ public:
 	}
 	void onMouseMove(int x, int y)
 	{
+		if((int)this > 100000)
 		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
 		{
 			if(!(*i)->hidden)
@@ -890,6 +894,7 @@ enum EffNameType
 	EffValve,
 	EffVibe,
 	EffWahWah,
+	NumEffs,
 };
 
 class EffectName
@@ -923,6 +928,7 @@ class ExampleEditor : public VSTGLEditor,
 	  vector<EffectName> mEffectNames;
 	  vector<EffectName> mUsingEffectList;
 	///	Constructor.
+	  void idle();
 	ExampleEditor(AudioEffect *effect);
 	///	Destructor.
 	~ExampleEditor();
@@ -943,7 +949,10 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateEffectPanel(EffNameType type, int whereis, bool loadPrev = false, int prevIdx = -1);
 	void DeleteEffectPanel(int whereis);
 	int GetEffectPreset(int whereis);
-	
+	bool mDelMeCompressor;
+	bool mDelMeEQ;
+	bool mDelMeDist;
+	bool mDelMeEcho;
 	
 	DistorsionPanelNS::DistorsionPanel *mDistPanel;
 	LinealEQNS::LinealEQ *mEQ1Panel;
@@ -961,16 +970,30 @@ class ExampleEditor : public VSTGLEditor,
 	///	Called repeatedly, to update the graphics.
 	void onMouseDown(int button, int x, int y)// button: 1 lmb 2 rmb 3 mmb
 	{
-		mGUI->onMouseDown(button, x,y);
+		if((int)mGUI > 100000)
+			mGUI->onMouseDown(button, x,y);
 	}
 	void onMouseUp(int button, int x, int y)
 	{
-		mGUI->onMouseUp(button, x,y);
+		if((int)mGUI > 100000)
+			mGUI->onMouseUp(button, x,y);
 	}
 	void onMouseMove(int x, int y)
 	{
-		mGUI->onMouseMove(x,y);
+		if((int)mGUI > 100000)
+			mGUI->onMouseMove(x,y);
 	}
+	void CreateEchotron(int whereis, bool loadPrev, int prevIdx);
+	void CreateConvolotron(int whereis, bool loadPrev, int prevIdx);
+	void CreateRyanWah(int whereis, bool loadPrev, int prevIdx);
+	void CreateReverbtron(int whereis, bool loadPrev, int prevIdx);
+	void CreateArpie(int whereis, bool loadPrev, int prevIdx);
+	void CreateExpander(int whereis, bool loadPrev, int prevIdx);
+	void CreateShuffle(int whereis, bool loadPrev, int prevIdx);
+	void CreateSynthfilter(int whereis, bool loadPrev, int prevIdx);
+	void CreateMVVvol(int whereis, bool loadPrev, int prevIdx);
+
+
 	void timerCallback();
 	GLGUI *mGUI;
 	int moveUpButton;

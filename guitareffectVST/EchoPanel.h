@@ -82,29 +82,31 @@ class EchoPanel
 public:
 	~EchoPanel()
 	{
+		Delete();
+	}
+	void Create(int whereis);
+	void Delete()
+	{
 		for(vector<int>::iterator it = mButtons.begin(); it != mButtons.end(); ++it)
 		{
 			mGUI->DeleteGUIElement(*it);
 		}
-		/*
-		delete cbWetDry;
-		delete myCB1;
-		delete myCB2;
-		delete cbLRCR;
-		delete cbDrive;
-		delete cbLevel;
-		delete cbPan;
-		delete cbHPF;
-		delete cbLPF;
-		delete cbSubOctv;
-		delete cbPrefilter;
 		delete cbPresetSelect;
 		delete cbPresetSelected;
-		delete cbType;
-		*/
+		delete cbWetDry;
+		delete cbReverse;
+		delete cbPan;
+		delete cbDelay;
+		delete cbLRdl;
+		delete cbLRCr;
+		delete cbFb;
+		delete cbDamp;
+		mButtons.clear();
+		mPresetStrs.clear();
+
 	}
 	void LoadPreset(int prevPreset);
-	EchoPanel(GLGUI *gui, VstPlugin *plug, int whereis);
+	EchoPanel(GLGUI *gui, VstPlugin *plug);
 	int *real;
 	int *print;
 	void SetPreset(int preset);

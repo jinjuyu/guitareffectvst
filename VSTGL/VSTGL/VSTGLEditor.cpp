@@ -321,98 +321,113 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 								   LPARAM lParam)
 {
 	VstKeyCode tempkey;
-	VSTGLEditor *ed = reinterpret_cast<VSTGLEditor *>(GetWindowLong(hwnd, GWL_USERDATA));
+	long a = GetWindowLong(hwnd, GWL_USERDATA);
+	VSTGLEditor *ed = reinterpret_cast<VSTGLEditor *>(a);
+	RECT rect;
+	rect.top=0;
+	rect.left=0;
+	rect.bottom = 750;
+	rect.right = 900;
 
-	switch(message)
+	if(a > 100000)
 	{
-		case WM_LBUTTONDOWN:
-			if(ed)
-			{
-				SetCapture(hwnd);
-				ed->onMouseDown(1,
-								(int)(short)GET_X_LPARAM(lParam),
-								(int)(short)GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_MBUTTONDOWN:
-			if(ed)
-			{
-				SetCapture(hwnd);
-				ed->onMouseDown(3,
-								(int)(short)GET_X_LPARAM(lParam),
-								(int)(short)GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_RBUTTONDOWN:
-			if(ed)
-			{
-				SetCapture(hwnd);
-				ed->onMouseDown(2,
-								(int)(short)GET_X_LPARAM(lParam),
-								(int)(short)GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_LBUTTONUP:
-			if(ed)
-			{
-				ReleaseCapture();
-				ed->onMouseUp(1,
-							  (int)(short)GET_X_LPARAM(lParam),
-							  (int)(short)GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_MBUTTONUP:
-			if(ed)
-			{
-				ReleaseCapture();
-				ed->onMouseUp(3,
-							  (int)(short)GET_X_LPARAM(lParam),
-							  (int)(short)GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_RBUTTONUP:
-			if(ed)
-			{
-				ReleaseCapture();
-				ed->onMouseUp(2,
-							  (int)(short)GET_X_LPARAM(lParam),
-							  (int)(short)GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_MOUSEMOVE:
-			if(ed)
-			{
-				ed->onMouseMove(GET_X_LPARAM(lParam),
-								GET_Y_LPARAM(lParam));
-			}
-			break;
-		case WM_MOUSEWHEEL:
-			if(ed)
-				ed->onMouseWheel(HIWORD(wParam),
-								 (int)(short)GET_X_LPARAM(lParam),
-								 (int)(short)GET_Y_LPARAM(lParam));
-			break;
-		case WM_KEYDOWN:
-			if(ed)
-			{
-				//This could be improved?
-				tempkey.character = wParam;
-				ed->onGLKeyDown(tempkey);
-			}
-			break;
-		case WM_KEYUP:
-			if(ed)
-			{
-				tempkey.character = wParam;
-				ed->onGLKeyUp(tempkey);
-			}
-			break;
-		case WM_PAINT:
-			if(ed)
-				ed->idle();
-			break;
+		switch(message)
+		{
+			case WM_LBUTTONDOWN:
+				if(ed)
+				{
+					SetCapture(hwnd);
+					ed->onMouseDown(1,
+									(int)(short)GET_X_LPARAM(lParam),
+									(int)(short)GET_Y_LPARAM(lParam));
+					//InvalidateRect(hwnd, &rect, true);
+				}
+				break;
+			case WM_MBUTTONDOWN:
+				if(ed)
+				{
+					SetCapture(hwnd);
+					ed->onMouseDown(3,
+									(int)(short)GET_X_LPARAM(lParam),
+									(int)(short)GET_Y_LPARAM(lParam));
+					//InvalidateRect(hwnd, &rect, true);
+				}
+				break;
+			case WM_RBUTTONDOWN:
+				if(ed)
+				{
+					SetCapture(hwnd);
+					ed->onMouseDown(2,
+									(int)(short)GET_X_LPARAM(lParam),
+									(int)(short)GET_Y_LPARAM(lParam));
+					//InvalidateRect(hwnd, &rect, true);
+				}
+				break;
+			case WM_LBUTTONUP:
+				if(ed)
+				{
+					ReleaseCapture();
+					ed->onMouseUp(1,
+								  (int)(short)GET_X_LPARAM(lParam),
+								  (int)(short)GET_Y_LPARAM(lParam));
+					//InvalidateRect(hwnd, &rect, true);
+				}
+				break;
+			case WM_MBUTTONUP:
+				if(ed)
+				{
+					ReleaseCapture();
+					ed->onMouseUp(3,
+								  (int)(short)GET_X_LPARAM(lParam),
+								  (int)(short)GET_Y_LPARAM(lParam));
+					//InvalidateRect(hwnd, &rect, true);
+				}
+				break;
+			case WM_RBUTTONUP:
+				if(ed)
+				{
+					ReleaseCapture();
+					ed->onMouseUp(2,
+								  (int)(short)GET_X_LPARAM(lParam),
+								  (int)(short)GET_Y_LPARAM(lParam));
+					//InvalidateRect(hwnd, &rect, true);
+				}
+				break;
+			case WM_MOUSEMOVE:
+				if(ed)
+				{
+					ed->onMouseMove(GET_X_LPARAM(lParam),
+									GET_Y_LPARAM(lParam));
+				}
+				break;
+			case WM_MOUSEWHEEL:
+				if(ed)
+					ed->onMouseWheel(HIWORD(wParam),
+									 (int)(short)GET_X_LPARAM(lParam),
+									 (int)(short)GET_Y_LPARAM(lParam));
+				break;
+			case WM_KEYDOWN:
+				if(ed)
+				{
+					//This could be improved?
+					tempkey.character = wParam;
+					ed->onGLKeyDown(tempkey);
+				}
+				break;
+			case WM_KEYUP:
+				if(ed)
+				{
+					tempkey.character = wParam;
+					ed->onGLKeyUp(tempkey);
+				}
+				break;
+			case WM_PAINT:
+				if(ed)
+					ed->idle();
+				break;
+		}
 	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
-}
+	}
 
 //-----------------------------------------------------------------------------

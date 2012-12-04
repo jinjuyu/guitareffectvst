@@ -199,9 +199,13 @@ void DistorsionPanel::DrawText()
 	y += 15;
 
 }
-DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
-	:mGUI(gui), mWhereis(whereis), mPlug(plug)
+DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug)
+	:mGUI(gui), mPlug(plug)
 {
+}
+void DistorsionPanel::Create(int whereis)
+{
+	mWhereis = whereis;
 	cbWetDry = new WetDryCallback(this);
 	cbLRCR = new LRCRCallback(this);
 	cbDrive = new DriveCallback(this);
@@ -345,6 +349,7 @@ DistorsionPanel::DistorsionPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 	char temp[123];
 	sprintf(temp, "%.4f %d", RealToVst(7, 47), VstToReal(7, 1.0));
 	MessageBox(NULL, temp, temp, MB_OK);*/
+
 }
 DistorsionTypeCallback::	DistorsionTypeCallback(DistorsionPanel *a)
 	:mPanel(a), ButtonCallback()

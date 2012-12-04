@@ -142,8 +142,13 @@ public:
 	F8KCallback *cb8K;
 	F16KCallback *cb16K;
 
-	LinealEQ(GLGUI *gui, VstPlugin *plug, int whereis);
+	LinealEQ(GLGUI *gui, VstPlugin *plug);
+	void Create(int whereis);
 	~LinealEQ()
+	{
+		Delete();
+	}
+	void Delete()
 	{
 		for(vector<int>::iterator it = mButtons.begin(); it != mButtons.end(); ++it)
 		{
@@ -162,6 +167,8 @@ public:
 		delete cb4K;
 		delete cb8K;
 		delete cb16K;
+		mButtons.clear();
+
 	}
 	void LoadPreset(int aaa);
 	int PrintToReal(int val)

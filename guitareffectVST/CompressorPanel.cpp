@@ -200,9 +200,13 @@ void CompressorPanel::LoadPreset(int preset)
 	}
 }
 
-CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis)
-	:mGUI(gui), mWhereis(whereis), mPlug(plug)
+CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug)
+	:mGUI(gui), mPlug(plug)
 {
+}
+void CompressorPanel::Create(int whereis)
+{
+	mWhereis = whereis;
 	real = CompressorReal;
 	mPresetStrs.push_back("2:1");
     mPresetStrs.push_back("4:1");
@@ -285,8 +289,8 @@ CompressorPanel::CompressorPanel(GLGUI *gui, VstPlugin *plug, int whereis)
 
 
 	//SetPreset(0);
-}
 
+}
 
 PresetCallback::	PresetCallback(CompressorPanel *a)
 	:mPanel(a), ButtonCallback()

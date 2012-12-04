@@ -295,7 +295,7 @@ RyanWah::setpreset (int npreset)
     const int NUM_PRESETS = 6;
     int presets[NUM_PRESETS][PRESET_SIZE] = {
         //Wah Pedal
-        {16, 10, 60, 0, 0, 64, 0, 0, 10, 7, -16, 40, -3, 1, 2000, 450, 1, 1, 0},
+        {16, 10, 60, 0, 0,  64, 0, 0, 10, 7,  -16, 40, -3, 1, 2000,  450, 1, 1, 0},
         //Mutron
         {0, 15, 138, 0, 0, 64, 0, 50, 0, 30, 32, 0, 5, 1, 2000, 60, 0, 1, 1},
         //Phase Wah
