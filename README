@@ -11,7 +11,7 @@ I have implemented processReplacing in each effect so it can be used in VSTPlugi
 But, I have not converted Looper and Vocoder for apparent reasons.
 
 Working DAWs
-------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------
 Tested on REAPER, Zynewave Podium, Minihost. 
 
 Known Issues
