@@ -2151,3 +2151,245 @@ void ExampleEditor::CreateShifter(int whereis, bool loadPrev, int prevIdx)
 
 
 }
+void ExampleEditor::CreateStompBox(int whereis, bool loadPrev, int prevIdx)
+{
+
+		const int PRESET_SIZE = 6;
+		const int NUM_PRESETS = 8;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Odie
+			80, 32, 0, 32, 10, 0,
+			//Grunger
+			48, 10, -6, 55, 85, 1,
+			//Hard Dist.
+			48, -22, -6, 38, 12, 1,
+			//Ratty
+			48, -20, 0, 0, 70, 2,
+			//Classic Dist
+			50, 64, 0, 0, 110, 4,
+			//Morbid Impalement
+			38, 6, 6, 6, 105, 5,
+			//Mid Elve
+			48, 0, -12, 0, 127, 6,
+			//Fuzz
+			48, 0, 0, 0, 127, 7
+		};
+		int StompReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,128,
+				//Phigh = value;
+				//if( value < 0) highb = ((float) value)/64.0f;
+				//if( value > 0) highb = ((float) value)/32.0f;
+				//break;
+			//case 2:
+			0,128,
+				//Pmid = value;
+				//if( value < 0) midb = ((float) value)/64.0f;
+				//if( value > 0) midb = ((float) value)/32.0f;
+				//break;
+			//case 3:
+			0,128,
+				//Plow = value;
+				//if( value < 0) lowb = ((float) value)/64.0f;
+				//if( value > 0) lowb = ((float) value)/32.0f;
+				//break;
+			//case 4:
+			0,127,
+				//Pgain = value;
+				//gain = dB2rap(50.0f * ((float)value)/127.0f  - 50.0f);
+				//break;
+			//case 5:
+			0,7,
+			/*
+            Amp
+            Grunge
+            Rat
+            Fat Cat
+            Dist+
+            Death
+            Mid Elves Own
+            Fuzz
+			*/
+          				//Pmode = value;
+				//init_mode (Pmode);
+				//break;
+
+
+		};
+		int StompPrint[] = {
+			0,127,
+			-64,64,
+			-64,64,
+			-64,64,
+			0,127,
+			0,7,
+		};
+		int *real = StompReal;
+		int *print = StompPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Odie");
+		presetTexts.push_back("Grunger");
+		presetTexts.push_back("Hard Dist.");
+		presetTexts.push_back("Ratty");
+		presetTexts.push_back("Classic Dist");
+		presetTexts.push_back("Morbid Impalement");
+		presetTexts.push_back("Mid Elve");
+		presetTexts.push_back("Fuzz");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffStompBox, "StompBox", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Low", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Mid", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "High", PanelNS::Slider));
+		vector<string> typeStrs;
+        typeStrs.push_back("Amp");
+        typeStrs.push_back("Grunge");
+        typeStrs.push_back("Rat");
+        typeStrs.push_back("Fat Cat");
+        typeStrs.push_back("Dist+");
+        typeStrs.push_back("Death");
+        typeStrs.push_back("Mid Elves Own");
+        typeStrs.push_back("Fuzz");
+
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Mode", PanelNS::Selection, false, false, typeStrs));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+
+}
+void ExampleEditor::CreateStereoHarm(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 12;
+		const int NUM_PRESETS = 4;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Plain
+			64, 64, 12, 0, 64, 12, 0, 0, 0, 0, 0, 64,
+			//Octavador
+			64, 64, 0, 0, 64, 0, 0, 0, 0, 0, 0, 64,
+			//Chorus
+			64, 64, 12, 80, 64, 12, -80, 0, 0, 0, 0, 64,
+			//Chorus
+			64, 64, 12, 280, 64, 12, -280, 0, 0, 0, 0, 64
+
+		};
+
+		int SharReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,128,
+				//setgain (0,value);
+				//break;
+			//case 2:
+			0,24
+				//setinterval(0,value);
+				//break;
+			//case 3:
+			-2000,2000,
+				//setchrome(0, value);
+				//break;
+			//case 4:
+			0,128,
+				//setgain (1,value);
+				//break;
+			//case 5:
+			0,24,
+				//setinterval(1,value);
+				//break;
+			//case 6:
+			-2000,2000,
+				//setchrome(1, value);
+				//break;
+			//case 7:
+			0,1,
+				//PSELECT = value;;
+				//break;
+			//case 8:
+			0,23,
+				//Pnote = value;
+				//break;
+			//case 9:
+			0,33,
+				//Ptype = value;
+				//if (Ptype==0) {
+					//setchrome(0, Pchromel);
+					//setchrome(1, Pchromer);
+				//}
+				//break;
+			//case 10:
+			0,1,
+				//setMIDI (value);
+				//break;
+			//case 11:
+			0,128,
+				//setlrcross(value);
+				//break;
+
+
+		};
+		int SharPrint[] = {
+			-64,63,
+			-64,64,
+			-12,12,
+			-2000,2000,
+			-64,64,
+			-12,12,
+			-2000,2000,
+			0,1,
+			0,23,
+			0,33,
+			0,1,
+			-64,64,
+		};
+		int *real = SharReal;
+		int *print = SharPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Plain");
+		presetTexts.push_back("Octavador");
+		presetTexts.push_back("Chorus");
+		presetTexts.push_back("Chorus");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffStereoHarm, "StereoHarm", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Int L", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Chrm L", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain L", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Int R", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Chrm R", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain R", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MIDI", PanelNS::OnOff));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "SEL", PanelNS::OnOff, false, true));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}

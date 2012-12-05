@@ -17,11 +17,11 @@ But, I have not converted Looper and Vocoder for apparent reasons.
 
 Working DAWs
 -------------------------------------------------------------------------------------------
-Tested on REAPER, Zynewave Podium, Minihost. 
+Tested on REAPER, Zynewave Podium, Minihost, Pedalboard2.
 
 Known Issues
 ------------------------------------------------------------------------------------------
-Does not work on FL Studio and VSTHost. Don't know how I can get it to work.
+Does not work on FL Studio and VSTHost. Don't know how I can get it to work yet.
 
 About Source Code
 ----------------------------------------------------------------------------------------

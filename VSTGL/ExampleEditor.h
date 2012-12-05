@@ -1096,6 +1096,10 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateSustainer(int whereis, bool loadPrev, int prevIdx);
 	void CreateSequence(int whereis, bool loadPrev, int prevIdx);
 	void CreateShifter(int whereis, bool loadPrev, int prevIdx);
+	void CreateStompBox(int whereis, bool loadPrev, int prevIdx);
+	void CreateStereoHarm(int whereis, bool loadPrev, int prevIdx);
+	
+	
 	
 	
 	

@@ -81,429 +81,10 @@ public:
 			0, 1, // 11
 			0, 1, // 12
 		};
-		
-
-		const int PRESET_SIZE = 10;
-		const int NUM_PRESETS = 5;
-		int presets[NUM_PRESETS*PRESET_SIZE] = {
-			//Fast
-			0, 64, 64, 200, 200, -20, 2, 0, 0, 0,
-			//Slowup
-			0, 64, 64, 900, 200, -20, 2, 0, 0, 0,
-			//Slowdown
-			0, 64, 64, 900, 200, -20, 3, 1, 0, 0,
-			//Chorus
-			64, 64, 64, 0, 0, -20, 1, 0, 1, 22,
-			//Trig Chorus
-			64, 64, 64, 250, 100, -10, 0, 0, 0, 25
-		};
-
-		int ShifterReal[] = {
-			//case 0:
-			0,127,
-				//setvolume (value);
-				//break;
-			//case 1:
-			0,127,
-				//setpanning (value);
-				//break;
-			//case 2:
-			0,127,
-				//setgain (value);
-				//break;
-			//case 3:
-			1,2000,
-				//Pattack = value;
-				//a_rate = 1000.0f / ((float)Pattack * nfSAMPLE_RATE);
-				//break;
-			//case 4:
-			1,2000,
-				//Pdecay = value;
-				//d_rate = 1000.0f / ((float)Pdecay * nfSAMPLE_RATE);
-				//break;
-			//case 5:
-			-70,20,
-				//Pthreshold = value;
-				//t_level = dB2rap ((float)Pthreshold);
-				//td_level = t_level*.75f;
-				//tz_level = t_level*.5f;
-				//break;
-			//case 6:
-			0,12,
-				//Pinterval = value;
-				//setinterval(Pinterval);
-				//break;
-			//case 7:
-			0,1,
-				//Pupdown = value;
-				//setinterval(Pinterval);
-				//break;
-			//case 8:
-			0,2,
-            /*Trigger
-            Whammy
-            Portamento*/
-				//Pmode = value;
-				//break;
-			//case 9:
-			0,127,
-				//Pwhammy = value;
-				//whammy = (float) value / 127.0f;
-				//break;
-
-
-		};
-		int ShifterPrint[] = {
-			-64,63,
-			-64,63,
-			-64,63,
-			1,2000,
-			1,2000,
-			-70,20,
-			0,12,
-			0,1,
-			0,2,
-			0,127,
-		};
 	}
 };
 
 /*
-      Fl_Group SHIFTER {
-        user_data 1
-        xywh {320 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
-      } {
-        Fl_Light_Button shifter_activar {
-          label On
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(116);
- o->value(rkr->Shifter_Bypass);
- return;
-}
-rkr->Shifter_Bypass=(int)o->value();
-if((int) o->value()==0)
-rkr->efx_Shifter->cleanup();
-findpos(38,(int)o->value(),o);}
-          xywh {325 216 34 18} shortcut 0x30 color 62 selection_color 1 labelsize 10 when 1
-        }
-        Fl_Choice shifter_preset {
-          label Preset
-          user_data 12038
-          callback {long long ud= (long long) v;
-if((ud==0)||(ud==12038))rkr->efx_Shifter->setpreset((int)o->value());
-shifter_WD->value(rkr->efx_Shifter->getpar(0)-64);
-shifter_pan->value(rkr->efx_Shifter->getpar(1)-64);
-shifter_gain->value(rkr->efx_Shifter->getpar(2)-64);
-shifter_int->value(rkr->efx_Shifter->getpar(6));
-shifter_attack->value(rkr->efx_Shifter->getpar(3));
-shifter_decay->value(rkr->efx_Shifter->getpar(4));
-shifter_thre->value(rkr->efx_Shifter->getpar(5));
-shifter_ud->value(rkr->efx_Shifter->getpar(7));
-shifter_whammy->value(rkr->efx_Shifter->getpar(9));
-
-shifter_mode->value(rkr->efx_Shifter->getpar(8));}
-          xywh {397 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label Fast
-            xywh {10 10 45 26} labelsize 10
-          }
-          MenuItem {} {
-            label {Slow Up}
-            xywh {42 42 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Slow Down}
-            xywh {42 42 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label Chorus
-            xywh {0 0 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Trig. Chorus}
-            xywh {0 0 36 21} labelsize 10
-          }
-        }
-        Fl_Value_Slider shifter_WD {
-          label {Wet/Dry}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(326);
- return;
-}
-rkr->efx_Shifter->changepar(0,(int)(o->value()+64));}
-          xywh {370 242 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider shifter_int {
-          label {Int.}
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(327);
- return;
-}
-rkr->Shifter_Bypass=0;
-rkr->efx_Shifter->changepar(6,(int)o->value());
-if((int)shifter_activar->value())rkr->Shifter_Bypass=1;}
-          xywh {370 255 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 12 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider shifter_gain {
-          label Gain
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(328);
- return;
-}
-rkr->efx_Shifter->changepar(2,(int)(o->value()+64));}
-          xywh {370 270 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider shifter_pan {
-          label Pan
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(329);
- return;
-}
-rkr->efx_Shifter->changepar(1,(int)(o->value()+64));}
-          xywh {370 283 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider shifter_attack {
-          label Attack
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(330);
- return;
-}
-rkr->efx_Shifter->changepar(3,(int)o->value());}
-          xywh {371 300 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 2000 step 1 value 100 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider shifter_decay {
-          label Decay
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(331);
- return;
-}
-rkr->efx_Shifter->changepar(4,(int)o->value());}
-          xywh {370 313 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 2000 step 1 value 100 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider shifter_thre {
-          label Thrshold
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(332);
- return;
-}
-rkr->efx_Shifter->changepar(5,(int)o->value());}
-          xywh {370 326 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -70 maximum 20 step 1 value 20 textcolor 7
-          class SliderW
-        }
-        Fl_Check_Button shifter_ud {
-          label Down
-          user_data 2
-          callback {rkr->efx_Shifter->changepar(7,(int)o->value())}
-          xywh {371 340 49 14} down_box BORDER_BOX labelsize 10 labelcolor 7
-        }
-        Fl_Value_Slider shifter_whammy {
-          label Whamy
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(333);
- return;
-}
-rkr->efx_Shifter->changepar(9,(int)o->value());}
-          xywh {370 357 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Choice shifter_mode {
-          label Mode
-          user_data 12
-          callback {rkr->efx_Shifter->changepar(8,(int)o->value())} open
-          xywh {363 377 78 13} down_box BORDER_BOX labelsize 9 labelcolor 7 textsize 9 textcolor 7
-        } {
-          MenuItem {} {
-            label Trigger
-            xywh {10 10 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label Whammy
-            xywh {0 0 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label Portamento
-            xywh {10 10 36 21} labelsize 9
-          }
-        }
-      }
-      Fl_Group STOMPBOX {
-        user_data 1
-        xywh {481 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
-      } {
-        Fl_Light_Button stomp_activar {
-          label On
-          user_data 2
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(116);
- o->value(rkr->StompBox_Bypass);
- return;
-}
-rkr->StompBox_Bypass=(int)o->value();
-if((int) o->value()==0)
-rkr->efx_StompBox->cleanup();
-findpos(39,(int)o->value(),o);}
-          xywh {486 216 34 18} shortcut 0x30 color 62 selection_color 1 labelsize 10 when 1
-        }
-        Fl_Choice stomp_preset {
-          label Preset
-          user_data 12039
-          callback {long long ud= (long long) v;
-if((ud==0)||(ud==12039))rkr->efx_StompBox->setpreset((int)o->value());
-stomp_WD->value(rkr->efx_StompBox->getpar(0));
-stomp_gain->value(rkr->efx_StompBox->getpar(4));
-stomp_low->value(rkr->efx_StompBox->getpar(3));
-stomp_mid->value(rkr->efx_StompBox->getpar(2));
-stomp_high->value(rkr->efx_StompBox->getpar(1));
-
-stomp_mode->value(rkr->efx_StompBox->getpar(5));}
-          xywh {558 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
-        } {
-          MenuItem {} {
-            label Odie
-            xywh {20 20 45 26} labelsize 10
-          }
-          MenuItem {} {
-            label Grunger
-            xywh {0 0 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Hard Dist.}
-            xywh {0 0 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label Ratula
-            xywh {10 10 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Classic Dist}
-            xywh {20 20 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Morbid Impalement}
-            xywh {30 30 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Sharp Metal}
-            xywh {40 40 36 21} labelsize 10
-          }
-          MenuItem {} {
-            label {Classic Fuzz}
-            xywh {50 50 36 21} labelsize 10
-          }
-        }
-        Fl_Value_Slider stomp_WD {
-          label Level
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(334);
- return;
-}
-rkr->efx_StompBox->changepar(0,(int)o->value());}
-          xywh {531 242 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider stomp_gain {
-          label Gain
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(335);
- return;
-}
-rkr->efx_StompBox->changepar(4,(int)o->value());}
-          xywh {531 270 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider stomp_low {
-          label Low
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(336);
- return;
-}
-rkr->efx_StompBox->changepar(3,(int)o->value());}
-          xywh {531 287 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider stomp_mid {
-          label Mid
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(337);
- return;
-}
-rkr->efx_StompBox->changepar(2,(int)o->value());}
-          xywh {531 304 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 36 minimum -64 maximum 64 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Value_Slider stomp_high {
-          label High
-          callback {if(Fl::event_button()==3)
-{
- getMIDIControl(338);
- return;
-}
-rkr->efx_StompBox->changepar(1,(int)o->value());}
-          xywh {531 321 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
-          class SliderW
-        }
-        Fl_Choice stomp_mode {
-          label Mode
-          user_data 12
-          callback {rkr->efx_StompBox->changepar(5,(int)o->value())}
-          xywh {524 377 78 13} down_box BORDER_BOX labelsize 9 labelcolor 7 textsize 9 textcolor 7
-        } {
-          MenuItem {} {
-            label Amp
-            xywh {20 20 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label Grunge
-            xywh {30 30 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label Rat
-            xywh {40 40 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {Fat Cat}
-            xywh {50 50 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {Dist+}
-            xywh {60 60 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label Death
-            xywh {70 70 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label {Mid Elves Own}
-            xywh {80 80 36 21} labelsize 9
-          }
-          MenuItem {} {
-            label Fuzz
-            xywh {90 90 36 21} labelsize 9
-          }
-        }
-      }
       Fl_Group SHAR {
         user_data 1
         xywh {481 212 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
@@ -1435,3 +1016,90 @@ rkr->efx_Infinity->changepar(14,(int)o->value());}
       }
       
 */
+
+
+		/*
+		const int PRESET_SIZE = 10;
+		const int NUM_PRESETS = 5;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Fast
+			0, 64, 64, 200, 200, -20, 2, 0, 0, 0,
+			//Slowup
+			0, 64, 64, 900, 200, -20, 2, 0, 0, 0,
+			//Slowdown
+			0, 64, 64, 900, 200, -20, 3, 1, 0, 0,
+			//Chorus
+			64, 64, 64, 0, 0, -20, 1, 0, 1, 22,
+			//Trig Chorus
+			64, 64, 64, 250, 100, -10, 0, 0, 0, 25
+		};
+
+		int ShifterReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			0,127,
+				//setgain (value);
+				//break;
+			//case 3:
+			1,2000,
+				//Pattack = value;
+				//a_rate = 1000.0f / ((float)Pattack * nfSAMPLE_RATE);
+				//break;
+			//case 4:
+			1,2000,
+				//Pdecay = value;
+				//d_rate = 1000.0f / ((float)Pdecay * nfSAMPLE_RATE);
+				//break;
+			//case 5:
+			-70,20,
+				//Pthreshold = value;
+				//t_level = dB2rap ((float)Pthreshold);
+				//td_level = t_level*.75f;
+				//tz_level = t_level*.5f;
+				//break;
+			//case 6:
+			0,12,
+				//Pinterval = value;
+				//setinterval(Pinterval);
+				//break;
+			//case 7:
+			0,1,
+				//Pupdown = value;
+				//setinterval(Pinterval);
+				//break;
+			//case 8:
+			0,2,
+            /*Trigger
+            Whammy
+            Portamento* /
+				//Pmode = value;
+				//break;
+			//case 9:
+			0,127,
+				//Pwhammy = value;
+				//whammy = (float) value / 127.0f;
+				//break;
+
+
+		};
+		int ShifterPrint[] = {
+			-64,63,
+			-64,63,
+			-64,63,
+			1,2000,
+			1,2000,
+			-70,20,
+			0,12,
+			0,1,
+			0,2,
+			0,127,
+		};
+		*/
+
