@@ -34,7 +34,7 @@ Future Plans
 
 Known Issues
 ------------------------------------------------------------------------------------------
-- Does not work on FL Studio and VSTHost. Don't know how I can get it to work yet.
+- Does not work on FL Studio and VSTHost. Don't know how I can get it to work yet.(It does not work because of Dependencies DLL load issue)
 - Dual Flange does not work due to a crashing bug I could not find the cause.(Removed from list)
 - There is no Looper and Vocoder.
 - StereoHarm and Harmonizer acts wierdly if MIDI and SELECT is on.
