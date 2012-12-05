@@ -311,6 +311,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffEcho,"Echo"));
 	mEffectNames.push_back(EffectName(EffChorus, "Chorus"));
 	mEffectNames.push_back(EffectName(EffFlange, "Flange"));
+
 	mEffectNames.push_back(EffectName(EffPhaser, "Phaser"));
 	mEffectNames.push_back(EffectName(EffReverb, "Reverb"));
 	mEffectNames.push_back(EffectName(EffParametricEQ, "Parametric EQ"));
@@ -318,29 +319,36 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffParametricEQ3, "Parametric EQ3"));
 	mEffectNames.push_back(EffectName(EffWahWah, "WahWah"));
 	mEffectNames.push_back(EffectName(EffAlienWah, "AlienWah"));
+
 	mEffectNames.push_back(EffectName(EffPan, "Pan"));
 	mEffectNames.push_back(EffectName(EffDistortion, "Distortion"));
 	mEffectNames.push_back(EffectName(EffHarmonizer, "Harmonizer"));
 	mEffectNames.push_back(EffectName(EffMusicDelay, "Musical Delay"));
 	mEffectNames.push_back(EffectName(EffGate, "Noise Gate"));
+
 	mEffectNames.push_back(EffectName(EffNewDist, "Derelict"));
 	mEffectNames.push_back(EffectName(EffAnalogPhaser, "Analog Phaser"));
 	mEffectNames.push_back(EffectName(EffValve, "Valve"));
-	//mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange"));
+	//mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange")); // TODO: There is bug. Don't know what yet.
 	mEffectNames.push_back(EffectName(EffRing, "Ring"));
+
 	mEffectNames.push_back(EffectName(EffExciter, "Exciter"));
 	mEffectNames.push_back(EffectName(EffMBDist, "DistBand"));
 	mEffectNames.push_back(EffectName(EffArpie, "Arpie"));
 	mEffectNames.push_back(EffectName(EffExpander, "Expander"));
-	mEffectNames.push_back(EffectName(EffShuffle, "Shuffle"));
+	mEffectNames.push_back(EffectName(EffShuffle, "Shuffle")); // 25
+
 	mEffectNames.push_back(EffectName(EffSynthfilter, "Synthfilter"));
 	mEffectNames.push_back(EffectName(EffConvolotron, "Convolotron"));
 	mEffectNames.push_back(EffectName(EffReverbtron, "Reverbtron"));
 	mEffectNames.push_back(EffectName(EffEchotron, "Echotron"));
-	mEffectNames.push_back(EffectName(EffMBVvol, "VaryBand"));
+	mEffectNames.push_back(EffectName(EffMBVvol, "VaryBand")); // 30/44
+
 	mEffectNames.push_back(EffectName(EffRyanWah, "MutroMojo"));
-	// MVVvol VaryBand
-	// RyanWah MutroMojo
+	mEffectNames.push_back(EffectName(EffRBEcho, "Echoverse"));
+	mEffectNames.push_back(EffectName(EffCoilCrafter, "CoilCrafter"));
+
+
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect);
 	mCompressorPanel = new CompressorNS::CompressorPanel(mGUI,(VstPlugin*)effect);
@@ -3614,6 +3622,16 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 
 	}
 	break;
+	case EffRBEcho:
+		{
+			CreateRBEcho(whereis, loadPrev, prevIdx);
+		}
+		break;
+	case EffCoilCrafter:
+		{
+			CreateCoilCrafter(whereis, loadPrev, prevIdx);
+		}
+		break;
 	default:
 		break;
 	}

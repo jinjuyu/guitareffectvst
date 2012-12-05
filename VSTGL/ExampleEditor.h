@@ -1090,6 +1090,8 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateShuffle(int whereis, bool loadPrev, int prevIdx);
 	void CreateSynthfilter(int whereis, bool loadPrev, int prevIdx);
 	void CreateMVVvol(int whereis, bool loadPrev, int prevIdx);
+	void CreateRBEcho(int whereis, bool loadPrev, int prevIdx);
+	void CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx);
 
 
 	void timerCallback();

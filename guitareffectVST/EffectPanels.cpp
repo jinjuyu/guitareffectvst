@@ -1442,3 +1442,263 @@ void ExampleEditor::CreateReverbtron(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+
+void ExampleEditor::CreateRBEcho(int whereis, bool loadPrev, int prevIdx)
+
+{
+		const int rbechoPRESET_SIZE = 10;
+		const int rbechoNUM_PRESETS = 3;
+		int rbechopresets[rbechoNUM_PRESETS*rbechoPRESET_SIZE] = {
+			//Echo 1
+			64, 64, 90, 64, 64, 64, 64, 0, 1, 96,
+			//Echo 2
+			64, 64, 90, 64, 64, 64, 64, 0, 2 ,96,
+			//Echo 3
+			64, 64, 90, 64, 64, 64, 64, 0, 3 ,96
+		};
+		int RBEchoReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			1,600,
+				//setdelay (value);
+				//break;
+			//case 3:
+			0,127,
+				//setlrdelay (value);
+				//break;
+			//case 4:
+			0,128,
+				//setlrcross (value);
+				//break;
+			//case 5:
+			0,127,
+				//setfb (value);
+				//break;
+			//case 6:
+			0,127,
+				//sethidamp (value);
+				//break;
+			//case 7:
+			0,127,
+				//setreverse (value);
+				//break;
+			//case 8:
+			0,5,
+			/*
+				label 1
+				label {1/2}
+				label {1/3}
+				label {1/4}
+				label {1/5}
+				label {1/6}
+				*/
+
+				//Psubdiv = value;
+				//subdiv = 1.0f/((float)(value + 1));
+				//delay = subdiv * fdelay;
+				//initdelays ();
+				//break;
+			//case 9:
+			0,127,
+				//Pes = value;
+				//pes = 8.0f * (float)Pes / 127.0f;
+				//break;
+		};
+		int RBEchoPrint[] = {
+			-64,63,
+			-64,63,
+			1,600,
+			0,127,
+			-64,64,
+			0,127,
+			0,127,
+			0,127,
+			0,5,
+			0,127,
+		};
+		int *real = RBEchoReal;
+		int *print = RBEchoPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Echo 1");
+		presetTexts.push_back("Echo 2");
+		presetTexts.push_back("Echo 3");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffRBEcho, "Echoverse", whereis, rbechopresets, rbechoPRESET_SIZE, rbechoNUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Reverse", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "LRdl.", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb.", PanelNS::Slider));
+		vector<string> mTypeStrs;
+		mTypeStrs.push_back("1");
+		mTypeStrs.push_back("1/2");
+		mTypeStrs.push_back("1/3");
+		mTypeStrs.push_back("1/4");
+		mTypeStrs.push_back("1/5");
+		mTypeStrs.push_back("1/6");
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Subdivision", PanelNS::Selection, false, false, mTypeStrs));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Damp", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "E.S.", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Angle", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}
+void ExampleEditor::CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx)
+{
+		const int coilPRESET_SIZE = 9;
+		const int coilNUM_PRESETS = 2;
+		int coilpresets[coilNUM_PRESETS*coilPRESET_SIZE] = {
+			//H to S
+			32, 6, 1, 3300, 16,  4400, 42, 20, 0,
+			//S to H
+			32, 1, 6, 4400, 42, 3300, 16, 20, 0,
+
+
+		};
+		int CoilReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,8,
+			/*
+            Off
+            Fender Strat (old)
+            Fender Strat (new)
+            Squire Strat
+            Fender Hambucker
+            Gibson P90
+            Gibson Standard
+            Gibson Mini
+            Gibson Super L6S
+			*/
+				//Ppo = value;
+				//if (Ppo>0) {
+					//freq1 = tfreqs[value];
+					//Pfreq1 = (int)freq1;
+					//setfreq1();
+					//q1 = tqs[value];
+					//Pq1 = (int)(q1*10.0f);
+					//setq1();
+				//}
+				//break;
+			//case 2:
+			0,8,
+				//Ppd = value;
+				//if(Ppd>0) {
+					//freq2 = tfreqs[value];
+					//Pfreq2 = (int)freq2;
+					//setfreq2();
+					//q2 = tqs[value];
+					//Pq2 =(int)(q2*10.0f);
+					//setq2();
+				//}
+				//break;
+			//case 3:
+			2600,4500,
+				//Pfreq1 = value;
+				//freq1 = (float) value;
+				//setfreq1();
+				//break;
+			//case 4:
+			10,65,
+				//Pq1 = value;
+				//q1 = (float)value/10.0f;
+				//setq1();
+				//break;
+			//case 5:
+			2600,4500,
+				//Pfreq2 = value;
+				//freq2 = (float) value;
+				//setfreq2();
+				//break;
+			//case 6:
+			10,65,
+				//Pq2 = value;
+				//q2 = (float)value/10.0f;
+				//setq2();
+				//break;
+			//case 7:
+			47,139, // 20~4400
+				//Ptone = value;
+				//sethpf(value);
+				//break;
+			//case 8:
+			0,1,
+				//Pmode = value;
+				//break;
+
+
+		};
+		int CoilPrint[] = {
+			0,127,
+			0,8,
+			0,8,
+			2600,4500,
+			10,65,
+			2600,4500,
+			10,65,
+			0,100,
+			0,1,
+		};
+		int *real = CoilReal;
+		int *print = CoilPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("H to S");
+		presetTexts.push_back("S to H");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffCoil, "CoilCrafter", whereis, coilpresets, coilPRESET_SIZE, coilNUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tone", PanelNS::Slider, true));
+		vector<string> typeStrs;
+        typeStrs.push_back("Off");
+        typeStrs.push_back("Fender Strat (old)");
+        typeStrs.push_back("Fender Strat (new)");
+        typeStrs.push_back("Squire Strat");
+        typeStrs.push_back("Fender Hambucker");
+        typeStrs.push_back("Gibson P90");
+        typeStrs.push_back("Gibson Standard");
+        typeStrs.push_back("Gibson Mini");
+        typeStrs.push_back("Gibson Super L6S");
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Origin", PanelNS::Selection, false, false, typeStrs));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tone", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tone", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Destiny", PanelNS::Selection, false, false, typeStrs));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tone", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tone", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pos.", PanelNS::OnOff));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}
