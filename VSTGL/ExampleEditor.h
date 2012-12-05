@@ -1093,6 +1093,8 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateRBEcho(int whereis, bool loadPrev, int prevIdx);
 	void CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx);
 	void CreateShelfBoost(int whereis, bool loadPrev, int prevIdx);
+	void CreateSustainer(int whereis, bool loadPrev, int prevIdx);
+	
 	
 
 	void timerCallback();

@@ -1784,3 +1784,56 @@ void ExampleEditor::CreateShelfBoost(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+
+void ExampleEditor::CreateSustainer(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 2;
+		const int NUM_PRESETS = 3;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Moderate
+			79, 54,
+			//Extreme
+			16, 127,
+			//Mild
+			120, 15,
+
+		};
+
+		int SustainerReal[] = {
+			//case 0:
+			0,127,
+				//Pvolume = value;
+				//level = dB2rap(-30.0f * (1.0f - ((float) Pvolume/127.0f)));
+				//break;
+			//case 1:
+			1,127,
+				//Psustain = value;
+				//fsustain =  (float) Psustain/127.0f;
+				//cratio = 1.25f - fsustain;
+				//input = dB2rap (42.0f * fsustain - 6.0f);
+				//cthresh = 0.25 + fsustain;
+				//break;
+
+
+		};
+		int SustainerPrint[] = {
+			0,127,
+			1,127,
+		};
+		int *real = SustainerReal;
+		int *print = SustainerPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Moderate");
+		presetTexts.push_back("Extreme");
+		presetTexts.push_back("Mild");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffShelfBoost, "ShelfBoost", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Sustain", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}
