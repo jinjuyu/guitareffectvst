@@ -356,6 +356,8 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffStereoHarm, "StereoHarm"));
 	mEffectNames.push_back(EffectName(EffCompBand, "CompBand")); // 40/44
 
+	mEffectNames.push_back(EffectName(EffOpticaltrem, "Opticaltrem")); // 41/44
+
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect);
 	mCompressorPanel = new CompressorNS::CompressorPanel(mGUI,(VstPlugin*)effect);
@@ -3674,6 +3676,12 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 			CreateCompBand(whereis, loadPrev, prevIdx);
 		}
 		break;
+	case EffOpticaltrem:
+		{
+			CreateOpticalTrem(whereis, loadPrev, prevIdx);
+		}
+		break;
+
 	default:
 		break;
 	}

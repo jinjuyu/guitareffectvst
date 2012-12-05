@@ -3,46 +3,63 @@ About
 This VST plugin is Win32 VST port of Rakkarack(http://rakarrack.sourceforge.net/)
 
 
+
 INSTALL
 -------------------------------------------------------------------------------------------
-you need to put all the other dlls(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.dll, libsamplerate-0.dll, libsndfile-1.dll, DevIL.dll, ILU.dll)
-in where the Podium.exe(REAPER.exe, Cubase.exe, etc) is. System32 doesn't work.
-To make this more convenient, I need to make a bridge dll for that but it's a lot of work so until then..
+- You need to put all the other dlls(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.dll, libsamplerate-0.dll, libsndfile-1.dll, DevIL.dll, ILU.dll) in the folder where the your DAW or Host's EXE is.
+- For example: where the Podium.exe(REAPER.exe, Cubase.exe, Pedalboard2.exe, etc) is. System32 and VSTPlugins folder doesn't work.
+- To make this more convenient, I need to make a bridge dll for that but it's a lot of work so until then..
 
 
-Currently, all the codes are converted and usable in VST code but no GUI interface whatsoever.(not even parameters are mapped)
-I have implemented processReplacing in each effect so it can be used in VSTPlugin::processReplacing.
-
-But, I have not converted Looper and Vocoder for apparent reasons.
 
 Working DAWs
 -------------------------------------------------------------------------------------------
 Tested on REAPER, Zynewave Podium, Minihost, Pedalboard2.
 
+
+
+Future Plans
+-------------------------------------------------------------------------------------------
+- Parameter Automation
+- Bridge DLL between plugin DLL and host. (This will make this plugin work on every DAWs and Hosts)
+- And also nice installer
+
+
+
 Known Issues
 ------------------------------------------------------------------------------------------
-Does not work on FL Studio and VSTHost. Don't know how I can get it to work yet.
+- Does not work on FL Studio and VSTHost. Don't know how I can get it to work yet.
+- Dual Flange does not work due to a crashing bug I could not find the cause.(Removed from list)
+- There is no Looper and Vocoder.
+- StereoHarm and Harmonizer acts wierdly if MIDI and SELECT is on.
+- Ring sometimes creates some noises, don't know if it's normal behavior.
+
+
 
 About Source Code
 ----------------------------------------------------------------------------------------
-Code is for Visual C++ 2010(Express). Project file is placed under VSTGL directory.
-Code guideline:
+- Currently, all the codes are converted and usable in VST code but no GUI interface whatsoever.(not even parameters are mapped)
+I have implemented processReplacing in each effect so it can be used in VSTPlugin::processReplacing.
+- But, I have not converted Looper and Vocoder for apparent reasons.
 
-- it usually retains original code
-- it adds processReplacing() for every out().
-- you need to reset PERIOD and fPERIOD for every processReplacing call in the processReplacing func.
-- thus functions that uses PERIOD or fPERIOD needs to be updated too.
-- for EffectLFO you need to call update() in processReplacing() like this:
-void APhaser::processReplacing()
-{
-    ...
 
-	PERIOD = sampleFrames;
-	fPERIOD = PERIOD;
-	invperiod = 1.0f/fPERIOD;
-	lfo.update();
-    (from APhaser.cpp) 
+- Code is for Visual C++ 2010(Express). Project file is placed under VSTGL directory.
+- Code guideline:
+    -> it usually retains original code
+    -> it adds processReplacing() for every out().
+    -> you need to reset PERIOD and fPERIOD for every processReplacing call in the processReplacing func.
+    -> thus functions that uses PERIOD or fPERIOD needs to be updated too.
+    -> for EffectLFO you need to call update() in processReplacing() like this:
+    void APhaser::processReplacing()
+    {
+        ...
 
-    ...
-}
+        PERIOD = sampleFrames;
+        fPERIOD = PERIOD;
+        invperiod = 1.0f/fPERIOD;
+        lfo.update();
+        (from APhaser.cpp) 
+
+        ...
+    }
 

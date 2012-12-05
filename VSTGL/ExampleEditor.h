@@ -1091,7 +1091,7 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateSynthfilter(int whereis, bool loadPrev, int prevIdx);
 	void CreateMVVvol(int whereis, bool loadPrev, int prevIdx);
 	void CreateRBEcho(int whereis, bool loadPrev, int prevIdx);
-	void CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx);
+	void CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx); 
 	void CreateShelfBoost(int whereis, bool loadPrev, int prevIdx);
 	void CreateSustainer(int whereis, bool loadPrev, int prevIdx);
 	void CreateSequence(int whereis, bool loadPrev, int prevIdx);
@@ -1099,6 +1099,7 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateStompBox(int whereis, bool loadPrev, int prevIdx);
 	void CreateStereoHarm(int whereis, bool loadPrev, int prevIdx);
 	void CreateCompBand(int whereis, bool loadPrev, int prevIdx);
+	void CreateOpticalTrem(int whereis, bool loadPrev, int prevIdx);
 	
 	
 	

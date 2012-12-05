@@ -2530,3 +2530,103 @@ void ExampleEditor::CreateCompBand(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+void ExampleEditor::CreateOpticalTrem(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 6;
+		const int NUM_PRESETS = 6;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Fast
+			127, 260, 10, 0, 64, 64,
+			//trem2
+			45, 140, 10, 0, 64, 64,
+			//hard pan
+			127, 120, 10, 5, 0, 64,
+			//soft pan
+			45, 240, 10, 1, 16, 64,
+			//ramp down
+			65, 200, 0, 3, 32, 64,
+			//hard ramp
+			127, 480, 0, 3, 32, 64
+
+		};
+
+		int real[] = {
+			//case 0:
+			0,127,
+				//Pdepth = value;
+				//fdepth = 0.5f + ((float) Pdepth)/254.0f;
+				//break;
+			//case 1:
+			1,600,
+				//lfo.Pfreq = value;
+				//lfo.updateparams ();
+				//break;
+			//case 2:
+			0,127,
+				//lfo.Prandomness = value;
+				//lfo.updateparams ();
+				//break;
+			//case 3:
+			0,9,
+				//lfo.PLFOtype = value;
+				//lfo.updateparams ();
+				//break;
+			//case 4:
+			0,127,
+				//lfo.Pstereo = value;
+				//lfo.updateparams ();
+				//break;
+			//case 5: // pan
+			0,127,
+				//setpanning(value);
+				//break;
+			//}
+
+
+		};
+		int print[] = {
+			0,127,
+			1,600,
+			0,127,
+			0,9,
+			0,127,
+			-64,63,
+		};
+		vector<string> presetTexts;
+		presetTexts.push_back("Fast");
+		presetTexts.push_back("trem2");
+		presetTexts.push_back("hard pan");
+		presetTexts.push_back("soft pan");
+		presetTexts.push_back("ramp down");
+		presetTexts.push_back("hard ramp");
+
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffOpticalTrem, "Opticaltrem", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rnd", PanelNS::Slider));
+		vector<string> lfoTypeStrs;
+		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Tri");
+		lfoTypeStrs.push_back("RampUp");
+		lfoTypeStrs.push_back("RampDn");
+		lfoTypeStrs.push_back("ZigZag");
+		lfoTypeStrs.push_back("M.Sqare");
+		lfoTypeStrs.push_back("M.Saw");
+		lfoTypeStrs.push_back("L.Fract");
+		lfoTypeStrs.push_back("L.FractXY");
+		lfoTypeStrs.push_back("S/H Rnd");
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}
