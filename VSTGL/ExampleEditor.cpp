@@ -342,21 +342,24 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffConvolotron, "Convolotron"));
 	mEffectNames.push_back(EffectName(EffReverbtron, "Reverbtron"));
 	mEffectNames.push_back(EffectName(EffEchotron, "Echotron"));
-	mEffectNames.push_back(EffectName(EffMBVvol, "VaryBand")); // 30/44
+	mEffectNames.push_back(EffectName(EffMBVvol, "VaryBand")); // 30/43
 
 	mEffectNames.push_back(EffectName(EffRyanWah, "MutroMojo"));
 	mEffectNames.push_back(EffectName(EffRBEcho, "Echoverse"));
 	mEffectNames.push_back(EffectName(EffCoilCrafter, "CoilCrafter"));
 	mEffectNames.push_back(EffectName(EffShelfBoost, "ShelfBoost"));
-	mEffectNames.push_back(EffectName(EffSustainer, "Sustainer")); // 35/44
+	mEffectNames.push_back(EffectName(EffSustainer, "Sustainer")); // 35/43
 
 	mEffectNames.push_back(EffectName(EffSequence, "Sequence"));
 	mEffectNames.push_back(EffectName(EffShifter, "Shifter"));
 	mEffectNames.push_back(EffectName(EffStompBox, "StompBox"));
 	mEffectNames.push_back(EffectName(EffStereoHarm, "StereoHarm"));
-	mEffectNames.push_back(EffectName(EffCompBand, "CompBand")); // 40/44
+	mEffectNames.push_back(EffectName(EffCompBand, "CompBand")); // 40/43
 
-	mEffectNames.push_back(EffectName(EffOpticaltrem, "Opticaltrem")); // 41/44
+	mEffectNames.push_back(EffectName(EffOpticaltrem, "Opticaltrem")); // 41/43
+	mEffectNames.push_back(EffectName(EffVibe, "Vibe")); // 41/43
+	mEffectNames.push_back(EffectName(EffInfinity, "Infinity")); // 41/43
+
 
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect);
@@ -3679,6 +3682,16 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	case EffOpticaltrem:
 		{
 			CreateOpticalTrem(whereis, loadPrev, prevIdx);
+		}
+		break;
+	case EffVibe:
+		{
+			CreateVibe(whereis, loadPrev, prevIdx);
+		}
+		break;
+	case EffInfinity:
+		{
+			CreateInfinity(whereis, loadPrev, prevIdx);
 		}
 		break;
 

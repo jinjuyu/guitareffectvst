@@ -2630,3 +2630,334 @@ void ExampleEditor::CreateOpticalTrem(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+
+void ExampleEditor::CreateVibe(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 11;
+		const int NUM_PRESETS = 8;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Classic
+			35, 120, 10, 0, 64, 64, 64, 64, 3, 64, 0,
+			//Stereo Classic
+			35, 120, 10, 0, 48, 64, 64, 64, 3, 64, 1,
+			//Wide Vibe
+			127, 80, 10, 0, 0, 64, 64, 64, 0, 64, 1,
+			//Classic Chorus
+			35, 360, 10, 0, 48, 64, 0, 64, 3, 64, 0,
+			//Vibe Chorus
+			75, 330, 10, 0, 50, 64, 0, 64, 17, 64, 0,
+			//Lush Chorus
+			55, 260, 10, 0, 64, 70, 0, 49, 20, 48, 0,
+			//Sick Phaser
+			110, 75, 10, 0, 32, 64, 64, 14, 0, 30, 1,
+			//Warble
+			127, 360, 10, 0, 0, 64, 0, 0, 0, 37, 0
+
+		};
+
+		int real[] = {
+			//case 0:
+			0,127,
+				//Pwidth = value;
+				//fwidth = ((float) Pwidth)/90.0f;
+				//break;
+			//case 1:
+			1,600,
+				//lfo.Pfreq = value;
+				//lfo.updateparams ();
+				//break;
+			//case 2:
+			0,127,
+				//lfo.Prandomness = value;
+				//lfo.updateparams ();
+				//break;
+			//case 3:
+			0,9,
+				//lfo.PLFOtype = value;
+				//lfo.updateparams ();
+				//break;
+			//case 4:
+			0,127,
+				//lfo.Pstereo = value;
+				//lfo.updateparams ();
+				//break;
+			//case 5: // pan
+			0,128,
+				//setpanning(value);
+				//break;
+			//case 6:
+			0,128,
+				//setvolume(value);
+				//break;
+			//case 7: //fb
+			0,128,
+				//Pfb = value;
+				//fb = ((float) (Pfb - 64))/65.0f;
+				//break;
+			//case 8: //depth
+			0,127,
+				//Pdepth = value;
+				//fdepth = ((float) Pdepth)/127.0f;
+				//break;
+			//case 9: //lrcross
+			0,128,
+				//Plrcross = value;
+				//flrcross = ((float) (Plrcross - 64))/64.0f;
+				//fcross = 1.0f - fabs(flrcross);
+				//break;
+			//case 10: //Stereo
+			0,1,
+				//Pstereo = value;
+				//break;
+
+
+		};
+		int print[] = {
+			0,127,
+			1,600,
+			0,127,
+			0,9,
+			0,127,
+			-64,64,
+			-64,64,
+			-64,64,
+			0,127,
+			-64,64,
+			0,1,
+		};
+
+		vector<string> presetTexts;
+		presetTexts.push_back("Classic");
+		presetTexts.push_back("Stereo Classic");
+		presetTexts.push_back("Wide Vibe");
+		presetTexts.push_back("Classic Chorus");
+		presetTexts.push_back("Vibe Chorus");
+		presetTexts.push_back("Lush Chorus");
+		presetTexts.push_back("Sick Phaser");
+		presetTexts.push_back("Warble");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffVibe, "Vibe", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Width", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Depth", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rnd", PanelNS::Slider));
+		vector<string> lfoTypeStrs;
+		lfoTypeStrs.push_back("Sine");
+		lfoTypeStrs.push_back("Tri");
+		lfoTypeStrs.push_back("RampUp");
+		lfoTypeStrs.push_back("RampDn");
+		lfoTypeStrs.push_back("ZigZag");
+		lfoTypeStrs.push_back("M.Sqare");
+		lfoTypeStrs.push_back("M.Saw");
+		lfoTypeStrs.push_back("L.Fract");
+		lfoTypeStrs.push_back("L.FractXY");
+		lfoTypeStrs.push_back("S/H Rnd");
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "LFOType", PanelNS::Selection, false, false, lfoTypeStrs));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Fb", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L/R.Cr", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+}
+void ExampleEditor::CreateInfinity(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 18;
+		const int NUM_PRESETS = 10;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Basic
+			64, 64, 64, 64, 64, 64, 64, 64, 64, 700, 20, 80, 60, 0, 1, 0, 0, 1 ,
+			//Rising Comb
+			64, 64, -64, 64, -64, 64, -64, 64, -64, 600, 0, 127, 32, 0, 16, 0, 0, 1 ,
+			//Falling Comb
+			64, 64, -64, 64, -64, 64, -64, 64, -64, 600, 127, 0, 32, 0, 16, 0, 0, 1 ,
+			//Laser
+			0, 64, -64, 64, -64, 64, -64, 64, -64, 600, 127, 2, 70, 0, 1, 0, 0, 1 ,
+			//Doppler
+			0,64,-64,64,-64,64,-64,64,-64,-564,0,127,150,-31,2,99,0,10,
+			//Freq Shifter
+			0,64,-64,64,-64,64,-64,64,-64,-564,0,127,60,-48,-1,0,0,10,
+			//Dizzy Sailor
+			0,64,-64,64,-64,64,-64,64,-64,-564,0,127,60,-48,-1,110,0,10,
+			//Stereo Phaser
+			42,64,0,64,0,64,0,64,0,91,0,127,60,32,16,92,1,6,
+			//Corkscrew
+			64,64,0,-64,0,64,0,-64,0,120,0,127,120,-16,15,67,1,4,
+			//FreqeeVox
+			0,64,-64,64,-64,64,-64,64,-64,-164,0,127,556,-16,-3,0,0,8
+
+		};
+
+		int real[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			//case 2:
+			//case 3:
+			//case 4:
+			//case 5:
+			//case 6:
+			//case 7:
+			//case 8:
+				//Pb[npar - 1] = value;
+				//rbandstate[npar - 1].level = (float) value/64.0f;
+				//lbandstate[npar - 1].level = (float) value/64.0f;
+				//break;
+			//case 9:
+			-1000,1000,
+				//Pq = value;
+				//setq();
+				//break;
+			//case 10:
+			0,127,
+				//Pstartfreq = value;
+				//adjustfreqs();
+				//reinitfilter ();
+				//break;
+			//case 11:
+			0,127,
+				//Pendfreq = value;
+				//adjustfreqs();
+				//reinitfilter ();
+				//break;
+			//case 12:
+			0,600,
+				//Prate = value;
+				//adjustfreqs();
+				//break;
+			//case 13:
+			-64,64,
+				//Pstdf = value;
+				//stdiff = ((float) value)/127.0f;
+				//reinitfilter ();
+				//break;
+			//case 14:
+			-16,16,
+				//Psubdiv = value;
+				//if(value!=0) ratescale =  10.0f/((float) abs(value));
+				//else ratescale = 10.0f;
+				//adjustfreqs();
+				//break;
+			//case 15:
+			0,127,
+				//Pautopan = value;
+				//autopan = ((float) Pautopan)/127.0f;
+				//if (autopan > 1.0f) autopan = 1.0f;
+				//if (autopan < 0.0f) autopan = 0.0f;
+				//break;
+			//case 16:
+			0,1,
+				//Preverse = value;
+				//adjustfreqs();
+				//reinitfilter ();
+				//break;
+			//case 17:
+			1,12,
+				//Pstages = value - 1;
+		//        //for (int i=0; i<NUM_INF_BANDS; i++)  {
+		//        //filterl[i]->setstages(value - 1);
+		//        //filterr[i]->setstages(value - 1);
+		//        //}
+				//phaserfb = 0.5f + (((float) (Pstages))/11.01f)*0.5f;
+				//break;
+
+
+		};
+		int print[] = {
+			-64,63,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-64,64,
+			-1000,1000,
+			0,127,
+			0,127,
+			0,600,
+			-64,64,
+			-16,16,
+			0,127,
+			0,1,
+			1,12,
+		};
+		vector<string> presetTexts;
+		presetTexts.push_back("Basic");
+		presetTexts.push_back("Rising Comb");
+		presetTexts.push_back("Falling Comb");
+		presetTexts.push_back("Laser");
+		presetTexts.push_back("Doppler");
+		presetTexts.push_back("Freq Shifter");
+		presetTexts.push_back("Dizzy Sailor");
+		presetTexts.push_back("Stereo Phaser");
+		presetTexts.push_back("Corkscrew");
+		presetTexts.push_back("FreqeeVox");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffInfinity, "Infinity", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Res", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "1", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "2", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "3", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "4", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "5", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "6", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "7", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "8", PanelNS::Slider));
+		iii=16;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Rev", PanelNS::OnOff));
+		iii=17;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Stages", PanelNS::Slider));
+		iii=15;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Autopan", PanelNS::Slider));
+		iii=15;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Autopan", PanelNS::Slider));
+		iii=13;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Start", PanelNS::Slider));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "End", PanelNS::Slider));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		iii=14;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Subdiv", PanelNS::Slider));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}

@@ -1100,8 +1100,11 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateStereoHarm(int whereis, bool loadPrev, int prevIdx);
 	void CreateCompBand(int whereis, bool loadPrev, int prevIdx);
 	void CreateOpticalTrem(int whereis, bool loadPrev, int prevIdx);
+	void CreateInfinity(int whereis, bool loadPrev, int prevIdx);
+	void CreateVibe(int whereis, bool loadPrev, int prevIdx);
 	
 	
+
 	
 	
 	
