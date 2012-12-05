@@ -2026,3 +2026,128 @@ void ExampleEditor::CreateSequence(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+
+void ExampleEditor::CreateShifter(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 10;
+		const int NUM_PRESETS = 5;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Fast
+			0, 64, 64, 200, 200, -20, 2, 0, 0, 0,
+			//Slowup
+			0, 64, 64, 900, 200, -20, 2, 0, 0, 0,
+			//Slowdown
+			0, 64, 64, 900, 200, -20, 3, 1, 0, 0,
+			//Chorus
+			64, 64, 64, 0, 0, -20, 1, 0, 1, 22,
+			//Trig Chorus
+			64, 64, 64, 250, 100, -10, 0, 0, 0, 25
+		};
+
+		int ShifterReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			0,127,
+				//setpanning (value);
+				//break;
+			//case 2:
+			0,127,
+				//setgain (value);
+				//break;
+			//case 3:
+			1,2000,
+				//Pattack = value;
+				//a_rate = 1000.0f / ((float)Pattack * nfSAMPLE_RATE);
+				//break;
+			//case 4:
+			1,2000,
+				//Pdecay = value;
+				//d_rate = 1000.0f / ((float)Pdecay * nfSAMPLE_RATE);
+				//break;
+			//case 5:
+			-70,20,
+				//Pthreshold = value;
+				//t_level = dB2rap ((float)Pthreshold);
+				//td_level = t_level*.75f;
+				//tz_level = t_level*.5f;
+				//break;
+			//case 6:
+			0,12,
+				//Pinterval = value;
+				//setinterval(Pinterval);
+				//break;
+			//case 7:
+			0,1,
+				//Pupdown = value;
+				//setinterval(Pinterval);
+				//break;
+			//case 8:
+			0,2,
+            /*Trigger
+            Whammy
+            Portamento*/
+				//Pmode = value;
+				//break;
+			//case 9:
+			0,127,
+				//Pwhammy = value;
+				//whammy = (float) value / 127.0f;
+				//break;
+
+
+		};
+		int ShifterPrint[] = {
+			-64,63,
+			-64,63,
+			-64,63,
+			1,2000,
+			1,2000,
+			-70,20,
+			0,12,
+			0,1,
+			0,2,
+			0,127,
+		};
+		int *real = ShifterReal;
+		int *print = ShifterPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Fast");
+		presetTexts.push_back("Slowup");
+		presetTexts.push_back("Slowdown");
+		presetTexts.push_back("Chorus");
+		presetTexts.push_back("Trig Chorus");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffShifter, "Shifter", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Int.", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pan", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Attack", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Decay", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Thrshld", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Down", PanelNS::OnOff));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Whammy", PanelNS::Slider));
+		vector<string> typeStrs;
+		typeStrs.push_back("Trigger");
+        typeStrs.push_back("Whammy");
+        typeStrs.push_back("Portamento");
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Mode", PanelNS::Selection, false, false, typeStrs));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+
+}

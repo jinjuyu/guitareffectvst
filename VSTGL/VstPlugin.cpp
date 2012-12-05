@@ -76,7 +76,6 @@ effectName("guitareffectVST"),
 vendorName("Jinju")
 {
 	// Setup RAKARRACK global vars
-	//* XXX:
 	mParam = new Parameters();
 	mParam->fPERIOD = 32768.0f;
 	mParam->PERIOD = 32768;
@@ -1181,7 +1180,6 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	// 여기에 플러그인의 상태를 저장한다.
 	// 그런 후에 마우스 우측버튼으로 파라메터 오토메이션이 가능하도록 16개의 파라메터를 매핑 가능하게 하면
 	// 완전 앰플리튜브...ㅜㅜ
-	return 0; // XXX:
 	//if(isPreset)
 		//return 0;
 	//MessageBox(NULL, "2", "asd2", MB_OK);
@@ -1324,7 +1322,6 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 	
 VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 {
-	return 0; // XXX:
 	//MessageBox(NULL, "", "asd", MB_OK);
 	//if(isPreset)
 		//return 0;
