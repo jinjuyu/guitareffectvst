@@ -1,3 +1,6 @@
+https://github.com/jinjuyu/guitareffectvst
+
+
 About
 -------------------------------------------------------------------------------------------
 This VST plugin is Win32 VST port of Rakkarack(http://rakarrack.sourceforge.net/)
@@ -21,7 +24,8 @@ Tested on REAPER, Zynewave Podium, Minihost, Pedalboard2.
 Future Plans
 -------------------------------------------------------------------------------------------
 - Parameter Automation
-- Bridge DLL and Installer(This will make this plugin work on every DAWs and Hosts)
+- Bridge DLL between plugin DLL and host. (This will make this plugin work on every DAWs and Hosts)
+- And also nice installer
 
 
 

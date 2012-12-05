@@ -1,3 +1,6 @@
+https://github.com/jinjuyu/guitareffectvst
+
+
 About
 -------------------------------------------------------------------------------------------
 This VST plugin is Win32 VST port of Rakkarack(http://rakarrack.sourceforge.net/)
@@ -6,7 +9,7 @@ This VST plugin is Win32 VST port of Rakkarack(http://rakarrack.sourceforge.net/
 
 INSTALL
 -------------------------------------------------------------------------------------------
-- You need to put all the other dlls(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.dll, libsamplerate-0.dll, libsndfile-1.dll, DevIL.dll, ILU.dll) in the folder where the your DAW or Host's EXE is.
+- You need to put all the other dlls in the Dependencies folder(libfftw3-3.dll, libfftw3f-3.dll, libfftw3l-3.dll, libsamplerate-0.dll, libsndfile-1.dll, DevIL.dll, ILU.dll) in the folder where the your DAW or Host's EXE is.
 - For example: where the Podium.exe(REAPER.exe, Cubase.exe, Pedalboard2.exe, etc) is. System32 and VSTPlugins folder doesn't work.
 - To make this more convenient, I need to make a bridge dll for that but it's a lot of work so until then..
 
