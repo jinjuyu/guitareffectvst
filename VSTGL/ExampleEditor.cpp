@@ -348,8 +348,9 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffRBEcho, "Echoverse"));
 	mEffectNames.push_back(EffectName(EffCoilCrafter, "CoilCrafter"));
 	mEffectNames.push_back(EffectName(EffShelfBoost, "ShelfBoost"));
-	mEffectNames.push_back(EffectName(EffSustainer, "Sustainer"));
+	mEffectNames.push_back(EffectName(EffSustainer, "Sustainer")); // 35/44
 
+	mEffectNames.push_back(EffectName(EffSequence, "Sequence"));
 
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect);
@@ -3642,6 +3643,11 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	case EffSustainer:
 		{
 			CreateSustainer(whereis, loadPrev, prevIdx);
+		}
+		break;
+	case EffSequence:
+		{
+			CreateSequence(whereis, loadPrev, prevIdx);
 		}
 		break;
 	default:

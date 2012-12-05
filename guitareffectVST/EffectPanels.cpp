@@ -1837,3 +1837,192 @@ void ExampleEditor::CreateSustainer(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+
+void ExampleEditor::CreateSequence(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 15;
+		const int NUM_PRESETS = 10;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Jumpy
+			20, 100, 10, 50, 25, 120, 60, 127, 0, 90, 40, 0, 0, 0, 3,
+			//Stair Step
+			10, 20, 30, 50, 75, 90, 100, 127, 64, 90, 96, 0, 0, 2, 5,
+			//Mild
+			20, 30, 10, 40, 25, 60, 100, 50, 0, 90, 40, 0, 0, 0, 4,
+			//WahWah
+			11, 55, 15, 95, 12, 76, 11, 36, 30, 80, 110, 0, 4, 1, 2,
+			//Filter Pan
+			28, 59, 94, 127, 120, 80, 50, 24, 64, 180, 107, 0, 3, 0, 8,
+			//Stepper
+			30, 127, 30, 50, 80, 40, 110, 80, 0, 240, 95, 1, 1, 2, 2,
+			//Shifter
+			0, 0, 127, 127, 0, 0, 127, 127, 64, 114, 64, 1, 0, 3, 0,
+			//Tremor
+			30, 127, 30, 50, 80, 40, 110, 80, 0, 240, 95, 1, 1, 4, 2,
+			//Boogie
+			0, 40, 50, 60, 70, 60, 40, 0, 0, 220, 64, 0, 0, 5, 0,
+			//Chorus
+			64, 30, 45, 20, 60, 25, 42, 15, 64, 120, 64, 0, 0, 6, 0
+
+		};
+		int SeqReal[] = {
+			//case 0:
+			0,127,
+			//case 1:
+			0,127,
+			//case 2:
+			0,127,
+			//case 3:
+			0,127,
+			//case 4:
+			0,127,
+			//case 5:
+			0,127,
+			//case 6:
+			0,127,
+			//case 7:
+			0,127,
+				//Psequence[npar] = value;
+				//fsequence[npar] = (float) value / 127.0f;
+
+				//seqpower = 0.0f;
+				//for (i = 0; i<8; i++)  seqpower += fsequence[i];
+				//if(seqpower > 0.1f) {
+					//seqpower = 15.0f/seqpower;
+					//rndflag = 0;
+				//}
+
+				//testegg = 0;
+				//for (i = 0; i<8; i++)  testegg += Psequence[i];
+				//if(testegg < 4) {
+					//seqpower = 5.0f;  //Easter egg
+					//rndflag = 1;
+				//}
+				//break;
+			//case 8:
+			0,128,
+				//Pvolume = value;
+				//outvolume = (float)Pvolume / 127.0f;
+				//break;
+			//case 9:
+			1,600,
+				//Ptempo = value;
+				//settempo(value);
+				//break;
+			//case 10:
+			0,128,
+				//Pq = value;
+				//panning = (((float)value) + 64.0f) /128.0f;
+				//fq = powf (60.0f, ((float)value - 64.0f) / 64.0f);
+				//fb = ( (float) value)/128.0f;
+				//break;
+			//case 11:
+			0,1,
+				//Pamplitude = value;
+				//break;
+			//case 12:
+			0,7,
+				//Pstdiff = value;
+				//break;
+			//case 13:
+			0,8,
+            /*Lineal
+            UpDown
+            Stepper
+            Shifter
+            Tremor
+            Arpegiator
+            Chorus
+            TrigStepper
+            Seq Delay*/
+
+				//Pmode = value;
+				//settempo(Ptempo);
+				//lmod = 0.5f;
+				//rmod = 0.5f;
+				//break;
+			//case 14:
+			1,8,
+				//Prange = value;
+				//setranges(Prange);
+				//break;
+
+
+		};
+		int SeqPrint[] = {
+			0,127,
+			0,127,
+			0,127,
+			0,127,
+			0,127,
+			0,127,
+			0,127,
+			0,127,
+			-64,64,
+			1,600,
+			-64,64,
+			0,1,
+			0,7,
+			0,8,
+			1,8,
+		};
+		int *real = SeqReal;
+		int *print = SeqPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Jumpy");
+		presetTexts.push_back("Stair Step");
+		presetTexts.push_back("Mild");
+		presetTexts.push_back("WahWah");
+		presetTexts.push_back("Filter Pan");
+		presetTexts.push_back("Stepper");
+		presetTexts.push_back("Shifter");
+		presetTexts.push_back("Tremor");
+		presetTexts.push_back("Boogie");
+		presetTexts.push_back("Chorus");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffSequence, "Sequence", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "1", PanelNS::Slider));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "2", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "3", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "4", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "5", PanelNS::Slider));
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "6", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "7", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "8", PanelNS::Slider));
+		iii=14;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Range", PanelNS::Slider));
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tempo", PanelNS::Slider));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Q", PanelNS::Slider));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "St.df", PanelNS::Slider));
+		vector<string> typeStrs;
+        typeStrs.push_back("Lineal");
+        typeStrs.push_back("UpDown");
+        typeStrs.push_back("Stepper");
+        typeStrs.push_back("Shifter");
+        typeStrs.push_back("Tremor");
+        typeStrs.push_back("Arpegiator");
+        typeStrs.push_back("Chorus");
+        typeStrs.push_back("TrigStepper");
+        typeStrs.push_back("Seq Delay");
+		iii=13;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1],  "Mode", PanelNS::Selection, false, false, typeStrs));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Amp.", PanelNS::OnOff));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}

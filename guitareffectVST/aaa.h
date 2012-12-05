@@ -6677,5 +6677,69 @@ rkr->efx_Vocoder->changepar(5,(int)o->value());}
           class NewVum
         }
       }
+      Fl_Group SUSTAINER {
+        user_data 1
+        xywh {161 213 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button sus_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->Sustainer_Bypass);
+ return;
+}
+rkr->Sustainer_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_Sustainer->cleanup();
+findpos(36,(int)o->value(),o);}
+          xywh {166 217 34 18} shortcut 0x31 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice sus_preset {
+          label Preset
+          user_data 12036
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12036))rkr->efx_Sustainer->setpreset((int) o->value());
+sus_gain->value(rkr->efx_Sustainer->getpar(0));
+sus_sus->value(rkr->efx_Sustainer->getpar(1));}
+          xywh {238 217 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label {Sustain 1}
+            xywh {10 10 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Sustain 2}
+            xywh {0 0 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Sustain 3}
+            xywh {0 0 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider sus_gain {
+          label Gain
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(312);
+ return;
+}
+rkr->efx_Sustainer->changepar(0,(int)o->value());}
+          xywh {210 275 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider sus_sus {
+          label Sustain
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(313);
+ return;
+}
+rkr->efx_Sustainer->changepar(1,(int)o->value());}
+          xywh {210 299 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 127 step 1 value 32 textcolor 7
+          class SliderW
+        }
+      }
 
 	  */

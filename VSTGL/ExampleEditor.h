@@ -1094,6 +1094,8 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx);
 	void CreateShelfBoost(int whereis, bool loadPrev, int prevIdx);
 	void CreateSustainer(int whereis, bool loadPrev, int prevIdx);
+	void CreateSequence(int whereis, bool loadPrev, int prevIdx);
+	
 	
 	
 
