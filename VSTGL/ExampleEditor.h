@@ -1092,7 +1092,8 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateMVVvol(int whereis, bool loadPrev, int prevIdx);
 	void CreateRBEcho(int whereis, bool loadPrev, int prevIdx);
 	void CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx);
-
+	void CreateShelfBoost(int whereis, bool loadPrev, int prevIdx);
+	
 
 	void timerCallback();
 	GLGUI *mGUI;

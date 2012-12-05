@@ -1702,3 +1702,85 @@ void ExampleEditor::CreateCoilCrafter(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+
+void ExampleEditor::CreateShelfBoost(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 5;
+		const int NUM_PRESETS = 4;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Trebble
+			127, 64, 16000, 1, 24,
+			//Mid
+			127, 64, 4400, 1, 24,
+			//Bass
+			127, 64, 220, 1, 24,
+			//Distortion 1
+			6, 40, 12600, 1, 127
+
+		};
+
+		int ShelfReal[] = {
+			//case 0:
+			0,127,
+				//setvolume (value);
+				//break;
+			//case 1:
+			-64,64,
+				//Pq1 = value;
+				//q1 = powf (30.0f, ((float)value - 64.0f) / 64.0f);
+				//RB1l->setq(q1);
+				//RB1r->setq(q1);
+				//break;
+			//case 2:
+			88,163,//220,16000,
+				//Pfreq1 = value;
+				//freq1 = (float) value;
+				//RB1l->setfreq(freq1);
+				//RB1r->setfreq(freq1);
+				//break;
+			//case 3:
+			0,1,
+				//Pstereo = value;
+				//break;
+			//case 4:
+			1,127,
+				//Plevel = value;
+				//gain = .375f * (float)value;
+				//u_gain = 1.0f / gain;
+				//RB1l->setgain(gain);
+				//RB1r->setgain(gain);
+				//break;
+
+
+		};
+		int ShelfPrint[] = {
+			0,127,
+			-64,64,
+			0,100,
+			0,1,
+			1,127,
+		};
+		int *real = ShelfReal;
+		int *print = ShelfPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Trebble");
+		presetTexts.push_back("Mid");
+		presetTexts.push_back("Bass");
+		presetTexts.push_back("Distortion 1");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffShelfBoost, "ShelfBoost", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Gain", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Level", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Tone", PanelNS::Slider, true));
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Pres.", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Stereo", PanelNS::OnOff));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}

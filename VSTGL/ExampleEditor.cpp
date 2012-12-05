@@ -347,6 +347,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffRyanWah, "MutroMojo"));
 	mEffectNames.push_back(EffectName(EffRBEcho, "Echoverse"));
 	mEffectNames.push_back(EffectName(EffCoilCrafter, "CoilCrafter"));
+	mEffectNames.push_back(EffectName(EffShelfBoost, "ShelfBoost"));
 
 
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
@@ -3630,6 +3631,11 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	case EffCoilCrafter:
 		{
 			CreateCoilCrafter(whereis, loadPrev, prevIdx);
+		}
+		break;
+	case EffShelfBoost:
+		{
+			CreateShelfBoost(whereis, loadPrev, prevIdx);
 		}
 		break;
 	default:
