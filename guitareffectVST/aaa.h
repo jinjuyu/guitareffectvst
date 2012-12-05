@@ -5895,5 +5895,231 @@ update_looper();}
           xywh {440 379 35 14} box DOWN_BOX align 84
         }
       }
+      Fl_Group RYANWAH {
+        user_data 1
+        xywh {479 211 158 184} box UP_BOX color 0 selection_color 0 labelfont 1 align 112 hide
+      } {
+        Fl_Light_Button ryanwah_activar {
+          label On
+          user_data 2
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(116);
+ o->value(rkr->RyanWah_Bypass);
+ return;
+}
+rkr->RyanWah_Bypass=(int)o->value();
+if((int) o->value()==0)
+rkr->efx_RyanWah->cleanup();
+findpos(31,(int)o->value(),o);}
+          xywh {485 216 34 18} shortcut 0x36 color 62 selection_color 1 labelsize 10 align 84 when 1
+        }
+        Fl_Choice ryanwah_preset {
+          label Preset
+          user_data 12031
+          callback {long long ud= (long long) v;
+if((ud==0)||(ud==12031))rkr->efx_RyanWah->setpreset((int) o->value());
+ryanwah_WD->value(rkr->efx_RyanWah->getpar(0)-64);
+
+int temp=rkr->efx_RyanWah->getpar(17);
+
+if((temp==1) || (temp==3)) ryanwah_qm->value(1); else ryanwah_qm->value(0);
+if((temp==2) || (temp==3)) ryanwah_nat->value(1); else ryanwah_nat->value(0);
+
+
+ryanwah_q->value(rkr->efx_RyanWah->getpar(1));
+ryanwah_freq->value(rkr->efx_RyanWah->getpar(2));
+ryanwah_lfotype->value(rkr->efx_RyanWah->getpar(4));
+ryanwah_dpth->value(rkr->efx_RyanWah->getpar(6));
+ryanwah_ampsns->value(rkr->efx_RyanWah->getpar(7));
+ryanwah_ampsnsinv->value(rkr->efx_RyanWah->getpar(8));
+ryanwah_smooth->value(rkr->efx_RyanWah->getpar(9));
+ryanwah_lp->value(rkr->efx_RyanWah->getpar(10));
+ryanwah_bp->value(rkr->efx_RyanWah->getpar(11));
+ryanwah_hp->value(rkr->efx_RyanWah->getpar(12));
+svfilter_stages->value(rkr->efx_RyanWah->getpar(13));
+ryanwah_rng->value(rkr->efx_RyanWah->getpar(14));
+o->value(rkr->efx_RyanWah->getpar(18));
+o->redraw();}
+          xywh {557 216 76 18} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 when 6 textsize 10 textcolor 7
+        } {
+          MenuItem {} {
+            label WahWah
+            xywh {72 72 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Mutron
+            xywh {72 72 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Phase Wah}
+            xywh {72 72 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label Phaser
+            xywh {82 82 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label {Quack Quack}
+            xywh {92 92 36 21} labelsize 10
+          }
+          MenuItem {} {
+            label SmoothTron
+            xywh {102 102 36 21} labelsize 10
+          }
+        }
+        Fl_Value_Slider ryanwah_WD {
+          label {Wet/Dry}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(256);
+ return;
+}
+rkr->efx_RyanWah->changepar(0,(int)(o->value()+64));}
+          xywh {529 241 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 63 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button ryanwah_qm {
+          label M
+          user_data 2
+          callback {if((int)o->value()) 
+rkr->efx_RyanWah->Pmode +=1;
+else
+rkr->efx_RyanWah->Pmode -=1;
+rkr->efx_RyanWah->changepar(17,rkr->efx_RyanWah->Pmode);}
+          xywh {495 254 15 15} down_box BORDER_BOX labelsize 10 labelcolor 7 align 4
+        }
+        Fl_Value_Slider ryanwah_lp {
+          label LP
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(257);
+ return;
+}
+rkr->efx_RyanWah->changepar(10,(int)o->value());}
+          xywh {529 255 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Check_Button ryanwah_nat {
+          label N
+          user_data 2
+          callback {if((int)o->value()) 
+rkr->efx_RyanWah->Pmode +=2;
+else
+rkr->efx_RyanWah->Pmode -=2;
+rkr->efx_RyanWah->changepar(17,rkr->efx_RyanWah->Pmode);}
+          xywh {495 267 15 15} down_box BORDER_BOX labelsize 10 labelcolor 7 align 4
+        }
+        Fl_Value_Slider ryanwah_bp {
+          label BP
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(258);
+ return;
+}
+rkr->efx_RyanWah->changepar(11,(int)o->value());}
+          xywh {529 266 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider ryanwah_hp {
+          label HP
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(259);
+ return;
+}
+rkr->efx_RyanWah->changepar(12,(int)o->value());}
+          xywh {529 277 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Counter svfilter_stages {
+          label Stg
+          callback {rkr->efx_RyanWah->changepar(13,(int)o->value());}
+          xywh {506 294 27 12} type Simple box THIN_UP_BOX labelsize 10 labelcolor 7 align 4 minimum 1 maximum 12 step 1 value 1 textsize 9
+        }
+        Fl_Choice ryanwah_lfotype {
+          label LFO
+          callback {rkr->efx_RyanWah->changepar(4,(int)o->value())}
+          xywh {559 293 72 16} down_box BORDER_BOX selection_color 0 labelsize 10 labelcolor 7 textsize 10 textcolor 7
+          code0 {o->menu(menu_chorus_lfotype);}
+        } {}
+        Fl_Value_Slider ryanwah_dpth {
+          label Width
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(260);
+ return;
+}
+rkr->efx_RyanWah->changepar(6,(int)o->value());}
+          xywh {529 313 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider ryanwah_freq {
+          label Tempo
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(261);
+ return;
+}
+rkr->efx_RyanWah->changepar(2,(int)o->value());}
+          xywh {529 325 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 600 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider ryanwah_q {
+          label {Res.}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(262);
+ return;
+}
+rkr->efx_RyanWah->changepar(1,(int)(o->value()));}
+          xywh {529 337 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 1 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider ryanwah_rng {
+          label Range
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(263);
+ return;
+}
+rkr->efx_RyanWah->changepar(14,(int)o->value());}
+          xywh {529 348 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum 10 maximum 6000 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider ryanwah_ampsnsinv {
+          label Wah
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(264);
+ return;
+}
+rkr->efx_RyanWah->changepar(8,(int)o->value());}
+          xywh {529 359 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider ryanwah_ampsns {
+          label {E. Sens}
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(265);
+ return;
+}
+rkr->efx_RyanWah->changepar(7,(int)o->value());}
+          xywh {529 370 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 minimum -64 maximum 64 step 1 textcolor 7
+          class SliderW
+        }
+        Fl_Value_Slider ryanwah_smooth {
+          label Smooth
+          callback {if(Fl::event_button()==3)
+{
+ getMIDIControl(266);
+ return;
+}
+rkr->efx_RyanWah->changepar(9,(int)o->value());}
+          xywh {529 381 100 10} type {Horz Knob} box FLAT_BOX color 178 selection_color 62 labelsize 10 labelcolor 7 align 4 maximum 127 step 1 textcolor 7
+          class SliderW
+        }
+      }
 
 	  */
