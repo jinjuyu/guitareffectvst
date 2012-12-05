@@ -1098,6 +1098,8 @@ class ExampleEditor : public VSTGLEditor,
 	void CreateShifter(int whereis, bool loadPrev, int prevIdx);
 	void CreateStompBox(int whereis, bool loadPrev, int prevIdx);
 	void CreateStereoHarm(int whereis, bool loadPrev, int prevIdx);
+	void CreateCompBand(int whereis, bool loadPrev, int prevIdx);
+	
 	
 	
 	

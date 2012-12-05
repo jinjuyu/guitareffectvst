@@ -2393,3 +2393,140 @@ void ExampleEditor::CreateStereoHarm(int whereis, bool loadPrev, int prevIdx)
 			mPanels[whereis]->SetPreset(0);
 
 }
+
+void ExampleEditor::CreateCompBand(int whereis, bool loadPrev, int prevIdx)
+{
+		const int PRESET_SIZE = 13;
+		const int NUM_PRESETS = 3;
+		int presets[NUM_PRESETS*PRESET_SIZE] = {
+			//Good Start
+			0, 16, 16, 16, 16, 0, 0, 0, 0, 1000, 5000, 10000, 48,
+
+			//Loudness
+			0, 16, 2, 2, 4, -16, 24, 24, -8, 140, 1000, 5000, 48,
+
+			//Loudness 2
+			64, 16, 2, 2, 2, -32, 24, 24, 24, 100, 1000, 5000, 48
+
+		};
+
+		int CompReal[] = {
+			//case 0:
+			0,128,
+				//setvolume (value);
+				//break;
+			//case 1:
+			2,42,
+				//PLratio = value;
+				//setratio(0,value);
+				//break;
+			//case 2:
+			2,42,
+				//PMLratio = value;
+				//setratio(1,value);
+				//break;
+			//case 3:
+			2,42,
+				//PMHratio = value;
+				//setratio(2,value);
+				//break;
+			//case 4:
+			2,42,
+				//PHratio = value;
+				//setratio(3,value);
+				//break;
+			//case 5:
+			-70,24,
+				//PLthres = value;
+				//setthres(0,value);
+				//break;
+			//case 6:
+			-70,24,
+				//PMLthres = value;
+				//setthres(1,value);
+				//break;
+			//case 7:
+			-70,24
+				//PMHthres = value;
+				//setthres(2,value);
+				//break;
+			//case 8:
+			-70,24,
+				//PHthres = value;
+				//setthres(3,value);
+				//break;
+			//case 9:
+			47,115, // 20~1000
+				//setCross1 (value);
+				//break;
+			//case 10:
+			114,151,// 1000~8000
+				//setCross2 (value);
+				//break;
+			//case 11:
+			126,171,
+			//2000,26000,
+				//setCross3(value);
+				//break;
+			//case 12:
+			0,127,
+				//setlevel(value);
+				//break;
+		};
+		int CompPrint[] = {
+			-64,64,
+			2,42,
+			2,42,
+			2,42,
+			2,42,
+			-70,24,
+			-70,24,
+			-70,24,
+			-70,24,
+			0,100,
+			0,100,
+			0,100,
+			0,127,
+		};
+		int *real = CompReal;
+		int *print = CompPrint;
+		vector<string> presetTexts;
+		presetTexts.push_back("Good Start");
+		presetTexts.push_back("Loudness");
+		presetTexts.push_back("Loudness 2");
+		mPanels[whereis] = new PanelNS::Panel(mGUI, (VstPlugin*)effect, ((VstPlugin*)effect)->mEffCompBand, "CompBand", whereis, presets, PRESET_SIZE, NUM_PRESETS, presetTexts);
+		int iii=0;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+		iii=12;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Wet/Dry", PanelNS::Slider));
+
+		iii=1;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L Ratio", PanelNS::Slider));
+		iii=2;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "ML Ratio", PanelNS::Slider));
+		iii=3;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MH Ratio", PanelNS::Slider));
+		iii=4;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "H Ratio", PanelNS::Slider));
+
+		iii=5;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "L Thres", PanelNS::Slider));
+		iii=6;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "ML Thres", PanelNS::Slider));
+		iii=7;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "MH Thres", PanelNS::Slider));
+		iii=8;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "H Thres", PanelNS::Slider));
+
+		iii=9;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Cross 1", PanelNS::Slider, true));
+		iii=10;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Cross 2", PanelNS::Slider, true));
+		iii=11;
+		mPanels[whereis]->AddParamData(PanelNS::Data(iii, real[iii*2], real[iii*2+1], print[iii*2], print[iii*2+1], "Cross 3", PanelNS::Slider, true));
+		if(loadPrev)
+			mPanels[whereis]->LoadPreset(prevIdx);
+		else
+			mPanels[whereis]->SetPreset(0);
+
+}

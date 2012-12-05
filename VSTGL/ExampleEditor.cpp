@@ -354,6 +354,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffShifter, "Shifter"));
 	mEffectNames.push_back(EffectName(EffStompBox, "StompBox"));
 	mEffectNames.push_back(EffectName(EffStereoHarm, "StereoHarm"));
+	mEffectNames.push_back(EffectName(EffCompBand, "CompBand")); // 40/44
 
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect);
@@ -3666,6 +3667,11 @@ void ExampleEditor::CreateEffectPanel(EffNameType type, int whereis, bool loadPr
 	case EffStereoHarm:
 		{
 			CreateStereoHarm(whereis, loadPrev, prevIdx);
+		}
+		break;
+	case EffCompBand:
+		{
+			CreateCompBand(whereis, loadPrev, prevIdx);
 		}
 		break;
 	default:
