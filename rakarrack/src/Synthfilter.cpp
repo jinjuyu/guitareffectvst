@@ -48,12 +48,12 @@ Synthfilter::Synthfilter (Parameters *param,float * efxoutl_, float * efxoutr_)
 	param->PERIOD = 44115;
 	param->fPERIOD = param->PERIOD;
 
-    lyn1 = new float[MAX_SFILTER_STAGES];
-    ryn1 = new float[MAX_SFILTER_STAGES];
-    lx1hp = new float[MAX_SFILTER_STAGES];
-    rx1hp = new float[MAX_SFILTER_STAGES];
-    ly1hp = new float[MAX_SFILTER_STAGES];
-    ry1hp = new float[MAX_SFILTER_STAGES];
+    lyn1 = new float[MAX_SFILTER_STAGES+1];
+    ryn1 = new float[MAX_SFILTER_STAGES+1];
+    lx1hp = new float[MAX_SFILTER_STAGES+1];
+    rx1hp = new float[MAX_SFILTER_STAGES+1];
+    ly1hp = new float[MAX_SFILTER_STAGES+1];
+    ry1hp = new float[MAX_SFILTER_STAGES+1];
 
     Plpstages = 4;
     Phpstages = 2;

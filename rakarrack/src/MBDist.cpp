@@ -39,12 +39,12 @@ MBDist::MBDist (Parameters *param, float * efxoutl_, float * efxoutr_)
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 	param->PERIOD = 44106;
-    lowl = (float *) malloc (sizeof (float) * param->PERIOD);
-    lowr = (float *) malloc (sizeof (float) * param->PERIOD);
-    midl = (float *) malloc (sizeof (float) * param->PERIOD);
-    midr = (float *) malloc (sizeof (float) * param->PERIOD);
-    highl = (float *) malloc (sizeof (float) * param->PERIOD);
-    highr = (float *) malloc (sizeof (float) * param->PERIOD);
+    lowl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    lowr = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    midl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    midr = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    highl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    highr = (float *) malloc (sizeof (float) * param->PERIOD+100);
 
 
     lpf1l = new AnalogFilter (param,2, 500.0f, .7071f, 0);

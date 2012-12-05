@@ -435,7 +435,7 @@ AnalogFilter::filterout (float * smp)
 	param->fPERIOD = param->PERIOD;
     float *ismp = NULL;	//used if it needs interpolation
     if (needsinterpolation != 0) {
-        ismp = new float[param->PERIOD];
+        ismp = new float[param->PERIOD+1];
         for (i = 0; i < param->PERIOD; i++)
             ismp[i] = smp[i];
         for (i = 0; i < stages + 1; i++)

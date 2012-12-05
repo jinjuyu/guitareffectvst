@@ -92,7 +92,7 @@ vendorName("Jinju")
 
 	char buffer[1024];
 	buffer[1023] = '\0';
-	GetModuleFileName((HMODULE)hInstance, buffer, sizeof(buffer));
+	GetModuleFileName((HMODULE)hInstance, buffer, 1023);
 	mHInstance = hInstance;
 	string a(buffer);
 	int pos = a.find_last_of('\\');
@@ -113,7 +113,7 @@ vendorName("Jinju")
 	c = b + "\\IR\\GK09 -jazz chorus room_K.wav";
 	strncpy(convF, c.c_str(), 1023);
 	// RAKARRACK effects
-	/*
+	
 	mEffEcho = new Echo(mParam, nullptr, nullptr);
 	mEffDistorsion = new Distorsion(mParam, nullptr, nullptr);
 	mEffConvolotron = new Convolotron(mParam, nullptr, nullptr, 1, 4, 2);
@@ -300,7 +300,6 @@ vendorName("Jinju")
 	mEffEchotron->setfile(0);
 	strncpy(mEffReverbtron->Filename, reveF, 1023);
 	mEffReverbtron->setfile(0);
-	//*/
 
 
 	// originals
@@ -337,7 +336,7 @@ vendorName("Jinju")
     setNumOutputs(2);
     canProcessReplacing(true);
     isSynth(false);
-    setUniqueID('JinJ');
+    setUniqueID(98765432);
 	programsAreChunks(true);
 
 	//Construct editor here.
@@ -350,7 +349,6 @@ vendorName("Jinju")
 //----------------------------------------------------------------------------
 VstPlugin::~VstPlugin()
 {
-	/* XXX:
 	delete mEffEcho;
 	delete mEffDistorsion;
 	delete mEffConvolotron;
@@ -396,7 +394,6 @@ VstPlugin::~VstPlugin()
 	delete mEffEQ4;
 	delete mEffEQ3;
 	delete mParam;
-	*/
 
 	int i;
 
@@ -459,7 +456,6 @@ void VstPlugin::processReplacing(float **inputs,
 		outputs[0][i] = inputs[0][i];
 		outputs[1][i] = inputs[1][i];
 	}
-	/*
 	mParam->PERIOD = sampleFrames;
 	mParam->fPERIOD = sampleFrames;
 	//mEffDistorsion->processReplacing(outputs, outputs, sampleFrames);
@@ -754,7 +750,6 @@ void VstPlugin::processReplacing(float **inputs,
 	}
 	delete tempOutputs[0];
 	delete tempOutputs[1];
-	*/ // XXX:
 
 	//If there are events remaining in the queue, update their delta values.
 	if(numPendingEvents > 0)

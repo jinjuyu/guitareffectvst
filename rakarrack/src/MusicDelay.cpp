@@ -51,10 +51,10 @@ MusicDelay::MusicDelay (Parameters *param, float * efxoutl_, float * efxoutr_)
     Phidamp = 60;
 
     maxx_delay = SAMPLE_RATE * MAX_DELAY;
-    ldelay1 = new float[maxx_delay];
-    rdelay1 = new float[maxx_delay];
-    ldelay2 = new float[maxx_delay];
-    rdelay2 = new float[maxx_delay];
+    ldelay1 = new float[maxx_delay+1];
+    rdelay1 = new float[maxx_delay+1];
+    ldelay2 = new float[maxx_delay+1];
+    rdelay2 = new float[maxx_delay+1];
 
     dl1 = maxx_delay-1;
     dl2 = maxx_delay-1;

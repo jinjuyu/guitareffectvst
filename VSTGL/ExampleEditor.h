@@ -222,12 +222,16 @@ public:
 		{
 			if((*i)->mHandle == handle)
 			{
-				delete (*i);
+				(*i)->hidden = true;
+				GUIElement *item = *i;
 				mGUIElements.erase(i);
+				delete item;
 				break;
 			}
 		}
+		mGUIDeleted = true;
 	}
+	bool mGUIDeleted;
 	int handleCounter;
 
 	void DrawQuad(QuadOption &op);
@@ -247,30 +251,119 @@ public:
 	}
 	void onMouseDown(int button, int x, int y)
 	{
-		if((int)this > 100000) // stupid access violation  can't find the cause so im doing this shit
-			// oh but it doesn't seem to be working lol "this" is still null
-		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
+		// GUIElements->OnMouseDown에서 mGUIElements자체를 수정하게 된다.
+		// 그러므로 이 코드는 invalid
+		// mGUIElements를 카피해서 써야한다.
+		// 아 그래도 안된다.
+		// 하나의 엘리먼트가 멀티플한 엘리먼트를 삭제하게 된다.
+		// 어떻게 할지 고민좀 해보자.
+		GUIElements copy;
+		GUIElements alreadyUsed;
+		for(int i=0; i < mGUIElements.size(); ++i)
 		{
-			if(!(*i)->hidden)
-				(*i)->OnMouseDown(button,x,y);
+			copy.push_back(mGUIElements[i]);
+		}
+		int i=0;
+		int max = copy.size();
+		while(i < max)
+		{
+			bool found = false;
+			for(int j=0; j< alreadyUsed.size(); ++j)
+			{
+				if(copy[i] == alreadyUsed[j])
+					found = true;
+			}
+			if(!(copy[i])->hidden && !found)
+				(copy[i])->OnMouseDown(button,x,y);
+			alreadyUsed.push_back(copy[i]);
+			i++;
+			if(mGUIDeleted)
+			{
+				i = 0;
+				copy.clear();
+				for(int j=0; j < mGUIElements.size(); ++j)
+				{
+					copy.push_back(mGUIElements[j]);
+				}
+				mGUIDeleted = false;
+				max = copy.size();
+			}
 		}
 	}
 	void onMouseUp(int button, int x, int y)
 	{
-		if((int)this > 100000)
-		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
+		GUIElements copy;
+		GUIElements alreadyUsed;
+
+		for(int i=0; i < mGUIElements.size(); ++i)
 		{
-			if(!(*i)->hidden)
-				(*i)->OnMouseUp(button,x,y);
+			copy.push_back(mGUIElements[i]);
+		}
+		int i=0;
+		int max = copy.size();
+
+		while(i < max)
+		{
+			bool found = false;
+			for(int j=0; j< alreadyUsed.size(); ++j)
+			{
+				if(copy[i] == alreadyUsed[j])
+					found = true;
+			}
+			if(!(copy[i])->hidden && !found)
+				(copy[i])->OnMouseUp(button,x,y);
+			alreadyUsed.push_back(copy[i]);
+
+			i++;
+			if(mGUIDeleted)
+			{
+				i = 0;
+				copy.clear();
+				for(int j=0; j < mGUIElements.size(); ++j)
+				{
+					copy.push_back(mGUIElements[j]);
+				}
+				mGUIDeleted = false;
+				max = copy.size();
+			}
+
 		}
 	}
 	void onMouseMove(int x, int y)
 	{
-		if((int)this > 100000)
-		for(GUIElements::iterator i=mGUIElements.begin(); i != mGUIElements.end(); ++i)
+		GUIElements copy;
+		GUIElements alreadyUsed;
+
+		for(int i=0; i < mGUIElements.size(); ++i)
 		{
-			if(!(*i)->hidden)
-				(*i)->OnMouseMove(x,y);
+			copy.push_back(mGUIElements[i]);
+		}
+		int i=0;
+		int max = copy.size();
+		while(i < max)
+		{
+			bool found = false;
+			for(int j=0; j< alreadyUsed.size(); ++j)
+			{
+				if(copy[i] == alreadyUsed[j])
+					found = true;
+			}
+			if(!(copy[i])->hidden && !found)
+				(copy[i])->OnMouseMove(x,y);
+			alreadyUsed.push_back(copy[i]);
+			i++;
+			if(mGUIDeleted)
+			{
+				i = 0;
+				copy.clear();
+				for(int j=0; j < mGUIElements.size(); ++j)
+				{
+					copy.push_back(mGUIElements[j]);
+				}
+				mGUIDeleted = false;
+				max = copy.size();
+			}
+
 		}
 	}
 	typedef vector<GUIElement *> GUIElements;
@@ -529,6 +622,7 @@ public:
 		listH = 15;
 		buttonH = 20;
 		margin = 3;
+		curPage = 0;
 	}
 	int buttonH;
 	int margin;
@@ -583,18 +677,24 @@ public:
 		}
 		int curY = y;
 		int idx=0;
-		for(vector<string>::iterator it = mStrs.begin()+curPage*GetNumItemsPerPage(); it != mStrs.end(); ++it)
+		char temp[123];
+		sprintf(temp, "%d %d %d", curPage, GetNumItemsPerPage(), mStrs.size());
+		//MessageBox(NULL, temp, temp, MB_OK);
+		if(curPage*GetNumItemsPerPage() >= 0 && curPage*GetNumItemsPerPage() < mStrs.size())
 		{
-			if(curY + listH > y+h-margin*2-buttonH) break;
-			TextOption top(x,curY,w,listH, 0,0,0,255);
-			if(idx+curPage*GetNumItemsPerPage() == selected)
+			for(vector<string>::iterator it = mStrs.begin()+curPage*GetNumItemsPerPage(); it != mStrs.end(); ++it)
 			{
-				QuadOptionBorder sel(x,curY,w,listH, 32,128,32,255,  0,0,0,255);
-				mGUI->DrawQuadBorder(sel);
+				if(curY + listH > y+h-margin*2-buttonH) break;
+				TextOption top(x,curY,w,listH, 0,0,0,255);
+				if(idx+curPage*GetNumItemsPerPage() == selected)
+				{
+					QuadOptionBorder sel(x,curY,w,listH, 32,128,32,255,  0,0,0,255);
+					mGUI->DrawQuadBorder(sel);
+				}
+				curY += listH;
+				idx++;
+				mGUI->Print(top, "%s", (*it).c_str());
 			}
-			curY += listH;
-			idx++;
-			mGUI->Print(top, "%s", (*it).c_str());
 		}
 		
 	}
@@ -971,17 +1071,14 @@ class ExampleEditor : public VSTGLEditor,
 	///	Called repeatedly, to update the graphics.
 	void onMouseDown(int button, int x, int y)// button: 1 lmb 2 rmb 3 mmb
 	{
-		if((int)mGUI > 100000)
 			mGUI->onMouseDown(button, x,y);
 	}
 	void onMouseUp(int button, int x, int y)
 	{
-		if((int)mGUI > 100000)
 			mGUI->onMouseUp(button, x,y);
 	}
 	void onMouseMove(int x, int y)
 	{
-		if((int)mGUI > 100000)
 			mGUI->onMouseMove(x,y);
 	}
 	void CreateEchotron(int whereis, bool loadPrev, int prevIdx);

@@ -135,3 +135,11 @@ Name(DrawText)
 여기서 const num_Presets가 정확해야 할 듯.
 
 그냥 노가다로 해도 이정도 제네럴하게 만드는 힘이 들 듯?
+-----------
+브릿지
+
+SetCurrentDirectory GetCurrentDirectory
+이걸로 현재 디렉토리를 플러그인이 설치된 폴더로 지정하게 한다.
+레지스트리를 써야함.
+
+VST호스팅이 가능한 VST플러그인을 만들어 브릿지 플러그인으로 쓴다.

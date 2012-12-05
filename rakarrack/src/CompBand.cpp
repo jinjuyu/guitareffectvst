@@ -45,14 +45,14 @@ CompBand::CompBand (Parameters *param, float * efxoutl_, float * efxoutr_)
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 	param->PERIOD = 44102;
-    lowl = (float *) malloc (sizeof (float) * param->PERIOD);
-    lowr = (float *) malloc (sizeof (float) * param->PERIOD);
-    midll = (float *) malloc (sizeof (float) * param->PERIOD);
-    midlr = (float *) malloc (sizeof (float) * param->PERIOD);
-    midhl = (float *) malloc (sizeof (float) * param->PERIOD);
-    midhr = (float *) malloc (sizeof (float) * param->PERIOD);
-    highl = (float *) malloc (sizeof (float) * param->PERIOD);
-    highr = (float *) malloc (sizeof (float) * param->PERIOD);
+    lowl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    lowr = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    midll = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    midlr = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    midhl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    midhr = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    highl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    highr = (float *) malloc (sizeof (float) * param->PERIOD+100);
 
 
     lpf1l = new AnalogFilter (param,2, 500.0f,.7071f, 0);

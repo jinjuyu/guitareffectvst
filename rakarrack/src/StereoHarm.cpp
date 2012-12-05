@@ -41,15 +41,15 @@ StereoHarm::StereoHarm (Parameters *param,float *efxoutl_, float *efxoutr_, long
     hq = Quality;
     adjust(DS);
 
-    templ = (float *) malloc (sizeof (float) * param->PERIOD);
-    tempr = (float *) malloc (sizeof (float) * param->PERIOD);
+    templ = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    tempr = (float *) malloc (sizeof (float) * param->PERIOD+100);
 
 
-    outil = (float *) malloc (sizeof (float) * nPERIOD);
-    outir = (float *) malloc (sizeof (float) * nPERIOD);
+    outil = (float *) malloc (sizeof (float) * nPERIOD+100);
+    outir = (float *) malloc (sizeof (float) * nPERIOD+100);
 
-    outol = (float *) malloc (sizeof (float) * nPERIOD);
-    outor = (float *) malloc (sizeof (float) * nPERIOD);
+    outol = (float *) malloc (sizeof (float) * nPERIOD+100);
+    outor = (float *) malloc (sizeof (float) * nPERIOD+100);
 
     memset (outil, 0, sizeof (float) * nPERIOD);
     memset (outir, 0, sizeof (float) * nPERIOD);

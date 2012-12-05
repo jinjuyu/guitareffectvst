@@ -29,17 +29,15 @@
 Alienwah::Alienwah (Parameters *param, float * efxoutl_, float * efxoutr_)
 :lfo(param), Effect(WetDry){
 	this->param = param;
-    efxoutl = efxoutl_;
-    efxoutr = efxoutr_;
-
+	oldpdelay = 0;
     Ppreset = 0;
-    setpreset (Ppreset);
+	setpreset (Ppreset);
     cleanup ();
+
     oldclfol.a = fb;
     oldclfol.b = 0.0;
     oldclfor.a = fb;
     oldclfor.b = 0.0;
-
 };
 
 Alienwah::~Alienwah ()
@@ -170,13 +168,12 @@ void Alienwah::processReplacing (float **inputs,
 void
 Alienwah::cleanup ()
 {
-    for (int i = oldpdelay; i < MAX_ALIENWAH_DELAY; i++) {
-        oldl[i].a = 0.0f;
-        oldl[i].b = 0.0f;
-        oldr[i].a = 0.0f;
-        oldr[i].b = 0.0f;
-
-    };
+	for (int i = oldpdelay; i < MAX_ALIENWAH_DELAY; i++) {
+		oldl[i].a = 0.0f;
+		oldl[i].b = 0.0f;
+		oldr[i].a = 0.0f;
+		oldr[i].b = 0.0f;
+	};
     oldk = 0;
 };
 
@@ -236,7 +233,7 @@ void
 Alienwah::setdelay (int Pdelay)
 {
     if (Pdelay > MAX_ALIENWAH_DELAY)
-        Pdelay = MAX_ALIENWAH_DELAY;
+        Pdelay = MAX_ALIENWAH_DELAY-1;
     this->Pdelay = Pdelay;
     if(Pdelay>oldpdelay)  cleanup ();
     oldpdelay = Pdelay;
@@ -258,18 +255,9 @@ Alienwah::setpreset (int npreset)
         {64, 64, 1, 0, 1, 66, 101, 11, 47, 0, 86}
     };
 
-    if(npreset>NUM_PRESETS-1) {
-
-        Fpre->ReadPreset(11,npreset-NUM_PRESETS+1);
-        for (int n = 0; n < PRESET_SIZE; n++)
-            changepar (n, pdata[n]);
-    } else {
-
-
-        for (int n = 0; n < PRESET_SIZE; n++)
-            changepar (n, presets[npreset][n]);
-    }
-
+	if(npreset < NUM_PRESETS)    
+		for (int n = 0; n < PRESET_SIZE; n++)
+	        changepar (n, presets[npreset][n]);
 
     Ppreset = npreset;
 };

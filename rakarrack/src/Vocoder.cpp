@@ -36,7 +36,7 @@ Vocoder::Vocoder (Parameters *param,float * efxoutl_, float * efxoutr_, int band
     VOC_BANDS = bands;
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
-    auxresampled = new float[nPERIOD*2];
+    auxresampled = new float[nPERIOD*2+100];
     //default values
     Ppreset = 0;
     Pvolume = 50;
@@ -443,7 +443,7 @@ Vocoder::setbands (int numbands, float startfreq, float endfreq)
     float start = startfreq;   //useful variables
     float endband = endfreq;
     float fnumbands = (float) numbands;
-    float *output = new float[VOC_BANDS + 1];
+    float *output = new float[VOC_BANDS + 1+1];
     int k;
 
     //calculate intermediate values

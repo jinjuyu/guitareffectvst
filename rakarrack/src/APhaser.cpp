@@ -46,15 +46,15 @@ Analog_Phaser::Analog_Phaser (Parameters *param, float * efxoutl_, float * efxou
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 	this->param = param;
-    lxn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES);
+    lxn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES+1);
 
-    lyn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES);
+    lyn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES+1);
 
-    rxn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES);
+    rxn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES+1);
 
-    ryn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES);
+    ryn1 = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES+1);
 
-    offset = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES);	//model mismatch between JFET devices
+    offset = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES+1);	//model mismatch between JFET devices
     offset[0] = -0.2509303f;
     offset[1] = 0.9408924f;
     offset[2] = 0.998f;

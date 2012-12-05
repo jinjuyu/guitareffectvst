@@ -40,8 +40,8 @@ Shuffle::Shuffle (Parameters *param,float * efxoutl_, float * efxoutr_)
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 	param->PERIOD = 44113;
-    inputl = (float *) malloc (sizeof (float) * param->PERIOD);
-    inputr = (float *) malloc (sizeof (float) * param->PERIOD);
+    inputl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    inputr = (float *) malloc (sizeof (float) * param->PERIOD+100);
 
 
     lr = new AnalogFilter (param,6, 300.0f, .3f, 0);

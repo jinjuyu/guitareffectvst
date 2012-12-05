@@ -31,7 +31,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include "Dual_Flange.h"
-
+#include <Windows.h>
 Dflange::Dflange (Parameters *param, float * efxoutl_, float * efxoutr_)
 :lfo(param), Effect(None){
 	this->param = param;
@@ -47,11 +47,11 @@ Dflange::Dflange (Parameters *param, float * efxoutl_, float * efxoutr_)
     rdelay = NULL;
 
 
-    maxx_delay = (int) SAMPLE_RATE * 0.055f;
-    ldelay = new float[maxx_delay];
-    rdelay = new float[maxx_delay];
-    zldelay = new float[maxx_delay];
-    zrdelay = new float[maxx_delay];
+    maxx_delay = (int) ((float)SAMPLE_RATE * 0.055f);
+    ldelay = new float[maxx_delay+1];
+    rdelay = new float[maxx_delay+1];if(zcenter >= maxx_delay) zcenter = maxx_delay-1;
+    zldelay = new float[maxx_delay+1];
+    zrdelay = new float[maxx_delay+1];
 
     ldelayline0  = new delayline(param,0.055f, 2);
     rdelayline0  = new delayline(param,0.055f, 2);
@@ -70,7 +70,7 @@ Dflange::Dflange (Parameters *param, float * efxoutl_, float * efxoutr_)
     fhidamp = 1.0f;
     fwidth = 800;
     fdepth = 50;
-    zcenter = (int) fSAMPLE_RATE/floorf(0.5f * (fdepth + fwidth));
+    zcenter = (int) (fSAMPLE_RATE/floorf(0.5f * (fdepth + fwidth)));
     base = 7.0f;		//sets curve of modulation to frequency relationship
     ibase = 1.0f/base;
     //default values
@@ -122,6 +122,7 @@ Dflange::cleanup ()
 void
 Dflange::out (float * smpsl, float * smpsr)
 {
+	/*
     int i;
     //deal with LFO's
     int tmp0, tmp1;
@@ -177,7 +178,7 @@ Dflange::out (float * smpsl, float * smpsr)
                 basically,
                 dl1(dl2(smps));
                 ^^This runs two flangers in series so you can get a double notch
-                */
+                * /
 
                 ldl = ldelayline0->delay(ldl,dlA, 0, 1, 0)  + ldelayline1->delay(ldl,drA, 0, 1, 0);
                 rdl = rdelayline0->delay(rdl,dlB, 0, 1, 0) + rdelayline1->delay(rdl,drB, 0, 1, 0);
@@ -207,7 +208,7 @@ Dflange::out (float * smpsl, float * smpsr)
                 basically,
                 dl1(dl2(smps));
                 ^^This runs two flangers in series so you can get a double notch
-                */
+                * /
 
                 ldl = ldelayline0->delay(ldl,dlA, 0, 1, 0);
                 ldl = ldelayline1->delay(ldl,dlB, 0, 1, 0);
@@ -348,9 +349,9 @@ Dflange::out (float * smpsl, float * smpsr)
 
 
             if (--kl < 0)   //Cycle delay buffer in reverse so delay time can be indexed directly with addition
-                kl =  maxx_delay;
+                kl =  maxx_delay-1;
             if (--kr < 0)
-                kr =  maxx_delay;
+                kr =  maxx_delay-1;
 
 
 
@@ -364,7 +365,7 @@ Dflange::out (float * smpsl, float * smpsr)
 
     }  //end intense if statement
 
-
+	*/
 };
 
 
@@ -380,7 +381,6 @@ Dflange::processReplacing (float **inputs,
 	param->fPERIOD = param->PERIOD;
 	period_const = 1.0/param->fPERIOD;
 	lfo.update();
-
     float lfol, lfor, lmod, rmod, lmodfreq, rmodfreq, rx0, rx1, lx0, lx1;
     float ldif0, ldif1, rdif0, rdif1;  //Difference between fractional delay and floor(fractional delay)
     float drA, drB, dlA, dlB;	//LFO inside the loop.
@@ -528,6 +528,12 @@ Dflange::processReplacing (float **inputs,
         for (i = 0; i < param->PERIOD; i++) {
 
             //Delay line utility
+			if(kl >= maxx_delay)
+				kl = maxx_delay-1;
+			if(kr >= maxx_delay)
+				kr = maxx_delay-1;
+			if( kl < 0) kl = 0;
+			if(kr < 0) kr = 0;
             ldl = ldelay[kl];
             rdl = rdelay[kr];
             l = ldl * flrcross + rdl * frlcross;
@@ -545,11 +551,16 @@ Dflange::processReplacing (float **inputs,
             oldr = rdl + DENORMAL_GUARD;
 
             if(Pzero) {
+				if(zl >= maxx_delay)
+					zl = maxx_delay-1;
+				if(zr >= maxx_delay)
+					zr = maxx_delay-1;
                 //Offset zero reference delay
                 zdl = zldelay[zl];
                 zdr = zrdelay[zr];
                 zldelay[zl] = inputs[0][i];
                 zrdelay[zr] = inputs[1][i];
+				if(zcenter >= maxx_delay) zcenter = maxx_delay-1;
                 if (--zl < 0)   //Cycle delay buffer in reverse so delay time can be indexed directly with addition
                     zl =  zcenter;
                 if (--zr < 0)
@@ -603,9 +614,9 @@ Dflange::processReplacing (float **inputs,
 
 
             if (--kl < 0)   //Cycle delay buffer in reverse so delay time can be indexed directly with addition
-                kl =  maxx_delay;
+                kl =  maxx_delay-1;
             if (--kr < 0)
-                kr =  maxx_delay;
+                kr =  maxx_delay-1;
 
 
 

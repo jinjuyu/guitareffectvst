@@ -38,11 +38,11 @@ Sequence::Sequence (Parameters *param, float * efxoutl_, float * efxoutr_, long 
 	param->fPERIOD = param->PERIOD;
     adjust(DS);
 	
-    templ = (float *) malloc (sizeof (float) * param->PERIOD);
-    tempr = (float *) malloc (sizeof (float) * param->PERIOD);
+    templ = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    tempr = (float *) malloc (sizeof (float) * param->PERIOD+100);
 
-    outi = (float *) malloc (sizeof (float) * nPERIOD);
-    outo = (float *) malloc (sizeof (float) * nPERIOD);
+    outi = (float *) malloc (sizeof (float) * nPERIOD+100);
+    outo = (float *) malloc (sizeof (float) * nPERIOD+100);
 	param->PERIOD = 44111;
 	param->fPERIOD = param->PERIOD;
     adjust(DS);
@@ -710,8 +710,8 @@ Sequence::processReplacing (float **inputs,
 
 
 	float *inputs2[2];
-	inputs2[0] = new float[sizeof(float)*nPERIOD];
-	inputs2[1] = new float[sizeof(float)*nPERIOD];
+	inputs2[0] = new float[sizeof(float)*nPERIOD+100];
+	inputs2[1] = new float[sizeof(float)*nPERIOD+100];
 
     switch(Pmode) {
     case 0:	//Lineal

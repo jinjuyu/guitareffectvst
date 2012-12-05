@@ -39,8 +39,8 @@ NewDist::NewDist (Parameters *param, float * efxoutl_, float * efxoutr_)
     efxoutr = efxoutr_;
 	param->PERIOD = 44108;
 	param->fPERIOD = 44100;
-    octoutl = (float *) malloc (sizeof (float) * param->PERIOD);
-    octoutr = (float *) malloc (sizeof (float) * param->PERIOD);
+    octoutl = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    octoutr = (float *) malloc (sizeof (float) * param->PERIOD+100);
 
 
 

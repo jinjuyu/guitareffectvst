@@ -33,8 +33,8 @@ FormantFilter::FormantFilter (Parameters *param, FilterParams * pars)
     for (int i = 0; i < numformants; i++)
         formant[i] = new AnalogFilter (param, 4 /*BPF*/, 1000.0f, 10.0f, pars->Pstages);
     cleanup ();
-    inbuffer = new float[param->PERIOD];
-    tmpbuf = new float[param->PERIOD];
+    inbuffer = new float[param->PERIOD+1];
+    tmpbuf = new float[param->PERIOD+1];
 
     for (int j = 0; j < FF_MAX_VOWELS; j++)
         for (int i = 0; i < numformants; i++) {

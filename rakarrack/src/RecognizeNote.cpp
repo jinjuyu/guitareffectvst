@@ -78,7 +78,7 @@ Recognize::schmittInit (int size)
 {
     blockSize = SAMPLE_RATE / size;
     schmittBuffer =
-    (signed short int *) malloc (blockSize * sizeof (signed short int));
+    (signed short int *) malloc (blockSize * sizeof (signed short int)+1);
     schmittPointer = schmittBuffer;
 };
 

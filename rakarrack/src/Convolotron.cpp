@@ -52,9 +52,9 @@ Convolotron::Convolotron (Parameters *param, float * efxoutl_, float * efxoutr_,
 	param->fPERIOD = param->PERIOD;
 
     maxx_size = param->PERIOD;//(int) (nfSAMPLE_RATE * convlength);
-    buf = (float *) malloc (sizeof (float) * maxx_size);
-    rbuf = (float *) malloc (sizeof (float) * maxx_size);
-    lxn = (float *) malloc (sizeof (float) * maxx_size);
+    buf = (float *) malloc (sizeof (float) * maxx_size+1);
+    rbuf = (float *) malloc (sizeof (float) * maxx_size+1);
+    lxn = (float *) malloc (sizeof (float) * maxx_size+1);
     maxx_size = 96000;
 	maxx_size--;
 	param->PERIOD = 1;

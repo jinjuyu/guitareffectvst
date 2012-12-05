@@ -25,17 +25,17 @@ delayline::delayline(Parameters *param, float maxdelay, int maxtaps_)
     maxtaps = maxtaps_;
     maxtime = fSAMPLE_RATE * maxdelay;
     maxdelaysmps = SAMPLE_RATE * lrintf(ceilf(maxdelay));
-    ringbuffer = (float *) malloc(sizeof(float) * maxdelaysmps);
-    avgtime = (float *) malloc(sizeof(float) * maxtaps);
-    time = (float *) malloc(sizeof(float) * maxtaps);
-    xfade = (float *) malloc(sizeof(float) * maxtaps);
-    cur_smps = (float *) malloc(sizeof(float) * maxtaps);
-    oldtime = (int *) malloc(sizeof(int) * maxtaps);
-    newtime = (int *) malloc(sizeof(int) * maxtaps);
-    crossfade = (int *) malloc(sizeof(int) * maxtaps);
+    ringbuffer = (float *) malloc(sizeof(float) * maxdelaysmps+1);
+    avgtime = (float *) malloc(sizeof(float) * maxtaps+1);
+    time = (float *) malloc(sizeof(float) * maxtaps+1);
+    xfade = (float *) malloc(sizeof(float) * maxtaps+1);
+    cur_smps = (float *) malloc(sizeof(float) * maxtaps+1);
+    oldtime = (int *) malloc(sizeof(int) * maxtaps+1);
+    newtime = (int *) malloc(sizeof(int) * maxtaps+1);
+    crossfade = (int *) malloc(sizeof(int) * maxtaps+1);
 
-    pstruct = (phasevars *) malloc(sizeof(struct phasevars) * maxtaps);
-    tapstruct = (tapvars *) malloc(sizeof(struct tapvars) * maxtaps);
+    pstruct = (phasevars *) malloc(sizeof(struct phasevars) * maxtaps+1);
+    tapstruct = (tapvars *) malloc(sizeof(struct tapvars) * maxtaps+1);
 
     zero_index = 0;
     tap = 0;

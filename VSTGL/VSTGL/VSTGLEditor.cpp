@@ -329,8 +329,6 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 	rect.bottom = 750;
 	rect.right = 900;
 
-	if(a > 100000)
-	{
 		switch(message)
 		{
 			case WM_LBUTTONDOWN:
@@ -426,7 +424,6 @@ LONG WINAPI VSTGLEditor::GLWndProc(HWND hwnd,
 					ed->idle();
 				break;
 		}
-	}
 	return DefWindowProc(hwnd, message, wParam, lParam);
 	}
 

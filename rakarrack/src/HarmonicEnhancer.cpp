@@ -31,8 +31,8 @@
 HarmEnhancer::HarmEnhancer(Parameters *param, float *Rmag, float hfreq, float lfreq, float gain)
 {
 	this->param = param;
-    inputl = (float *) malloc (sizeof (float) * 44100);//param->PERIOD);
-    inputr = (float *) malloc (sizeof (float) * 44100);//param->PERIOD);
+    inputl = (float *) malloc (sizeof (float) * 44100+100);//param->PERIOD);
+    inputr = (float *) malloc (sizeof (float) * 44100+100);//param->PERIOD);
 
     set_vol(0,gain);
     realvol = gain;
@@ -191,8 +191,8 @@ HarmEnhancer::harm_out(float *smpsl, float *smpsr)
 
     memcpy(inputl,smpsl, sizeof(float)*param->PERIOD);
     memcpy(inputr,smpsr, sizeof(float)*param->PERIOD);
-	float *compressedl = new float[param->PERIOD];
-	float *compressedr = new float[param->PERIOD];
+	float *compressedl = new float[param->PERIOD+1];
+	float *compressedr = new float[param->PERIOD+1];
 
 
     hpfl->filterout(inputl);

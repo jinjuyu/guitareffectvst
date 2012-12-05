@@ -37,7 +37,7 @@ Reverb::Reverb (Parameters *param, float * efxoutl_, float * efxoutr_)
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 	param->PERIOD = 44109;
-    inputbuf = new float[param->PERIOD];
+    inputbuf = new float[param->PERIOD+1];
     //filterpars=NULL;
 
 
@@ -315,7 +315,7 @@ Reverb::setidelay (int Pidelay)
     idelaylen = lrintf (fSAMPLE_RATE * delay / 1000.0f);
     if (idelaylen > 1) {
         idelayk = 0;
-        idelay = new float[idelaylen];
+        idelay = new float[idelaylen+1];
         for (int i = 0; i < idelaylen; i++)
             idelay[i] = 0.0;
     };
@@ -385,7 +385,7 @@ Reverb::settype (int Ptype)
         lpcomb[i] = 0;
         if (comb[i] != NULL)
             delete comb[i];
-        comb[i] = new float[comblen[i]];
+        comb[i] = new float[comblen[i]+1];
     };
 
     for (int i = 0; i < REV_APS * 2; i++) {
@@ -403,7 +403,7 @@ Reverb::settype (int Ptype)
         apk[i] = 0;
         if (ap[i] != NULL)
             delete ap[i];
-        ap[i] = new float[aplen[i]];
+        ap[i] = new float[aplen[i]+1];
     };
     settime (Ptime);
     cleanup ();

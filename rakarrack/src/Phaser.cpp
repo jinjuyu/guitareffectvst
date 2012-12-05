@@ -33,8 +33,8 @@ Phaser::Phaser (Parameters *param, float * efxoutl_, float * efxoutr_)
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
-    oldl = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES * 2);
-    oldr = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES * 2);
+    oldl = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES * 2+1);
+    oldr = (float *) malloc(sizeof(float)* MAX_PHASER_STAGES * 2+1);
 
     Ppreset = 0;
     setpreset (Ppreset);

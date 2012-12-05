@@ -83,7 +83,7 @@ Tuner::schmittInit (int size)
 {
     blockSize = SAMPLE_RATE / size;
     schmittBuffer =
-    (signed short int *) malloc (blockSize * sizeof (signed short int));
+    (signed short int *) malloc ((blockSize+1) * sizeof (signed short int));
     schmittPointer = schmittBuffer;
 };
 

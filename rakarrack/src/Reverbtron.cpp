@@ -49,21 +49,21 @@ Reverbtron::Reverbtron (Parameters *param, float * efxoutl_, float * efxoutr_,in
     maxtime = 0.0f;
 	param->PERIOD = 44110;
 	adjust(DS);
-    templ = (float *) malloc (sizeof (float) * nPERIOD);
-    tempr = (float *) malloc (sizeof (float) * nPERIOD);
+    templ = (float *) malloc (sizeof (float) * nPERIOD+100);
+    tempr = (float *) malloc (sizeof (float) * nPERIOD+100);
 
     hrtf_size = nSAMPLE_RATE/2;
     maxx_size = (int) (nfSAMPLE_RATE * convlength);  //just to get the max memory allocated
-    time = (int *) malloc (sizeof (int) * 2000);
-    rndtime = (int *) malloc (sizeof (int) * 2000);
-    ftime = (float *) malloc (sizeof (float) * 2000);
-    data = (float *) malloc (sizeof (float) * 2000);
-    rnddata = (float *) malloc (sizeof (float) * 2000);
-    tdata = (float *) malloc (sizeof (float) * 2000);
-    lxn = (float *) malloc (sizeof (float) * (1 + maxx_size));
-    hrtf =  (float *) malloc (sizeof (float) * (1 + hrtf_size));
+    time = (int *) malloc (sizeof (int) * 2000+100);
+    rndtime = (int *) malloc (sizeof (int) * 2000+100);
+    ftime = (float *) malloc (sizeof (float) * 2000+100);
+    data = (float *) malloc (sizeof (float) * 2000+100);
+    rnddata = (float *) malloc (sizeof (float) * 2000+100);
+    tdata = (float *) malloc (sizeof (float) * 2000+100);
+    lxn = (float *) malloc (sizeof (float) * (1 + maxx_size)+100);
+    hrtf =  (float *) malloc (sizeof (float) * (1 + hrtf_size)+100);
     imax = nSAMPLE_RATE/2;  // 1/2 second available
-    imdelay = (float *) malloc (sizeof (float) * imax);
+    imdelay = (float *) malloc (sizeof (float) * imax+100);
     offset = 0;
     hoffset = 0;
     data_length=0;

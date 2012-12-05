@@ -35,8 +35,8 @@ Chorus::Chorus (Parameters *param, float * efxoutl_, float * efxoutr_)
     dlk = 0;
     drk = 0;
     maxdelay = lrintf (MAX_CHORUS_DELAY / 1000.0 * SAMPLE_RATE);
-    delayl = new float[maxdelay];
-    delayr = new float[maxdelay];
+    delayl = new float[maxdelay+1];
+    delayr = new float[maxdelay+1];
 
 
     float tmp = 0.08f;

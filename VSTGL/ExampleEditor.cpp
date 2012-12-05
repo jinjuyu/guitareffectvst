@@ -295,7 +295,7 @@ thing(0.0f)
 		mEffectOn[i] = false;
 	}
 	//mSlider = mGUI->NewSlider(60, 185, 120, 0, 100);
-	/*
+	
 	int x = 400;
 	exchangeCB = new ExchangeCallback(this);
 	moveUpCB = new MoveUpCallback(this);
@@ -326,7 +326,7 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffNewDist, "Derelict"));
 	mEffectNames.push_back(EffectName(EffAnalogPhaser, "Analog Phaser"));
 	mEffectNames.push_back(EffectName(EffValve, "Valve"));
-	mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange"));
+	//mEffectNames.push_back(EffectName(EffDualFlange, "Dual Flange"));
 	mEffectNames.push_back(EffectName(EffRing, "Ring"));
 	mEffectNames.push_back(EffectName(EffExciter, "Exciter"));
 	mEffectNames.push_back(EffectName(EffMBDist, "DistBand"));
@@ -341,7 +341,6 @@ thing(0.0f)
 	mEffectNames.push_back(EffectName(EffRyanWah, "MutroMojo"));
 	// MVVvol VaryBand
 	// RyanWah MutroMojo
-
 	mEQ1Panel = new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect);
 	mDistPanel = new DistorsionPanelNS::DistorsionPanel(mGUI,(VstPlugin*)effect);
 	mCompressorPanel = new CompressorNS::CompressorPanel(mGUI,(VstPlugin*)effect);
@@ -398,11 +397,6 @@ thing(0.0f)
 		int b = mGUI->NewOnOffButton((i-5)*180, 13+150+300, 50, 20, "On", mCBOnOffs[i]);
 		mOnOffButtons[i] = b;
 	}
-
-	*/
-// 이펙트 온/오프를 만들고 리스트에서 추가/변경을 하게 한다.
-	//for(int i=3;i<20;++i)
-//		mEQ1Panels.push_back(new LinealEQNS::LinealEQ(mGUI,(VstPlugin*)effect, i));
 
 }
 
@@ -688,6 +682,7 @@ GLGUI::GLGUI(void *hInstance):m_hInstance(hInstance)
 	handleCounter = 0;
 	mPopupList = new TabbedListBox(GetNewHandle(), this, 0, 0, 300, 150);
 	mPopupList->hidden = true;
+	mGUIDeleted = false;
 }
 //------
 bool InRect(int x,int y,int w,int h,int x2,int y2)

@@ -37,10 +37,10 @@ Ring::Ring (Parameters *param, float * efxoutl_, float * efxoutr_)
     efxoutl = efxoutl_;
     efxoutr = efxoutr_;
 
-    sin_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
-    tri_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
-    squ_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
-    saw_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2);
+    sin_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2+1);
+    tri_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2+1);
+    squ_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2+1);
+    saw_tbl = (float *) malloc(sizeof(float) * SAMPLE_RATE*2+1);
 
     Create_Tables();
 

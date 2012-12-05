@@ -56,10 +56,10 @@ Looper::Looper (float * efxoutl_, float * efxoutr_, float size)
     maxx_delay = lrintf(fSAMPLE_RATE * size);
     fade = (int) SAMPLE_RATE / 2;    //1/2 SR fade time available
 
-    ldelay = new float[maxx_delay];
-    rdelay = new float[maxx_delay];
-    t2ldelay = new float[maxx_delay];
-    t2rdelay = new float[maxx_delay];
+    ldelay = new float[maxx_delay+1];
+    rdelay = new float[maxx_delay+1];
+    t2ldelay = new float[maxx_delay+1];
+    t2rdelay = new float[maxx_delay+1];
 
     setpreset (Ppreset);
     cleanup ();
@@ -133,7 +133,7 @@ Looper::out (float * smpsl, float * smpsr)
 {
     int i;
     float rswell, lswell;
-    float *ticktock = new float[param->PERIOD];
+    float *ticktock = new float[param->PERIOD+1];
     if((Pmetro) && (Pplay) && (!Pstop)) ticker.metronomeout(ticktock);
 
     for (i = 0; i < param->PERIOD; i++) {
@@ -214,7 +214,7 @@ Looper::processReplacing (float **inputs,
 	param->PERIOD = sampleFrames;
 	param->fPERIOD = param->PERIOD;
 
-    float *ticktock = new float[param->PERIOD];
+    float *ticktock = new float[param->PERIOD+1];
     //if((Pmetro) && (Pplay) && (!Pstop)) ticker.metronomeout(ticktock);
 
     for (i = 0; i < param->PERIOD; i++) {

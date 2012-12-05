@@ -42,11 +42,11 @@ Shifter::Shifter (Parameters *param,float *efxoutl_, float *efxoutr_, long int Q
 	param->fPERIOD = param->PERIOD;
     adjust(DS);
 
-    templ = (float *) malloc (sizeof (float) * param->PERIOD);
-    tempr = (float *) malloc (sizeof (float) * param->PERIOD);
+    templ = (float *) malloc (sizeof (float) * param->PERIOD+100);
+    tempr = (float *) malloc (sizeof (float) * param->PERIOD+100);
 
-    outi = (float *) malloc (sizeof (float) * nPERIOD);
-    outo = (float *) malloc (sizeof (float) * nPERIOD);
+    outi = (float *) malloc (sizeof (float) * nPERIOD+100);
+    outo = (float *) malloc (sizeof (float) * nPERIOD+100);
 
     U_Resample = new Resample(dq);
     D_Resample = new Resample(uq);
@@ -274,8 +274,8 @@ Shifter::processReplacing (float **inputs,
 	adjust(DS_state);
 
 	float *inputs2[2];
-	inputs2[0] = new float[nPERIOD];
-	inputs2[1] = new float[nPERIOD];
+	inputs2[0] = new float[nPERIOD+100];
+	inputs2[1] = new float[nPERIOD+100];
 
     if(DS_state != 0) {
         memcpy(templ, inputs[0],sizeof(float)*param->PERIOD);

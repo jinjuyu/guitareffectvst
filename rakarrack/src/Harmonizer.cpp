@@ -43,8 +43,8 @@ Harmonizer::Harmonizer (Parameters *param, float *efxoutl_, float *efxoutr_, lon
     tempr = (float *) malloc (sizeof (float) * (param->PERIOD+100));
 
 
-    outi = (float *) malloc (sizeof (float) * nPERIOD);
-    outo = (float *) malloc (sizeof (float) * nPERIOD);
+    outi = (float *) malloc (sizeof (float) * nPERIOD+100);
+    outo = (float *) malloc (sizeof (float) * nPERIOD+100);
 
     memset (outi, 0, sizeof (float) * nPERIOD);
     memset (outo, 0, sizeof (float) * nPERIOD);
