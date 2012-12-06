@@ -111,6 +111,9 @@ public:
 	virtual void SetVal(int val)
 	{
 	}
+	virtual void OnRDown()
+	{
+	}
 	
 };
 class ButtonCallback
@@ -411,6 +414,10 @@ public:
 			clickedX = x_;
 			clickedY = y_;
 			LMouseDown = true;
+		}
+		else if(button == 2 && InRect(x,y,w,h, x_, y_))
+		{
+			if(mCB) mCB->OnRDown();
 		}
 	}
 	int clickedX, clickedY;

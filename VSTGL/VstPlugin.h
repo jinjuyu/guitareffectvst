@@ -26,6 +26,7 @@
 
 #include "audioeffectx.h"
 #include <string>
+
 #include "Echo.h"
 #include "Distorsion.h"
 #include "Convolotron.h"
@@ -70,6 +71,9 @@
 #include "DynamicFilter.h"
 #include "RecChord.h"
 #include "RecognizeNote.h"
+#include <string>
+#include <vector>
+using namespace std;
 struct PluginProgram;
 
 //Trick to ensure inline functions get inlined properly.
@@ -78,6 +82,14 @@ class ExampleEditor;
 
 //----------------------------------------------------------------------------
 ///	VST plugin class.
+enum EffNameType;
+struct ParamAuto
+{
+	EffNameType type;
+	int paramNum; // real parameter value used in changepar
+	string typeStr;
+	string paramStr;
+};
 class VstPlugin : public AudioEffectX
 {
 public:
@@ -142,7 +154,19 @@ public:
 	DynamicFilter *mEffWahWah;
 	Recognize *RecNote;
 	RecChord *RC;
-	
+	ParamAuto mParamAuto[16];
+	vector<Effect*> mEnumToEffect;
+	float RealToVst(int realMin, int realMax, int val)
+	{
+		int realLength = realMax-realMin;
+		float realVal = float(val - realMin)/float(realLength);
+		return realVal;
+	}
+	int VstToReal(int realMin, int realMax, float val)
+	{
+		int realLength = realMax-realMin;
+		return realMin + (int)(val*realLength+0.5f);
+	}
 	///	Processes a block of audio, accumulating.
 	/*!
 		\param inputs Pointer to an array of an array of audio samples
@@ -246,8 +270,7 @@ public:
 	///	Enum for enumerating the plugin's parameters.
 	enum
 	{
-		param1,
-		numParameters,
+		numParameters=16,
 	};
   private:
 	///	Called for every sample, to dispatch MIDI events appropriately.

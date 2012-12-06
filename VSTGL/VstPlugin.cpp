@@ -88,6 +88,12 @@ vendorName("Jinju")
 	Wave_res_amount = 2;
 	Wave_up_q = 4;
 	Wave_down_q = 1;
+	
+	memset((void*)mParamAuto, 0, sizeof(ParamAuto)*16);
+	mParamAuto[0].type = EffInfinity;
+	mParamAuto[0].paramNum = 0;
+	mParamAuto[0].typeStr = "Infinity";
+	mParamAuto[0].paramStr = "Wet/Dry";
 
 	char buffer[1024];
 	buffer[1023] = '\0';
@@ -163,7 +169,52 @@ vendorName("Jinju")
 	mParam->rtrig = .6f;
 	RecNote = new Recognize(mParam, nullptr, nullptr, mParam->rtrig);
 	RC = new RecChord(mParam);
-	
+	mEnumToEffect.resize(NumEffs);
+	mEnumToEffect[EffEcho] = mEffEcho;
+	mEnumToEffect[EffCompressor] = mEffCompressor;
+	mEnumToEffect[EffLinealEQ] = mEffEQ1;
+	mEnumToEffect[EffChorus] = mEffChorus;
+	mEnumToEffect[EffPhaser] = mEffPhaser;
+	mEnumToEffect[EffReverb] = mEffReverb;
+	mEnumToEffect[EffParametricEQ] = mEffEQ2;
+	mEnumToEffect[EffParametricEQ2] = mEffEQ3;
+	mEnumToEffect[EffParametricEQ3] = mEffEQ4;
+	mEnumToEffect[EffWahWah] = mEffWahWah;
+	mEnumToEffect[EffAlienWah] = mEffAlienwah;
+	mEnumToEffect[EffPan] = mEffPan;
+	mEnumToEffect[EffDistortion] = mEffDistorsion;
+	mEnumToEffect[EffFlange] = mEffFlange;
+	mEnumToEffect[EffGate] = mEffGate;
+	mEnumToEffect[EffExpander] = mEffExpander;
+	mEnumToEffect[EffConvolotron] = mEffConvolotron;
+	mEnumToEffect[EffAnalogPhaser] = mEffAPhaser;
+	mEnumToEffect[EffArpie] = mEffArpie;
+	mEnumToEffect[EffCoilCrafter] = mEffCoil;
+	mEnumToEffect[EffCompBand] = mEffCompBand;
+	mEnumToEffect[EffDualFlange] = mEffDualFlange;
+	mEnumToEffect[EffEchotron] = mEffEchotron;
+	mEnumToEffect[EffExciter] = mEffExciter;
+	mEnumToEffect[EffHarmonizer] = mEffHarmonizer;
+	mEnumToEffect[EffInfinity] = mEffInfinity;
+	mEnumToEffect[EffMBDist] = mEffMBDist;
+	mEnumToEffect[EffMBVvol] = mEffMBVvol;
+	mEnumToEffect[EffMusicDelay] = mEffMusicDelay;
+	mEnumToEffect[EffNewDist] = mEffNewDist;
+	mEnumToEffect[EffOpticaltrem] = mEffOpticalTrem;
+	mEnumToEffect[EffRBEcho] = mEffRBEcho;
+	mEnumToEffect[EffReverbtron] = mEffReverbtron;
+	mEnumToEffect[EffRing] = mEffRing;
+	mEnumToEffect[EffRyanWah] = mEffRyanWah;
+	mEnumToEffect[EffSequence] = mEffSequence;
+	mEnumToEffect[EffShelfBoost] = mEffShelfBoost;
+	mEnumToEffect[EffShifter] = mEffShifter;
+	mEnumToEffect[EffShuffle] = mEffShuffle;
+	mEnumToEffect[EffStereoHarm] = mEffStereoHarm;
+	mEnumToEffect[EffStompBox] = mEffStompBox;
+	mEnumToEffect[EffSustainer] = mEffSustainer;
+	mEnumToEffect[EffSynthfilter] = mEffSynthfilter;
+	mEnumToEffect[EffValve] = mEffValve;
+	mEnumToEffect[EffVibe] = mEffVibe;
 	
 	mEffWahWah->setpreset(0);
 	//presets
@@ -327,8 +378,6 @@ vendorName("Jinju")
 	tempEvents->events[0] = (VstEvent *)midiEvent[0];
 
 	//Setup programs here.
-	programs = new PluginProgram[numPrograms];
-	setProgram(0);
 
 	//Set various constants.
     setNumInputs(2); // 2in2out here
@@ -342,6 +391,10 @@ vendorName("Jinju")
 	
 	mEditor = new ExampleEditor(this);
 	editor = mEditor;
+
+	programs = new PluginProgram[numPrograms];
+	setProgram(0);
+
 	//SetCurrentDirectory() 이건 호스트에서나 쓸 수 있다.
 }
 
@@ -880,7 +933,65 @@ void VstPlugin::setParameter(VstInt32 index, float value)
 {
 	parameters[index] = value;
 	programs[curProgram].parameters[index] = parameters[index];
+	if(mParamAuto[index].type != EffNone)
+	{
+		switch(mParamAuto[index].type)
+		{
+		case EffLinealEQ:
+			break;
+		case EffDistortion:
+			break;
+		case EffCompressor:
+			break;
+		case EffEcho:
+			break;
+		default:
+			{
+				bool found=false;
+				int foundIdx = -1;
+				for(int i=0; i< 10; ++i)
+				{
+					if( ((ExampleEditor*)editor)->mBuiltPanels[i] == mParamAuto[index].type)
+					{
+						found = true;
+						foundIdx = i;
+						break;
+					}
+				}
+				if(found)
+				{
+					bool found2=false;
+					int foundIdx2 = -1;
+					for(int i=0; i< ((ExampleEditor*)editor)->mPanels[foundIdx]->mData.size(); ++i)
+					{
+						if( ((ExampleEditor*)editor)->mPanels[foundIdx]->mData[i].parIdx == mParamAuto[index].paramNum)
+						{
+							found2 = true;
+							foundIdx2 = i;
+							break;
+						}
+					}
 
+					if(found2)
+					{
+						int realMax = ((ExampleEditor*)editor)->mPanels[foundIdx]->mData[foundIdx2].valRealMax;
+						int realMin = ((ExampleEditor*)editor)->mPanels[foundIdx]->mData[foundIdx2].valRealMin;
+						float realVal = VstToReal(realMin, realMax, value);
+						int printVal = ((ExampleEditor*)editor)->mPanels[foundIdx]->RealToPrint(foundIdx2, realVal);
+						::Slider* slider = (::Slider*)(((ExampleEditor*)editor)->mGUI->GetElement(((ExampleEditor*)editor)->mPanels[foundIdx]->mData[foundIdx2].handle));
+						slider->SetVal(printVal);
+					}
+				}
+			}
+			break;
+		}
+		// 파라메터 오토메이션은 꽤 쉽다.
+		// 슬라이더 오른클릭->팝업에 파라메터 리스트
+		// 바인드.
+		// 바인드 이후 패널을 이용해서 vst to real을 적용(mData의 min max를 이용한다.)하여 changepar
+		// getparam시에도 반대로 적용하여 getpar
+		//mEnumToEffect[mParamAuto[index].type]->changepar(mParamAuto[index].paramNum, 
+	}
 	if(editor)
 	{
 		((VSTGLEditor *)editor)->setParameter(index, value);
@@ -890,18 +1001,83 @@ void VstPlugin::setParameter(VstInt32 index, float value)
 //----------------------------------------------------------------------------
 float VstPlugin::getParameter(VstInt32 index)
 {
-	return parameters[index];
+	float val = 0.0f;
+	if(mParamAuto[index].type != EffNone)
+	{
+		switch(mParamAuto[index].type)
+		{
+		case EffLinealEQ:
+			break;
+		case EffDistortion:
+			break;
+		case EffCompressor:
+			break;
+		case EffEcho:
+			break;
+		default:
+			{
+				bool found=false;
+				int foundIdx = -1;
+				for(int i=0; i< 10; ++i)
+				{
+					if( ((ExampleEditor*)editor)->mBuiltPanels[i] == mParamAuto[index].type)
+					{
+						found = true;
+						foundIdx = i;
+						break;
+					}
+				}
+				if(found)
+				{
+					bool found2=false;
+					int foundIdx2 = -1;
+					for(int i=0; i< ((ExampleEditor*)editor)->mPanels[foundIdx]->mData.size(); ++i)
+					{
+						if( ((ExampleEditor*)editor)->mPanels[foundIdx]->mData[i].parIdx == mParamAuto[index].paramNum)
+						{
+							found2 = true;
+							foundIdx2 = i;
+							break;
+						}
+					}
+
+					if(found2)
+					{
+						int value = mEnumToEffect[mParamAuto[index].type]->getpar(mParamAuto[index].paramNum);
+						int realMax = ((ExampleEditor*)editor)->mPanels[foundIdx]->mData[foundIdx2].valRealMax;
+						int realMin = ((ExampleEditor*)editor)->mPanels[foundIdx]->mData[foundIdx2].valRealMin;
+						val = RealToVst(realMin, realMax, value);
+					}
+				}
+			}
+			break;
+		}
+		// 파라메터 오토메이션은 꽤 쉽다.
+		// 슬라이더 오른클릭->팝업에 파라메터 리스트
+		// 바인드.
+		// 바인드 이후 패널을 이용해서 vst to real을 적용(mData의 min max를 이용한다.)하여 changepar
+		// getparam시에도 반대로 적용하여 getpar
+		//mEnumToEffect[mParamAuto[index].type]->changepar(mParamAuto[index].paramNum, 
+	}
+
+	return val;
 }
 
 //----------------------------------------------------------------------------
 void VstPlugin::getParameterLabel(VstInt32 index, char *label)
 {
-	strncpy(label, " ", 64);
+	char temp[123];
+	if(mParamAuto[index].type != EffNone)
+		sprintf(temp, "%s - %s", mParamAuto[index].typeStr.c_str(), mParamAuto[index].paramStr.c_str());
+	else
+		sprintf(temp, "Param %d", index);
+	strncpy(label, temp, 64);
 }
 
 //----------------------------------------------------------------------------
 void VstPlugin::getParameterDisplay(VstInt32 index, char *text)
 {
+	char temp[123];
 	float2string(parameters[index], text, 7);
 }
 
@@ -909,9 +1085,12 @@ void VstPlugin::getParameterDisplay(VstInt32 index, char *text)
 void VstPlugin::getParameterName(VstInt32 index, char *label)
 {
 	char tempch[8];
-
-	sprintf(tempch, "p%d", static_cast<int>(index));
-	strncpy(label, tempch, 7);
+	char temp[123];
+	if(mParamAuto[index].type != EffNone)
+		sprintf(temp, "%s - %s", mParamAuto[index].typeStr.c_str(), mParamAuto[index].paramStr.c_str());
+	else
+		sprintf(temp, "Param %d", index);
+	strncpy(label, temp, 32);
 }
 
 //----------------------------------------------------------------------------

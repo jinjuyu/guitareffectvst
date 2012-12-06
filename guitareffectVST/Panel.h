@@ -12,6 +12,7 @@ public:
 	int mDataIdx;
 	PanelSliderCallback(Panel *a, int dataIdx);
 	void SetVal(int val);
+	void OnRDown();
 };
 class PanelListCallback : public TabbedListBoxCallback
 {
@@ -19,6 +20,15 @@ public:
 	Panel *mPanel;
 	int mDataIdx;
 	PanelListCallback(Panel *a, int dataIdx);
+	void OnSelect(int idx);
+	void OnPageSelect(int idx);
+};
+class PanelAutoParamListCallback : public TabbedListBoxCallback
+{
+public:
+	Panel *mPanel;
+	int mDataIdx;
+	PanelAutoParamListCallback(Panel *a, int dataIdx);
 	void OnSelect(int idx);
 	void OnPageSelect(int idx);
 };
@@ -114,6 +124,7 @@ public:
 	vector<PanelButtonCallback*> mCBButtons;
 	vector<PanelOnOffCallback*> mCBOnOffs;
 	vector<PanelListCallback*> mCBLists;
+	PanelAutoParamListCallback *mCBAutoParam;
 	PanelBrowseCallback *mCBBrowser;
 	vector<Data> mData;
 	int mSizePreset;
@@ -121,6 +132,7 @@ public:
 	~Panel();
 	bool mUsePresetIdx;
 	Effect *mEffect;
+	int mCurAutoParam;
 	vector<vector<string>> mTypeStrs;
 	vector<string> mPresetStrs;
 	vector<vector<int>> mPresets;

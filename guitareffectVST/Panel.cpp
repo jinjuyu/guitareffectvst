@@ -193,6 +193,8 @@ Panel::Panel(GLGUI *gui, VstPlugin *plug, Effect *effect, string effName, int wh
 
 	cbPresetSelect = new PresetCallback(this);
 	cbPresetSelected = new PresetListCallback(this);
+	mCBAutoParam = new PanelAutoParamListCallback(this, 0);
+	
 	mButtons.push_back(mGUI->NewButton(x+100,y-35+13,80, 20, "Default", cbPresetSelect)); // Preset
 	mPresetButton = *(mButtons.end()-1);
 
@@ -221,6 +223,7 @@ Panel::~Panel()
 	}
 	delete cbPresetSelect;
 	delete cbPresetSelected;
+	delete mCBAutoParam;
 	if(mCBBrowser) delete mCBBrowser;
 	
 }
@@ -290,6 +293,29 @@ PanelSliderCallback::PanelSliderCallback(Panel *a, int dataIdx)
 	: mPanel(a), mDataIdx(dataIdx)
 {
 }
+void PanelSliderCallback::OnRDown()
+{
+	mPanel->mGUI->mPopupList->hidden = false;
+	mPanel->mGUI->mPopupList->Clear();
+
+	// 여기에 VstPlugin에있는 mAutoParam안에 있는 16개의 리스트를 넣는다.
+	char temp[123];
+	mPanel->mCurAutoParam = mDataIdx;
+	for(int i=0;i<16;++i)
+	{
+		if(mPanel->mPlug->mParamAuto[i].type != EffNone)
+		{
+			sprintf(temp, "%s - %s", mPanel->mPlug->mParamAuto[i].typeStr.c_str(), mPanel->mPlug->mParamAuto[i].paramStr.c_str());
+			mPanel->mGUI->mPopupList->Add(temp);
+		}
+		else
+		{
+			sprintf(temp, "Param %d", i);
+			mPanel->mGUI->mPopupList->Add(temp);
+		}
+	}
+	mPanel->mGUI->mPopupList->SetCallback(mPanel->mCBAutoParam);
+}
 void PanelSliderCallback::SetVal(int val)
 {
 	int newval = mPanel->PrintToReal(mDataIdx, val);
@@ -325,6 +351,59 @@ void PanelListCallback::OnSelect(int idx)
 	}
 }
 void PanelListCallback::OnPageSelect(int idx)
+{
+
+
+}
+PanelAutoParamListCallback::PanelAutoParamListCallback(Panel *a, int dataIdx)
+	: mPanel(a), mDataIdx(dataIdx)
+{
+}
+void PanelAutoParamListCallback::OnSelect(int idx)
+{
+	mPanel->mGUI->mPopupList->hidden = true;
+	mPanel->mGUI->mPopupList->Clear();
+	mPanel->mGUI->mPopupList->SetCallback(nullptr);
+	if(idx < 16)
+	{
+
+		EffNameType type = EffNone;
+		bool found;
+		for(int i=0; i< NumEffs; ++i)
+		{
+			if(mPanel->mPlug->mEnumToEffect[i] == mPanel->mEffect)
+			{
+				found = true;
+				type = (EffNameType)i;
+			}
+		}
+		if(found)
+		{
+			mPanel->mPlug->mParamAuto[idx].type = type;
+			mPanel->mPlug->mParamAuto[idx].typeStr = mPanel->mEffName;
+			mPanel->mPlug->mParamAuto[idx].paramStr = mPanel->mData[mPanel->mCurAutoParam].text;
+			mPanel->mPlug->mParamAuto[idx].paramNum = mPanel->mData[mPanel->mCurAutoParam].parIdx;
+		}
+	}
+	/*
+	여기엔 0~15의 값이 오는데 그거에 맞게 VSTPlugin안에 있는 mAutoParam의 값을 수정해 준다.
+
+	if(idx != -1 && idx <= mPanel->mData[mDataIdx].valRealMax)
+	{
+		mPanel->mGUI->mPopupList->hidden = true;
+		mPanel->mGUI->mPopupList->Clear();
+		mPanel->mEffect->changepar(mPanel->mData[mDataIdx].parIdx, idx);
+		Button *but = (Button *)mPanel->mGUI->GetElement(mPanel->mData[mDataIdx].handle);
+		but->mLabel = mPanel->mTypeStrs[mPanel->mData[mDataIdx].typeStrsIdx][idx];
+	}
+	else
+	{
+		char temp[123];
+		sprintf(temp, "%d %d %d", idx, mDataIdx, mPanel->mData[mDataIdx].parIdx);
+		//MessageBox(NULL, temp, temp, MB_OK);
+	}*/
+}
+void PanelAutoParamListCallback::OnPageSelect(int idx)
 {
 
 

@@ -1,5 +1,10 @@
 https://github.com/jinjuyu/guitareffectvst
 
+New in 0.2
+------------------------------------------------------------------------------------------
+Added Parameter Automation Support.
+Just right click on Slider and select parameter slot on the popup!
+
 
 About
 -------------------------------------------------------------------------------------------
@@ -26,7 +31,7 @@ Tested on REAPER, Zynewave Podium, Minihost, Pedalboard2, FL Studio.
 
 Future Plans
 -------------------------------------------------------------------------------------------
-- Parameter Automation
+
 - Bridge DLL between plugin DLL and host. (This will make this plugin work on every DAWs and Hosts)
 - And also nice installer
 
