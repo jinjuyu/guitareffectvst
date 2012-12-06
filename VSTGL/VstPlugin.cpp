@@ -1359,6 +1359,7 @@ VstInt32 VstPlugin::getChunk (void** data, bool isPreset)
 		//return 0;
 	//MessageBox(NULL, "2", "asd2", MB_OK);
 	SaveState save;
+	memcpy(save.mParamAuto, mParamAuto, sizeof(ParamAuto)*16);
 	for(int i=0; i< 10; ++i)
 	{
 		save.type[i] = mEditor->mBuiltPanels[i];
@@ -1508,7 +1509,7 @@ VstInt32 VstPlugin::setChunk (void* data, VstInt32 byteSize, bool isPreset)
 	for(int i=0; i< 10; ++i)
 		mEditor->DeleteEffectPanel(i);
 	mEditor->mUsingEffectList.clear();
-	
+	memcpy(mParamAuto, save.mParamAuto, sizeof(ParamAuto)*16);
 	for(int i=0; i< 10; ++i)
 	{
 		int presetIdx = save.params[i].presetIdx;

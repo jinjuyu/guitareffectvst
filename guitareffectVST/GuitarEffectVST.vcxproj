@@ -249,6 +249,7 @@
     <ClInclude Include="EchoPanel.h" />
     <ClInclude Include="LinealEQ.h" />
     <ClInclude Include="Panel.h" />
+    <ClInclude Include="ParamAuto.h" />
     <ClInclude Include="paramsMinMax.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

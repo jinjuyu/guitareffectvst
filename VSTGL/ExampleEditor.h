@@ -30,6 +30,8 @@
 #include <stdarg.h>
 #include <vector>
 #include <math.h>
+#include "../guitareffectVST/ParamAuto.h"
+
 using namespace std;
 ///	Simple VSTGL example.
 #pragma warning(disable: 4018)
@@ -1018,6 +1020,7 @@ struct SaveParams
 	int params[20];
 
 };
+
 struct SaveState{
 	EffNameType type[10];
 	SaveParams params[10];
@@ -1026,6 +1029,7 @@ struct SaveState{
 	char ConFN[1024];
 	char EchoFN[1024];
 	char ReverbFN[1024];
+	ParamAuto mParamAuto[16];
 };
 bool CompEff(EffectName a, EffectName b);
 class ExampleEditor : public VSTGLEditor,

@@ -530,5 +530,8 @@
     <ClInclude Include="Panel.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ParamAuto.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

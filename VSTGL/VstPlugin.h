@@ -73,6 +73,7 @@
 #include "RecognizeNote.h"
 #include <string>
 #include <vector>
+#include "../guitareffectVST/ParamAuto.h"
 using namespace std;
 struct PluginProgram;
 
@@ -83,13 +84,7 @@ class ExampleEditor;
 //----------------------------------------------------------------------------
 ///	VST plugin class.
 enum EffNameType;
-struct ParamAuto
-{
-	EffNameType type;
-	int paramNum; // real parameter value used in changepar
-	string typeStr;
-	string paramStr;
-};
+
 class VstPlugin : public AudioEffectX
 {
 public:
