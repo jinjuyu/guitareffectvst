@@ -100,6 +100,7 @@ LinealEQ::LinealEQ(GLGUI *gui, VstPlugin *plug)
 }
 void LinealEQ::Create(int whereis)
 {
+	mWhereis = whereis;
 	real = EQ1Real;
 	print = EQ1Print;
 	int x,y,w=180,h=300;
