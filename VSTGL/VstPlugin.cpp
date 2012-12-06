@@ -90,10 +90,6 @@ vendorName("Jinju")
 	Wave_down_q = 1;
 	
 	memset((void*)mParamAuto, 0, sizeof(ParamAuto)*16);
-	mParamAuto[0].type = EffInfinity;
-	mParamAuto[0].paramNum = 0;
-	mParamAuto[0].typeStr = "Infinity";
-	mParamAuto[0].paramStr = "Wet/Dry";
 
 	char buffer[1024];
 	buffer[1023] = '\0';
