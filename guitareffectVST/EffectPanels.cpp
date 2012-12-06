@@ -2400,13 +2400,13 @@ void ExampleEditor::CreateCompBand(int whereis, bool loadPrev, int prevIdx)
 		const int NUM_PRESETS = 3;
 		int presets[NUM_PRESETS*PRESET_SIZE] = {
 			//Good Start
-			0, 16, 16, 16, 16, 0, 0, 0, 0, 1000, 5000, 10000, 48,
+			0, 16, 16, 16, 16,  0, 0, 0, 0, 1000, 5000, 10000, 48,
 
 			//Loudness
-			0, 16, 2, 2, 4, -16, 24, 24, -8, 140, 1000, 5000, 48,
+			0, 16, 2, 2, 4,  -16, 24, 24, -8,  140, 1000, 5000, 48,
 
 			//Loudness 2
-			64, 16, 2, 2, 2, -32, 24, 24, 24, 100, 1000, 5000, 48
+			64, 16, 2, 2, 2,  -32, 24, 24, 24,  100, 1000, 5000, 48
 
 		};
 
@@ -2446,7 +2446,7 @@ void ExampleEditor::CreateCompBand(int whereis, bool loadPrev, int prevIdx)
 				//setthres(1,value);
 				//break;
 			//case 7:
-			-70,24
+			-70,24,
 				//PMHthres = value;
 				//setthres(2,value);
 				//break;
