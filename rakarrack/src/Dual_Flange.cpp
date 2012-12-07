@@ -742,7 +742,7 @@ Dflange::getpar (int npar)
 {
     switch (npar) {
     case 0:
-        return (Pwetdry);
+        return (-Pwetdry);
         break;
     case 1:
         return (Ppanning);
