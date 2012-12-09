@@ -1031,6 +1031,9 @@ struct SaveState{
 	char ReverbFN[1024];
 	ParamAuto mParamAuto[16];
 };
+
+
+
 bool CompEff(EffectName a, EffectName b);
 class ExampleEditor : public VSTGLEditor,
 					  public Timer
@@ -1044,6 +1047,597 @@ class ExampleEditor : public VSTGLEditor,
 	ExampleEditor(AudioEffect *effect);
 	///	Destructor.
 	~ExampleEditor();
+	struct Preset_Bank_Struct {
+		char Preset_Name[64];
+		char Author[64];
+		char Classe[36];
+		char Type[4];
+		char ConvoFiname[128];
+		char cInput_Gain[64];
+		char cMaster_Volume[64];
+		char cBalance[64];
+		float Input_Gain;
+		float Master_Volume;
+		float Balance;
+		int Bypass;
+		char RevFiname[128];
+		char EchoFiname[128];
+		int lv[70][20];
+		int XUserMIDI[128][20];
+		int XMIDIrangeMin[128];
+		int XMIDIrangeMax[128];
+	} Bank[62];
+	/*
+        if ((fn = fopen (temp, "rb")) != NULL) {
+            New_Bank();
+            while (!feof (fn)) {
+                fread (&Bank, sizeof (Bank), 1, fn);
+                for(j=1; j<=60; j++) strcpy(B_Names[k][j].Preset_Name,Bank[j].Preset_Name);
+            }
+            fclose (fn);
+        }
+
+int
+RKR::loadbank (char *filename)
+{
+
+    int err_message=1;
+    char meslabel[64];
+    FILE *fn;
+
+
+    memset(meslabel,0, sizeof(meslabel));
+    sprintf(meslabel, "%s %s",jackcliname,VERSION);
+
+
+    err_message = CheckOldBank(filename);
+
+    switch(err_message) {
+    case 0:
+        break;
+    case 1:
+        Message(1, meslabel, "Can not load this Bank file because is from a old rakarrack version,\n please use 'Convert Old Bank' menu entry in the Bank window.");
+        return(0);
+        break;
+    case 2:
+        Message(1, meslabel, "Can not load this Bank file\n");
+        return(0);
+        break;
+    case 3:
+        Message(1, meslabel, "Can not load this Bank file because is from a old rakarrack git version,\n please use rakgit2new utility to convert.");
+        return(0);
+        break;
+
+    }
+
+
+    if ((fn = fopen (filename, "rb")) != NULL) {
+        New_Bank();
+        while (!feof (fn)) {
+            fread (&Bank, sizeof (Bank), 1, fn);
+        }
+        fclose (fn);
+        if(BigEndian()) fix_endianess();
+        convert_IO();
+        modified=0;
+        new_bank_loaded=1;
+        return (1);
+    }
+    return (0);
+};
+
+
+int
+RKR::savebank (char *filename)
+{
+
+    FILE *fn;
+
+    if ((fn = fopen (filename, "wb")) != NULL) {
+        copy_IO();
+        if(BigEndian()) fix_endianess();
+        fwrite (&Bank, sizeof (Bank), 1, fn);
+        if(BigEndian()) fix_endianess();
+        fclose (fn);
+        modified=0;
+        return(1);
+    }
+
+    if(errno==EACCES) Error_Handle(3);
+    return (0);
+};
+void
+RKR::New_Bank ()
+{
+
+    int i, j, k;
+
+    int presets[48][16] = {
+//Reverb
+        {80, 64, 63, 24, 0, 0, 0, 85, 5, 83, 1, 64, 0, 0, 0, 0},
+//Echo
+        {67, 64, 35, 64, 30, 59, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//Chorus
+        {64, 64, 33, 0, 0, 90, 40, 85, 64, 119, 0, 0, 0, 0, 0, 0},
+//Flanger
+        {64, 64, 39, 0, 0, 60, 23, 3, 62, 0, 0, 0, 0, 0, 0, 0},
+//Phaser
+        {64, 64, 11, 0, 0, 64, 110, 64, 1, 0, 0, 20, 0, 0, 0, 0},
+//Overdrive
+        {84, 64, 35, 56, 40, 0, 0, 6703, 21, 0, 0, 0, 0, 0, 0, 0},
+//Distorsion
+        {0, 64, 0, 87, 14, 6, 0, 3134, 157, 0, 1, 0, 0, 0, 0, 0},
+//EQ1
+        {64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 0, 0, 0, 0},
+//EQ2
+        {24, 64, 64, 75, 64, 64, 113, 64, 64, 64, 0, 0, 0, 0, 0, 0},
+//Compressor
+        {-30, 2, -6, 20, 120, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//Order
+        {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15},
+//WahWah
+        {64, 64, 138, 0, 0, 64, 20, 90, 0, 60, 0, 0, 0, 0, 0, 0},
+//AlienWah1
+        {64, 64, 80, 0, 0, 62, 60, 105, 25, 0, 64, 0, 0, 0, 0, 0},
+//Cabinet
+        {0, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//Pan
+        {64, 64, 26, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+//Harmonizer
+        {64, 64, 64, 12, 6000, 0, 0, 0, 64, 64, 0, 0, 0, 0, 0, 0},
+//MusicDelay
+        {64, 0, 2, 7, 0, 59, 0, 127, 4, 59, 106, 75, 75, 0, 0, 0},
+//NoiseGate
+        {0, 0, 1, 2, 6703, 76, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//NewDist
+        {0, 64, 64, 83, 65, 15, 0, 2437, 169, 68, 0, 0, 0, 0, 0, 0},
+//APhaser
+        {64, 20, 14, 0, 1, 64, 110, 40, 4, 10, 0, 64, 1, 0, 0, 0},
+//Valve
+        {0, 64, 64, 127, 64, 0, 5841, 61, 1, 0, 69, 1, 80 ,0 ,0 ,0},
+//Dual Flange
+        {-32, 0, 0, 110, 800, 10, -27, 16000, 1, 0, 24, 64, 1, 10, 0, 0},
+//Ring
+        {-64, 0, -64, 64, 35, 1, 0, 20, 0, 40, 0, 64, 1, 0, 0 ,0},
+//Exciter
+        {127, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20000, 20, 0, 0, 0 },
+//MBDist
+        {0, 64, 64, 56, 40, 0, 0, 0, 29, 35, 100, 0, 450, 1500, 1, 0},
+//Arpie
+        {67, 64, 35, 64, 30, 59, 0, 127, 0, 0, 0, 0, 0, 0, 0, 0},
+//Expander
+        {-50, 20, 50, 50, 3134, 76, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0},
+//Shuffle 1
+        {64, 10, 0, 0, 0, 600, 1200, 2000, 6000,-14, 1, 0, 0 ,0 ,0, 0},
+//Synthfilter
+        {0, 20, 14, 0, 1, 64, 110, -40, 6, 0, 0, 32, -32, 500, 100, 0},
+//MBVvol
+        {0, 40, 0, 64, 80, 0, 0, 500, 2500, 5000, 0, 0, 0, 0, 0, 0},
+//Convolotron 1
+        {67, 64, 1, 100, 0, 64, 30, 20, 0, 0, 0, 0, 0, 0, 0, 0},
+//Looper
+        {64, 0, 1, 0, 1, 0, 64, 1, 0, 0, 64, 0, 0, 0, 0, 0},
+//RyanWah
+        {16, 10, 60, 0, 0, 64, 0, 0, 10, 7, -16, 40, -3, 1, 2000, 450},
+//Echoverse
+        {64, 64, 90, 64, 64, 64, 64, 0, 1, 96, 0, 0, 0, 0, 0, 0},
+//CoilCrafter
+        {32, 6, 1, 3300, 16, 4400, 42, 20, 0, 0, 0, 0, 0, 0, 0, 0},
+//ShelfBoost
+        {127, 64, 16000, 1, 24, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//Vocoder
+        {0, 64, 10, 70, 70, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//Systainer
+        {67, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//Sequence
+        {20, 100, 10, 50, 25, 120, 60, 127, 0, 90, 40, 0, 0, 0, 3, 0},
+//Shifter
+        {0, 64, 64, 200, 200, -20, 2, 0, 0, 0, 0, 0 ,0 ,0 ,0 ,0},
+//StompBox
+        {48, 32, 0, 32, 65, 0, 0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0 ,0},
+//Reverbtron
+        {64, 0, 1, 1500, 0, 0, 60, 18, 4, 0, 0, 64, 0 ,0 ,0 ,0},
+//Echotron
+        {64, 45, 34, 4, 0, 76, 3, 41, 0, 96, -13, 64, 1, 1, 1, 1},
+//StereoHarm
+        {64, 64, 12, 0, 64, 12, 0, 0, 0, 0, 0, 64, 0, 0, 0, 0},
+//CompBand
+        {0, 16, 16, 16, 16, 0, 0, 0, 0, 1000, 5000, 10000, 48, 0, 0, 0},
+//Opticaltrem
+        {127, 260, 10, 0, 64, 64, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+//Vibe
+        {35, 120, 10, 0, 64, 64, 64, 64, 3, 64, 0, 0, 0, 0, 0, 0},
+//Infinity
+        {64, 64, 64, 64, 64, 64, 64, 64, 64, 700, 20, 80, 60, 0, 1, 0}
+
+
+
+
+
+
+
+
+    };
+
+
+
+
+    for (i = 0; i < 62; i++) {
+        memset(Bank[i].Preset_Name, 0, sizeof (Bank[i].Preset_Name));
+        memset(Bank[i].Author, 0, sizeof (Bank[i].Author));
+        strcpy(Bank[i].Author,UserRealName);
+        memset(Bank[i].ConvoFiname,0, sizeof(Bank[i].ConvoFiname));
+        memset(Bank[i].RevFiname,0,sizeof(Bank[i].RevFiname));
+        memset(Bank[i].EchoFiname,0,sizeof(Bank[i].EchoFiname));
+
+        Bank[i].Input_Gain = .5f;
+        Bank[i].Master_Volume = .5f;
+        Bank[i].Balance = 1.0f;
+        Bank[i].Bypass = 0;
+        memset(Bank[i].lv , 0 , sizeof(Bank[i].lv));
+
+        for (j = 0; j < NumEffects; j++) {
+            for (k = 0; k < 16; k++) {
+                Bank[i].lv[j][k] = presets[j][k];
+            }
+            Bank[i].lv[j][19] =0;
+
+        }
+
+        memset(Bank[i].XUserMIDI, 0, sizeof(Bank[i].XUserMIDI));
+
+    }
+
+
+
+
+};
+void
+RKR::Bank_to_Preset (int i)
+{
+
+    int j, k;
+
+
+    memset(Preset_Name, 0,sizeof (Preset_Name));
+    strcpy (Preset_Name, Bank[i].Preset_Name);
+    memset(Author, 0,sizeof (Author));
+    strcpy (Author, Bank[i].Author);
+    memset(efx_Convol->Filename, 0, sizeof (efx_Convol->Filename));
+    strcpy (efx_Convol->Filename,Bank[i].ConvoFiname);
+    memset(efx_Reverbtron->Filename, 0, sizeof (efx_Reverbtron->Filename));
+    strcpy (efx_Reverbtron->Filename,Bank[i].RevFiname);
+    memset(efx_Echotron->Filename, 0, sizeof (efx_Echotron->Filename));
+    strcpy (efx_Echotron->Filename,Bank[i].EchoFiname);
+
+
+    for (j = 0; j <=NumEffects; j++) {
+        for (k = 0; k < 20; k++) {
+            lv[j][k] = Bank[i].lv[j][k];
+        }
+    }
+
+
+    for (k = 0; k < 12; k++)
+        efx_order[k] = Bank[i].lv[10][k];
+	// 이게 바로 어떤 이펙트가 어디에 있는가를 결정하는거
+
+    Reverb_B = Bank[i].lv[0][19];
+    Echo_B = Bank[i].lv[1][19];
+    Chorus_B = Bank[i].lv[2][19];
+    Flanger_B = Bank[i].lv[3][19];
+    Phaser_B = Bank[i].lv[4][19];
+    Overdrive_B = Bank[i].lv[5][19];
+    Distorsion_B = Bank[i].lv[6][19];
+    EQ1_B = Bank[i].lv[7][19];
+    EQ2_B = Bank[i].lv[8][19];
+    Compressor_B = Bank[i].lv[9][19];
+    WhaWha_B = Bank[i].lv[11][19];
+    Alienwah_B = Bank[i].lv[12][19];
+    Cabinet_B = Bank[i].lv[13][19];
+    Pan_B = Bank[i].lv[14][19];
+    Harmonizer_B = Bank[i].lv[15][19];
+    MusDelay_B = Bank[i].lv[16][19];
+    Gate_B = Bank[i].lv[17][19];
+    NewDist_B = Bank[i].lv[18][19];
+    APhaser_B = Bank[i].lv[19][19];
+    Valve_B = Bank[i].lv[20][19];
+    DFlange_B = Bank[i].lv[21][19];
+    Ring_B = Bank[i].lv[22][19];
+    Exciter_B = Bank[i].lv[23][19];
+    MBDist_B = Bank[i].lv[24][19];
+    Arpie_B = Bank[i].lv[25][19];
+    Expander_B = Bank[i].lv[26][19];
+    Shuffle_B = Bank[i].lv[27][19];
+    Synthfilter_B = Bank[i].lv[28][19];
+    MBVvol_B = Bank[i].lv[29][19];
+    Convol_B = Bank[i].lv[30][19];
+    Looper_B = Bank[i].lv[31][19];
+    RyanWah_B = Bank[i].lv[32][19];
+    RBEcho_B = Bank[i].lv[33][19];
+    CoilCrafter_B = Bank[i].lv[34][19];
+    ShelfBoost_B = Bank[i].lv[35][19];
+    Vocoder_B = Bank[i].lv[36][19];
+    Sustainer_B = Bank[i].lv[37][19];
+    Sequence_B = Bank[i].lv[38][19];
+    Shifter_B = Bank[i].lv[39][19];
+    StompBox_B = Bank[i].lv[40][19];
+    Reverbtron_B = Bank[i].lv[41][19];
+    Echotron_B = Bank[i].lv[42][19];
+    StereoHarm_B = Bank[i].lv[43][19];
+    CompBand_B = Bank[i].lv[44][19];
+    Opticaltrem_B = Bank[i].lv[45][19];
+    Vibe_B = Bank[i].lv[46][19];
+    Infinity_B = Bank[i].lv[47][19];
+
+	//_B는 바이패스 즉 온 오프
+    Bypass_B = Bypass;
+
+
+    memcpy(XUserMIDI, Bank[i].XUserMIDI, sizeof(XUserMIDI));
+
+
+
+    Actualizar_Audio ();
+
+    if (actuvol == 0) {
+        Input_Gain = Bank[i].Input_Gain;
+        Master_Volume = Bank[i].Master_Volume;
+        Fraction_Bypass = Bank[i].Balance;
+    }
+
+    if((Tap_Updated) && (Tap_Bypass) && (Tap_TempoSet>0) && (Tap_TempoSet<601)) Update_tempo();
+
+};
+
+
+void
+RKR::Preset_to_Bank (int i)
+{
+
+
+    int j, k;
+    memset(Bank[i].Preset_Name, 0, sizeof (Bank[i].Preset_Name));
+    strcpy (Bank[i].Preset_Name, Preset_Name);
+    memset(Bank[i].Author, 0, sizeof (Bank[i].Author));
+    strcpy (Bank[i].Author, Author);
+    memset(Bank[i].ConvoFiname,0, sizeof(Bank[i].ConvoFiname));
+    strcpy(Bank[i].ConvoFiname, efx_Convol->Filename);
+    memset(Bank[i].RevFiname, 0, sizeof(Bank[i].RevFiname));
+    strcpy(Bank[i].RevFiname, efx_Reverbtron->Filename);
+    memset(Bank[i].EchoFiname, 0, sizeof(Bank[i].EchoFiname));
+    strcpy(Bank[i].EchoFiname, efx_Echotron->Filename);
+
+
+    Bank[i].Input_Gain = Input_Gain;
+    Bank[i].Master_Volume = Master_Volume;
+    Bank[i].Balance = Fraction_Bypass;
+
+
+    for (j = 0; j <= 11; j++)
+        lv[0][j] = efx_Rev->getpar (j);
+    for (j = 0; j <= 8; j++)
+        lv[1][j] = efx_Echo->getpar (j);
+    for (j = 0; j <= 12; j++)
+        lv[2][j] = efx_Chorus->getpar (j);
+    for (j = 0; j <= 12; j++)
+        lv[3][j] = efx_Flanger->getpar (j);
+    for (j = 0; j <= 11; j++)
+        lv[4][j] = efx_Phaser->getpar (j);
+    for (j = 0; j <= 12; j++)
+        lv[5][j] = efx_Overdrive->getpar (j);
+    for (j = 0; j <= 12; j++)
+        lv[6][j] = efx_Distorsion->getpar (j);
+    for (j = 0; j <= 8; j++)
+        lv[9][j] = efx_Compressor->getpar (j + 1);
+    for (j = 0; j <= 9; j++)
+        lv[11][j] = efx_WhaWha->getpar (j);
+    for (j = 0; j <= 10; j++)
+        lv[12][j] = efx_Alienwah->getpar (j);
+    for (j = 0; j <= 8; j++)
+        lv[14][j] = efx_Pan->getpar (j);
+    for (j = 0; j <= 10; j++)
+        lv[15][j] = efx_Har->getpar (j);
+    for (j = 0; j <= 12; j++)
+        lv[16][j] = efx_MusDelay->getpar (j);
+    for (j = 0; j <= 6; j++)
+        lv[17][j] = efx_Gate->getpar (j + 1);
+    for (j = 0; j <= 11; j++)
+        lv[18][j] = efx_NewDist->getpar (j);
+    for (j = 0; j <= 12; j++)
+        lv[19][j] = efx_APhaser->getpar(j);
+    for (j = 0; j <= 12; j++)
+        lv[20][j] = efx_Valve->getpar(j);
+    for (j = 0; j <= 14; j++)
+        lv[21][j] = efx_DFlange->getpar(j);
+    for (j = 0; j <= 12; j++)
+        lv[22][j] = efx_Ring->getpar(j);
+    for (j = 0; j <= 12; j++)
+        lv[23][j] = efx_Exciter->getpar(j);
+    for (j = 0; j <= 14; j++)
+        lv[24][j] = efx_MBDist->getpar(j);
+    for (j = 0; j <= 10; j++)
+        lv[25][j] = efx_Arpie->getpar(j);
+    for (j = 0; j <= 6; j++)
+        lv[26][j] = efx_Expander->getpar(j+1);
+    for (j = 0; j <= 10; j++)
+        lv[27][j] = efx_Shuffle->getpar(j);
+    for (j = 0; j <= 15; j++)
+        lv[28][j] = efx_Synthfilter->getpar(j);
+    for (j = 0; j <= 10; j++)
+        lv[29][j] = efx_MBVvol->getpar(j);
+    for (j = 0; j <= 10; j++)
+        lv[30][j] = efx_Convol->getpar(j);
+    for (j = 0; j <= 13; j++)
+        lv[31][j] = efx_Looper->getpar(j);
+    for (j = 0; j <= 18; j++)
+        lv[32][j] = efx_RyanWah->getpar(j);
+    for (j = 0; j <= 9; j++)
+        lv[33][j] = efx_RBEcho->getpar(j);
+    for (j = 0; j <= 8; j++)
+        lv[34][j] = efx_CoilCrafter->getpar(j);
+    for (j = 0; j <= 4; j++)
+        lv[35][j] = efx_ShelfBoost->getpar(j);
+    for (j = 0; j <= 6; j++)
+        lv[36][j] = efx_Vocoder->getpar(j);
+    for (j = 0; j <= 1; j++)
+        lv[37][j] = efx_Sustainer->getpar(j);
+    for (j = 0; j <= 14; j++)
+        lv[38][j] = efx_Sequence->getpar(j);
+    for (j = 0; j <= 9; j++)
+        lv[39][j] = efx_Shifter->getpar(j);
+    for (j = 0; j <= 5; j++)
+        lv[40][j] = efx_StompBox->getpar(j);
+    for (j = 0; j <= 15; j++)
+        lv[41][j] = efx_Reverbtron->getpar(j);
+    for (j = 0; j <= 15; j++)
+        lv[42][j] = efx_Echotron->getpar(j);
+    for (j = 0; j <= 11; j++)
+        lv[43][j] = efx_StereoHarm->getpar(j);
+    for (j = 0; j <= 12; j++)
+        lv[44][j] = efx_CompBand->getpar(j);
+    for (j = 0; j <= 5; j++)
+        lv[45][j] = efx_Opticaltrem->getpar(j);
+    for (j = 0; j <= 10; j++)
+        lv[46][j] = efx_Vibe->getpar(j);
+    for (j = 0; j <= 17; j++)
+        lv[47][j] = efx_Infinity->getpar(j);
+
+
+    for (j = 0; j <= 12; j++)
+        lv[10][j] = efx_order[j];
+
+    for (j = 0; j < 10; j++)
+        lv[7][j] = efx_EQ1->getpar (j * 5 + 12);
+    lv[7][10] = efx_EQ1->getpar (0);
+    lv[7][11] = efx_EQ1->getpar (13);
+
+    for (j = 0; j < 3; j++) {
+        lv[8][0 + j * 3] = efx_EQ2->getpar (j * 5 + 11);
+        lv[8][1 + j * 3] = efx_EQ2->getpar (j * 5 + 12);
+        lv[8][2 + j * 3] = efx_EQ2->getpar (j * 5 + 13);
+    }
+    lv[8][9] = efx_EQ2->getpar (0);
+
+    lv[13][0] = Cabinet_Preset;
+    lv[13][1] = efx_Cabinet->getpar (0);
+
+
+
+    for (j = 0; j <= NumEffects; j++) {
+        for (k = 0; k < 19; k++) {
+            Bank[i].lv[j][k] = lv[j][k];
+        }
+    }
+
+    Bank[i].lv[11][10] = efx_WhaWha->Ppreset;
+
+
+    Bank[i].lv[0][19] = Reverb_Bypass;
+    Bank[i].lv[1][19] = Echo_Bypass;
+    Bank[i].lv[2][19] = Chorus_Bypass;
+    Bank[i].lv[3][19] = Flanger_Bypass;
+    Bank[i].lv[4][19] = Phaser_Bypass;
+    Bank[i].lv[5][19] = Overdrive_Bypass;
+    Bank[i].lv[6][19] = Distorsion_Bypass;
+    Bank[i].lv[7][19] = EQ1_Bypass;
+    Bank[i].lv[8][19] = EQ2_Bypass;
+    Bank[i].lv[9][19] = Compressor_Bypass;
+    Bank[i].lv[11][19] = WhaWha_Bypass;
+    Bank[i].lv[12][19] = Alienwah_Bypass;
+    Bank[i].lv[13][19] = Cabinet_Bypass;
+    Bank[i].lv[14][19] = Pan_Bypass;
+    Bank[i].lv[15][19] = Harmonizer_Bypass;
+    Bank[i].lv[16][19] = MusDelay_Bypass;
+    Bank[i].lv[17][19] = Gate_Bypass;
+    Bank[i].lv[18][19] = NewDist_Bypass;
+    Bank[i].lv[19][19] = APhaser_Bypass;
+    Bank[i].lv[20][19] = Valve_Bypass;
+    Bank[i].lv[21][19] = DFlange_Bypass;
+    Bank[i].lv[22][19] = Ring_Bypass;
+    Bank[i].lv[23][19] = Exciter_Bypass;
+    Bank[i].lv[24][19] = MBDist_Bypass;
+    Bank[i].lv[25][19] = Arpie_Bypass;
+    Bank[i].lv[26][19] = Expander_Bypass;
+    Bank[i].lv[27][19] = Shuffle_Bypass;
+    Bank[i].lv[28][19] = Synthfilter_Bypass;
+    Bank[i].lv[29][19] = MBVvol_Bypass;
+    Bank[i].lv[30][19] = Convol_Bypass;
+    Bank[i].lv[31][19] = Looper_Bypass;
+    Bank[i].lv[32][19] = RyanWah_Bypass;
+    Bank[i].lv[33][19] = RBEcho_Bypass;
+    Bank[i].lv[34][19] = CoilCrafter_Bypass;
+    Bank[i].lv[35][19] = ShelfBoost_Bypass;
+    Bank[i].lv[36][19] = Vocoder_Bypass;
+    Bank[i].lv[37][19] = Sustainer_Bypass;
+    Bank[i].lv[38][19] = Sequence_Bypass;
+    Bank[i].lv[39][19] = Shifter_Bypass;
+    Bank[i].lv[40][19] = StompBox_Bypass;
+    Bank[i].lv[41][19] = Reverbtron_Bypass;
+    Bank[i].lv[42][19] = Echotron_Bypass;
+    Bank[i].lv[43][19] = StereoHarm_Bypass;
+    Bank[i].lv[44][19] = CompBand_Bypass;
+    Bank[i].lv[45][19] = Opticaltrem_Bypass;
+    Bank[i].lv[46][19] = Vibe_Bypass;
+    Bank[i].lv[47][19] = Infinity_Bypass;
+
+
+    memcpy(Bank[i].XUserMIDI,XUserMIDI,sizeof(XUserMIDI));
+
+
+};
+
+플러그인윈도우의 가로 길이를 늘려서 거기에 뱅크 로드(임포트)/세이브(익스포트), 선택/새로저장 기능을 넣는다.
+        switch(efx_order[j]) {
+        case 0: //EQ1
+        case 1:// Compressor
+        case 2://Distortion
+        case 3://Overdrive
+        case 4://Echo
+        case 5://Chorus
+        case 6://Phaser
+        case 7://Flanger
+        case 8://Reverb
+        case 9://EQ2
+        case 10://WhaWha
+        case 11://Alienwah
+        case 12://Cabinet
+        case 13://Pan
+        case 14://Harmonizer
+        case 15://MusDelay
+        case 16://Gate
+        case 17://NewDist
+        case 18://APhaser
+        case 19://Valve
+        case 20://DFlange
+        case 21://Ring
+        case 22://Exciter
+        case 23://MBDist
+        case 24://Arpie
+        case 25://Expander
+        case 26://Shuffle
+        case 27://Synthfilter
+        case 28://MBVvol
+        case 29://Convolotron
+        case 30://Looper
+        case 31://RyanWah
+        case 32://RBEcho
+        case 33://CoilCrafter
+        case 34://ShelfBoost
+        case 35://Vocoder
+        case 36://Sustainer
+        case 37://Sequence
+        case 38://Shifter
+        case 39://StompBox
+        case 40://Reverbtron
+        case 41://Echotron
+        case 42://StereoHarm
+        case 43://CompBand
+        case 44://OpticalTrem
+        case 45://Vibe
+        case 46://Infinity
+
+		*/
 	MySliderCallback myCB;
 	MyButtonCallback myButtonCB;
 	MyButtonCallback2 myButton2CB;

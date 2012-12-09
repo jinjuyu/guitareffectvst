@@ -2295,7 +2295,7 @@ void ExampleEditor::CreateStereoHarm(int whereis, bool loadPrev, int prevIdx)
 				//setgain (0,value);
 				//break;
 			//case 2:
-			0,24
+			0,24,
 				//setinterval(0,value);
 				//break;
 			//case 3:
