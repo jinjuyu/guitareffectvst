@@ -102,6 +102,9 @@ class VSTGLEditor : public AEffEditor
 	VSTGLEditor(AudioEffect *effect, WindowFlags flags=DefaultFlags);
 	///	Destructor.
 	virtual ~VSTGLEditor();
+	HWND tempHWnd;
+	///	Windows: Device context for our window.
+	HDC dc;
 
 	///	Returns the size of the editor, so the host can provide the correct-sized window.
 	bool getRect(ERect **rect) {*rect = &_rect; return true;};
@@ -252,9 +255,6 @@ class VSTGLEditor : public AEffEditor
 	///	Windows: Windows rendering context.
 	HGLRC glRenderingContext;
 	///	Windows: Holds a handle to the window we created in createWindow().
-	HWND tempHWnd;
-	///	Windows: Device context for our window.
-	HDC dc;
 	///	Windows: The pixel format we want to use for the window.
 	PIXELFORMATDESCRIPTOR pixelformat;
 #endif

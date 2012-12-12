@@ -138,6 +138,19 @@ void VstPlugin::process(float **inputs, float **outputs, VstInt32 sampleFrames)
 	}
 }
 
+
+inline float LPF(float x, float prevY, float cutOff)
+{
+	return (1.0-cutOff)*prevY+ cutOff*x;
+}
+inline float HPF(float x, float prevX, float prevY, float cutOff)
+{
+	return cutOff*(prevY + x - prevX);
+}
+inline float BPF(float x, float prevX, float prevY, float cutOff)
+{
+	return LPF(HPF(x,prevX,prevY,cutOff), prevY, cutOff);
+}
 //----------------------------------------------------------------------------
 void VstPlugin::processReplacing(float **inputs,
 								 float **outputs,
