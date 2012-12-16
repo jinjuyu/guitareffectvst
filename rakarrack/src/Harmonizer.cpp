@@ -157,6 +157,11 @@ Harmonizer::processReplacing (float **inputs,
         memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
         U_Resample->out(templ,tempr,tempinputsl,tempinputsr,param->PERIOD,u_up);
     }
+	else
+	{
+        memcpy(tempinputsl, inputs[0],sizeof(float)*param->PERIOD);
+        memcpy(tempinputsr, inputs[1],sizeof(float)*param->PERIOD);
+	}
 
 
     for (i = 0; i < nPERIOD; i++) {

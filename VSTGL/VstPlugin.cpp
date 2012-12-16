@@ -117,7 +117,7 @@ vendorName("Jinju")
 	
 	mEffEcho = new Echo(mParam, nullptr, nullptr);
 	mEffDistorsion = new Distorsion(mParam, nullptr, nullptr);
-	mEffConvolotron = new Convolotron(mParam, nullptr, nullptr, 2, 4, 2);
+	mEffConvolotron = new Convolotron(mParam, nullptr, nullptr, 0, 4, 2);
 	mEffAlienwah = new Alienwah(mParam, nullptr, nullptr);
 	mEffAPhaser = new Analog_Phaser(mParam, nullptr, nullptr);
 	mEffArpie = new Arpie(mParam, nullptr, nullptr);
@@ -135,7 +135,7 @@ vendorName("Jinju")
 	mEffExciter = new Exciter(mParam, nullptr, nullptr);
 	mEffExpander = new Expander(mParam, nullptr, nullptr);
 	mEffGate = new Gate(mParam, nullptr, nullptr);
-	mEffHarmonizer = new Harmonizer(mParam, nullptr, nullptr, 4, 2, 4, 2); // keep quality at 4 or 32, DS == 1 means 96000 and so on, leave uq dq at 4,2 for now
+	mEffHarmonizer = new Harmonizer(mParam, nullptr, nullptr, 4, 0, 4, 2); // keep quality at 4 or 32, DS == 1 means 96000 and so on, leave uq dq at 4,2 for now
 	mEffInfinity = new Infinity(mParam, nullptr, nullptr);
 	mEffMBDist = new MBDist(mParam, nullptr, nullptr);
 	mEffMBVvol = new MBVvol(mParam, nullptr, nullptr);
@@ -146,14 +146,14 @@ vendorName("Jinju")
 	mEffPhaser = new Phaser(mParam, nullptr, nullptr);
 	mEffRBEcho = new RBEcho(mParam, nullptr, nullptr);
 	mEffReverb = new Reverb(mParam, nullptr, nullptr);
-	mEffReverbtron = new Reverbtron(mParam, nullptr, nullptr, 2, 4, 2);
+	mEffReverbtron = new Reverbtron(mParam, nullptr, nullptr, 0, 4, 2);
 	mEffRing = new Ring(mParam, nullptr, nullptr);
 	mEffRyanWah = new RyanWah(mParam, nullptr, nullptr);
-	mEffSequence = new Sequence(mParam, nullptr, nullptr, 4, 2, 4, 2);
+	mEffSequence = new Sequence(mParam, nullptr, nullptr, 4, 0, 4, 2);
 	mEffShelfBoost = new ShelfBoost(mParam, nullptr, nullptr);
-	mEffShifter = new Shifter(mParam, nullptr, nullptr, 4, 2, 4, 2);
+	mEffShifter = new Shifter(mParam, nullptr, nullptr, 4, 0, 4, 2);
 	mEffShuffle = new Shuffle(mParam, nullptr, nullptr);
-	mEffStereoHarm = new StereoHarm(mParam, nullptr, nullptr, 4, 2, 4, 2);
+	mEffStereoHarm = new StereoHarm(mParam, nullptr, nullptr, 4, 0, 4, 2);
 	mEffStompBox = new StompBox(mParam, nullptr, nullptr);
 	mEffSustainer = new Sustainer(mParam, nullptr, nullptr);
 	mEffSynthfilter = new Synthfilter(mParam, nullptr, nullptr);

@@ -321,6 +321,8 @@ Sequence::out (float * smpsl, float * smpsr)
         }
 
 
+
+
         for ( i = 0; i < nPERIOD; i++) { //Maintain sequenced modulator
 
             if (++tcount >= intperiod) {
@@ -868,6 +870,11 @@ Sequence::processReplacing (float **inputs,
             memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
             U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
         }
+		else
+		{
+            memcpy(inputs2[0], inputs[0],sizeof(float)*param->PERIOD);
+            memcpy(inputs2[1], inputs[1],sizeof(float)*param->PERIOD);
+		}
 
 
         for ( i = 0; i < nPERIOD; i++) { //Maintain sequenced modulator
@@ -984,6 +991,11 @@ Sequence::processReplacing (float **inputs,
             memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
             U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
         }
+		else
+		{
+            memcpy(inputs2[0], inputs[0],sizeof(float)*param->PERIOD);
+            memcpy(inputs2[1], inputs[1],sizeof(float)*param->PERIOD);
+		}
 
 
 
@@ -1038,6 +1050,12 @@ Sequence::processReplacing (float **inputs,
             memcpy(tempr, inputs[1],sizeof(float)*param->PERIOD);
             U_Resample->out(templ,tempr,inputs2[0],inputs2[1],param->PERIOD,u_up);
         }
+		else
+		{
+
+            memcpy(inputs2[0], inputs[0],sizeof(float)*param->PERIOD);
+            memcpy(inputs2[1], inputs[1],sizeof(float)*param->PERIOD);
+		}
 
 
 

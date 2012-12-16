@@ -361,6 +361,7 @@ PanelAutoParamListCallback::PanelAutoParamListCallback(Panel *a, int dataIdx)
 }
 void PanelAutoParamListCallback::OnSelect(int idx)
 {
+	if(!(idx >= 0 && idx < 16)) return;
 	mPanel->mGUI->mPopupList->hidden = true;
 	mPanel->mGUI->mPopupList->Clear();
 	mPanel->mGUI->mPopupList->SetCallback(nullptr);
