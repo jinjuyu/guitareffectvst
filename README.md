@@ -8,6 +8,8 @@ Help to this particular program: https://github.com/jinjuyu/guitareffectvst/wiki
 
 Download it Here: https://github.com/jinjuyu/guitareffectvst/blob/master/ExtraReleaseFiles/guitareffectVST-0.2.7.rar?raw=true
 
+Demo MP3: https://github.com/jinjuyu/guitareffectvst/blob/master/Demo.mp3?raw=true
+
 ![screenshot](https://github.com/jinjuyu/guitareffectvst/raw/master/Screenshot.jpg)
 
 New in 0.2
