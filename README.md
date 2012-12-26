@@ -60,11 +60,6 @@ Known Issues
 
 About Source Code
 ----------------------------------------------------------------------------------------
-- Currently, all the codes are converted and usable in VST code but no GUI interface whatsoever.(not even parameters are mapped)
-I have implemented processReplacing in each effect so it can be used in VSTPlugin::processReplacing.
-- But, I have not converted Looper and Vocoder for apparent reasons.
-
-
 - Code is for Visual C++ 2010(Express). Project file is placed under VSTGL directory.
 - Code guideline:
     -> it usually retains original code
