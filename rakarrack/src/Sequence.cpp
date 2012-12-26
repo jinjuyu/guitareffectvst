@@ -714,6 +714,8 @@ Sequence::processReplacing (float **inputs,
 	float *inputs2[2];
 	inputs2[0] = new float[sizeof(float)*nPERIOD+100];
 	inputs2[1] = new float[sizeof(float)*nPERIOD+100];
+	memcpy(outputs[0], inputs[0], sizeof(float)*sampleFrames);
+	memcpy(outputs[1], inputs[1], sizeof(float)*sampleFrames);
 
     switch(Pmode) {
     case 0:	//Lineal
